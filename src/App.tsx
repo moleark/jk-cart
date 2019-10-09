@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
+import * as React from 'react';
 import './App.css';
+import { NavView, nav, Page, Tabs, start } from 'tonva';
+import { CApp } from 'CApp';
+import { appConfig } from 'configuration';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+//const tonvaApp = "bruce/TestApp";
+nav.setSettings(appConfig);
+
+class App extends React.Component {
+
+  private onLogined = async () => {
+    await start(CApp, appConfig);
+  }
+  public render() {
+    return <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+  }
 }
 
 export default App;
