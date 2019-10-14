@@ -234,12 +234,17 @@ export class COrder extends CUqBase {
         switch (state) {
             case 'pendingpayment':
                 return await this.uqs.order.GetPendingPayment.table(undefined);
-                break;
             case 'processing':
                 return await this.uqs.order.Order.mySheets(undefined, 1, -20);
-                break;
-            default:
+            case 'completed':
                 return await this.uqs.order.Order.mySheets("#", 1, -20)
+            case 'all':
+                let promises: PromiseLike<any>[] = [];
+                promises.push(this.uqs.order.Order.mySheets(undefined, 1, -20));
+                promises.push(this.uqs.order.Order.mySheets("#", 1, -20));
+                let presult = await Promise.all(promises);
+                return presult[0].concat(presult[1]);
+            default:
                 break;
         }
     }

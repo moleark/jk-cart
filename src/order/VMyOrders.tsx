@@ -10,6 +10,7 @@ export class VMyOrders extends VPage<COrder> {
     @observable private pendingOrders: any[];
     @observable private processingOrders: any[];
     @observable private completedOrders: any[];
+    @observable private allOrders: any[];
     private currentState: string;
     async open(param: any) {
         this.currentState = param;
@@ -28,19 +29,9 @@ export class VMyOrders extends VPage<COrder> {
     private page = () => {
 
         let tabs = [{
-            title: '待付款',
-            content: () => {
-                return <List items={this.pendingOrders} item={{ render: this.renderOrder }} none="无待付款订单" />
-            },
-            isSelected: this.currentState === 'pendingpayment',
-            load: async () => {
-                this.currentState = 'pendingpayment';
-                this.pendingOrders = await this.controller.getMyOrders(this.currentState);
-            }
-        }, {
             title: '待审核',
             content: () => {
-                return <List items={this.processingOrders} item={{ render: this.renderOrder }} none="你还没有订单" />
+                return <List items={this.processingOrders} item={{ render: this.renderOrder }} none="无待审核订单" />
             },
             isSelected: this.currentState === 'processing',
             load: async () => {
@@ -48,7 +39,7 @@ export class VMyOrders extends VPage<COrder> {
                 this.processingOrders = await this.controller.getMyOrders(this.currentState);
             }
         }, {
-            title: '处理中',
+            title: '待发货',
             content: () => {
                 return <List items={this.completedOrders} item={{ render: this.renderOrder }} none="还没有已完成的订单" />
             },
@@ -56,6 +47,16 @@ export class VMyOrders extends VPage<COrder> {
             load: async () => {
                 this.currentState = 'completed';
                 this.completedOrders = await this.controller.getMyOrders(this.currentState);
+            }
+        }, {
+            title: '所有订单',
+            content: () => {
+                return <List items={this.allOrders} item={{ render: this.renderOrder }} none="还没有订单" />
+            },
+            isSelected: this.currentState === 'all',
+            load: async () => {
+                this.currentState = 'all';
+                this.allOrders = await this.controller.getMyOrders(this.currentState);
             }
         }];
         return <Page header="我的订单" tabs={tabs} tabPosition="top" />

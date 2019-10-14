@@ -54,17 +54,17 @@ export class VMe extends VPage<CMe> {
 
         let { openMyOrders } = this.controller;
         return <div className="d-flex justify-content-around w-100 my-3">
-            <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('pendingpayment')}>
-                <FA name="file-text-o" className="text-info fa-2x" />
-                <small>待付款</small>
-            </div>
             <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('processing')}>
-                <FA name="file-text-o" className="text-info fa-2x" />
+                <FA name="desktop" className="text-info fa-2x" />
                 <small>待审核</small>
             </div>
             <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('completed')}>
+                <FA name="truck" className="text-info fa-2x" />
+                <small>待发货</small>
+            </div>
+            <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('all')}>
                 <FA name="file-text-o" className="text-info fa-2x" />
-                <small>处理中</small>
+                <small>所有订单</small>
             </div>
         </div>
     };
