@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Page, nav } from 'tonva';
+import { Page } from 'tonva';
 import ReactMarkdown from 'react-markdown';
 import logo from '../images/logo.png';
 
@@ -22,7 +22,7 @@ export class About extends React.Component {
         let right = null;
         return <Page header="关于百灵威" right={right}>
             <div className='bg-white p-3'>
-                <img className="h-3c position-absolute" src={logo} />
+                <img className="h-3c position-absolute" src={logo} alt="百灵威" />
                 <div className="h3 flex-fill text-center">
                     <span className="text-primary mr-3">百灵威集团</span>
                 </div>
