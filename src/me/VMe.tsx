@@ -70,6 +70,10 @@ export class VMe extends VPage<CMe> {
     };
 
     render() {
+        return <this.content />;
+    }
+
+    private content = observer(() => {
         const { user } = nav;
         let aboutRows: Prop[] = [
             '',
@@ -146,7 +150,7 @@ export class VMe extends VPage<CMe> {
             rows.push(...aboutRows, ...logOutRows);
         }
         return <PropGrid rows={rows} values={{}} />;
-    }
+    })
 }
 
 
