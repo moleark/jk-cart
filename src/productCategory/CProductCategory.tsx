@@ -44,17 +44,29 @@ export class CProductCategory extends CUqBase {
         });
     }
 
-    private buildCategories(categoryWapper: any, firstCategory: any, secendCategory: any):any {
-        let pcid:number;
-        firstCategory.forEach((element: any) => {
-            pcid = element.productCategory.id;
-            element.children = secendCategory.filter((v: any) => v.parent === pcid);
-        });
-        let {name, productCategory} = categoryWapper;
-        pcid = productCategory.id;
+    private buildCategories(categoryWapper: any, firstCategory: any[], secendCategory: any[]):any {
+        let {productCategory} = categoryWapper;
+        let catId:number = productCategory.id, children:any[] = [];
+        for (let f of firstCategory) {
+            if (f.parent !== catId) continue;
+            let pcid = f.productCategory.id;
+            let len = secendCategory.length;
+            let subsub = '';
+            for (let j=0; j<len; j++) {
+                //element.children = secendCategory.filter((v: any) => v.parent === pcid);
+                let {name, parent} = secendCategory[j];
+                if (parent !== pcid) continue;
+                if (subsub.length > 0) subsub += ' / ';
+                subsub += name;
+                let sLen = subsub.length;
+                if (sLen > 40) break;
+            }
+            if (subsub.length > 0) f.subsub = subsub;
+            children.push(f);
+        }
         //categoryWapper.children = firstCategory.filter((v: any) => v.parent === pcid);
         let ret = _.clone(categoryWapper);
-        ret.children = firstCategory.filter((v: any) => v.parent === pcid);
+        ret.children = children; // firstCategory.filter((v: any) => v.parent === pcid);
         return ret;
     }
 

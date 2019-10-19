@@ -54,7 +54,7 @@ export class VCategory extends VPage<CProductCategory> {
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, children, total } = item;
+        let { name, subsub, total } = item;
         return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
@@ -65,7 +65,7 @@ export class VCategory extends VPage<CProductCategory> {
                         &nbsp; {name}
                     </span>
                 </div>
-                {renderThirdCategory(children, total)}
+                {renderThirdCategory(subsub, total)}
             </div>
         </div>;
     }
