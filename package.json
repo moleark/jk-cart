@@ -1,7 +1,7 @@
 {
   "name": "jk-cart",
   "homepage": ".",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@types/classnames": "^2.2.9",
