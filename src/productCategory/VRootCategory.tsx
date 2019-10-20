@@ -36,7 +36,6 @@ export class VRootCategory extends View<CProductCategory> {
         let { name, children, productCategory } = item;
         let { id: productCategoryID } = productCategory;
         let { src, labelColor } = GLOABLE.ROOTCATEGORY[productCategoryID];
-        console.log('renderRootCategory ' + name);
         return <div className="bg-white mb-3" key={name}>
             <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, undefined, labelColor)}>
                 <img className="mr-4 cat-root-img" src={src} alt={name} />
