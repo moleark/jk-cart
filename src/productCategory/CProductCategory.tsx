@@ -10,6 +10,8 @@ export class CProductCategory extends CUqBase {
     //@observable categories2: any[] = [];
 
     async internalStart(param: any) {
+        this.uqs.product.ProductCategory.stopCache();
+
         let { currentSalesRegion, currentLanguage } = this.cApp;
         let results = await this.uqs.product.GetRootCategory.query({
             salesRegion: currentSalesRegion.id, 
