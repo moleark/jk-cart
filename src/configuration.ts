@@ -14,6 +14,7 @@ export const appConfig: AppConfig = {
     version: "1.0.21 tonva 1.1.17",                   // 版本变化，缓存的uqs才会重载
     tvs: tvs,
     loginTop: jnkTop,
+    oem: '百灵威'
 };
 
 // 生产配置
