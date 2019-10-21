@@ -1,0 +1,27 @@
+.cat-title-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cat-sub-style {
+    font-size: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cat-root-img {
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+.cat-root-sub {
+    padding-right: 1px;
+}
+
+.cat-sub {
+    border: 1px solid #eeeeee;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
