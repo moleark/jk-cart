@@ -13,7 +13,6 @@ export interface UqOrder {
 
 export interface UqProduct {
     ProductX: Tuid;
-    ProductCategory: Tuid;
     PriceX: Map;
     AgentPrice: Map;
     ProductChemical: Map;

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
+//import { CCartApp } from 'CCartApp';
+
+export const store = {
+    //homeCount: observable.box<number>(-1),
+    //cartCount: observable.box<number>(101),
+};
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 

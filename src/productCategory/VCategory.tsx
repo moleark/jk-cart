@@ -1,25 +1,26 @@
 import * as React from 'react';
-import { VPage, Page, FA } from 'tonva';
 import { CProductCategory } from './CProductCategory';
-//import { tv } from 'tonva';
-import { renderThirdCategory } from './VRootCategory';
+import { VPage, Page } from 'tonva';
+import { List, FA } from 'tonva';
+import { tv } from 'tonva';
+import { titleTitle, subStyle, renderThirdCategory } from './VRootCategory';
 
 export class VCategory extends VPage<CProductCategory> {
 
     async open(categoryWaper: any) {
+
         this.openPage(this.page, categoryWaper);
     }
 
-    /*
     private renderChild = (childWapper: any) => {
+
         return <div className="py-2"><FA name="hand-o-right mr-2"></FA>{childWapper.name}</div>
-    }*/
+    }
 
     private categoryClick = async (childWapper: any, parent: any, labelColor: string) => {
         await this.controller.openMainPage(childWapper, parent, labelColor);
     }
 
-    /*
     private breadCrumb = (item: any, parent: any) => {
         return <nav arial-babel="breadcrumb">
             <ol className="breadcrumb">
@@ -27,9 +28,8 @@ export class VCategory extends VPage<CProductCategory> {
             </ol>
         </nav>
 
-    }*/
+    }
 
-    /*
     private breadCrumbItem = (values: any, parent: any) => {
         if (values === undefined || values.productCategory === undefined)
             return <></>;
@@ -37,7 +37,7 @@ export class VCategory extends VPage<CProductCategory> {
             {tv(values.productCategory.parent, this.breadCrumbItem)}
             <li className="breadcrumb-item" onClick={() => this.categoryClick(values, undefined, "")}>{values.name}</li>
         </>
-    }*/
+    }
 
     private renderRootCategory = (item: any, parent: any, labelColor: string) => {
         let { productCategory, name, children } = item;
@@ -45,7 +45,9 @@ export class VCategory extends VPage<CProductCategory> {
             <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
                 <b>{name}</b>
             </div>
-            <div className="cat-root-sub">
+            <div className=""
+                style={{ paddingRight: '1px' }}
+            >
                 <div className="row no-gutters">
                     {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
                 </div>
@@ -54,23 +56,26 @@ export class VCategory extends VPage<CProductCategory> {
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, subsub, total } = item;
+        let { name, children, total } = item;
         return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
-            <div className="py-2 px-2 cat-sub">
-                <div className="cat-title-title">
+            <div className="py-2 px-2"
+                style={{ border: '1px solid #eeeeee', marginRight: '-1px', marginBottom: '-1px' }}
+            >
+                <div style={titleTitle}>
                     <span className="ml-1 align-middle">
                         <FA name="chevron-circle-right" className={labelColor} />
                         &nbsp; {name}
                     </span>
                 </div>
-                {renderThirdCategory(subsub, total)}
+                {renderThirdCategory(children, total)}
             </div>
         </div>;
     }
 
     private page = (categoryWaper: any) => {
+
         let { cHome } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
