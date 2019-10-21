@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
+import { VPage, Page } from 'tonva';
 import { CProduct, renderProduct } from './CProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react';
@@ -17,8 +17,8 @@ export class VProductList extends VPage<CProduct> {
         this.controller.showProductDetail(product.id);
     }
 
-    private onScrollBottom = async (scroller: Scroller) => {
-        scroller.scrollToBottom();
+    private onScrollBottom = async () => {
+
         await this.controller.pageProducts.more();
     }
 
