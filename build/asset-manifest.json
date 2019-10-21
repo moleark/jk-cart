@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "./static/css/main.ed3b9ab3.chunk.css",
+    "main.js": "./static/js/main.b90834b8.chunk.js",
+    "main.js.map": "./static/js/main.b90834b8.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.05fa0477.js",
+    "runtime-main.js.map": "./static/js/runtime-main.05fa0477.js.map",
+    "static/css/2.d2218183.chunk.css": "./static/css/2.d2218183.chunk.css",
+    "static/js/2.a1df23f9.chunk.js": "./static/js/2.a1df23f9.chunk.js",
+    "static/js/2.a1df23f9.chunk.js.map": "./static/js/2.a1df23f9.chunk.js.map",
+    "static/js/3.6ec3a71c.chunk.js": "./static/js/3.6ec3a71c.chunk.js",
+    "static/js/3.6ec3a71c.chunk.js.map": "./static/js/3.6ec3a71c.chunk.js.map",
+    "static/js/4.dc212563.chunk.js": "./static/js/4.dc212563.chunk.js",
+    "static/js/4.dc212563.chunk.js.map": "./static/js/4.dc212563.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.55afbbbdc58a92fd6a553a02408fb937.js": "./precache-manifest.55afbbbdc58a92fd6a553a02408fb937.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/2.d2218183.chunk.css.map": "./static/css/2.d2218183.chunk.css.map",
+    "static/css/main.ed3b9ab3.chunk.css.map": "./static/css/main.ed3b9ab3.chunk.css.map",
+    "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
+    "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
+    "static/media/LifeScience.png": "./static/media/LifeScience.5c2e6ff5.png",
+    "static/media/MaterialScience.png": "./static/media/MaterialScience.f2439aa0.png",
+    "static/media/OrganicChemistry.png": "./static/media/OrganicChemistry.6d56971c.png",
+    "static/media/font-awesome.min.css": "./static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/logo.svg": "./static/media/logo.ee7cd8ed.svg",
+    "static/media/pig.png": "./static/media/pig.772a31a6.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.05fa0477.js",
+    "static/css/2.d2218183.chunk.css",
+    "static/js/2.a1df23f9.chunk.js",
+    "static/css/main.ed3b9ab3.chunk.css",
+    "static/js/main.b90834b8.chunk.js"
+  ]
+}
