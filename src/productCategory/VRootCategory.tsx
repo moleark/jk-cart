@@ -55,7 +55,7 @@ export class VRootCategory extends View<CProductCategory> {
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
             <div className="py-2 px-2 cat-sub">
-                <div className="cat-title-title">
+                <div className="text-truncate">
                     <span className="ml-1 align-middle">
                         <FA name="chevron-circle-right" className={labelColor} />
                         &nbsp; {name}
@@ -85,18 +85,18 @@ export class VRootCategory extends View<CProductCategory> {
 }
 
 
-export function renderThirdCategory(subsub:string, total: number) {
+export function renderThirdCategory(subsub: string, total: number) {
     /*
     return <div className="py-1 px-1 text-muted small cat-sub-style">
         {items.length === 0 ? <>该类产品数量: {total > 1000 ? '>1000' : total}</> : items.map((v: any) => v.name).join(' / ')}
     </div>
     */
-    return <div className="py-1 px-1 text-muted small cat-sub-style">
-    {
-        subsub === undefined ? 
-            <>该类产品数量: {total > 1000 ? '>1000' : total}</> 
-            : 
-            subsub
-    }
+    return <div className="py-1 px-1 text-muted small text-truncate">
+        {
+            subsub === undefined ?
+                <>该类产品数量: {total > 1000 ? '>1000' : total}</>
+                :
+                subsub
+        }
     </div>
 }
