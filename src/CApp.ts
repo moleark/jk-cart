@@ -12,6 +12,7 @@ import { CMe } from "./me/CMe";
 import { CUqBase } from "./CBase";
 import { VMain } from 'ui/main';
 import { GLOABLE } from 'configuration';
+import * as qs from 'querystringify';
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -60,7 +61,21 @@ export class CApp extends CAppBase {
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
+
         this.showMain();
+        let { location } = document;
+        let { search } = location;
+        if (search) {
+            let query: any = qs.parse(search.toLowerCase());
+            switch (query.type) {
+                case "product":
+                    let prouductBoxId = this.uqs.product.ProductX.boxId(query.product);
+                    this.cProduct.showProductDetail(prouductBoxId);
+                    break;
+                case "order":
+                    break;
+            }
+        }
         this.topKey = nav.topKey();
     }
 

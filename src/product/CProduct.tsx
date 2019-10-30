@@ -69,9 +69,12 @@ export class CProduct extends CUqBase {
 
     showProductDetail = async (product: BoxId) => {
 
-        let loader = new LoaderProductChemicalWithPrices(this.cApp);
-        let productData = await loader.load(product.id);
-        this.openVPage(VProduct, { productData, product });
+        let { id: productId } = product;
+        if (productId) {
+            let loader = new LoaderProductChemicalWithPrices(this.cApp);
+            let productData = await loader.load(productId);
+            this.openVPage(VProduct, { productData, product });
+        }
     }
 
     renderProductPrice = (product: BoxId) => {
