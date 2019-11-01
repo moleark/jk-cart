@@ -11,13 +11,12 @@ export { CApp } from './CApp';
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',
-    version: '1.1.35',
+    version: '1.1.36',
     tvs: tvs,
     loginTop: jnkTop,
     oem: '百灵威'
 };
 
-/*
 // 生产配置
 export const GLOABLE = {
     CHINA: 44,
@@ -47,8 +46,8 @@ export const GLOABLE = {
     } as any,
     TIPDISPLAYTIME: 2000
 }
-*/
 
+/*
 // 测试环境配置
 export const GLOABLE = {
     CHINA: 43,
@@ -78,3 +77,4 @@ export const GLOABLE = {
     } as any,
     TIPDISPLAYTIME: 2000
 }
+*/
