@@ -1,12 +1,9 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { observable } from 'mobx';
-import { Query, tv, BoxId, Map } from 'tonva';
-import { PageItems, Controller, nav, Page, Image } from 'tonva';
+import { Query, tv, BoxId, PageItems } from 'tonva';
 import classNames from 'classnames';
-import { CApp } from '../CApp';
 import { CUqBase } from '../CBase';
-//import { CCartApp } from '../CCartApp';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
@@ -40,7 +37,6 @@ class PageProducts extends PageItems<any> {
  *
  */
 export class CProduct extends CUqBase {
-    //    cApp: CApp;
     pageProducts: PageProducts;
 
     @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
@@ -52,7 +48,6 @@ export class CProduct extends CUqBase {
 
     searchByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        //let searchProductQuery = cUqProduct.query("searchProduct");
         this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
         this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.openVPage(VProductList, key);
@@ -60,7 +55,6 @@ export class CProduct extends CUqBase {
 
     async searchByCategory(category: any) {
         let { currentSalesRegion } = this.cApp;
-        //let searchProductQuery = .query("searchProductByCategory");
         this.pageProducts = new PageProducts(this.uqs.product.SearchProductByCategory);
         let { productCategoryId, name } = category;
         this.pageProducts.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
