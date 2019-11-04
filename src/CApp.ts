@@ -13,6 +13,7 @@ import { CUqBase } from "./CBase";
 import { VMain } from 'ui/main';
 import { GLOABLE } from 'configuration';
 import * as qs from 'querystringify';
+import { CCoupon } from "coupon/CCoupon";
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -23,11 +24,13 @@ export class CApp extends CAppBase {
     currentSalesRegion: any;
     currentLanguage: any;
     currentUser: WebUser;
+    currentCouponCode: string;
 
     cHome: CHome;
     cCart: CCart;
     cProduct: CProduct;
     cOrder: COrder;
+    cCoupon: CCoupon;
     cProductCategory: CProductCategory;
     cMember: CMember;
     cMe: CMe;
@@ -43,20 +46,20 @@ export class CApp extends CAppBase {
 
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         if (this.isLogined) {
-            this.currentUser.setUser(this.user);
+            await this.currentUser.setUser(this.user);
         }
 
         this.cart = new Cart(this);
         await this.cart.init();
 
-        this.cProductCategory = this.newC(CProductCategory); // new CProductCategory(this, undefined);
-        this.cCart = this.newC(CCart); // new CCart(this, undefined);
-        this.cHome = this.newC(CHome); // new CHome(this, undefined);
-        this.cProduct = this.newC(CProduct); // new CProduct(this, undefined);
-        this.cOrder = this.newC(COrder); // new COrder(this, undefined);
-        //this.cSelectContact = new CSelectContact(this, undefined);
-        this.cMember = this.newC(CMember); // new CMember(this, undefined);
-        this.cMe = this.newC(CMe); // new CMe(this, undefined);
+        this.cProductCategory = this.newC(CProductCategory);
+        this.cCart = this.newC(CCart);
+        this.cHome = this.newC(CHome);
+        this.cProduct = this.newC(CProduct);
+        this.cOrder = this.newC(COrder);
+        this.cCoupon = this.newC(CCoupon);
+        this.cMember = this.newC(CMember);
+        this.cMe = this.newC(CMe);
 
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
@@ -70,9 +73,15 @@ export class CApp extends CAppBase {
             switch (query.type) {
                 case "product":
                     let prouductBoxId = this.uqs.product.ProductX.boxId(query.product);
-                    this.cProduct.showProductDetail(prouductBoxId);
+                    await this.cProduct.showProductDetail(prouductBoxId);
+                    break;
+                case "coupon":
+                    if (query.coupon)
+                        await this.cCoupon.showSharedCoupon(query);
                     break;
                 case "order":
+                    break;
+                default:
                     break;
             }
         }
