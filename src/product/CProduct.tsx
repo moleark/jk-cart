@@ -63,7 +63,7 @@ export class CProduct extends CUqBase {
 
     showProductDetail = async (product: BoxId) => {
 
-        await product.assure();
+        // await product.assure();
         let { id: productId, obj } = product;
         if (productId) {
             let discount = 0;

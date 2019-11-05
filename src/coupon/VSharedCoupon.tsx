@@ -29,7 +29,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
         if (result !== 1 || !isValid) {
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                优惠券【{code}】无效
+                优惠券【{code}】无效，请与您的专属销售人员联系。
             </div>
         } else {
             this.controller.cApp.currentCouponCode = code;
@@ -51,7 +51,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
 
             couponUi = <div className="bg-white p-3 mb-1">
                 <LMR left={aleft} right={aright} />
-                <LMR left={bleft} right={<small className="text-success">此优惠券可用于本次订货</small>}>
+                <LMR left={bleft} right={<small className="text-success">此优惠券也可用于订购其他产品</small>}>
                     {bcenter}
                 </LMR>
             </div>
