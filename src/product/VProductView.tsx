@@ -30,8 +30,8 @@ export class VCartProuductView extends View<CProduct> {
                     </div>
                     <div className="col-9">
                         <div className="row">
-                            {this.controller.renderChemicalInfo(product)}
                             {productPropItem('编号', origin)}
+                            {this.controller.renderChemicalInfoInCart(product)}
                             {tv(brand, renderBrand)}
                         </div>
                     </div>
@@ -44,12 +44,13 @@ export class VCartProuductView extends View<CProduct> {
 
 export class VProuductView extends View<CProduct> {
 
-    render(param: any): JSX.Element {
-        return <>{tv(param, this.renderProduct)}</>;
+    render(product: any): JSX.Element {
+        return <this.renderProduct product={product} />;
     }
 
-    private renderProduct = (product: any) => {
-        let { brand, description, descriptionC, origin, imageUrl } = product;
+    private renderProduct = (param: any) => {
+        let { product } = param;
+        let { id, brand, description, descriptionC, origin, imageUrl } = product;
         return <div className="d-block mb-4 px-3">
             <div className="py-2">
                 <div><strong>{description}</strong></div>
@@ -62,8 +63,8 @@ export class VProuductView extends View<CProduct> {
                 <div className="col-9">
                     <div className="row">
                         {productPropItem('产品编号', origin)}
+                        {this.controller.renderChemicalInfoInCart(product)}
                         {tv(brand, renderBrand)}
-                        {this.controller.renderChemicalInfo(product)}
                     </div>
                 </div>
             </div>

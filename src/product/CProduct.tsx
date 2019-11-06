@@ -9,8 +9,8 @@ import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
 import { ProductImage } from '../tools/productImage';
 import { VProductDelivery } from './VProductDelivery';
-import { VCartProuductView, VProductPrice } from './VProductView';
-import { VChemicalInfo } from './VChemicalInfo';
+import { VCartProuductView, VProductPrice, VProuductView } from './VProductView';
+import { VChemicalInfoInCart } from './VChemicalInfo';
 
 class PageProducts extends PageItems<any> {
 
@@ -61,16 +61,18 @@ export class CProduct extends CUqBase {
         this.openVPage(VProductList, name);
     }
 
-    showProductDetail = async (product: BoxId) => {
+    /**
+     *
+     */
+    showProductDetail = async (productId: BoxId | any) => {
 
-        // await product.assure();
-        let { id: productId, obj } = product;
         if (productId) {
-            let discount = 0;
+            let discount = 0, product;
             /*
+            product = await this.uqs.product.ProductX.load(productId);
             let { currentUser } = this.cApp;
             if (currentUser.hasCustomer) {
-                let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: obj.brand.id, customer: currentUser.currentCustomer });
+                let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
                 discount = discountSetting && discountSetting.discount;
             }
             */
@@ -136,14 +138,18 @@ export class CProduct extends CUqBase {
         return this.futureDeliveryTimeDescriptionContainer[cacheId];
     }
 
-    renderChemicalInfo = (product: BoxId) => {
-        return this.renderView(VChemicalInfo, product);
+    renderChemicalInfoInCart = (product: BoxId) => {
+        return this.renderView(VChemicalInfoInCart, product);
     }
 
     getChemicalInfo = async (productId: number) => {
         if (this.chemicalInfoContainer[productId] === undefined) {
             this.chemicalInfoContainer[productId] = await this.uqs.product.ProductChemical.obj({ product: productId });
         }
+    }
+
+    renderProduct = (product: any) => {
+        return this.renderView(VProuductView, product);
     }
 
     renderCartProduct = (product: BoxId) => {
@@ -178,8 +184,8 @@ export function renderProduct(product: any) {
             </div>
             <div className="col-9">
                 <div className="row">
-                    {productPropItem('CAS', CAS)}
                     {productPropItem('产品编号', origin)}
+                    {productPropItem('CAS', CAS)}
                     {productPropItem('纯度', purity)}
                     {productPropItem('分子式', molecularFomula)}
                     {productPropItem('分子量', molecularWeight)}

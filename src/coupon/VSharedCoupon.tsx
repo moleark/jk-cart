@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { CCoupon } from './CCoupon';
 import { VPage, Page, BoxId, List, tv, FA, EasyDate, LMR } from 'tonva';
-import { renderProduct } from 'product';
 
 export class VSharedCoupon extends VPage<CCoupon> {
 
@@ -56,6 +55,8 @@ export class VSharedCoupon extends VPage<CCoupon> {
                 </LMR>
             </div>
         }
+
+        let { renderProduct } = this.controller;
         return <Page header="分享">
             {couponUi}
             <List items={this.products} item={{ render: renderProduct, onClick: this.showProductDetail }} none={null} />
