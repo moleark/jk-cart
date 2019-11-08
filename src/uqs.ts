@@ -42,6 +42,7 @@ export interface UqWebUser {
     WebUserSetting: Map;
     WebUserCustomer: Map;
     WebUserContacts: Map;
+    WebUserBuyerAccount: Map;
 }
 
 export interface UqCustomer {

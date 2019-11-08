@@ -89,7 +89,9 @@ export class WebUser {
     private async loadWebUser() {
         let { id, _user } = this;
         if (this._user !== undefined) {
-            let webUser = await this.uqs.webuser.WebUser.load(this.id);
+            let { webuser: webUserTuid } = this.uqs;
+            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount } = webUserTuid;
+            let webUser = await WebUser.load(this.id);
             if (webUser) {
                 let { firstName, gender, salutation, organizationName, departmentName } = webUser;
                 this.firstName = firstName;
@@ -98,7 +100,8 @@ export class WebUser {
                 this.organizationName = organizationName;
                 this.departmentName = departmentName;
             }
-            let contact = await this.uqs.webuser.WebUserContact.obj({ "webUser": id });
+
+            let contact = await WebUserContact.obj({ "webUser": id });
             if (contact) {
                 let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
                 this.telephone = telephone;
@@ -109,12 +112,20 @@ export class WebUser {
                 this.addressString = addressString;
                 this.zipCode = zipCode;
             }
-            this.webUserSettings = await this.uqs.webuser.WebUserSetting.obj({ webUser: id }) || { webUser: id };
-            let value = await this.uqs.webuser.WebUserCustomer.obj({ webUser: id });
+
+            this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
+
+            let value = await WebUserCustomer.obj({ webUser: id });
             if (value !== undefined) {
                 this.currentCustomer = new Customer(value.customer, this.uqs);
                 await this.currentCustomer.init();
             }
+            /*
+            let accountValue = await WebUserBuyerAccount.query({ webUser: id });
+            if (accountValue !== undefined) {
+
+            }
+            */
         }
     }
 
