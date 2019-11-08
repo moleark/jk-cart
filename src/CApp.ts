@@ -72,7 +72,7 @@ export class CApp extends CAppBase {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {
                 case "product":
-                    let prouductBoxId = this.uqs.product.ProductX.boxId(query.product);
+                    let prouductBoxId = await this.uqs.product.ProductX.boxId(query.product).assure();
                     await this.cProduct.showProductDetail(prouductBoxId);
                     break;
                 case "coupon":

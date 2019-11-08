@@ -67,7 +67,7 @@ export class CProduct extends CUqBase {
     showProductDetail = async (productId: BoxId | any) => {
 
         if (productId) {
-            let discount = 0, product;
+            let discount = 0, product = productId;
             /*
             product = await this.uqs.product.ProductX.load(productId);
             let { currentUser } = this.cApp;
