@@ -301,21 +301,27 @@ const LOCALCARTNAME: string = "cart";
 class CartLocal extends CartStore {
 
     private cartData: any[] = [];
+    private productTuid: Tuid;
+    private packTuid: TuidDiv;
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        this.productTuid = this.cApp.uqs.product.ProductX;
+        this.packTuid = this.productTuid.div('packx');
+    }
 
     get isLocal(): boolean { return true }
 
     async load(): Promise<CartItem2[]> {
         try {
-            let productTuid = this.cApp.uqs.product.ProductX;
-            let packTuid = productTuid.div('packx');
             let cartstring = localStorage.getItem(LOCALCARTNAME);
             if (cartstring === null) return [];
             this.cartData = JSON.parse(cartstring);
             let cartDataBoxed = [];
             for (let i = 0; i < this.cartData.length; i++) {
                 let { product, pack, quantity, price, currency } = this.cartData[i];
-                let productbox = productTuid.boxId(product);
-                let packbox = packTuid.boxId(pack);
+                let productbox = this.productTuid.boxId(product);
+                let packbox = this.packTuid.boxId(pack);
                 cartDataBoxed.push({
                     product: productbox,
                     pack: packbox,
@@ -334,7 +340,7 @@ class CartLocal extends CartStore {
     }
 
     async storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any) {
-        let cartItemExists = this.cartData.find(e => e.product === product.id && e.pack === pack.id);
+        let cartItemExists = this.cartData.find(e => this.productTuid.equ(e.product, product) && this.packTuid.equ(e.pack, pack));
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;
             cartItemExists.price = price;
