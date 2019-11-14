@@ -26,6 +26,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
 
         let couponUi;
         if (result !== 1 || !isValid) {
+            this.controller.cApp.currentCouponCode = undefined;
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
                 优惠券【{code}】无效，请与您的专属销售人员联系。
