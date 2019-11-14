@@ -32,10 +32,9 @@ export class COrder extends CUqBase {
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
 
-        let { currentCustomer } = currentUser;
-        if (currentCustomer !== undefined) {
-            let { Contractor } = currentCustomer;
-            this.orderData.customer = (Contractor && Contractor.id) || currentCustomer.id;
+        let { buyerAccount } = currentUser;
+        if (buyerAccount !== undefined) {
+            this.orderData.customer = buyerAccount;
         }
 
         if (this.orderData.shippingContact === undefined) {

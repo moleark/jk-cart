@@ -31,8 +31,8 @@ export class CCoupon extends CUqBase {
         let products: any;
         if (productids) {
             let { ProductX } = this.uqs.product;
-            // let promises: PromiseLike<void>[] = productids.split('-').map((v: any) => ProductX.boxId(v).assure());
-            let promises: PromiseLike<void>[] = productids.split('-').map((v: any) => ProductX.load(v));
+            let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
+            let promises: PromiseLike<void>[] = productidArray.map((v: any) => ProductX.load(v));
             products = await Promise.all(promises);
         }
         this.openVPage(VSharedCoupon, { couponValidationResult, products });

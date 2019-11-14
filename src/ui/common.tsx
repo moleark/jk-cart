@@ -10,7 +10,7 @@ export const addressUI: TuidUI = {
     }
 }
 
-export const countryUI: TuidUI = {
+export const cpccUI: TuidUI = {
     content: (values: any) => {
         return <> {values.chineseName} </>;
     }
@@ -25,10 +25,10 @@ export const currencyUI: TuidUI = {
 const uqUI: UqUI = {
     tuid: {
         address: addressUI,
-        country: countryUI,
-        province: countryUI,
-        city: countryUI,
-        county: countryUI,
+        country: cpccUI,
+        province: cpccUI,
+        city: cpccUI,
+        county: cpccUI,
         currency: currencyUI,
     },
 }

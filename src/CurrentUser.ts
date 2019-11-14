@@ -57,6 +57,7 @@ export class WebUser {
     addressString: string;
     zipCode: string;
     @computed get allowOrdering() {
+        // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
             (this.mobile && this.firstName && this.organizationName);
     }
@@ -120,12 +121,12 @@ export class WebUser {
                 this.currentCustomer = new Customer(value.customer, this.uqs);
                 await this.currentCustomer.init();
             }
-            /*
             let accountValue = await WebUserBuyerAccount.query({ webUser: id });
-            if (accountValue !== undefined) {
-
+            let { ret: buyerAccounts } = accountValue;
+            if (buyerAccounts && buyerAccounts.length > 0) {
+                // TODO: 暂时不考虑有多个相关账号的情况
+                this.buyerAccount = buyerAccounts[0].buyerAccount;
             }
-            */
         }
     }
 
@@ -136,6 +137,7 @@ export class WebUser {
         return this.currentCustomer !== undefined;
     }
     currentCustomer: Customer;
+    buyerAccount: any;
 
     async getContacts(): Promise<any[]> {
         /*

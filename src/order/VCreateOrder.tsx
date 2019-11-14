@@ -121,14 +121,7 @@ export class VCreateOrder extends VPage<COrder> {
 
         let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, openMeInfo, onInvoiceInfoEdit, onCouponEdit } = this.controller;
         let { currentUser } = cApp;
-        let fillMeInfo = <div onClick={openMeInfo} className="alert alert-warning text-primary py-1" role="alert">
-            首次下单请点击完善您的个人信息
-        </div>
-        if (currentUser.allowOrdering) {
-            fillMeInfo = null;
-        }
         let footer = <div className="d-block">
-            {fillMeInfo}
             <div className="w-100 px-3">
                 <div className="d-flex justify-content-left flex-grow-1">
                     <span className="text-danger" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</span>
