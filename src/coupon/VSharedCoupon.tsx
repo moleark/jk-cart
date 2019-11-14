@@ -34,8 +34,8 @@ export class VSharedCoupon extends VPage<CCoupon> {
         } else {
             this.controller.cApp.currentCouponCode = code;
             let codeShow = String(code + 100000000);
-            let p1 = codeShow.substr(1, 4);
-            let p2 = codeShow.substr(5, 4);
+            let p1 = codeShow.substr(0, 4);
+            let p2 = codeShow.substr(4);
             codeShow = p1 + ' ' + p2;
 
             let aleft = <div><FA name='th-large' className='my-2 mr-3 text-warning' />{codeShow}</div>;
