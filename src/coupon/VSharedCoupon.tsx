@@ -33,7 +33,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
             </div>
         } else {
             this.controller.cApp.currentCouponCode = code;
-            let codeShow = String(code + 100000000);
+            let codeShow = String(code);
             let p1 = codeShow.substr(0, 4);
             let p2 = codeShow.substr(4);
             codeShow = p1 + ' ' + p2;
