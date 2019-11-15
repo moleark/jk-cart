@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { tv, View } from 'tonva';
-import { CProduct, productPropItem } from './CProduct';
+import { CProduct } from './CProduct';
 import { observer } from 'mobx-react';
+import { productPropItem } from './VProductView';
 
-export class VChemicalInfo extends View<CProduct> {
+export class VChemicalInfoInCart extends View<CProduct> {
 
     render(param: any): JSX.Element {
         let { id: productId } = param;
+        if (typeof productId === 'object')
+            productId = productId.id;
         let { controller } = this;
         controller.getChemicalInfo(productId);
         return <this.content productId={productId} />;

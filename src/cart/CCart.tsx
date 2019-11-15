@@ -1,5 +1,4 @@
 import { RowContext, nav, User, BoxId } from 'tonva';
-import { CApp } from '../CApp';
 import { CUqBase } from '../CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCart } from './VCart';
@@ -7,7 +6,6 @@ import { CartPackRow, CartItem2 } from './Cart';
 
 export class CCart extends CUqBase {
 
-    //    cApp: CApp;
     private selectedCartItems: CartItem2[];
 
     protected async internalStart(param: any) {

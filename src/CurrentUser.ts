@@ -21,9 +21,9 @@ export class WebUser {
     get defaultOrganizationName(): string {
         return this.organizationName ||
             (this.webUserSettings &&
-                ((
+                (
                     (this.webUserSettings.invoiceInfo && this.webUserSettings.invoiceInfo.obj['title'])
-                    || this.webUserSettings.shippingContact && this.webUserSettings.shippingContact.obj['organizationName'])
+                    || (this.webUserSettings.shippingContact && this.webUserSettings.shippingContact.obj['organizationName'])
                     || (this.webUserSettings.invoiceContact && this.webUserSettings.invoiceContact.obj['organizationName'])
                 )
             );
@@ -57,6 +57,7 @@ export class WebUser {
     addressString: string;
     zipCode: string;
     @computed get allowOrdering() {
+        // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
             (this.mobile && this.firstName && this.organizationName);
     }
@@ -89,7 +90,9 @@ export class WebUser {
     private async loadWebUser() {
         let { id, _user } = this;
         if (this._user !== undefined) {
-            let webUser = await this.uqs.webuser.WebUser.load(this.id);
+            let { webuser: webUserTuid } = this.uqs;
+            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount } = webUserTuid;
+            let webUser = await WebUser.load(this.id);
             if (webUser) {
                 let { firstName, gender, salutation, organizationName, departmentName } = webUser;
                 this.firstName = firstName;
@@ -98,7 +101,8 @@ export class WebUser {
                 this.organizationName = organizationName;
                 this.departmentName = departmentName;
             }
-            let contact = await this.uqs.webuser.WebUserContact.obj({ "webUser": id });
+
+            let contact = await WebUserContact.obj({ "webUser": id });
             if (contact) {
                 let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
                 this.telephone = telephone;
@@ -109,11 +113,19 @@ export class WebUser {
                 this.addressString = addressString;
                 this.zipCode = zipCode;
             }
-            this.webUserSettings = await this.uqs.webuser.WebUserSetting.obj({ webUser: id }) || { webUser: id };
-            let value = await this.uqs.webuser.WebUserCustomer.obj({ webUser: id });
-            if (value != undefined) {
+
+            this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
+
+            let value = await WebUserCustomer.obj({ webUser: id });
+            if (value !== undefined) {
                 this.currentCustomer = new Customer(value.customer, this.uqs);
                 await this.currentCustomer.init();
+            }
+            let accountValue = await WebUserBuyerAccount.query({ webUser: id });
+            let { ret: buyerAccounts } = accountValue;
+            if (buyerAccounts && buyerAccounts.length > 0) {
+                // TODO: 暂时不考虑有多个相关账号的情况
+                this.buyerAccount = buyerAccounts[0].buyerAccount;
             }
         }
     }
@@ -125,6 +137,7 @@ export class WebUser {
         return this.currentCustomer !== undefined;
     }
     currentCustomer: Customer;
+    buyerAccount: any;
 
     async getContacts(): Promise<any[]> {
         /*
@@ -249,6 +262,7 @@ export class Customer {
     id: number;
 
     private customerSettings: any;
+    Contractor: any;
 
     constructor(customer: BoxId, uqs: UQs) {
         this.id = customer.id;
@@ -269,6 +283,9 @@ export class Customer {
 
     async init() {
         this.customerSettings = await this.uqs.customer.CustomerSetting.obj({ customer: this.id }) || { customer: this.id };
+        let customerContactorMap: any = await this.uqs.customer.CustomerContacts.obj({ customer: this.id });
+        if (customerContactorMap)
+            this.Contractor = customerContactorMap.contractor;
     }
 
     getSetting() {

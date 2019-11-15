@@ -29,6 +29,8 @@ export class VCouponEdit extends VPage<CCoupon> {
                 this.tips = '有效';
                 break;
             case 0:
+                this.tips = "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。";
+                break;
             case 2:
             case 3:
             case 5:

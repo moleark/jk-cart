@@ -1,14 +1,14 @@
 import { contactUI } from './contact';
-import { addressUI, countryUI } from '../../common';
+import { addressUI, cpccUI } from '../../common';
 import { invoiceInfoUI, invoiceTypeUI } from './invoice';
 
 export default {
     contact: contactUI,
     address: addressUI,
-    country: countryUI,
-    province: countryUI,
-    city: countryUI,
-    county: countryUI,
+    country: cpccUI,
+    province: cpccUI,
+    city: cpccUI,
+    county: cpccUI,
     invoiceInfo: invoiceInfoUI,
     invoiceType: invoiceTypeUI
 }

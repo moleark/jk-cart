@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CProduct, renderBrand, productPropItem } from './CProduct';
+import { CProduct } from './CProduct';
 import {
     VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId
@@ -10,6 +10,7 @@ import { MinusPlusWidget } from '../tools/minusPlusWidget';
 import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
+import { productPropItem, renderBrand } from './VProductView';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -24,10 +25,12 @@ const schema: ItemSchema[] = [
 
 export class VProduct extends VPage<CProduct> {
     private productBox: BoxId;
+    private discount: number;
 
     async open(param: any) {
-        let { productData, product } = param;
+        let { productData, product, discount } = param;
         this.productBox = product;
+        this.discount = discount;
         this.openPage(this.page, productData);
     }
 
@@ -43,8 +46,8 @@ export class VProduct extends VPage<CProduct> {
                 </div>
                 <div className="col-12 col-sm-9">
                     <div className="row mx-3">
-                        {productPropItem('CAS', CAS, "font-weight-bold")}
                         {productPropItem('产品编号', origin, "font-weight-bold")}
+                        {productPropItem('CAS', CAS, "font-weight-bold")}
                         {productPropItem('纯度', purity)}
                         {productPropItem('分子式', molecularFomula)}
                         {productPropItem('分子量', molecularWeight)}
@@ -127,49 +130,30 @@ export class VProduct extends VPage<CProduct> {
         </>;
     }
 
-    private page = observer((product: any) => {
+    private page = (product: any) => {
 
         let { cApp } = this.controller;
         let header = cApp.cHome.renderSearchHeader();
         let cartLabel = cApp.cCart.renderCartLabel();
-        let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
-        viewProduct.model = product;
+        if (true) {
+            let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
+            viewProduct.model = product;
 
-        return <Page header={header} right={cartLabel}>
-            <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
-        </Page>
-
-        /*
-        下面的做法大概不行，因为嵌套的层次较深，且都是observer的，上层observable的变化会嵌套执行下层的代码，而下层代码的render
-        会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
-        let { controller, productBox } = this;
-        let { renderChemicalInfo, renderProductPrice } = controller;
-        return <Page header={header} right={cartLabel}>
-            {tv(productBox, (value: any) => {
-                let { id, brand, description, descriptionC, origin, imageUrl, packx } = value;
-                return <div className="p-2 bg-white mb-3">
-                    <div className="mb-3 px-2">
-                        <div className="py-2"><strong>{description}</strong></div>
-                        <div>{descriptionC}</div>
-                        <div className="row mt-3">
-                            <div className="col-12 col-sm-3">
-                                <ProductImage chemicalId={imageUrl} className="w-100" />
-                            </div>
-                            <div className="col-12 col-sm-9">
-                                <div className="row mx-3">
-                                    {productPropItem('产品编号', origin, "font-weight-bold")}
-                                    {renderChemicalInfo(productBox)}
-                                    {tv(brand, renderBrand)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        {renderProductPrice(productBox)}
-                    </div>
+            return <Page header={header} right={cartLabel}>
+                <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
+            </Page>
+        } else {
+            /*
+            下面的做法大概不行，因为嵌套的层次较深，且都是observer的，上层observable的变化会嵌套执行下层的代码，而下层代码的render
+            会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
+            */
+            let { controller, productBox } = this;
+            let { renderProductWithPrice } = controller;
+            return <Page header={header} right={cartLabel}>
+                <div className="px-2 py-2 bg-white mb-3">
+                    {renderProductWithPrice(productBox)}
                 </div>
-            })}
-        </Page>
-        */
-    })
+            </Page>
+        }
+    }
 }
