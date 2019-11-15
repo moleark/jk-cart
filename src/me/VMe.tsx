@@ -7,6 +7,7 @@ import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
+import { CPointProduct } from 'pointMarket/CPointProduct';
 
 export class VMe extends VPage<CMe> {
 
@@ -31,6 +32,10 @@ export class VMe extends VPage<CMe> {
 
     private openInvoice = async () => {
         this.controller.openInvoice();
+    }
+
+    private openPoint = async () => {
+        this.controller.openPoint();
     }
 
     private meInfo = observer(() => {
@@ -140,6 +145,12 @@ export class VMe extends VPage<CMe> {
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="发票管理" />,
                     onClick: this.openInvoice
                 },
+                // '',
+                // {
+                //     type: 'component',
+                //     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
+                //     onClick: this.openPoint
+                // },
                 '',
                 {
                     type: 'component',

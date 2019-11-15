@@ -7,6 +7,7 @@ import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
+import { CPointProduct } from 'pointMarket/CPointProduct';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -43,6 +44,11 @@ export class CMe extends CUqBase {
 
         let origInvoice = _.pick(defaultSetting, ['invoiceType', 'invoiceInfo']);
         cInvoiceInfo.start(origInvoice);
+    }
+
+    openPoint = async () => {
+        let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
+        await cPointProduct.start();
     }
 
     openMeInfoFirstOrder = async () => {
