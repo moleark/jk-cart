@@ -235,6 +235,13 @@ export class WebUser {
         await this.uqs.webuser.WebUserContact.add(webUserContact);
         await this.loadWebUser();
     }
+
+    async getPoints() {
+        if (this.currentCustomer !== undefined) {
+            return await this.currentCustomer.getPoints();
+        }
+        return [];
+    }
 };
 
 export class Customer {
@@ -287,4 +294,9 @@ export class Customer {
     async setDefaultSettings() {
         await this.uqs.customer.CustomerSetting.add(this.customerSettings);
     }
+
+    async getPoints() {
+        return await this.uqs.积分商城.getPoints.table({ customer: this.id });
+    }
+
 }

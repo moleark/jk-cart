@@ -1,4 +1,4 @@
-import { Tuid, Map, Query, Action, Sheet } from "tonva";
+import { Tuid, Map, Query, Action, Sheet, Book } from "tonva";
 
 export interface UqOrder {
     //a: Tuid;
@@ -72,6 +72,15 @@ export interface UqMember {
     MemberRecommender: Map;
 }
 
+export interface UqPointShop {
+    PointProduct: Map;
+    PointHistory: History;
+    PointExchangeSheet: Sheet;
+    getPoints: Query;
+    getPointProduct: Query;
+    getExchangeSheets: Query;
+}
+
 export interface UQs {
     order: UqOrder;
     product: UqProduct;
@@ -83,4 +92,5 @@ export interface UQs {
     warehouse: UqWarehouse;
     salesTask: UqSalesTask;
     member: UqMember;
+    积分商城: UqPointShop;
 }
