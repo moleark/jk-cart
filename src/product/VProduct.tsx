@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CProduct, renderBrand, productPropItem } from './CProduct';
+import { CProduct } from './CProduct';
 import {
     VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId
@@ -10,6 +10,7 @@ import { MinusPlusWidget } from '../tools/minusPlusWidget';
 import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
+import { productPropItem, renderBrand } from './VProductView';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -147,13 +148,10 @@ export class VProduct extends VPage<CProduct> {
             会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
             */
             let { controller, productBox } = this;
-            let { renderProductPrice, renderProduct } = controller;
+            let { renderProductWithPrice } = controller;
             return <Page header={header} right={cartLabel}>
                 <div className="px-2 py-2 bg-white mb-3">
-                    <>{renderProduct(productBox)}</>
-                    <div>
-                        {renderProductPrice(productBox, this.discount)}
-                    </div>
+                    {renderProductWithPrice(productBox)}
                 </div>
             </Page>
         }

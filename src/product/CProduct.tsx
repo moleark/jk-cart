@@ -1,15 +1,12 @@
-import * as React from 'react';
 import * as _ from 'lodash';
 import { observable } from 'mobx';
 import { Query, tv, BoxId, PageItems } from 'tonva';
-import classNames from 'classnames';
 import { CUqBase } from '../CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
-import { ProductImage } from '../tools/productImage';
 import { VProductDelivery } from './VProductDelivery';
-import { VCartProuductView, VProductPrice, VProuductView } from './VProductView';
+import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice } from './VProductView';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 
 class PageProducts extends PageItems<any> {
@@ -86,6 +83,10 @@ export class CProduct extends CUqBase {
         return this.renderView(VProductPrice, { product: product, discount: discount });
     }
 
+    renderProductWithPrice = (product: BoxId) => {
+        return this.renderView(VProductWithPrice, product);
+    }
+
     getProductPrice = async (product: BoxId, salesRegionId: number, discount: number) => {
         let { id: productId } = product;
         let { currentSalesRegion, cart, currentLanguage, uqs } = this.cApp;
@@ -148,50 +149,25 @@ export class CProduct extends CUqBase {
         }
     }
 
+    /**
+     *
+     */
     renderProduct = (product: any) => {
         return this.renderView(VProuductView, product);
+    }
+
+    getProductAndDiscount = async (productId: BoxId) => {
+        let product = await this.uqs.product.ProductX.load(productId);
+        let discount = 0;
+        let { currentUser } = this.cApp;
+        if (currentUser.hasCustomer) {
+            let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
+            discount = discountSetting && discountSetting.discount;
+        }
+        return { product: product, discount: discount };
     }
 
     renderCartProduct = (product: BoxId) => {
         return this.renderView(VCartProuductView, product);
     }
-}
-
-export function renderBrand(brand: any) {
-    return productPropItem('品牌', brand.name);
-}
-
-export function productPropItem(caption: string, value: any, captionClass?: string) {
-    if (value === null || value === undefined || value === '0') return null;
-    let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
-    let valClass = captionClass ? classNames(captionClass) : "";
-    return <>
-        <div className={classNames("col-6 col-sm-2 pr-0 small", capClass)}> {caption}</div>
-        <div className={classNames("col-6 col-sm-4", valClass)}>{value}</div>
-    </>;
-}
-
-export function renderProduct(product: any) {
-    let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
-    return <div className="d-block mb-4 px-3">
-        <div className="py-2">
-            <div><strong>{description}</strong></div>
-            <div>{descriptionC}</div>
-        </div>
-        <div className="row">
-            <div className="col-3">
-                <ProductImage chemicalId={imageUrl} className="w-100" />
-            </div>
-            <div className="col-9">
-                <div className="row">
-                    {productPropItem('产品编号', origin)}
-                    {productPropItem('CAS', CAS)}
-                    {productPropItem('纯度', purity)}
-                    {productPropItem('分子式', molecularFomula)}
-                    {productPropItem('分子量', molecularWeight)}
-                    {tv(brand, renderBrand)}
-                </div>
-            </div>
-        </div>
-    </div>
 }

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { tv, View } from 'tonva';
-import { CProduct, productPropItem } from './CProduct';
+import { CProduct } from './CProduct';
 import { observer } from 'mobx-react';
+import { productPropItem } from './VProductView';
 
 export class VChemicalInfoInCart extends View<CProduct> {
 

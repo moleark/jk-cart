@@ -12,11 +12,6 @@ export class VSharedCoupon extends VPage<CCoupon> {
         this.openPage(this.page);
     }
 
-    private renderProduct = (product: any) => {
-        // return <div>{tv(product, (v) => v.description)}</div>
-        // return <div>{product.description}</div>;
-    }
-
     private showProductDetail = async (product: any) => {
         await this.controller.showProductDetail(product);
     }
@@ -39,28 +34,40 @@ export class VSharedCoupon extends VPage<CCoupon> {
             codeShow = p1 + ' ' + p2;
 
             let aleft = <div><FA name='th-large' className='my-2 mr-3 text-warning' />{codeShow}</div>;
-            let aright = <div className="text-muted"><small>有效期：<EasyDate date={validitydate} /></small></div>;
-            let bcenter: any, bleft: any;
-            if (typeof discount === 'number') {
-                let discountShow: any;
-                discountShow = (1 - discount) * 10;
-                bleft = <div><small><span className=" mx-3 ">{discountShow === 10 ? '无折扣' : <>{discountShow.toFixed(1)} 折</>}</span></small></div>;
-            }
+            let bcenter: any;
             if (preferential)
                 bcenter = <div className="text-muted"><small>优惠：<span className="mx-3">￥{preferential}</span></small></div>;
 
+            let right = <div>
+                <div className="pb-1">
+                    <FA name='th-large' className='mr-1 text-warning' />{codeShow}
+                    <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
+                </div>
+                <div><small className="text-success">此优惠券也可用于订购其他产品</small></div>
+            </div>;
+
+            let left: any;
+            if (typeof discount === 'number') {
+                let discountShow: any;
+                discountShow = (1 - discount) * 10;
+                left = <div>
+                    <div className="mr-3 font-weight-bold text-danger"><big>{discountShow === 10 ? '无折扣' : <>{discountShow.toFixed(1)} 折</>}</big></div>
+                    {discountShow === 10 ? null : <span className="text-muted"><small>结算时自动扣减</small></span>}
+                </div>;
+            }
+
             couponUi = <div className="bg-white p-3 mb-1">
-                <LMR left={aleft} right={aright} />
-                <LMR left={bleft} right={<small className="text-success">此优惠券也可用于订购其他产品</small>}>
-                    {bcenter}
+                <LMR left={left} right={right}>
                 </LMR>
             </div>
         }
 
-        let { renderProduct } = this.controller;
-        return <Page header="分享">
+        let { renderProduct, cApp } = this.controller;
+        let { cCart } = cApp;
+        let cart = cCart.renderCartLabel();
+        return <Page header="与您分享" right={cart}>
             {couponUi}
-            <List items={this.products} item={{ render: renderProduct, onClick: this.showProductDetail }} none={null} />
+            <List items={this.products} item={{ render: renderProduct, className: "mb-1" }} none={null} />
         </Page>
     }
 }

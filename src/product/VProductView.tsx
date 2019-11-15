@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form } from 'tonva';
-import { CProduct, productPropItem, renderBrand } from './CProduct';
+import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema } from 'tonva';
+import { CProduct } from './CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
+import classNames from 'classnames';
 
 export class VCartProuductView extends View<CProduct> {
 
@@ -41,16 +42,33 @@ export class VCartProuductView extends View<CProduct> {
     };
 }
 
-
+/**
+ *
+ */
 export class VProuductView extends View<CProduct> {
 
-    render(product: any): JSX.Element {
-        return <this.renderProduct product={product} />;
+    @observable product: any;
+    @observable discount: number;
+
+    render(product: BoxId): JSX.Element {
+        return <this.renderProduct productBox={product} />;
     }
 
-    private renderProduct = (param: any) => {
-        let { product } = param;
-        let { id, brand, description, descriptionC, origin, imageUrl } = product;
+    private async getProudct(product: BoxId) {
+        if (this.product === undefined) {
+            let ret = await this.controller.getProductAndDiscount(product);
+            this.product = ret.product;
+            this.discount = ret.discount;
+        }
+    }
+
+    private renderProduct = observer((param: any) => {
+        let { productBox } = param;
+        this.getProudct(productBox);
+        if (!this.product)
+            return null;
+        let { renderChemicalInfoInCart } = this.controller;
+        let { id, brand, description, descriptionC, origin, imageUrl } = this.product;
         return <div className="d-block mb-4 px-3">
             <div className="py-2">
                 <div><strong>{description}</strong></div>
@@ -63,26 +81,34 @@ export class VProuductView extends View<CProduct> {
                 <div className="col-9">
                     <div className="row">
                         {productPropItem('产品编号', origin)}
-                        {this.controller.renderChemicalInfoInCart(product)}
+                        {renderChemicalInfoInCart(productBox)}
                         {tv(brand, renderBrand)}
                     </div>
                 </div>
             </div>
         </div>
-    }
+    })
 }
 
+/**
+ * 显示产品包装价格，配合CProduct.renderProductPrice使用
+ * 需要的参数product必须是BoxId(或者object?)
+ */
 export class VProductPrice extends View<CProduct> {
 
-    private schema = [
+    private schema: ItemSchema[] = [
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
+        { name: 'retail', type: 'number' } as NumSchema,
+        { name: 'vipPrice', type: 'number' } as NumSchema,
+        { name: 'promotionPrice', type: 'number' } as NumSchema,
+        { name: 'currency', type: 'string' },
     ];
 
     private onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
         let { data } = context;
         let { pack, retail, vipPrice, promotionPrice, currency } = data;
-        let price = 0; //this.minPrice(vipPrice, promotionPrice) || retail;
+        let price = this.minPrice(vipPrice, promotionPrice) || retail;
         let { cApp } = this.controller;
         let { cart } = cApp;
         if (value > 0)
@@ -94,6 +120,10 @@ export class VProductPrice extends View<CProduct> {
     private uiSchema: UiSchema = {
         items: {
             pack: { visible: false },
+            retail: { visible: false },
+            vipPrice: { visible: false },
+            promotionPrice: { visible: false },
+            currency: { visible: false },
             quantity: {
                 widget: 'custom',
                 label: null,
@@ -135,17 +165,6 @@ export class VProductPrice extends View<CProduct> {
             right = <small>请询价</small>
         }
         return right;
-        /*
-        let { pack, retail } = item;
-        return <div className="row">
-            <div className="col-sm-6 pb-2 d-flex justify-content-end align-items-center">
-                <span className="text-danger">¥ <span className="h5">{retail}</span></span>
-            </div>
-            <div className="col-sm-6 pb-2 d-flex justify-content-end align-items-center">
-                <Form schema={this.schema} uiSchema={this.uiSchema} formData={item} />
-            </div>
-        </div>
-        */
     }
 
     private minPrice(vipPrice: any, promotionPrice: any) {
@@ -187,6 +206,107 @@ export class VProductPrice extends View<CProduct> {
                 }
             });
         }
-        return priceUI;
+        return <>
+            {priceUI}
+        </>;
     })
+}
+
+export class VProductWithPrice extends View<CProduct> {
+    @observable product: any;
+    @observable discount: number;
+
+    render(product: BoxId): JSX.Element {
+        return <this.renderProduct productBox={product} />;
+    }
+
+    private async getProudct(product: BoxId) {
+        if (this.product === undefined) {
+            let ret = await this.controller.getProductAndDiscount(product);
+            this.product = ret.product;
+            this.discount = ret.discount;
+        }
+    }
+
+    private renderProduct = observer((param: any) => {
+        let { productBox } = param;
+        this.getProudct(productBox);
+        if (!this.product)
+            return null;
+        let { renderChemicalInfoInCart, renderProductPrice } = this.controller;
+        let { id, brand, description, descriptionC, origin, imageUrl } = this.product;
+        return <div className="d-block mb-2 px-3">
+            <div className="py-2">
+                <div><strong>{description}</strong></div>
+                <div>{descriptionC}</div>
+            </div>
+            <div className="row py-2">
+                <div className="col-3">
+                    <ProductImage chemicalId={imageUrl} className="w-100" />
+                </div>
+                <div className="col-9">
+                    <div className="row">
+                        {productPropItem('产品编号', origin)}
+                        {renderChemicalInfoInCart(productBox)}
+                        {tv(brand, renderBrand)}
+                    </div>
+                </div>
+            </div>
+            <div className="border-top pt-2">
+                {renderProductPrice(productBox, this.discount)}
+            </div>
+        </div>
+    })
+    /*
+    render(product: BoxId): JSX.Element {
+        let { renderProduct, renderProductPrice } = this.controller;
+        return <div className="d-flex flex-column">
+            <div>{renderProduct(product)}</div>
+            <div className="p-2 border-top">{renderProductPrice(product, 1)}</div>
+        </div>
+    }
+    */
+}
+
+export function renderBrand(brand: any) {
+    return productPropItem('品牌', brand.name);
+}
+
+export function productPropItem(caption: string, value: any, captionClass?: string) {
+    if (value === null || value === undefined || value === '0') return null;
+    let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
+    let valClass = captionClass ? classNames(captionClass) : "";
+    return <>
+        <div className={classNames("col-6 col-sm-2 pr-0 small", capClass)}> {caption}</div>
+        <div className={classNames("col-6 col-sm-4", valClass)}>{value}</div>
+    </>;
+}
+
+/**
+ * 显示产品信息（不包含包装价格），特定于参数包含相关的CAS/Purity等信息），现应用于产品列表
+ * @param product
+ */
+export function renderProduct(product: any) {
+    let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
+    return <div className="d-block mb-4 px-3">
+        <div className="py-2">
+            <div><strong>{description}</strong></div>
+            <div>{descriptionC}</div>
+        </div>
+        <div className="row">
+            <div className="col-3">
+                <ProductImage chemicalId={imageUrl} className="w-100" />
+            </div>
+            <div className="col-9">
+                <div className="row">
+                    {productPropItem('产品编号', origin)}
+                    {productPropItem('CAS', CAS)}
+                    {productPropItem('纯度', purity)}
+                    {productPropItem('分子式', molecularFomula)}
+                    {productPropItem('分子量', molecularWeight)}
+                    {tv(brand, renderBrand)}
+                </div>
+            </div>
+        </div>
+    </div>
 }
