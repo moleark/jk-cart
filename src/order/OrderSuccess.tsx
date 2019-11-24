@@ -12,7 +12,7 @@ export class OrderSuccess extends VPage<COrder> {
     private page = (orderCreateResult: any) => {
         return <Page header="下单成功" back="close">
             <div className="py-4 px-3 bg-white mb-3 d-flex">
-                <FA name="list-alt" className="text-success mx-5" size="4x" />
+                <FA name="list-alt" className="text-success mr-3" size="4x" />
                 <div>
                     <p className="text-primary"><span className="h4">下单成功！</span></p>
                     <p className="">

@@ -89,6 +89,31 @@ export class VCreateOrder extends VPage<COrder> {
         }
     });
 
+    private onBuyerAccountChanged = () => {
+
+    }
+
+    private renderBuyerAccount = (item: any) => {
+        let { buyerAccount } = item;
+        return <div>{tv(buyerAccount, (v) => {
+            let { id, description, organization } = v;
+            return <>{description}{tv(organization, (o) => {
+                return <>{o.name}</>
+            }, undefined, () => null)}</>
+        })}</div>
+    }
+
+    private renderBuyerAccounts = observer(() => {
+        let { buyerAccounts } = this.controller;
+        if (!buyerAccounts || buyerAccounts.length === 0) return null;
+        return <div className="row py-3 bg-white mb-1">
+            <div className="col-4 col-sm-2 pb-2 text-muted">订单账号:</div>
+            <div className="col-8 col-sm-10">
+                <List items={buyerAccounts} item={{ render: this.renderBuyerAccount, onSelect: this.onBuyerAccountChanged }}></List>
+            </div>
+        </div>
+    })
+
     private onSubmit = async () => {
         let { orderData } = this.controller;
         // 必填项验证
@@ -119,7 +144,7 @@ export class VCreateOrder extends VPage<COrder> {
 
     private page = observer(() => {
 
-        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, openMeInfo, onInvoiceInfoEdit, onCouponEdit } = this.controller;
+        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
         let { currentUser } = cApp;
         let footer = <div className="d-block">
             <div className="w-100 px-3">
@@ -138,6 +163,7 @@ export class VCreateOrder extends VPage<COrder> {
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>
             : null;
         let invoiceAddressBlankTip = this.invoiceAddressIsBlank ? <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票地址</div> : null;
+
         let divInvoiceContact: any = null;
         if (this.useShippingAddress === false) {
             if (orderData.invoiceContact !== undefined) {
