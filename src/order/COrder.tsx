@@ -19,6 +19,7 @@ export class COrder extends CUqBase {
     //    cApp: CApp;
     @observable orderData: Order = new Order();
     @observable couponData: any = {};
+    @observable buyerAccounts: any[] = [];
 
     protected async internalStart(param: any) {
         let cart = param;
@@ -32,9 +33,12 @@ export class COrder extends CUqBase {
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
 
-        let { buyerAccount } = currentUser;
-        if (buyerAccount !== undefined) {
-            this.orderData.customer = buyerAccount;
+        let buyerAccountQResult = await this.uqs.webuser.WebUserBuyerAccount.query({ webUser: currentUser.id })
+        if (buyerAccountQResult) {
+            this.buyerAccounts = buyerAccountQResult.ret;
+            if (this.buyerAccounts && this.buyerAccounts.length === 1) {
+                this.orderData.customer = this.buyerAccounts[0].buyerAccount;
+            }
         }
 
         if (this.orderData.shippingContact === undefined) {
