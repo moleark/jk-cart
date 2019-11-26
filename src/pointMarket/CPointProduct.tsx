@@ -49,8 +49,8 @@ export class CPointProduct extends CUqBase {
         this.openVPage(VExchangeHistory);
     }
 
-    openPlatformOrderPoint = async () => {
-        this.openVPage(VPlatformOrderPoint);
+    openPlatformOrderPoint = async (credits?: string) => {
+        this.openVPage(VPlatformOrderPoint, credits);
     }
 
     openExchangeOrder = async () => {

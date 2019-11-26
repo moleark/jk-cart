@@ -14,6 +14,7 @@ import { VMain } from 'ui/main';
 import { GLOABLE } from 'configuration';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
+import { CPointProduct } from "pointMarket/CPointProduct";
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -34,6 +35,7 @@ export class CApp extends CAppBase {
     cProductCategory: CProductCategory;
     cMember: CMember;
     cMe: CMe;
+    cPointProduct: CPointProduct;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -60,6 +62,8 @@ export class CApp extends CAppBase {
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
+        this.cPointProduct = this.newC(CPointProduct);
+
 
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
@@ -78,6 +82,10 @@ export class CApp extends CAppBase {
                 case "coupon":
                     if (query.coupon)
                         await this.cCoupon.showSharedCoupon(query);
+                    break;
+                case "credits":
+                    if (query.credits)
+                        await this.cPointProduct.openPlatformOrderPoint(query.credits);
                     break;
                 case "order":
                     break;

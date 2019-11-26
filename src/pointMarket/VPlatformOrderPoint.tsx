@@ -9,9 +9,11 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
     private orderIdInput: HTMLInputElement;
     private couponInput: HTMLInputElement;
+    private currentCredits: string;
     @observable tips: string;
 
     async open(param?: any) {
+        this.currentCredits = param;
         this.openPage(this.page);
     }
 
@@ -95,7 +97,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     <div className="row py-2">
                         <div className="col-3 text-muted pr">积分码:</div>
                         <div className="col-9 d-flex pl-0">
-                            <input ref={v => this.couponInput = v} type="text" className="form-control"></input>
+                            <input ref={v => this.couponInput = v} type="text" className="form-control" value={this.currentCredits}></input>
                         </div>
                     </div>
                     <div className="row">
