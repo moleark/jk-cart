@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
-import { ProductImage } from 'tools/productImage';
+import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'configuration';
@@ -21,6 +21,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
         { name: 'point', type: 'number' } as NumSchema,
+        { name: 'imageUrl', type: 'object' } as ObjectSchema,
     ];
 
     private uiSchema: UiSchema = {
@@ -34,16 +35,17 @@ export class VPointProduct extends VPage<CPointProduct> {
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
-            point: { visible: false }
+            point: { visible: false },
+            imageUrl: { visible: false }
         }
     }
 
     private renderPointProduct = (pointProduct: any, index: number) => {
-        let { product, pack, point } = pointProduct;
+        let { product, pack, point, imageUrl } = pointProduct;
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><ProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
                     {tv(pack, (c) => {
                         return <div className="col-8 small">
                             <div>{v.descriptionC}</div>
@@ -61,7 +63,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                     })}
                 </div>
             })}
-        </ >
+        </>
     }
 
     private openExchangeOrder = async () => {

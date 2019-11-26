@@ -81,6 +81,8 @@ export interface UqPointShop {
     getPoints: Query;
     getPointProduct: Query;
     getExchangeSheets: Query;
+    IsCanUseOrder: Action;
+    AddPlatformOrderPoint: Action;
 }
 
 export interface UQs {

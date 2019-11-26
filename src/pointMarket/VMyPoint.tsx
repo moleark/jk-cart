@@ -18,6 +18,9 @@ export class VMyPoint extends VPage<CPointProduct> {
     private openExchangeHistory = async () => {
         this.controller.openExchangeHistory();
     }
+    private openPlatformOrderPoint = async () => {
+        this.controller.openPlatformOrderPoint();
+    }
 
     private remarks = () => nav.push(<VPointRule />);
 
@@ -38,6 +41,11 @@ export class VMyPoint extends VPage<CPointProduct> {
                 icon: 'history',
                 caption: '兑换历史记录',
                 action: this.openExchangeHistory
+            },
+            {
+                icon: 'history',
+                caption: '提取其它平台积分',
+                action: this.openPlatformOrderPoint
             },
             {
                 icon: 'book',

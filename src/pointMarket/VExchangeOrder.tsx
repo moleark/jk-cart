@@ -3,7 +3,7 @@ import { VPage, nav, Page, LMR, FA, tv, List } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
-import { ProductImage } from 'tools/productImage';
+import { ProductImage, PointProductImage } from 'tools/productImage';
 import { GLOABLE } from 'configuration';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
@@ -18,12 +18,12 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     private renderPointProduct = (pointProduct: any, index: number) => {
-        let { product, pack, quantity, point } = pointProduct;
+        let { product, pack, quantity, point, imageUrl } = pointProduct;
         if (quantity > 0) {
             return <>
                 {tv(product, (v) => {
                     return <div className="row m-1 w-100">
-                        <div title={v.description} className="col-4 m-0 p-0"><ProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                        <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
                         {tv(pack, (c) => {
                             return <div className="col-8 small">
                                 <div>{v.descriptionC}</div>

@@ -10,12 +10,13 @@ import { OrderSuccess } from './OrderSuccess';
 import { pointOrder, OrderItem } from './pointOrder';
 import { VExchangeHistoryDetail } from './VExchangeHistoryDetail';
 import { VExchangeHistory } from './VExchangeHistory';
+import { VPlatformOrderPoint } from './VPlatformOrderPoint';
 
 export class CPointProduct extends CUqBase {
 
-    @observable myPoints: any[] = [];               /*我的积分 */
+    @observable myPoints: any[] = [];              /*我的积分 */
     @observable myPointSum: number = 0;            /*我的积分(计算后) */
-    @observable myPointInvalid: number = 0;            /*我的积分(计算后) */
+    @observable myPointInvalid: number = 0;        /*我的快过期积分 */
 
     @observable pointProducts: any[] = [];          /*可兑产品列表 */
     @observable pointProductsSelected: any[] = [];  /*已选择产品列表 */
@@ -46,6 +47,10 @@ export class CPointProduct extends CUqBase {
     openExchangeHistory = async () => {
         this.exchangeHistory = await this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20);
         this.openVPage(VExchangeHistory);
+    }
+
+    openPlatformOrderPoint = async () => {
+        this.openVPage(VPlatformOrderPoint);
     }
 
     openExchangeOrder = async () => {
@@ -136,6 +141,37 @@ export class CPointProduct extends CUqBase {
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(OrderSuccess, result);
+    }
+
+    applyOrder = async (orderId: string) => {
+        let validationResult = await this.getOrderValidationResult(orderId);
+        let rtn = validationResult.result;
+        return rtn;
+    }
+    getOrderValidationResult = async (orderId: string) => {
+        let { currentCustomer } = this.cApp.currentUser;
+        return await this.uqs.积分商城.IsCanUseOrder.submit({ orderId: orderId, customer: currentCustomer && currentCustomer.id });
+    }
+
+    applyCoupon = async (coupon: string) => {
+        let validationResult = await this.getCouponValidationResult(coupon);
+        let rtn = validationResult.result;
+        if (rtn !== 0 && validationResult.types == "coupon") {
+            rtn = 0;
+        }
+        return rtn;
+    }
+    getCouponValidationResult = async (coupon: string) => {
+        let { currentCustomer } = this.cApp.currentUser;
+        return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, customer: currentCustomer && currentCustomer.id });
+    }
+
+    addPlatformOrderPoint = async (orderId: string, couponId: string) => {
+        let { currentCustomer } = this.cApp.currentUser;
+        let AddPoint = this.uqs.积分商城.AddPlatformOrderPoint;
+        let result = await AddPoint.submit({ orderId: orderId, couponId: couponId, customer: currentCustomer && currentCustomer.id });
+        let rtn = result.result;
+        return rtn;
     }
 
     private defaultSetting: any;
