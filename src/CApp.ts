@@ -79,6 +79,12 @@ export class CApp extends CAppBase {
                     if (query.coupon)
                         await this.cCoupon.showSharedCoupon(query);
                     break;
+                /*
+                case "credits":
+                    if(query.coupon)
+                        this.cpoint
+                    break;
+                */
                 case "order":
                     break;
                 default:
