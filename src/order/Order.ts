@@ -41,6 +41,7 @@ export class Order {
     @observable coupon: BoxId;
     @observable couponOffsetAmount: number;
     @observable couponRemitted: number;
+    @observable couponCredits: number;
     salesRegion: BoxId;
 
     getDataForSave() {

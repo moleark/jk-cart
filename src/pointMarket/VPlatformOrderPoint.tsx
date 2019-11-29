@@ -36,7 +36,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
         let retOrder = await applyOrder(orderId);
         let retCoupon = await applyCoupon(coupon);
         if (retOrder == 1 && retCoupon == 1) {
-            let rtn = await addPlatformOrderPoint(orderId, coupon);
+            let rtn = await addPlatformOrderPoint(orderId);
             if (rtn == 1) {
                 this.tips = "提取成功,积分稍后到账";
             }
@@ -44,32 +44,32 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             let tip = "";
             switch (retCoupon) {
                 case -1:
-                    tip = '对不起，当前服务器繁忙，请稍后再试。';
+                    tip = '对不起，当前服务器繁忙，请稍后再试，';
                     break;
                 case 1:
-                    tip = '积分码有效';
+                    tip = '积分码有效，';
                     break;
                 case 0:
                 case 2:
                 case 4:
                 case 6:
-                    tip = '积分码无效';
+                    tip = '积分码无效，';
                     break;
                 case 3:
-                    tip = '这是其他人的独享积分码';
+                    tip = '这是其他人的独享积分码，';
                     break;
                 case 5:
-                    tip = '积分码的创建人不是您的专属销售';
+                    tip = '积分码的创建人不是您的专属销售，';
                     break;
                 default:
                     break;
             }
             switch (retOrder) {
                 case 1:
-                    tip += '，合同号有效';
+                    tip += '合同号有效。';
                     break;
                 case 0:
-                    tip += "，合同号无效。";
+                    tip += "合同号无效。";
                     break;
                 default:
                     break;

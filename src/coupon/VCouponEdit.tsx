@@ -57,10 +57,10 @@ export class VCouponEdit extends VPage<CCoupon> {
                 {this.tips}
             </div>
         }
-        return <Page header="填写优惠券">
+        return <Page header="填写优惠券/积分码">
             <div className="px-2 bg-white">
                 <div className="row py-3 pr-3 my-1">
-                    <div className="col-4 col-sm-2 pb-2 text-muted">优惠券:</div>
+                    <div className="col-4 col-sm-2 pb-2 text-muted">优惠券/积分码:</div>
                     <div className="col-8 col-sm-10 d-flex">
                         <input ref={v => this.couponInput = v} type="number" className="form-control"></input>
                     </div>

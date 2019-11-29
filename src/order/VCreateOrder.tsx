@@ -59,12 +59,18 @@ export class VCreateOrder extends VPage<COrder> {
     private renderCoupon = observer((param: any) => {
         let { couponData } = this.controller;
         if (couponData['id'] === undefined) {
-            return <span className="text-primary">使用优惠券</span>;
+            return <span className="text-primary">使用优惠券/积分码</span>;
         } else {
-            let { id, code, discount, preferential, validitydate, isValid } = couponData;
-            let { couponOffsetAmount, couponRemitted } = param;
+            let { id, code, discount, preferential, validitydate, isValid, types } = couponData;
+            let { couponOffsetAmount, couponRemitted, couponCredits } = param;
             let offsetUI, remittedUI, noOffsetUI;
-            if (couponOffsetAmount || couponRemitted) {
+            if (types == "credits") {
+                offsetUI = <div className="d-flex flex-row justify-content-between">
+                    <div className="text-muted">积分倍数:</div>
+                    <div className="text-right text-danger"><small>x</small>{couponCredits}</div>
+                </div>
+            }
+            else if (couponOffsetAmount || couponRemitted) {
                 if (couponOffsetAmount) {
                     offsetUI = <div className="d-flex flex-row justify-content-between">
                         <div className="text-muted">折扣:</div>
@@ -228,10 +234,10 @@ export class VCreateOrder extends VPage<COrder> {
         let couponUI = <></>;
         if (1 === 1) {
             couponUI = <div className="row py-3 bg-white mb-1" onClick={onCouponEdit}>
-                <div className="col-4 col-sm-2 pb-2 text-muted">优惠券:</div>
+                <div className="col-4 col-sm-2 pb-2 text-muted">优惠券/积分码:</div>
                 <div className="col-8 col-sm-10">
                     <LMR className="w-100 align-items-center" right={chevronRight}>
-                        <this.renderCoupon couponOffsetAmount={orderData.couponOffsetAmount} couponRemitted={orderData.couponRemitted} />
+                        <this.renderCoupon couponOffsetAmount={orderData.couponOffsetAmount} couponRemitted={orderData.couponRemitted} couponCredits={orderData.couponCredits} />
                     </LMR>
                 </div>
             </div>

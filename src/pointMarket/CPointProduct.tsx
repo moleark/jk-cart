@@ -23,6 +23,7 @@ export class CPointProduct extends CUqBase {
     @observable pointsSum: number = 0;              /*积分总计 */
     @observable exchangeHistory: any[] = [];        /*积分产品列表 */
     @observable orderData: pointOrder = new pointOrder();   /*正在提交的产品列表*/
+    @observable couponId: number;                    /*积分码 */
 
     protected async internalStart(param: any) {
         let { currentUser } = this.cApp;
@@ -123,7 +124,7 @@ export class CPointProduct extends CUqBase {
         let getDataForSave = this.orderData.getDataForSave();
         let result: any = await PointExchangeSheet.save("PointExchangeSheet", getDataForSave);
         let { id, flow, state } = result;
-        await this.uqs.积分商城.PointExchangeSheet.action(id, flow, state, "submit");
+        await PointExchangeSheet.action(id, flow, state, "submit");
 
         //暂时扣除已经兑换的积分;
         this.myPointSum = this.myPointSum - this.pointsSum;
@@ -155,8 +156,9 @@ export class CPointProduct extends CUqBase {
 
     applyCoupon = async (coupon: string) => {
         let validationResult = await this.getCouponValidationResult(coupon);
+        this.couponId = validationResult.id;
         let rtn = validationResult.result;
-        if (rtn !== 0 && validationResult.types == "coupon") {
+        if (rtn !== 0 && validationResult.types !== "credits") {
             rtn = 0;
         }
         return rtn;
@@ -166,10 +168,10 @@ export class CPointProduct extends CUqBase {
         return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, customer: currentCustomer && currentCustomer.id });
     }
 
-    addPlatformOrderPoint = async (orderId: string, couponId: string) => {
+    addPlatformOrderPoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
         let AddPoint = this.uqs.积分商城.AddPlatformOrderPoint;
-        let result = await AddPoint.submit({ orderId: orderId, couponId: couponId, customer: currentCustomer && currentCustomer.id });
+        let result = await AddPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
         let rtn = result.result;
         return rtn;
     }

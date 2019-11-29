@@ -168,7 +168,7 @@ export class COrder extends CUqBase {
      */
     applyCoupon = async (coupon: any) => {
 
-        let { result: validationResult, id, code, discount, preferential, validitydate, isValid } = coupon;
+        let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types } = coupon;
         if (validationResult === 1 && code !== undefined && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
             this.orderData.coupon = id;
             this.couponData = coupon;
@@ -210,6 +210,9 @@ export class COrder extends CUqBase {
             }
             if (preferential) {
                 this.orderData.couponRemitted = preferential * -1;
+            }
+            if (types = "credits") {
+                this.orderData.couponCredits = 2;
             }
             // 运费和运费减免
             this.orderData.freightFee = FREIGHTFEEFIXED;
