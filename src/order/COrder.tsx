@@ -168,56 +168,60 @@ export class COrder extends CUqBase {
      */
     applyCoupon = async (coupon: any) => {
 
+        this.removeCoupon();
         let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types } = coupon;
         if (validationResult === 1 && code !== undefined && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
             this.orderData.coupon = id;
             this.couponData = coupon;
-            if (discount) {
-                // this.orderData.couponOffsetAmount = Math.round(this.orderData.productAmount * discount) * -1;
-                let { orderItems } = this.orderData;
-                if (orderItems !== undefined && orderItems.length > 0) {
-                    let promises: PromiseLike<any>[] = [];
-                    orderItems.forEach(e => {
-                        promises.push(this.uqs.product.AgentPrice.table({ product: e.product.id, salesRegion: this.cApp.currentSalesRegion.id }));
-                    });
-                    let agentPrices = await Promise.all(promises);
-                    if (agentPrices && agentPrices.length > 0) {
-                        let couponOffsetAmount = 0;
-                        for (let i = 0; i < orderItems.length; i++) {
-                            let oi = orderItems[i];
-                            let { product, packs } = oi;
-                            let eachProductAgentPrice = agentPrices[i];
-                            for (let j = 0; j < packs.length; j++) {
-                                let pk = packs[j];
-                                let agentPrice: any = eachProductAgentPrice.find(
-                                    (p: any) => p.product.id === product.id &&
-                                        p.pack.id === pk.pack.id &&
-                                        p.discountinued === 0 &&
-                                        p.expireDate > Date.now());
-                                if (!agentPrice) break;
-                                pk.price = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
-                                couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);
-                                /*
-                                if (agentPrice) {
-                                    pk.price = Math.round(agentPrice.retail * (1 - discount));
-                                }
-                                */
+            if (types === "coupon") {
+                if (discount) {
+                    // this.orderData.couponOffsetAmount = Math.round(this.orderData.productAmount * discount) * -1;
+                    let { orderItems } = this.orderData;
+                    if (orderItems !== undefined && orderItems.length > 0) {
+                        let promises: PromiseLike<any>[] = [];
+                        orderItems.forEach(e => {
+                            promises.push(this.uqs.product.AgentPrice.table({ product: e.product.id, salesRegion: this.cApp.currentSalesRegion.id }));
+                        });
+                        let agentPrices = await Promise.all(promises);
+                        if (agentPrices && agentPrices.length > 0) {
+                            let couponOffsetAmount = 0;
+                            for (let i = 0; i < orderItems.length; i++) {
+                                let oi = orderItems[i];
+                                let { product, packs } = oi;
+                                let eachProductAgentPrice = agentPrices[i];
+                                for (let j = 0; j < packs.length; j++) {
+                                    let pk = packs[j];
+                                    let agentPrice: any = eachProductAgentPrice.find(
+                                        (p: any) => p.product.id === product.id &&
+                                            p.pack.id === pk.pack.id &&
+                                            p.discountinued === 0 &&
+                                            p.expireDate > Date.now());
+                                    if (!agentPrice) break;
+                                    pk.price = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
+                                    couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);
+                                    /*
+                                    if (agentPrice) {
+                                        pk.price = Math.round(agentPrice.retail * (1 - discount));
+                                    }
+                                    */
+                                };
                             };
+                            this.orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
                         };
-                        this.orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
-                    };
+                    }
                 }
+                if (preferential) {
+                    this.orderData.couponRemitted = preferential * -1;
+                }
+                // 运费和运费减免
+                this.orderData.freightFee = FREIGHTFEEFIXED;
+                if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
+                    this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
             }
-            if (preferential) {
-                this.orderData.couponRemitted = preferential * -1;
+
+            if (types === "credits") {
+                this.orderData.point = Math.round(this.orderData.productAmount * 2);
             }
-            if (types = "credits") {
-                this.orderData.couponCredits = 2;
-            }
-            // 运费和运费减免
-            this.orderData.freightFee = FREIGHTFEEFIXED;
-            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
-                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
         }
     }
 
@@ -229,6 +233,7 @@ export class COrder extends CUqBase {
         this.couponData = {};
         this.orderData.couponOffsetAmount = 0;
         this.orderData.couponRemitted = 0;
+        this.orderData.point = 0;
     }
 
 

@@ -62,12 +62,12 @@ export class VCreateOrder extends VPage<COrder> {
             return <span className="text-primary">使用优惠券/积分码</span>;
         } else {
             let { id, code, discount, preferential, validitydate, isValid, types } = couponData;
-            let { couponOffsetAmount, couponRemitted, couponCredits } = param;
+            let { couponOffsetAmount, couponRemitted, point } = param;
             let offsetUI, remittedUI, noOffsetUI;
-            if (types == "credits") {
+            if (types === "credits") {
                 offsetUI = <div className="d-flex flex-row justify-content-between">
-                    <div className="text-muted">积分倍数:</div>
-                    <div className="text-right text-danger"><small>x</small>{couponCredits}</div>
+                    <div className="text-muted">积分:</div>
+                    <div className="text-right text-danger">{point}<small>分</small></div>
                 </div>
             }
             else if (couponOffsetAmount || couponRemitted) {
@@ -237,7 +237,7 @@ export class VCreateOrder extends VPage<COrder> {
                 <div className="col-4 col-sm-2 pb-2 text-muted">优惠券/积分码:</div>
                 <div className="col-8 col-sm-10">
                     <LMR className="w-100 align-items-center" right={chevronRight}>
-                        <this.renderCoupon couponOffsetAmount={orderData.couponOffsetAmount} couponRemitted={orderData.couponRemitted} couponCredits={orderData.couponCredits} />
+                        <this.renderCoupon couponOffsetAmount={orderData.couponOffsetAmount} couponRemitted={orderData.couponRemitted} point={orderData.point} />
                     </LMR>
                 </div>
             </div>
