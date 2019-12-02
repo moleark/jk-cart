@@ -7,7 +7,6 @@ import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
-import { Privacy } from './privacy';
 
 export class VMe extends VPage<CMe> {
 
@@ -20,7 +19,9 @@ export class VMe extends VPage<CMe> {
     }
 
     private about = () => nav.push(<About />);
-    private privacy = () => this.openVPage(Privacy);
+    private privacy = () => {
+        this.controller.openPrivacy();
+    }
     private aboutThisApp = () => nav.push(<AboutThisApp />);
 
     private changePassword = async () => {

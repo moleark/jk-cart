@@ -8,6 +8,7 @@ import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
 import { CPointProduct } from 'pointMarket/CPointProduct';
+import { Privacy } from './privacy';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -63,6 +64,10 @@ export class CMe extends CUqBase {
     pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
         let cAddress = this.newC(CAddress); // new CAddress(this.cApp, undefined);
         return await cAddress.call<number>();
+    }
+
+    openPrivacy = () => {
+        this.openVPage(Privacy);
     }
 
     getCommonText = async (textId: number) => {

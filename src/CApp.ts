@@ -75,6 +75,9 @@ export class CApp extends CAppBase {
         if (search) {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {
+                case "privacy":
+                    this.cMe.openPrivacy();
+                    break;
                 case "product":
                     let prouductBoxId = await this.uqs.product.ProductX.boxId(query.product).assure();
                     await this.cProduct.showProductDetail(prouductBoxId);
