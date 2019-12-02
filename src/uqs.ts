@@ -9,6 +9,7 @@ export interface UqOrder {
     Order: Sheet;
     GetCart: Query;
     GetPendingPayment: Query;
+    CommonText: Tuid;
 }
 
 export interface UqProduct {

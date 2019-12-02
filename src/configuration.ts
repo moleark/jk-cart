@@ -11,7 +11,7 @@ export { CApp } from './CApp';
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',
-    version: '1.1.52',
+    version: '1.1.53',
     tvs: tvs,
     loginTop: jnkTop,
     oem: '百灵威'
@@ -77,5 +77,5 @@ const GLOABLE_TEST = {
     TIPDISPLAYTIME: 2000
 }
 
-export { GLOABLE_PRODUCTION as GLOABLE };
-// export { GLOABLE_TEST as GLOABLE };
+// export { GLOABLE_PRODUCTION as GLOABLE };
+export { GLOABLE_TEST as GLOABLE };

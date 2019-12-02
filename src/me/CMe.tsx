@@ -64,4 +64,8 @@ export class CMe extends CUqBase {
         let cAddress = this.newC(CAddress); // new CAddress(this.cApp, undefined);
         return await cAddress.call<number>();
     }
+
+    getCommonText = async (textId: number) => {
+        return await this.uqs.order.CommonText.load(textId);
+    }
 }

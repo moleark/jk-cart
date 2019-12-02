@@ -7,7 +7,7 @@ import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
-import { CPointProduct } from 'pointMarket/CPointProduct';
+import { Privacy } from './privacy';
 
 export class VMe extends VPage<CMe> {
 
@@ -20,6 +20,7 @@ export class VMe extends VPage<CMe> {
     }
 
     private about = () => nav.push(<About />);
+    private privacy = () => this.openVPage(Privacy);
     private aboutThisApp = () => nav.push(<AboutThisApp />);
 
     private changePassword = async () => {
@@ -94,6 +95,12 @@ export class VMe extends VPage<CMe> {
                     <IconText iconClass="text-info mr-2" icon="smile-o" text="关于本APP" />
                     <div className="py-2 small">V{appConfig.version}</div>
                 </div>,
+            },
+            '',
+            {
+                type: 'component',
+                component: <IconText iconClass="text-info mr-2" icon="smile-o" text="隐私政策" />,
+                onClick: this.privacy
             },
             ''
         ];
