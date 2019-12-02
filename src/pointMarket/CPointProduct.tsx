@@ -163,9 +163,10 @@ export class CPointProduct extends CUqBase {
         }
         return rtn;
     }
+
     getCouponValidationResult = async (coupon: string) => {
-        let { currentCustomer } = this.cApp.currentUser;
-        return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, customer: currentCustomer && currentCustomer.id });
+        let { currentUser } = this.cApp;
+        return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
     }
 
     addPlatformOrderPoint = async (orderId: string) => {
