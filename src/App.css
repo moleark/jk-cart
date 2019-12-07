@@ -51,34 +51,14 @@
   border-radius: 0.6rem;
 }
 
-.text-danger-1 {
-  color: #ffc0c0;
-}
 .text-danger-2 {
   color: #ff8080;
-}
-.text-danger-3 {
-  color: #ff4040;
 }
 
 .sep-product-select {
   border-top: 1px solid #f0f0f0;
 }
 
-.point-man-top {
+.point-main-top {
   background: linear-gradient(#17b8b880,#17a2b880, #176ab880);
-}
-
-.point-remarks {
-  list-style: decimal;
-  padding-left: 1rem;
-  padding-bottom: 2rem;
-}
-
-.point-remarks>li {
-  margin-bottom: 1rem;
-}
-
-.noneMassage {
-   height: 50px;
 }

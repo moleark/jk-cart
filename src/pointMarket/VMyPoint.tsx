@@ -22,7 +22,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.controller.openPlatformOrderPoint();
     }
 
-    private remarks = () => nav.push(<VPointRule />);
+    private pointRules = () => nav.push(<VPointRule />);
 
     private page = observer(() => {
         let { myPointSum, myPointInvalid } = this.controller;
@@ -38,30 +38,32 @@ export class VMyPoint extends VPage<CPointProduct> {
             : null;
         let actions: DropdownAction[] = [
             {
-                icon: 'history',
-                caption: '兑换历史记录',
-                action: this.openExchangeHistory
-            },
-            {
-                icon: 'history',
-                caption: '提取其它平台积分',
+                icon: 'get-pocket',
+                caption: '提取平台订单积分',
                 action: this.openPlatformOrderPoint
             },
             {
+                icon: 'history',
+                caption: '积分兑换历史',
+                action: this.openExchangeHistory
+            },
+            {
                 icon: 'book',
-                caption: '积分兑换说明',
-                action: this.remarks
+                caption: '积分规则',
+                action: this.pointRules
             }
         ];
         let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
         return <Page header="积分管理" right={right}>
             <div className="bg-white h-100">
-                <div className="small d-flex flex-column align-items-center py-5 point-man-top">
+                <div className="d-flex flex-column align-items-center py-5 point-main-top">
                     <div className="text-white">
                         <small>当前</small> <span className="h2">{point}</span> <small>分</small>
                     </div>
                     <div className="mt-3">
-                        <button className="btn btn-light" onClick={this.openPointProduct}><label className="m-0 p-0">积分兑换</label></button>
+                        <button className="btn btn-light" onClick={this.openPointProduct}>
+                            <label className="m-0 p-0">积分兑换</label>
+                        </button>
                     </div>
                 </div>
                 {nowPointTip}
@@ -69,5 +71,3 @@ export class VMyPoint extends VPage<CPointProduct> {
         </Page >;
     });
 }
-
-
