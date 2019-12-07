@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "./static/css/main.fe43d42c.chunk.css",
-    "main.js": "./static/js/main.5740f3c9.chunk.js",
-    "main.js.map": "./static/js/main.5740f3c9.chunk.js.map",
+    "main.css": "./static/css/main.eff161c7.chunk.css",
+    "main.js": "./static/js/main.392a91fa.chunk.js",
+    "main.js.map": "./static/js/main.392a91fa.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.857faf20.js",
     "runtime-main.js.map": "./static/js/runtime-main.857faf20.js.map",
     "static/css/2.63463464.chunk.css": "./static/css/2.63463464.chunk.css",
@@ -13,10 +13,10 @@
     "static/js/4.9ae07b11.chunk.js": "./static/js/4.9ae07b11.chunk.js",
     "static/js/4.9ae07b11.chunk.js.map": "./static/js/4.9ae07b11.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.5607fae7d20e069b6b382d696ca70740.js": "./precache-manifest.5607fae7d20e069b6b382d696ca70740.js",
+    "precache-manifest.ec1fe3d5f671556f7953bf17822cb98e.js": "./precache-manifest.ec1fe3d5f671556f7953bf17822cb98e.js",
     "service-worker.js": "./service-worker.js",
     "static/css/2.63463464.chunk.css.map": "./static/css/2.63463464.chunk.css.map",
-    "static/css/main.fe43d42c.chunk.css.map": "./static/css/main.fe43d42c.chunk.css.map",
+    "static/css/main.eff161c7.chunk.css.map": "./static/css/main.eff161c7.chunk.css.map",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
     "static/media/LifeScience.png": "./static/media/LifeScience.5c2e6ff5.png",
@@ -30,7 +30,7 @@
     "static/js/runtime-main.857faf20.js",
     "static/css/2.63463464.chunk.css",
     "static/js/2.edd6e955.chunk.js",
-    "static/css/main.fe43d42c.chunk.css",
-    "static/js/main.5740f3c9.chunk.js"
+    "static/css/main.eff161c7.chunk.css",
+    "static/js/main.392a91fa.chunk.js"
   ]
 }
