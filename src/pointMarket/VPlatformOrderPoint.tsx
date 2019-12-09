@@ -65,7 +65,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     this.openPlatformOrderPoint();
                 }
             } else {
-                tip = "系统中暂无可用订单号,此积分码会在下次生成订单时自动使用";
+                tip = "积分码已记录,此积分码会在下次生成订单时自动使用";
             }
             // 不论有无订单,都保存积分码
             let Crtn = await addUsedCoupon();
@@ -112,7 +112,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     </div>
                     <div className="my-2 small">
                         <div>可用订单:</div>
-                        <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单号,此积分码会在下次生成订单时自动使用"></List>
+                        <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单号"></List>
                     </div>
                     <div className="row py-2">
                         <div className="col-12">

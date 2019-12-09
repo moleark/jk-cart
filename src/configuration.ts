@@ -77,5 +77,5 @@ const GLOABLE_TEST = {
     TIPDISPLAYTIME: 2000
 }
 
-// export { GLOABLE_PRODUCTION as GLOABLE };
-export { GLOABLE_TEST as GLOABLE };
+export { GLOABLE_PRODUCTION as GLOABLE };
+// export { GLOABLE_TEST as GLOABLE };
