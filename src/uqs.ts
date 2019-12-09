@@ -80,10 +80,13 @@ export interface UqPointShop {
     PointHistory: History;
     PointExchangeSheet: Sheet;
     getPoints: Query;
-    getPointProduct: Query;
-    getExchangeSheets: Query;
+    GetPointProduct: Query;
+    AddPoint: Action;
     IsCanUseOrder: Action;
+    GetPlatFormOrder: Query;
+    GetLastPlatFormOrder: Action;
     AddPlatformOrderPoint: Action;
+    AddUsedCoupon: Action;
 }
 
 export interface UQs {

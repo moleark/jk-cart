@@ -23,7 +23,9 @@ export class CPointProduct extends CUqBase {
     @observable pointsSum: number = 0;              /*积分总计 */
     @observable exchangeHistory: any[] = [];        /*积分产品列表 */
     @observable orderData: pointOrder = new pointOrder();   /*正在提交的产品列表*/
-    @observable couponId: number;                    /*积分码 */
+    @observable couponId: number;                   /*积分码 */
+    @observable platformOrderId: any;               /*平台合同号 */
+    @observable platformOrder: any[] = [];          /*平台合同 */
 
     protected async internalStart(param: any) {
         let { currentUser } = this.cApp;
@@ -51,6 +53,8 @@ export class CPointProduct extends CUqBase {
     }
 
     openPlatformOrderPoint = async (credits?: string) => {
+        await this.applyOrder();
+        this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
         this.openVPage(VPlatformOrderPoint, credits);
     }
 
@@ -72,11 +76,7 @@ export class CPointProduct extends CUqBase {
     }
 
     getPointsProducts = async () => {
-        return await this.uqs.积分商城.getPointProduct.table({});
-    }
-
-    getExchangeSheets = async () => {
-        return await this.uqs.积分商城.getExchangeSheets.table({});
+        return await this.uqs.积分商城.GetPointProduct.table({});
     }
 
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
@@ -144,17 +144,28 @@ export class CPointProduct extends CUqBase {
         this.openVPage(OrderSuccess, result);
     }
 
-    applyOrder = async (orderId: string) => {
-        let validationResult = await this.getOrderValidationResult(orderId);
+    applyOrder = async () => {
+        this.platformOrderId = undefined;
+        let validationResult = await this.getOrderValidationResult();
         let rtn = validationResult.result;
+        if (rtn !== 0) {
+            this.platformOrderId = validationResult.platformOrderId;
+            rtn = validationResult.platformOrderId;
+        }
         return rtn;
     }
-    getOrderValidationResult = async (orderId: string) => {
+    getOrderValidationResult = async () => {
         let { currentCustomer } = this.cApp.currentUser;
-        return await this.uqs.积分商城.IsCanUseOrder.submit({ orderId: orderId, customer: currentCustomer && currentCustomer.id });
+        return await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer && currentCustomer.id });
+    }
+
+    getPlatFormOrder = async (platformOrderId: string) => {
+        return await this.uqs.积分商城.GetPlatFormOrder.table({ platformOrderId: platformOrderId });
     }
 
     applyCoupon = async (coupon: string) => {
+        this.couponId = 0;
+        this.couponId = 0;
         let validationResult = await this.getCouponValidationResult(coupon);
         this.couponId = validationResult.id;
         let rtn = validationResult.result;
@@ -173,6 +184,13 @@ export class CPointProduct extends CUqBase {
         let { currentCustomer } = this.cApp.currentUser;
         let AddPoint = this.uqs.积分商城.AddPlatformOrderPoint;
         let result = await AddPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
+        let rtn = result.result;
+        return rtn;
+    }
+    addUsedCoupon = async () => {
+        let { currentCustomer } = this.cApp.currentUser;
+        let AddUsedCoupon = this.uqs.积分商城.AddUsedCoupon;
+        let result = await AddUsedCoupon.submit({ couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
         let rtn = result.result;
         return rtn;
     }
