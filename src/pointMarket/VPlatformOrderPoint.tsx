@@ -122,9 +122,9 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     {tipsUI}
                     <div>
                         <ol className="my-3 small">
-                            <li>录入在第三方平台上采购百灵威产品订单号，可获取额外积分；</li>
-                            <li>第三方平台上订单买方必须和当前登录人一致；</li>
-                            <li>每个订单号仅限提取一次积分；</li>
+                            <li>输入积分码，可获取可用订单获取的额外积分；</li>
+                            <li>暂无可用订单(平台订单尚未导入百灵威订单系统)的情况下，系统会记录您输入的积分码，待订单导入后获取额外积分；</li>
+                            <li>每个订单仅限提取一次积分。</li>
                         </ol>
                     </div>
                 </div>
