@@ -87,6 +87,7 @@ export interface UqPointShop {
     GetLastPlatFormOrder: Action;
     AddPlatformOrderPoint: Action;
     AddUsedCoupon: Action;
+    CustomerCoupon: Map;
 }
 
 export interface UQs {

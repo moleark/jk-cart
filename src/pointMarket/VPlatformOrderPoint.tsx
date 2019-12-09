@@ -24,7 +24,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
     private applyCouponOrder = async () => {
 
-        let { applyOrder, applyCoupon, addPlatformOrderPoint, addUsedCoupon } = this.controller;
+        let { applyOrder, IsCouponCanUse, addPlatformOrderPoint, addUsedCoupon } = this.controller;
 
         let coupon = this.couponInput.value;
         if (!coupon) {
@@ -35,7 +35,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             return;
         }
 
-        let retCoupon = await applyCoupon(coupon);
+        let retCoupon = await IsCouponCanUse(coupon);
         let tip = "";
         if (retCoupon !== 1) {
             switch (retCoupon) {
@@ -52,6 +52,8 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                 case 5:
                     tip = '您输入的积分码无效，请重新输入或与您的专属销售人员联系！';
                     break;
+                case 100:
+                    tip = '您已经使用过该积分码了，不可重复使用。'
                 default:
                     break;
             }
@@ -60,12 +62,12 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
             if (retOrder !== 0) {
                 let rtn = await addPlatformOrderPoint(retOrder);
-                if (rtn == 1) {
+                if (rtn === 1) {
                     tip = "提取成功，积分稍后到账！";
-                    this.openPlatformOrderPoint();
+                    this.controller.platformOrder = [];
                 }
             } else {
-                tip = "积分码已记录,此积分码会在下次生成订单时自动使用";
+                tip = "积分码已记录，此积分码会在下次生成订单时自动使用";
             }
             // 不论有无订单,都保存积分码
             let Crtn = await addUsedCoupon();

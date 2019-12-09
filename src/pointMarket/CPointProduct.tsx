@@ -146,7 +146,7 @@ export class CPointProduct extends CUqBase {
 
     applyOrder = async () => {
         this.platformOrderId = undefined;
-        let validationResult = await this.getOrderValidationResult();
+        let validationResult = await this.getLastPlatFormOrder();
         let rtn = validationResult.result;
         if (rtn !== 0) {
             this.platformOrderId = validationResult.platformOrderId;
@@ -154,7 +154,8 @@ export class CPointProduct extends CUqBase {
         }
         return rtn;
     }
-    getOrderValidationResult = async () => {
+
+    getLastPlatFormOrder = async () => {
         let { currentCustomer } = this.cApp.currentUser;
         return await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer && currentCustomer.id });
     }
@@ -163,30 +164,38 @@ export class CPointProduct extends CUqBase {
         return await this.uqs.积分商城.GetPlatFormOrder.table({ platformOrderId: platformOrderId });
     }
 
-    applyCoupon = async (coupon: string) => {
+    IsCouponCanUse = async (couponCode: string) => {
         this.couponId = 0;
-        this.couponId = 0;
-        let validationResult = await this.getCouponValidationResult(coupon);
-        this.couponId = validationResult.id;
-        let rtn = validationResult.result;
-        if (rtn !== 0 && validationResult.types !== "credits") {
-            rtn = 0;
-        }
-        return rtn;
-    }
-
-    getCouponValidationResult = async (coupon: string) => {
         let { currentUser } = this.cApp;
-        return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
+        let { salesTask, 积分商城 } = this.uqs;
+        let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
+
+        let { result, id, types } = validationResult;
+        if (result === 1) {
+            if (types !== 'credits')
+                result = 0;
+            else {
+                this.couponId = id;
+                let { currentCustomer, id: currentUserId } = currentUser;
+                let userRecord = await 积分商城.CustomerCoupon.obj({
+                    customer: currentCustomer && currentCustomer.id
+                    , webUser: currentUserId, coupon: this.couponId
+                });
+                if (userRecord && userRecord.coupon)
+                    result = 100;
+            }
+        }
+        return result;
     }
 
     addPlatformOrderPoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
-        let AddPoint = this.uqs.积分商城.AddPlatformOrderPoint;
-        let result = await AddPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
+        let { AddPlatformOrderPoint } = this.uqs.积分商城;
+        let result = await AddPlatformOrderPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
         let rtn = result.result;
         return rtn;
     }
+
     addUsedCoupon = async () => {
         let { currentCustomer } = this.cApp.currentUser;
         let AddUsedCoupon = this.uqs.积分商城.AddUsedCoupon;
