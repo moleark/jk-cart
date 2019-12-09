@@ -39,7 +39,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         let actions: DropdownAction[] = [
             {
                 icon: 'get-pocket',
-                caption: '提取平台订单积分',
+                caption: '领取积分',
                 action: this.openPlatformOrderPoint
             },
             {

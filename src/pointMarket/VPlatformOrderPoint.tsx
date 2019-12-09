@@ -101,7 +101,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             </div>
         }
 
-        return <Page header="提取平台订单积分" right={null}>
+        return <Page header="领取积分" right={null}>
             <div>
                 <div className="px-2 bg-white">
                     <div className="row py-2">
@@ -112,7 +112,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     </div>
                     <div className="my-2 small">
                         <div>可用订单:</div>
-                        <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单号"></List>
+                        <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单"></List>
                     </div>
                     <div className="row py-2">
                         <div className="col-12">
