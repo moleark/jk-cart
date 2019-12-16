@@ -332,7 +332,7 @@ class CartLocal extends CartStore {
             }
             return cartDataBoxed;
         }
-        catch {
+        catch (e) {
             localStorage.removeItem(LOCALCARTNAME);
             this.cartData = [];
             return this.cartData;

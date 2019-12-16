@@ -11,7 +11,7 @@ export { CApp } from './CApp';
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',
-    version: '1.1.60',
+    version: '1.1.61',
     tvs: tvs,
     loginTop: jnkTop,
     oem: '百灵威'
@@ -44,7 +44,8 @@ const GLOABLE_PRODUCTION = {
             labelColor: 'text-primary',
         },
     } as any,
-    TIPDISPLAYTIME: 2000
+    TIPDISPLAYTIME: 2000,
+    ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk"
 }
 
 // 测试环境配置
@@ -74,8 +75,9 @@ const GLOABLE_TEST = {
             labelColor: 'text-primary',
         },
     } as any,
-    TIPDISPLAYTIME: 2000
+    TIPDISPLAYTIME: 2000,
+    ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk"
 }
 
-export { GLOABLE_PRODUCTION as GLOABLE };
-// export { GLOABLE_TEST as GLOABLE };
+// export { GLOABLE_PRODUCTION as GLOABLE };
+export { GLOABLE_TEST as GLOABLE };

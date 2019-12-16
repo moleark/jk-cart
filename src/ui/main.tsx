@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
+import logo from '../images/logo.png';
+import { browser } from 'tools/browser';
+import { GLOABLE } from 'configuration';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -8,6 +11,12 @@ export class VMain extends VPage<CApp> {
     async open(param?: any) {
         this.openPage(this.render);
     }
+
+    downloadApp = () => {
+        if (browser.versions.android)
+            window.open(GLOABLE.ANDROIDAPPADDRESS);
+    }
+
     render = (param?: any): JSX.Element => {
         let { cHome, cMember, cCart, cMe, cart } = this.controller;
         let faceTabs = [
@@ -24,7 +33,21 @@ export class VMain extends VPage<CApp> {
                 notify: notify,
             }
         });
-        return <Page header={false}>
+
+        let header: any = false;
+        if (!browser.versions.html5Plus && browser.versions.android) {
+            header = <div className="w-100 mx-3 d-flex justify-content-between">
+                <div className="d-flex" onClick={this.downloadApp}>
+                    <img src={logo} alt="logo" style={{ height: "2rem", width: "2rem" }}></img>
+                    <div className="ml-2">
+                        <div className="small">百灵威购物</div>
+                        <div className="small">专业化学试剂供应商</div>
+                    </div>
+                </div>
+                <button type="button" className="btn btn-primary">立即打开</button>
+            </div>
+        }
+        return <Page header={header}>
             <Tabs tabs={faceTabs} />
         </Page>;
     }
