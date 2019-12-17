@@ -13,8 +13,8 @@ export class VMain extends VPage<CApp> {
     }
 
     downloadApp = () => {
-        // if (browser.versions.android)
-        window.open(GLOABLE.ANDROIDAPPADDRESS);
+        if (browser.versions.android)
+            window.open(GLOABLE.ANDROIDAPPADDRESS);
     }
 
     render = (param?: any): JSX.Element => {
@@ -35,7 +35,7 @@ export class VMain extends VPage<CApp> {
         });
 
         let header: any = false;
-        if (!browser.versions.html5Plus) {
+        if (!browser.versions.html5Plus && browser.versions.android) {
             header = <div className="w-100 mx-3 d-flex justify-content-between" onClick={this.downloadApp}>
                 <span className="pt-2 small text-danger">
                     APP购物更方便
