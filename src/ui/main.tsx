@@ -13,8 +13,8 @@ export class VMain extends VPage<CApp> {
     }
 
     downloadApp = () => {
-        if (browser.versions.android)
-            window.open(GLOABLE.ANDROIDAPPADDRESS);
+        // if (browser.versions.android)
+        window.open(GLOABLE.ANDROIDAPPADDRESS);
     }
 
     render = (param?: any): JSX.Element => {
@@ -35,19 +35,15 @@ export class VMain extends VPage<CApp> {
         });
 
         let header: any = false;
-        if (!browser.versions.html5Plus && browser.versions.android) {
-            header = <div className="w-100 mx-3 d-flex justify-content-between">
-                <div className="d-flex" onClick={this.downloadApp}>
-                    <img src={logo} alt="logo" style={{ height: "2rem", width: "2rem" }}></img>
-                    <div className="ml-2">
-                        <div className="small">百灵威购物</div>
-                        <div className="small">专业化学试剂供应商</div>
-                    </div>
-                </div>
-                <button type="button" className="btn btn-primary">立即打开</button>
+        if (!browser.versions.html5Plus) {
+            header = <div className="w-100 mx-3 d-flex justify-content-between" onClick={this.downloadApp}>
+                <span className="pt-2 small text-danger">
+                    APP购物更方便
+                </span>
+                <button type="button" className="btn btn-primary btn-sm">立即安装</button>
             </div>
         }
-        return <Page header={header}>
+        return <Page header={header} headerClassName="bg-warning" >
             <Tabs tabs={faceTabs} />
         </Page>;
     }
