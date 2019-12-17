@@ -11,10 +11,10 @@ import { CMember } from "./member";
 import { CMe } from "./me/CMe";
 import { CUqBase } from "./CBase";
 import { VMain } from 'ui/main';
-import { GLOABLE } from 'configuration';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
+import { GLOABLE } from "cartenv";
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };

@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { Context } from 'tonva';
-import { CApp } from '../CApp';
+import { Context, nav } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
@@ -67,7 +66,8 @@ export class CMe extends CUqBase {
     }
 
     openPrivacy = () => {
-        this.openVPage(Privacy);
+        // this.openVPage(Privacy);
+        nav.showPrivacyPage();
     }
 
     getCommonText = async (textId: number) => {

@@ -3,7 +3,7 @@ import { VPage, Page, FA, List, tv, LMR } from "tonva";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from "mobx-react-lite";
 import { observable } from "mobx";
-import { GLOABLE } from "configuration";
+import { GLOABLE } from "cartenv";
 
 export class VPlatformOrderPoint extends VPage<CPointProduct> {
 

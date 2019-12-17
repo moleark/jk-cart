@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
-import { GLOABLE } from 'configuration';
+import { GLOABLE } from 'cartenv';
 
 export class VPointProduct extends VPage<CPointProduct> {
 

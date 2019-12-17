@@ -6,7 +6,7 @@ import { COrder } from './COrder';
 import { OrderItem } from './Order';
 import { CartPackRow } from '../cart/Cart';
 import classNames from 'classnames';
-import { GLOABLE } from 'configuration';
+import { GLOABLE } from 'cartenv';
 
 export class VCreateOrder extends VPage<COrder> {
     @observable private useShippingAddress: boolean = true;

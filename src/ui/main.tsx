@@ -3,7 +3,7 @@ import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
 import logo from '../images/logo.png';
 import { browser } from 'tools/browser';
-import { GLOABLE } from 'configuration';
+import { GLOABLE } from 'cartenv';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 

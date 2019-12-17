@@ -2,8 +2,8 @@ import * as React from 'react';
 import { View } from 'tonva';
 import { CProductCategory } from './CProductCategory';
 import { FA } from 'tonva';
+import { GLOABLE } from 'cartenv';
 //import { observer } from 'mobx-react';
-import { GLOABLE } from 'configuration';
 
 /*
 const imgStyle: React.CSSProperties = {

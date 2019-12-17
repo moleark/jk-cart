@@ -4,7 +4,7 @@ import { ItemSchema, Page, Edit, VPage, FA } from 'tonva';
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';
-import { GLOABLE } from 'configuration';
+import { GLOABLE } from 'cartenv';
 
 export class EditMeInfoFirstOrder extends VPage<CMe>{
 

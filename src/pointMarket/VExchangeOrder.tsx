@@ -3,8 +3,8 @@ import { VPage, nav, Page, LMR, FA, tv, List } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
-import { ProductImage, PointProductImage } from 'tools/productImage';
-import { GLOABLE } from 'configuration';
+import { PointProductImage } from 'tools/productImage';
+import { GLOABLE } from 'cartenv';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
     @observable private shippingAddressIsBlank: boolean = false;
