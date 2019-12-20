@@ -67,10 +67,10 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     this.controller.platformOrder = [];
                 }
             } else {
+                // 无可用订单,保存积分码
+                let Crtn = await addUsedCoupon();
                 tip = "积分码已记录，此积分码会在下次生成订单时自动使用";
             }
-            // 不论有无订单,都保存积分码
-            let Crtn = await addUsedCoupon();
         }
 
         this.tips = tip;
@@ -122,8 +122,8 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                         </div>
                     </div>
                     {tipsUI}
-                    <div>
-                        <ol className="my-3 small">
+                    <div className="pt-2 pb-3">
+                        <ol className="mr-3 small">
                             <li>输入积分码，可获取可用订单获取的额外积分；</li>
                             <li>暂无可用订单(平台订单尚未导入百灵威订单系统)的情况下，系统会记录您输入的积分码，待订单导入后获取额外积分；</li>
                             <li>每个订单仅限提取一次积分。</li>
