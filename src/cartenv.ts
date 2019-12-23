@@ -69,5 +69,5 @@ const GLOABLE_TEST = {
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
 }
 
-export { GLOABLE_PRODUCTION as GLOABLE };
-// export { GLOABLE_TEST as GLOABLE };
+// export { GLOABLE_PRODUCTION as GLOABLE };
+export { GLOABLE_TEST as GLOABLE };

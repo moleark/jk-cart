@@ -51,8 +51,8 @@ export class CMe extends CUqBase {
         await cPointProduct.start();
     }
 
-    openMeInfoFirstOrder = async () => {
-        await this.openVPage(EditMeInfoFirstOrder);
+    openMeInfoFirstOrder = async (onlyRequired?: boolean) => {
+        await this.openVPage(EditMeInfoFirstOrder, onlyRequired);
     }
 
     doCheckout = async () => {

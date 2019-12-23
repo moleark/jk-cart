@@ -192,7 +192,7 @@ export class CPointProduct extends CUqBase {
     private doFirstOrderChecking = async () => {
         let { cMe, currentUser } = this.cApp;
         if (!currentUser.allowOrdering) {
-            cMe.openMeInfoFirstOrder();
+            cMe.openMeInfoFirstOrder(true);
         } else {
             let { AddUsedCoupon } = this.uqs.积分商城;
             let result = await AddUsedCoupon.submit({ couponId: this.couponId });

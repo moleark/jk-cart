@@ -112,10 +112,13 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                             <input ref={v => this.couponInput = v} type="text" className="form-control" value={this.currentCredits}></input>
                         </div>
                     </div>
-                    <div className="my-2 small">
-                        <div>可用订单:</div>
-                        <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单"></List>
-                    </div>
+                    {
+                        platformOrder.length > 0 &&
+                        <div className="my-2 small">
+                            <div>可用订单:</div>
+                            <List items={platformOrder} item={{ render: this.renderPlatformOrder }} none="系统中暂无可用订单"></List>
+                        </div>
+                    }
                     <div className="row py-2">
                         <div className="col-12">
                             <button className="btn btn-primary w-100" onClick={this.applyCouponOrder}>确认</button>

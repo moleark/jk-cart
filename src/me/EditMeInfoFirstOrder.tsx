@@ -7,10 +7,11 @@ import { observer } from 'mobx-react';
 import { GLOABLE } from 'cartenv';
 
 export class EditMeInfoFirstOrder extends VPage<CMe>{
-
+    onlyRequired: boolean;
     @observable tips: JSX.Element;
 
     async open(param: any) {
+        this.onlyRequired = param;
         this.openPage(this.page);
     }
 
@@ -77,16 +78,21 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 {this.tips}
             </div>
         }
+        let schemaFilter = (itemSchema: ItemSchema): boolean => {
+            return (this.onlyRequired === true && itemSchema.required === true)
+                || this.onlyRequired === undefined
+                || this.onlyRequired === false
+        }
         return <Page header="请补充账户信息">
             <div className="alert alert-primary small" role="alert">
                 <FA name="exclamation-circle" className="text-warning mr-3 my-1 float-left" size="3x" />
                 化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
                 为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
             </div>
-            <Edit schema={webUserSchema} uiSchema={webUserUiSchema}
+            <Edit schema={webUserSchema.filter(schemaFilter)} uiSchema={webUserUiSchema}
                 data={this.webUserData}
                 onItemChanged={this.onWebUserChanged} />
-            <Edit schema={webUserContactSchema} uiSchema={webUserContactUiSchema(this.controller.pickAddress)}
+            <Edit schema={webUserContactSchema.filter(schemaFilter)} uiSchema={webUserContactUiSchema(this.controller.pickAddress)}
                 data={this.webUserContactData}
                 onItemChanged={this.onWebUserContactChanged} />
             <div className="p-3 bg-white">
