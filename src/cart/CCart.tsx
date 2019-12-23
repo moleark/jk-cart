@@ -57,7 +57,7 @@ export class CCart extends CUqBase {
         if (!this.isLogined) {
             nav.showLogin(this.loginCallback, true);
         } else {
-            this.doFirstOrderChecking();
+            await this.doFirstOrderChecking();
         }
     }
 

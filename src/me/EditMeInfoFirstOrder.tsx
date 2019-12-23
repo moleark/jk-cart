@@ -77,7 +77,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 {this.tips}
             </div>
         }
-        return <Page header="首次下单须补充账户信息">
+        return <Page header="请补充账户信息">
             <div className="alert alert-primary small" role="alert">
                 <FA name="exclamation-circle" className="text-warning mr-3 my-1 float-left" size="3x" />
                 化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。

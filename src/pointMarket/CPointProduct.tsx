@@ -157,7 +157,8 @@ export class CPointProduct extends CUqBase {
 
     getLastPlatFormOrder = async () => {
         let { currentCustomer } = this.cApp.currentUser;
-        return await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer.id });
+
+        return await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer && currentCustomer.id });
     }
 
     getPlatFormOrder = async (platformOrderId: string) => {
@@ -170,20 +171,11 @@ export class CPointProduct extends CUqBase {
         let { salesTask, 积分商城 } = this.uqs;
         let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
 
-        let { result, id, types } = validationResult;
+        let { result, id, types, code } = validationResult;
         if (result === 1) {
+            this.couponId = code;
             if (types !== 'credits')
                 result = 0;
-            else {
-                this.couponId = id;
-                let { currentCustomer, id: currentUserId } = currentUser;
-                let userRecord = await 积分商城.CustomerCoupon.obj({
-                    customer: currentCustomer.id
-                    , webUser: currentUserId, coupon: this.couponId
-                });
-                if (userRecord && userRecord.coupon)
-                    result = 100;
-            }
         }
         return result;
     }
@@ -191,17 +183,26 @@ export class CPointProduct extends CUqBase {
     addPlatformOrderPoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
         let { AddPlatformOrderPoint } = this.uqs.积分商城;
-        let result = await AddPlatformOrderPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer.id });
+        let result = await AddPlatformOrderPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
         let rtn = result.result;
         return rtn;
     }
 
+
+    private doFirstOrderChecking = async () => {
+        let { cMe, currentUser } = this.cApp;
+        if (!currentUser.allowOrdering) {
+            cMe.openMeInfoFirstOrder();
+        } else {
+            let { AddUsedCoupon } = this.uqs.积分商城;
+            let result = await AddUsedCoupon.submit({ couponId: this.couponId });
+            let rtn = result.result;
+            return rtn;
+        }
+    }
+
     addUsedCoupon = async () => {
-        let { currentCustomer } = this.cApp.currentUser;
-        let { AddUsedCoupon } = this.uqs.积分商城;
-        let result = await AddUsedCoupon.submit({ couponId: this.couponId });
-        let rtn = result.result;
-        return rtn;
+        await this.doFirstOrderChecking();
     }
 
     private defaultSetting: any;
