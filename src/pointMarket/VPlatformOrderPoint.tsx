@@ -4,6 +4,7 @@ import { CPointProduct } from "./CPointProduct";
 import { observer } from "mobx-react-lite";
 import { observable } from "mobx";
 import { GLOABLE } from "cartenv";
+import { VReceivePointSuccess } from "./VReceivePointSuccess";
 
 export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
@@ -13,8 +14,6 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
     async open(param?: any) {
         this.currentCredits = param;
-
-
         this.openPage(this.page);
     }
 
@@ -22,19 +21,39 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
         this.controller.openPlatformOrderPoint();
     }
 
-    private applyCouponOrder = async () => {
+    private tryApplyCoupon = async () => {
 
-        let { applyOrder, IsCouponCanUse, addPlatformOrderPoint, addUsedCoupon } = this.controller;
-
+        this.tips = "";
         let coupon = this.couponInput.value;
         if (!coupon) {
-            if (!coupon) {
-                this.tips = '请填写积分码';
-            }
+            this.tips = '请填写积分码';
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
             return;
         }
 
+        let options = {
+            onlyRequired: true,
+            caption: "第一次领取积分",
+            note: <>
+                请提供信息，以便自动为您最近的内部订单积分。
+                </>,
+            actionButton: {
+                value: "确定",
+                action: this.applyCoupon
+            }
+        };
+        let { userInfoCompletedChecking } = this.controller;
+        if (userInfoCompletedChecking(options)) {
+            await this.applyCoupon();
+        }
+    }
+
+    private applyCoupon = async () => {
+
+        let { IsCouponCanUse, getLastPlatformOrder, receivePoint, addUsedCoupon } = this.controller;
+
+        let coupon = this.couponInput.value;
+        coupon = coupon.replace(' ', '');
         let retCoupon = await IsCouponCanUse(coupon);
         let tip = "";
         if (retCoupon !== 1) {
@@ -57,30 +76,29 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                 default:
                     break;
             }
-        } else {
-            let retOrder = await applyOrder();
-
-            if (retOrder !== 0) {
-                let rtn = await addPlatformOrderPoint(retOrder);
-                if (rtn === 1) {
-                    tip = "提取成功，积分稍后到账！";
-                    this.controller.platformOrder = [];
-                }
-            } else {
-                // 无可用订单,保存积分码
-                let Crtn = await addUsedCoupon();
-                tip = "积分码已记录，此积分码会在下次生成订单时自动使用";
-            }
-        }
-
-        this.tips = tip;
-        if (this.tips) {
+            this.tips = tip;
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+            return;
         }
+
+        let lastPlatformOrderId = await getLastPlatformOrder();
+        if (lastPlatformOrderId) {
+            let rtn = await receivePoint(lastPlatformOrderId);
+            if (rtn === 1) {
+                this.controller.platformOrder = [];
+                tip = "提取成功，积分稍后到账！";
+            }
+        } else {
+            // 无可用订单,保存积分码
+            let Crtn = await addUsedCoupon();
+            tip = "积分码已记录，此积分码会在下次产生内部订单时自动使用。";
+        }
+        this.closePage();
+        this.openVPage(VReceivePointSuccess, tip);
     }
 
     private renderPlatformOrder = (PlatformOrder: any, index: number) => {
-        let { platformOrderId, description, descriptionC, price, quantity, radioy, unit, subAmount } = PlatformOrder;
+        let { description, price, quantity, radioy, unit } = PlatformOrder;
         return <div className="row">
             <div className="col-12"><label>{description}</label></div>
             <div className="col-12 d-flex justify-content-between">
@@ -98,7 +116,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
         let tipsUI;
         if (this.tips) {
             tipsUI = <div className="alert alert-primary" role="alert">
-                <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                <FA name="smile-o" className="text-warning mr-3" size="2x"></FA>
                 {this.tips}
             </div>
         }
@@ -121,7 +139,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     }
                     <div className="row py-2">
                         <div className="col-12">
-                            <button className="btn btn-primary w-100" onClick={this.applyCouponOrder}>确认</button>
+                            <button className="btn btn-primary w-100" onClick={this.tryApplyCoupon}>确认</button>
                         </div>
                     </div>
                     {tipsUI}

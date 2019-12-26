@@ -32,7 +32,7 @@ const GLOABLE_PRODUCTION = {
             labelColor: 'text-primary',
         },
     } as any,
-    TIPDISPLAYTIME: 2000,
+    TIPDISPLAYTIME: 3000,
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
 }
@@ -64,10 +64,10 @@ const GLOABLE_TEST = {
             labelColor: 'text-primary',
         },
     } as any,
-    TIPDISPLAYTIME: 2000,
+    TIPDISPLAYTIME: 3000,
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
 }
 
-// export { GLOABLE_PRODUCTION as GLOABLE };
-export { GLOABLE_TEST as GLOABLE };
+export { GLOABLE_PRODUCTION as GLOABLE };
+// export { GLOABLE_TEST as GLOABLE };

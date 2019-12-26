@@ -1,4 +1,5 @@
 import * as React from 'react';
+import _ from 'lodash';
 import { observable } from 'mobx';
 import { ItemSchema, Page, Edit, VPage, FA } from 'tonva';
 import { CMe } from './CMe';
@@ -6,12 +7,23 @@ import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiS
 import { observer } from 'mobx-react';
 import { GLOABLE } from 'cartenv';
 
-export class EditMeInfoFirstOrder extends VPage<CMe>{
+interface Options {
     onlyRequired: boolean;
+    caption: string;
+    note: string;
+    actionButton: {
+        value: string;
+        action: any;
+    }
+}
+
+export class EditMeInfoFirstOrder extends VPage<CMe>{
+    private options: Options;
     @observable tips: JSX.Element;
 
     async open(param: any) {
-        this.onlyRequired = param;
+        // this.onlyRequired = param;
+        this.options = param;
         this.openPage(this.page);
     }
 
@@ -43,24 +55,20 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         }
     }
 
-    private onWebUserChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
-        let { name } = itemSchema;
-        this.webUserData[name] = newValue;
-        await this.controller.changeWebUser(this.webUserData);
-    }
-
-    private onWebUserContactChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
+    private onMergeDataChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
         let { name } = itemSchema;
         this.webUserContactData[name] = newValue;
+        this.webUserData[name] = newValue;
+        await this.controller.changeWebUser(this.webUserData);
         await this.controller.changeWebUserContact(this.webUserContactData);
     }
 
-    private checkOut = async () => {
+    private onCompleted = async () => {
         let { currentUser } = this.controller.cApp;
         if (currentUser.allowOrdering) {
             this.closePage();
             await currentUser.addContactFromAccount();
-            await this.controller.doCheckout();
+            await this.options.actionButton.action();
         } else {
             this.tips = <>以上带有 <span className='text-danger'>*</span> 的内容均须填写！</>;
             setTimeout(() => {
@@ -78,26 +86,46 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 {this.tips}
             </div>
         }
+
+        let { onlyRequired, caption, note, actionButton } = this.options;
         let schemaFilter = (itemSchema: ItemSchema): boolean => {
-            return (this.onlyRequired === true && itemSchema.required === true)
-                || this.onlyRequired === undefined
-                || this.onlyRequired === false
+            return (onlyRequired === true && itemSchema.required === true)
+                || onlyRequired === undefined
+                || onlyRequired === false
         }
-        return <Page header="请补充账户信息">
-            <div className="alert alert-primary small" role="alert">
-                <FA name="exclamation-circle" className="text-warning mr-3 my-1 float-left" size="3x" />
-                化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
-                为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
+
+        let schemaArr = [];
+        for (let item of webUserSchema) {
+            if (item.required === true) schemaArr.push(item);
+        }
+        for (let item of webUserContactSchema) {
+            if (item.required === true) schemaArr.push(item);
+        }
+        if (onlyRequired !== true) {
+            for (let item of webUserSchema) {
+                if (item.required !== true) schemaArr.push(item);
+            }
+            for (let item of webUserContactSchema) {
+                if (item.required !== true) schemaArr.push(item);
+            }
+        }
+        let uiSchema = {};
+        _.merge(uiSchema, webUserUiSchema, webUserContactUiSchema(this.controller.pickAddress));
+
+        let data = _.merge(this.webUserData, this.webUserContactData);
+        let { value } = actionButton;
+        return <Page header={caption}>
+            <div className="alert alert-light my-3 py-4" role="alert">
+                <FA name="smile-o" className="text-warning mr-4 my-1" size="2x" />
+                {note}
             </div>
-            <Edit schema={webUserSchema.filter(schemaFilter)} uiSchema={webUserUiSchema}
-                data={this.webUserData}
-                onItemChanged={this.onWebUserChanged} />
-            <Edit schema={webUserContactSchema.filter(schemaFilter)} uiSchema={webUserContactUiSchema(this.controller.pickAddress)}
-                data={this.webUserContactData}
-                onItemChanged={this.onWebUserContactChanged} />
+            <Edit schema={schemaArr.filter(schemaFilter)} uiSchema={uiSchema}
+                data={data}
+                onItemChanged={this.onMergeDataChanged} />
+
             <div className="p-3 bg-white">
                 {tipsUI}
-                <button type="button" className="btn btn-primary w-100" onClick={() => this.checkOut()}>下一步</button>
+                <button type="button" className="btn btn-primary w-100" onClick={() => this.onCompleted()}>{value}</button>
             </div>
         </Page>;
     });

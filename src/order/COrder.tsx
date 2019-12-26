@@ -293,11 +293,6 @@ export class COrder extends CUqBase {
         this.openVPage(VOrderDetail, order);
     }
 
-    openMeInfo = async () => {
-        let { cMe } = this.cApp;
-        await cMe.openMeInfoFirstOrder();
-    }
-
     renderDeliveryTime = (pack: BoxId) => {
         let { cProduct } = this.cApp;
         return cProduct.renderDeliveryTime(pack);

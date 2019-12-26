@@ -53,8 +53,9 @@ export class CPointProduct extends CUqBase {
     }
 
     openPlatformOrderPoint = async (credits?: string) => {
-        await this.applyOrder();
-        this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
+        let lastPlatformId = await this.getLastPlatformOrder();
+        if (lastPlatformId)
+            this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
         this.openVPage(VPlatformOrderPoint, credits);
     }
 
@@ -117,6 +118,9 @@ export class CPointProduct extends CUqBase {
         }
     }
 
+    /**
+     * 兑换积分
+     */
     submitOrder = async () => {
         this.createOrderFromCart();
 
@@ -144,21 +148,16 @@ export class CPointProduct extends CUqBase {
         this.openVPage(OrderSuccess, result);
     }
 
-    applyOrder = async () => {
-        this.platformOrderId = undefined;
-        let validationResult = await this.getLastPlatFormOrder();
-        let rtn = validationResult.result;
-        if (rtn !== 0) {
-            this.platformOrderId = validationResult.platformOrderId;
-            rtn = validationResult.platformOrderId;
-        }
-        return rtn;
-    }
+    /**
+     * 获取当前webuser对应customer的最近一个订单
+     */
+    getLastPlatformOrder = async () => {
 
-    getLastPlatFormOrder = async () => {
         let { currentCustomer } = this.cApp.currentUser;
-
-        return await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer && currentCustomer.id });
+        let validationResult = await this.uqs.积分商城.GetLastPlatFormOrder.submit({ customer: currentCustomer && currentCustomer.id });
+        let { platformOrderId } = validationResult;
+        this.platformOrderId = validationResult.platformOrderId;
+        return platformOrderId;
     }
 
     getPlatFormOrder = async (platformOrderId: string) => {
@@ -168,7 +167,7 @@ export class CPointProduct extends CUqBase {
     IsCouponCanUse = async (couponCode: string) => {
         this.couponId = 0;
         let { currentUser } = this.cApp;
-        let { salesTask, 积分商城 } = this.uqs;
+        let { salesTask } = this.uqs;
         let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
 
         let { result, id, types, code } = validationResult;
@@ -180,7 +179,10 @@ export class CPointProduct extends CUqBase {
         return result;
     }
 
-    addPlatformOrderPoint = async (orderId: string) => {
+    /**
+     * 领取积分
+     */
+    receivePoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
         let { AddPlatformOrderPoint } = this.uqs.积分商城;
         let result = await AddPlatformOrderPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
@@ -188,21 +190,26 @@ export class CPointProduct extends CUqBase {
         return rtn;
     }
 
-
-    private doFirstOrderChecking = async () => {
+    /**
+     * 检查客户信息是否完善（不完善需补充完善后方可领取积分）
+     */
+    userInfoCompletedChecking = (options: any): boolean => {
         let { cMe, currentUser } = this.cApp;
         if (!currentUser.allowOrdering) {
-            cMe.openMeInfoFirstOrder(true);
-        } else {
-            let { AddUsedCoupon } = this.uqs.积分商城;
-            let result = await AddUsedCoupon.submit({ couponId: this.couponId });
-            let rtn = result.result;
-            return rtn;
+            cMe.openMeInfoFirstOrder(options);
+            return false;
         }
+        return true;
     }
 
+    /**
+     *
+     */
     addUsedCoupon = async () => {
-        await this.doFirstOrderChecking();
+        let { AddUsedCoupon } = this.uqs.积分商城;
+        let result = await AddUsedCoupon.submit({ couponId: this.couponId });
+        let rtn = result.result;
+        return rtn;
     }
 
     private defaultSetting: any;
@@ -227,6 +234,7 @@ export class CPointProduct extends CUqBase {
         let defaultSetting = await this.getDefaultSetting();
         return defaultSetting.shippingContact || await this.getContact();
     }
+
     onSelectShippingContact = async () => {
         let cSelect = this.newC(CSelectShippingContact);
         let contactBox = await cSelect.call<BoxId>(true);

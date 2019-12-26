@@ -11,8 +11,7 @@ import { Privacy } from './privacy';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
-    protected async internalStart() {
-
+    protected async internalStart(param?: any) {
     }
 
     async changeWebUser(webUser: any) {
@@ -51,13 +50,8 @@ export class CMe extends CUqBase {
         await cPointProduct.start();
     }
 
-    openMeInfoFirstOrder = async (onlyRequired?: boolean) => {
-        await this.openVPage(EditMeInfoFirstOrder, onlyRequired);
-    }
-
-    doCheckout = async () => {
-        let { cCart } = this.cApp;
-        await cCart.doCheckOut();
+    openMeInfoFirstOrder = async (options?: any) => {
+        await this.openVPage(EditMeInfoFirstOrder, options);
     }
 
     pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
