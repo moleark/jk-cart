@@ -15,12 +15,13 @@ import { VPlatformOrderPoint } from './VPlatformOrderPoint';
 export class CPointProduct extends CUqBase {
 
     @observable myPoints: any[] = [];              /*我的积分 */
-    @observable myPointSum: number = 0;            /*我的积分(计算后) */
-    @observable myPointInvalid: number = 0;        /*我的快过期积分 */
+    @observable myEffectivePoints: number = 0;            /*我的积分(计算后) */
+    @observable myTotalPoints: number = 0;            /*我的积分(计算后) */
+    @observable myPointTobeExpired: number = 0;        /*我的快过期积分 */
 
     @observable pointProducts: any[] = [];          /*可兑产品列表 */
     @observable pointProductsSelected: any[] = [];  /*已选择产品列表 */
-    @observable pointsSum: number = 0;              /*积分总计 */
+    @observable pointToExchanging: number = 0;              /*将要兑换的积分总计 */
     @observable exchangeHistory: any[] = [];        /*积分产品列表 */
     @observable orderData: pointOrder = new pointOrder();   /*正在提交的产品列表*/
     @observable couponId: number;                   /*积分码 */
@@ -28,21 +29,27 @@ export class CPointProduct extends CUqBase {
     @observable platformOrder: any[] = [];          /*平台合同 */
 
     protected async internalStart(param: any) {
-        let { currentUser } = this.cApp;
-        let date = new Date();
-        let dateYear = date.getFullYear();
-        this.myPoints = await currentUser.getPoints();
-        this.myPointSum = this.myPoints.reduce((v, e) => { return v + e.point - e.usedPoint }, 0);
-        this.myPointInvalid = this.myPoints.reduce((v, e) => { return v + ((dateYear - e.pointYear) > 1 ? (e.point - e.usedPoint) : 0) }, 0);
+        await this.refreshMypoint();
         this.exchangeHistory = await this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20);
         this.openVPage(VMyPoint);
+    }
+
+
+    refreshMypoint = async () => {
+        let { currentUser } = this.cApp;
+        this.myPoints = await currentUser.getPoints();
+        this.myEffectivePoints = this.myPoints.reduce((v, e) => { return v + e.effectiveLeftPoint }, 0);
+        this.myTotalPoints = this.myPoints.reduce((v, e) => { return v + e.totalLeftPoint }, 0)
+        let date = new Date();
+        let dateYear = date.getFullYear();
+        this.myPointTobeExpired = this.myPoints.reduce((v, e) => { return v + ((dateYear - e.pointYear) > 1 ? e.effectiveLeftPoint : 0) }, 0);
     }
 
     openPointProduct = async () => {
         //清空选择的积分产品
         this.orderData.exchangeItems = undefined;
         this.pointProductsSelected.length = 0;
-        this.pointsSum = 0;
+        this.pointToExchanging = 0;
         this.pointProducts = await this.getPointsProducts();
         this.openVPage(VPointProduct);
     }
@@ -84,7 +91,7 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
-        this.pointsSum = this.pointsSum + (data.point * nowQuantity);
+        this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
 
         this.pointProductsSelected.forEach(element => {
             if (element.pack.id == data.pack.id) {
@@ -119,7 +126,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 兑换积分
+     * 生成兑换单兑换积分
      */
     submitOrder = async () => {
         this.createOrderFromCart();
@@ -131,17 +138,18 @@ export class CPointProduct extends CUqBase {
         await PointExchangeSheet.action(id, flow, state, "submit");
 
         //暂时扣除已经兑换的积分;
-        this.myPointSum = this.myPointSum - this.pointsSum;
-        if (this.pointsSum > this.myPointInvalid) {
-            this.myPointInvalid = 0;
+        this.myEffectivePoints = this.myEffectivePoints - this.pointToExchanging;
+        this.myTotalPoints = this.myTotalPoints - this.pointToExchanging;
+        if (this.pointToExchanging > this.myPointTobeExpired) {
+            this.myPointTobeExpired = 0;
         } else {
-            this.myPointInvalid = this.myPointInvalid - this.pointsSum;
+            this.myPointTobeExpired = this.myPointTobeExpired - this.pointToExchanging;
         }
 
         //兑换后清空选择的积分产品
         this.orderData.exchangeItems = undefined;
         this.pointProductsSelected.length = 0;
-        this.pointsSum = 0;
+        this.pointToExchanging = 0;
 
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
@@ -170,9 +178,9 @@ export class CPointProduct extends CUqBase {
         let { salesTask } = this.uqs;
         let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
 
-        let { result, id, types, code } = validationResult;
+        let { result, id, types } = validationResult;
         if (result === 1) {
-            this.couponId = code;
+            this.couponId = id;
             if (types !== 'credits')
                 result = 0;
         }
@@ -187,6 +195,7 @@ export class CPointProduct extends CUqBase {
         let { AddPlatformOrderPoint } = this.uqs.积分商城;
         let result = await AddPlatformOrderPoint.submit({ orderId: orderId, couponId: this.couponId, customer: currentCustomer && currentCustomer.id });
         let rtn = result.result;
+
         return rtn;
     }
 

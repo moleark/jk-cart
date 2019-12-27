@@ -50,7 +50,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
     private applyCoupon = async () => {
 
-        let { IsCouponCanUse, getLastPlatformOrder, receivePoint, addUsedCoupon } = this.controller;
+        let { IsCouponCanUse, getLastPlatformOrder, receivePoint, addUsedCoupon, refreshMypoint } = this.controller;
 
         let coupon = this.couponInput.value;
         coupon = coupon.replace(' ', '');
@@ -87,6 +87,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             if (rtn === 1) {
                 this.controller.platformOrder = [];
                 tip = "提取成功，积分稍后到账！";
+                await refreshMypoint();
             }
         } else {
             // 无可用订单,保存积分码

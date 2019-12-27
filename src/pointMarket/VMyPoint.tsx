@@ -25,12 +25,11 @@ export class VMyPoint extends VPage<CPointProduct> {
     private pointRules = () => nav.push(<VPointRule />);
 
     private page = observer(() => {
-        let { myPointSum, myPointInvalid } = this.controller;
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints } = this.controller;
         var date = new Date();
         let dateYear = date.getFullYear();
 
-        let point = myPointSum;
-        let nowPoint = myPointInvalid;
+        let nowPoint = myPointTobeExpired;
         let nowPointTip = nowPoint > 0 ?
             <div className="alert alert-warning m-2" role="alert">
                 <span className="text-muted">友情提示: 将有{nowPoint}积分于{dateYear}-12-31过期</span>
@@ -57,8 +56,10 @@ export class VMyPoint extends VPage<CPointProduct> {
         return <Page header="积分管理" right={right}>
             <div className="bg-white h-100">
                 <div className="d-flex flex-column align-items-center py-5 point-main-top">
-                    <div className="text-white">
-                        <small>当前</small> <span className="h2">{point}</span> <small>分</small>
+                    <div className="text-white text-center">
+                        <small>当前</small> <span className="h2">{myEffectivePoints}</span> <small>分可用</small>
+                        <br />
+                        {myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}
                     </div>
                     <div className="mt-3">
                         <button className="btn btn-light" onClick={this.openPointProduct}>

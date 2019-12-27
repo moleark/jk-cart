@@ -55,7 +55,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     private page = observer(() => {
-        let { pointProductsSelected, pointsSum, orderData, onSelectShippingContact } = this.controller;
+        let { pointProductsSelected, pointToExchanging: pointsSum, orderData, onSelectShippingContact } = this.controller;
         let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>

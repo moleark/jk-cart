@@ -68,16 +68,16 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     private openExchangeOrder = async () => {
         // 未选择产品
-        let { pointsSum, myPointSum } = this.controller;
+        let { pointToExchanging, myEffectivePoints } = this.controller;
 
-        if (pointsSum < 1) {
+        if (pointToExchanging < 1) {
             this.productIsNull = true;
             this.pointIsEnough = false;
             setTimeout(() => this.productIsNull = false, GLOABLE.TIPDISPLAYTIME);
             return;
         }
         // 积分不足
-        if (pointsSum > myPointSum) {
+        if (pointToExchanging > myEffectivePoints) {
             this.productIsNull = false;
             this.pointIsEnough = true;
             setTimeout(() => this.pointIsEnough = false, GLOABLE.TIPDISPLAYTIME);
@@ -98,18 +98,18 @@ export class VPointProduct extends VPage<CPointProduct> {
     });
 
     protected ExchangePoint = observer(() => {
-        let { pointsSum, myPointSum } = this.controller;
+        let { pointToExchanging, myEffectivePoints } = this.controller;
 
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
             : null;
         let pointIsEnoughTip = this.pointIsEnough ?
-            <div className="text-danger small m-0 p-0"><FA name="exclamation-circle" />积分不足<br />剩余{myPointSum}分</div>
+            <div className="text-danger small m-0 p-0"><FA name="exclamation-circle" />积分不足<br />剩余{myEffectivePoints}分</div>
             : null;
 
         return <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
-                <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
+                <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointToExchanging}</span>分</div>
                 <div>{productIsNullTip}{pointIsEnoughTip}</div>
                 <button type="button" className="btn btn-danger m-1" onClick={this.openExchangeOrder}>去兑换</button>
             </div>
