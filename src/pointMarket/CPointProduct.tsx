@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BoxId, RowContext, nav } from 'tonva';
+import { BoxId, RowContext, nav, User } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { VPointProduct } from 'pointMarket/VPointProduct';
@@ -199,17 +199,38 @@ export class CPointProduct extends CUqBase {
         return rtn;
     }
 
+    private openMeInfoOptions: any;
     /**
      * 检查客户信息是否完善（不完善需补充完善后方可领取积分）
      */
     userInfoCompletedChecking = (options: any): boolean => {
+
+        if (!this.isLogined) {
+            this.openMeInfoOptions = options;
+            nav.showLogin(this.loginCallback, true);
+            return false;
+        } else {
+            let { cMe, currentUser } = this.cApp;
+            if (!currentUser.allowOrdering) {
+                cMe.openMeInfoFirstOrder(options);
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private loginCallback = async (user: User): Promise<void> => {
+        let { cApp } = this;
+        await cApp.currentUser.setUser(user);
+        await cApp.loginCallBack(user);
+        this.closePage(1);
+
         let { cMe, currentUser } = this.cApp;
         if (!currentUser.allowOrdering) {
-            cMe.openMeInfoFirstOrder(options);
-            return false;
+            cMe.openMeInfoFirstOrder(this.openMeInfoOptions);
         }
-        return true;
-    }
+    };
+
 
     /**
      *
