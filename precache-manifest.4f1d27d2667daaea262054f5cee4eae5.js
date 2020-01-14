@@ -1,39 +1,43 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "142e8c0e915011ecdf72dc9ff3832e32",
+    "revision": "4eff490063eadd852bcc166046020356",
     "url": "./index.html"
   },
   {
-    "revision": "858f2aa789386706c5f1",
-    "url": "./static/css/2.b95e81f6.chunk.css"
+    "revision": "78b517a9a4716bb0f20f",
+    "url": "./static/css/2.9f649cc8.chunk.css"
   },
   {
-    "revision": "0958ac4d5650f0327880",
+    "revision": "95b19636bfc6c9d46cbf",
     "url": "./static/css/main.eff161c7.chunk.css"
   },
   {
-    "revision": "858f2aa789386706c5f1",
-    "url": "./static/js/2.5f12069f.chunk.js"
+    "revision": "78b517a9a4716bb0f20f",
+    "url": "./static/js/2.ad94f98e.chunk.js"
   },
   {
-    "revision": "24ab648a51cfad4b741b",
-    "url": "./static/js/3.e0545a22.chunk.js"
+    "revision": "8ee2ab3e00641754bdd9",
+    "url": "./static/js/3.4d821095.chunk.js"
   },
   {
-    "revision": "55947f6c21f42f97f98f",
-    "url": "./static/js/4.391940ea.chunk.js"
+    "revision": "0268a1b663d0a003a15a",
+    "url": "./static/js/4.955ae1ff.chunk.js"
   },
   {
-    "revision": "0958ac4d5650f0327880",
-    "url": "./static/js/main.310cb558.chunk.js"
+    "revision": "95b19636bfc6c9d46cbf",
+    "url": "./static/js/main.1b79f5a7.chunk.js"
   },
   {
-    "revision": "b7afaae89aceb9c99b8b",
-    "url": "./static/js/runtime-main.4716fde9.js"
+    "revision": "724b0a414e9e30af6539",
+    "url": "./static/js/runtime-main.6dce6bfa.js"
   },
   {
     "revision": "f85ff3e0a81d38e50a00c59f0687c339",
     "url": "./static/media/AnalyticalChemistry.f85ff3e0.png"
+  },
+  {
+    "revision": "e79a8a39d737fe03497aa10a8c74ac82",
+    "url": "./static/media/HebBirdsEye.e79a8a39.jpg"
   },
   {
     "revision": "3f6ce00f7bed58ef38b348940f7810ea",
@@ -72,11 +76,35 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/fontawesome-webfont.fee66e71.woff"
   },
   {
+    "revision": "5a414d86c51059b6b1dd9db356c13ad6",
+    "url": "./static/media/lab.5a414d86.jpg"
+  },
+  {
     "revision": "ee7cd8ed2dcec943251eb2763684fc6f",
     "url": "./static/media/logo.ee7cd8ed.svg"
   },
   {
     "revision": "772a31a646cb82c2cf0bdebade5fee51",
     "url": "./static/media/pig.772a31a6.png"
+  },
+  {
+    "revision": "a972b48f1dc5da0137a48721f2b5f5ef",
+    "url": "./static/media/productSample.a972b48f.jpg"
+  },
+  {
+    "revision": "b7c9e1e479de3b53f1e4e30ebac2403a",
+    "url": "./static/media/slick.b7c9e1e4.woff"
+  },
+  {
+    "revision": "ced611daf7709cc778da928fec876475",
+    "url": "./static/media/slick.ced611da.eot"
+  },
+  {
+    "revision": "d41f55a78e6f49a5512878df1737e58a",
+    "url": "./static/media/slick.d41f55a7.ttf"
+  },
+  {
+    "revision": "f97e3bbf73254b0112091d0192f17aec",
+    "url": "./static/media/slick.f97e3bbf.svg"
   }
 ]);
