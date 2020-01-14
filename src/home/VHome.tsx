@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Page, View } from 'tonva';
-//import { observer } from 'mobx-react';
 import { CHome } from './CHome';
 import { VSiteHeader } from './VSiteHeader';
-//import { observable } from 'mobx';
+import { VSlider } from './VSlider';
 
 export class VHome extends View<CHome> {
 
@@ -27,6 +26,7 @@ export class VHome extends View<CHome> {
         let siteHeader = this.renderVm(VSiteHeader);
         return <>
             {siteHeader}
+            {this.renderVm(VSlider)}
             {renderCategoryRootList()}
         </>
     };

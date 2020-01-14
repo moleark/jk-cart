@@ -13,6 +13,7 @@
     "@types/querystringify": "^2.0.0",
     "@types/react": "^16.9.5",
     "@types/react-dom": "^16.9.1",
+    "@types/react-slick": "^0.23.4",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
     "font-awesome": "^4.7.0",
@@ -26,6 +27,8 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
+    "react-slick": "^0.25.2",
+    "slick-carousel": "^1.8.1",
     "tonva": "^1.1.88",
     "typescript": "^3.6.3"
   },
