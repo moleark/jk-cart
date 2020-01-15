@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, nav } from 'tonva';
-import { LMR, FA, SearchBox } from 'tonva';
+import { LMR, FA, View } from 'tonva';
 import logo from '../images/logo.png';
 import { CHome } from './CHome';
 

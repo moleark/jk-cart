@@ -3,7 +3,7 @@ import { VPage, Page, EasyDate } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { tv, List } from 'tonva';
 import { OrderItem } from './pointOrder';
-import { ProductImage, PointProductImage } from 'tools/productImage';
+import { PointProductImage } from 'tools/productImage';
 
 export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 

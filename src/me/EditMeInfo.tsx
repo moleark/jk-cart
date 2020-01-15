@@ -118,8 +118,8 @@ export const webUserUiSchema: UiSchema = {
         } as UiTextItem,
         gender: { widget: 'radio', label: '性别', list: [{ value: '1', title: '男' }, { value: '0', title: '女' }] } as UiRadio,
         salutation: { widget: 'text', label: '称谓', rules: salutationValidation } as UiTextItem,
-        organizationName: { widget: 'text', label: '单位名称', rules: organizationNameValidation } as UiTextItem,
-        departmentName: { widget: 'text', label: '部门名称', rules: departmentNameValidation } as UiTextItem,
+        organizationName: { widget: 'text', label: '单位名称', placeholder: '单位名称', rules: organizationNameValidation } as UiTextItem,
+        departmentName: { widget: 'text', label: '部门名称', placeholder: '部门名称', rules: departmentNameValidation } as UiTextItem,
     }
 }
 
@@ -137,12 +137,12 @@ export const webUserContactSchema: ItemSchema[] = [
 export function webUserContactUiSchema(pickAddress: any) {
     return {
         items: {
-            telephone: { widget: 'text', label: '固定电话', rules: telephoneValidation } as UiTextItem,
-            mobile: { widget: 'text', label: '手机号', rules: mobileValidation } as UiTextItem,
+            telephone: { widget: 'text', label: '固定电话', placeholder: '固定电话', rules: telephoneValidation } as UiTextItem,
+            mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiTextItem,
             email: { widget: 'text', label: 'Email', rules: emailValidation, placeholder: 'Email' } as UiTextItem,
-            fax: { widget: 'text', label: '传真', rules: faxValidation } as UiTextItem,
+            fax: { widget: 'text', label: '传真', placeholder: '传真', rules: faxValidation } as UiTextItem,
             address: {
-                widget: 'id', label: '所在地区',
+                widget: 'id', label: '所在地区', placeholder: '所在地区',
                 pickId: async (context: Context, name: string, value: number) => await pickAddress(context, name, value),
                 Templet: (address: BoxId) => {
                     if (!address) return <small className="text-muted">(无)</small>;
@@ -160,8 +160,8 @@ export function webUserContactUiSchema(pickAddress: any) {
                     })
                 }
             } as UiIdItem,
-            addressString: { widget: 'text', label: '详细地址', rules: addressDetailValidation } as UiTextItem,
-            zipCode: { widget: 'text', label: '邮编', rules: zipCodeValidation } as UiTextItem,
+            addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
+            zipCode: { widget: 'text', label: '邮编', placeholder: '邮编', rules: zipCodeValidation } as UiTextItem,
         }
     }
 }

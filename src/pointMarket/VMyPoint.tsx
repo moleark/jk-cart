@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Prop, IconText, PropGrid, LMR, List, tv, EasyDate, nav, DropdownActions, DropdownAction, FA } from "tonva";
+import { VPage, Page, nav, DropdownActions, DropdownAction } from "tonva";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';

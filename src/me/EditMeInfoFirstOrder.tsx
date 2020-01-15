@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { observable } from 'mobx';
-import { ItemSchema, Page, Edit, VPage, FA } from 'tonva';
+import { ItemSchema, Page, VPage, FA, Form, Context } from 'tonva';
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';
@@ -20,6 +20,7 @@ interface Options {
 export class EditMeInfoFirstOrder extends VPage<CMe>{
     private options: Options;
     @observable tips: JSX.Element;
+    private form: Form;
 
     async open(param: any) {
         // this.onlyRequired = param;
@@ -55,19 +56,21 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         }
     }
 
-    private onMergeDataChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
-        let { name } = itemSchema;
-        this.webUserContactData[name] = newValue;
-        this.webUserData[name] = newValue;
+    private onFormButtonClick = async (name: string, context: Context) => {
+        let { data } = context.form;
+        console.log(data);
+        _.merge(this.webUserData, data);
+        _.merge(this.webUserContactData, data);
         await this.controller.changeWebUser(this.webUserData);
         await this.controller.changeWebUserContact(this.webUserContactData);
-    }
 
-    private onCompleted = async () => {
         let { currentUser } = this.controller.cApp;
         if (currentUser.allowOrdering) {
             this.closePage();
-            await currentUser.addContactFromAccount();
+            let webUserContacts = await currentUser.getContacts();
+            if (webUserContacts === undefined || webUserContacts.length === 0) {
+                await currentUser.addContactFromAccount();
+            }
             await this.options.actionButton.action();
         } else {
             this.tips = <>以上带有 <span className='text-danger'>*</span> 的内容均须填写！</>;
@@ -75,6 +78,12 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 this.tips = undefined;
             }, GLOABLE.TIPDISPLAYTIME);
         }
+    }
+
+
+    private onCompleted = async () => {
+        if (!this.form) return;
+        await this.form.buttonClick("submit");
     }
 
     private page = observer(() => {
@@ -119,14 +128,33 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 <FA name="smile-o" className="text-warning mr-4 my-1" size="2x" />
                 {note}
             </div>
-            <Edit schema={schemaArr.filter(schemaFilter)} uiSchema={uiSchema}
-                data={data}
-                onItemChanged={this.onMergeDataChanged} />
+
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
+                    schema={schemaArr.filter(schemaFilter)}
+                    uiSchema={uiSchema}
+                    formData={data}
+                    onButtonClick={this.onFormButtonClick}
+                    fieldLabelSize={3} />
+            </div>
 
             <div className="p-3 bg-white">
                 {tipsUI}
                 <button type="button" className="btn btn-primary w-100" onClick={() => this.onCompleted()}>{value}</button>
             </div>
-        </Page>;
+        </Page >;
     });
 }
+/*
+<Edit schema={schemaArr.filter(schemaFilter)} uiSchema={uiSchema}
+    data={data}
+    onItemChanged={this.onMergeDataChanged} />
+
+    private onMergeDataChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
+        let { name } = itemSchema;
+        this.webUserContactData[name] = newValue;
+        this.webUserData[name] = newValue;
+        await this.controller.changeWebUser(this.webUserData);
+        await this.controller.changeWebUserContact(this.webUserContactData);
+    }
+*/

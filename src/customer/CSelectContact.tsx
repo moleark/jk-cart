@@ -1,10 +1,7 @@
-//import * as React from 'react';
 import { observable } from 'mobx';
-import _ from 'lodash';
 import { Context, BoxId } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VContactList } from './VContactList';
-//import { CCartApp } from 'CCartApp';
 import { VContact } from './VContact';
 import { CAddress } from './CAddress';
 

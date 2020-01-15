@@ -7,7 +7,6 @@ import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
 import { CPointProduct } from 'pointMarket/CPointProduct';
-import { Privacy } from './privacy';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;

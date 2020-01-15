@@ -5,7 +5,6 @@ import {
     ObjectSchema, RowContext, UiCustom, FormField, BoxId
 } from 'tonva';
 import { tv } from 'tonva';
-import { observer } from 'mobx-react';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
 import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';

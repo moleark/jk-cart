@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { VPage, Page, BoxId } from 'tonva';
 import { tv } from 'tonva';
-import { List, FA } from 'tonva';
+import { FA } from 'tonva';
 import { CAddress } from './CAddress';
 import { GLOABLE } from 'cartenv';
 

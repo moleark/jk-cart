@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import { NavView, nav, Page, Tabs, start } from 'tonva';
+import { NavView, nav, start } from 'tonva';
 import { CApp } from 'CApp';
 import { appConfig } from 'configuration';
 

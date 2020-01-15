@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
-import logo from '../images/logo.png';
 import { browser } from 'tools/browser';
 import { GLOABLE } from 'cartenv';
 
@@ -18,7 +17,7 @@ export class VMain extends VPage<CApp> {
     }
 
     render = (param?: any): JSX.Element => {
-        let { cHome, cMember, cCart, cMe, cart } = this.controller;
+        let { cHome, cCart, cMe, cart } = this.controller;
         let faceTabs = [
             { name: 'home', label: '首页', icon: 'home', content: cHome.tab, notify: undefined/*store.homeCount*/ },
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },

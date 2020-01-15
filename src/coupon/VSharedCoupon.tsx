@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CCoupon } from './CCoupon';
-import { VPage, Page, BoxId, List, tv, FA, EasyDate, LMR } from 'tonva';
+import { VPage, Page, List, FA, EasyDate, LMR } from 'tonva';
 
 export class VSharedCoupon extends VPage<CCoupon> {
 

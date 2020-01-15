@@ -1,6 +1,5 @@
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
-import { PackRow } from 'product/Product';
 
 export class pointOrder {
 

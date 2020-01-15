@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { observable } from 'mobx';
 import { Query, tv, BoxId, PageItems } from 'tonva';
 import { CUqBase } from '../CBase';

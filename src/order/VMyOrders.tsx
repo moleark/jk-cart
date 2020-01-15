@@ -3,7 +3,6 @@ import { VPage, Page } from 'tonva';
 import { COrder } from './COrder';
 import { List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
-import { async } from 'q';
 
 export class VMyOrders extends VPage<COrder> {
 

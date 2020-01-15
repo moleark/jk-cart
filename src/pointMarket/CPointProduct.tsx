@@ -94,12 +94,12 @@ export class CPointProduct extends CUqBase {
         this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
 
         this.pointProductsSelected.forEach(element => {
-            if (element.pack.id == data.pack.id) {
+            if (element.pack.id === data.pack.id) {
                 element.quantity = element.quantity + nowQuantity;
                 IsContain = IsContain + 1;
             }
         });
-        if (IsContain == 0) {
+        if (IsContain === 0) {
             this.pointProductsSelected.push(data);
         }
     }

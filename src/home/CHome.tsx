@@ -1,7 +1,5 @@
 import { Tuid } from 'tonva';
-//import { CCartApp } from '../CCartApp';
-import { PageItems, Controller } from 'tonva';
-import { CApp } from '../CApp';
+import { PageItems } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
