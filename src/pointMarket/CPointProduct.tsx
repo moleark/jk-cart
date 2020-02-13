@@ -55,7 +55,11 @@ export class CPointProduct extends CUqBase {
     }
 
     openExchangeHistory = async () => {
-        this.exchangeHistory = await this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20);
+        let promises: PromiseLike<any>[] = [];
+        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20));
+        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -20));
+        let presult = await Promise.all(promises);
+        this.exchangeHistory = presult[0].concat(presult[1]);
         this.openVPage(VExchangeHistory);
     }
 
