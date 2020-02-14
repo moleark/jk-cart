@@ -2,6 +2,7 @@ import * as React from 'react';
 import { nav, User, Page, Image, VPage } from 'tonva';
 import { Prop, Media, IconText, FA, PropGrid, LMR } from 'tonva';
 import { About } from './about';
+import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
@@ -19,6 +20,7 @@ export class VMe extends VPage<CMe> {
     }
 
     private about = () => nav.push(<About />);
+    private contactUs = () => nav.push(<ContactUs />);
     private privacy = () => {
         this.controller.openPrivacy();
     }
@@ -88,6 +90,12 @@ export class VMe extends VPage<CMe> {
                 type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="关于百灵威" />,
                 onClick: this.about
+            },
+            '',
+            {
+                type: 'component',
+                component: <IconText iconClass="text-info mr-2" icon="phone" text="联系我们" />,
+                onClick: this.contactUs
             },
             '',
             {
