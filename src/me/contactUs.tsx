@@ -18,7 +18,7 @@ export class ContactUs extends React.Component {
                     <div className="small">
                         <p>地址：北京市朝阳区北辰西路69号峻峰华亭A座5层</p>
                         <p>邮编：100029</p>
-                        <p>电话：<a href="tel:4006667788">400-666-7788</a> / <a href="+861082848833">+86 10 8284 8833</a></p>
+                        <p>电话：<a href="tel:4006667788">400-666-7788</a> / <a href="tel:861082848833">+86 10 8284 8833</a></p>
                         <p>传真：+86 10 8284 9933</p>
                         <p>电子邮件：<a href="mailto:jkinfo@jkchemical.com">jkinfo@jkchemical.com</a><a className="ml-3" href="mailto:jkinfo@jk-sci.com">jkinfo@jk-sci.com</a></p>
                     </div>
