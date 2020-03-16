@@ -116,11 +116,12 @@ export class VMe extends VPage<CMe> {
 
         let rows: Prop[];
         if (user === undefined) {
+            let { showLogin } = this.controller;
             rows = aboutRows;
             rows.push(
                 {
                     type: 'component',
-                    component: <button className="btn btn-success w-100 my-2" onClick={() => nav.showLogin(undefined, true)}>
+                    component: <button className="btn btn-success w-100 my-2" onClick={() => showLogin()}>
                         <FA name="sign-out" size="lg" /> 请登录
                     </button>
                 },
@@ -181,7 +182,7 @@ export class VMe extends VPage<CMe> {
 }
 
 
-function userSpan(name: string, nick: string): JSX.Element {
+export function userSpan(name: string, nick: string): JSX.Element {
     return nick ?
         <><b>{nick} &nbsp; <small className="muted">{name}</small></b></>
         : <b>{name}</b>

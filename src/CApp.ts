@@ -64,43 +64,57 @@ export class CApp extends CAppBase {
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
 
-
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
 
-        this.showMain();
         let { location } = document;
         let { search } = location;
         if (search) {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {
                 case "privacy":
+                    this.showMain();
                     this.cMe.openPrivacy();
                     break;
                 case "product":
+                    this.showMain();
                     let prouductBoxId = await this.uqs.product.ProductX.boxId(query.product).assure();
                     await this.cProduct.showProductDetail(prouductBoxId);
                     break;
                 case "coupon":
+                    this.showMain();
                     if (query.coupon)
                         await this.cCoupon.showSharedCoupon(query);
                     break;
                 case "credits":
+                    this.showMain();
                     if (query.credits)
                         await this.cPointProduct.openPlatformOrderPoint(query.credits);
                     break;
-                case "order":
+                case "login":
+                    this.cMe.showLogin();
                     break;
                 default:
+                    this.showMain();
                     break;
             }
+        } else {
+            this.showMain();
         }
         this.topKey = nav.topKey();
     }
 
     showMain(initTabName?: string) {
-        this.openVPage(VMain, initTabName);
+        let root = document.getElementById('root');
+        if (root)
+            this.openVPage(VMain, initTabName);
+
+        let divLogin = document.getElementById('login');
+        if (divLogin) {
+            // this.openPage(this.cCart.renderCartLabel());
+            this.openPage(this.cMe.renderLoginState());
+        }
     }
 
     async loginCallBack(user: User) {

@@ -7,6 +7,7 @@ import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
 import { CPointProduct } from 'pointMarket/CPointProduct';
+import { VLoginState } from './VLoginState';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -65,5 +66,13 @@ export class CMe extends CUqBase {
 
     getCommonText = async (textId: number) => {
         return await this.uqs.order.CommonText.load(textId);
+    }
+
+    renderLoginState() {
+        return this.renderView(VLoginState);
+    }
+
+    showLogin = () => {
+        nav.showLogin(undefined, true);
     }
 }
