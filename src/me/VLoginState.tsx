@@ -8,8 +8,10 @@ export class VLoginState extends View<CMe> {
     render() {
         let { user } = nav;
         if (user === undefined) {
-            return <div className="w-100">
-                <a href="/shop?type=login">登录</a>
+            return <div className="d-flex align-items-center justify-content-end small text-muted">
+                <a className="px-2" href="./shop?type=signUp">注册</a>
+                <a className="px-2" href="./shop?type=login">登录</a>
+                {this.controller.renderCarLabel()}
             </div>
         }
         let { id, name, nick, icon } = user;
