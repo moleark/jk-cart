@@ -26,6 +26,7 @@ export class CApp extends CAppBase {
     currentLanguage: any;
     currentUser: WebUser;
     currentCouponCode: string;
+    currentCreditCode: string;
 
     cHome: CHome;
     cCart: CCart;
@@ -89,8 +90,12 @@ export class CApp extends CAppBase {
                     break;
                 case "credits":
                     this.showMain();
-                    if (query.credits)
-                        await this.cPointProduct.openPlatformOrderPoint(query.credits);
+                    if (query.credits) {
+                        if (query.platform === 1)
+                            await this.cPointProduct.openPlatformOrderPoint(query.credits);
+                        else
+                            await this.cCoupon.showSharedCredits(query);
+                    }
                     break;
                 case "login":
                     this.cMe.showLogin();

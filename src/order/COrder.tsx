@@ -28,7 +28,7 @@ export class COrder extends CUqBase {
     }
 
     private createOrderFromCart = async (cartItems: CartItem2[]) => {
-        let { currentUser, currentSalesRegion, currentCouponCode } = this.cApp;
+        let { currentUser, currentSalesRegion, currentCouponCode, currentCreditCode } = this.cApp;
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
@@ -74,12 +74,16 @@ export class COrder extends CUqBase {
             if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
                 this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
         }
-        if (currentCouponCode) {
-            let coupon = await this.cApp.cCoupon.getCouponValidationResult(currentCouponCode);
+
+        let currentCode = currentCouponCode || currentCreditCode;
+        if (currentCode) {
+            let coupon = await this.cApp.cCoupon.getCouponValidationResult(currentCode);
             if (coupon.result === 1)
                 this.applyCoupon(coupon);
-            else
+            else {
                 this.cApp.currentCouponCode = undefined;
+                this.cApp.currentCreditCode = undefined;
+            }
         }
     }
 

@@ -2,6 +2,7 @@ import { CUqBase } from '../CBase';
 import { VCouponEdit } from './VCouponEdit';
 import { VSharedCoupon } from './VSharedCoupon';
 import { BoxId } from 'tonva';
+import { VSharedCredit } from './VSharedCredit';
 
 export class CCoupon extends CUqBase {
 
@@ -24,6 +25,9 @@ export class CCoupon extends CUqBase {
         this.openVPage(VCouponEdit);
     }
 
+    /**
+     * 
+     */
     showSharedCoupon = async (param: any) => {
         let { coupon, productids } = param;
 
@@ -37,6 +41,21 @@ export class CCoupon extends CUqBase {
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
         this.openVPage(VSharedCoupon, { couponValidationResult, products });
+    }
+
+    showSharedCredits = async (param: any) => {
+        let { credits, productids } = param;
+
+        let creditsValidationResult = await this.getCouponValidationResult(credits);
+        let products: any;
+        if (productids) {
+            let { ProductX } = this.uqs.product;
+            let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
+            // let promises: PromiseLike<void>[] = productidArray.map((v: any) => ProductX.load(v));
+            // products = await Promise.all(promises);
+            products = productidArray.map((v: any) => ProductX.boxId(v));
+        }
+        this.openVPage(VSharedCredit, { creditsValidationResult, products });
     }
 
     async showProductDetail(product: BoxId) {
