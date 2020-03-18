@@ -91,7 +91,7 @@ export class CApp extends CAppBase {
                 case "credits":
                     this.showMain();
                     if (query.credits) {
-                        if (query.platform === 1)
+                        if (query.platform === "1")
                             await this.cPointProduct.openPlatformOrderPoint(query.credits);
                         else
                             await this.cCoupon.showSharedCredits(query);
