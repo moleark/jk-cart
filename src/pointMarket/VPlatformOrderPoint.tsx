@@ -18,7 +18,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
     }
 
     private openPlatformOrderPoint = async () => {
-        this.controller.openPlatformOrderPoint();
+        this.controller.openPointDrawing();
     }
 
     private tryApplyCoupon = async () => {
@@ -36,7 +36,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             caption: "第一次领取积分",
             note: <>
                 请提供信息，以便自动为您最近的内部订单积分。
-                </>,
+            </>,
             actionButton: {
                 value: "确定",
                 action: this.applyCoupon

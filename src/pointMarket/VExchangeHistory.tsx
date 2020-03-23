@@ -4,9 +4,11 @@ import { CPointProduct } from './CPointProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
 
-
 export class VExchangeHistory extends VPage<CPointProduct> {
+
+    private exchangeHistory: any[] = [];        /*积分产品列表 */
     async open(param?: any) {
+        this.exchangeHistory = param;
         this.openPage(this.page);
     }
 
@@ -20,9 +22,8 @@ export class VExchangeHistory extends VPage<CPointProduct> {
     }
 
     private page = observer(() => {
-        let { exchangeHistory } = this.controller;
         return <Page header="兑换历史记录">
-            <List items={exchangeHistory} item={{ render: this.renderExchangeHistory }} none="暂无记录"></List>
+            <List items={this.exchangeHistory} item={{ render: this.renderExchangeHistory }} none="暂无记录"></List>
         </Page>;
     });
 }

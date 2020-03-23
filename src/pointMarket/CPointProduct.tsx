@@ -22,7 +22,6 @@ export class CPointProduct extends CUqBase {
     @observable pointProducts: any[] = [];          /*可兑产品列表 */
     @observable pointProductsSelected: any[] = [];  /*已选择产品列表 */
     @observable pointToExchanging: number = 0;              /*将要兑换的积分总计 */
-    @observable exchangeHistory: any[] = [];        /*积分产品列表 */
     @observable orderData: pointOrder = new pointOrder();   /*正在提交的产品列表*/
     @observable couponId: number;                   /*积分码 */
     @observable platformOrderId: any;               /*平台合同号 */
@@ -30,7 +29,6 @@ export class CPointProduct extends CUqBase {
 
     protected async internalStart(param: any) {
         await this.refreshMypoint();
-        this.exchangeHistory = await this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20);
         this.openVPage(VMyPoint);
     }
 
@@ -59,11 +57,11 @@ export class CPointProduct extends CUqBase {
         promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20));
         promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -20));
         let presult = await Promise.all(promises);
-        this.exchangeHistory = presult[0].concat(presult[1]);
-        this.openVPage(VExchangeHistory);
+        let exchangeHistory = presult[0].concat(presult[1]);
+        this.openVPage(VExchangeHistory, exchangeHistory);
     }
 
-    openPlatformOrderPoint = async (credits?: string) => {
+    openPointDrawing = async (credits?: string) => {
         let lastPlatformId = await this.getLastPlatformOrder();
         if (lastPlatformId)
             this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);

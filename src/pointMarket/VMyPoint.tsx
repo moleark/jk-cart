@@ -18,8 +18,12 @@ export class VMyPoint extends VPage<CPointProduct> {
     private openExchangeHistory = async () => {
         this.controller.openExchangeHistory();
     }
-    private openPlatformOrderPoint = async () => {
-        this.controller.openPlatformOrderPoint();
+
+    /**
+     * 打开领取积分界面 
+     */
+    private openPointDrawing = async () => {
+        this.controller.openPointDrawing();
     }
 
     private pointRules = () => nav.push(<VPointRule />);
@@ -39,7 +43,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             {
                 icon: 'get-pocket',
                 caption: '领取积分',
-                action: this.openPlatformOrderPoint
+                action: this.openPointDrawing
             },
             {
                 icon: 'history',

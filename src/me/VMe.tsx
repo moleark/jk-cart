@@ -38,8 +38,8 @@ export class VMe extends VPage<CMe> {
         this.controller.openInvoice();
     }
 
-    private openPoint = async () => {
-        this.controller.openPoint();
+    private openMyPoint = async () => {
+        this.controller.openMyPoint();
     }
 
     private meInfo = observer(() => {
@@ -166,7 +166,7 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
-                    onClick: this.openPoint
+                    onClick: this.openMyPoint
                 },
                 '',
                 {

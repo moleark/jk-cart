@@ -45,7 +45,7 @@ export class CMe extends CUqBase {
         cInvoiceInfo.start(origInvoice);
     }
 
-    openPoint = async () => {
+    openMyPoint = async () => {
         let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
         await cPointProduct.start();
     }
