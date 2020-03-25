@@ -7,7 +7,7 @@ export class VLoginState extends View<CMe> {
 
     render() {
         let { user } = nav;
-        if (user === undefined) {
+        if (!user) {
             return <div className="d-flex align-items-center justify-content-end small text-muted">
                 <a className="px-2" href="./shop?type=signUp">注册</a>
                 <a className="px-2" href="./shop?type=login">登录</a>
@@ -15,19 +15,15 @@ export class VLoginState extends View<CMe> {
             </div>
         }
         let { id, name, nick, icon } = user;
-        return <div>
-            <LMR className="py-2 cursor-pointer w-100"
-                left={<Image className="w-3c h-3c mr-3" src={icon} />}
-                right="退出"
-                onClick={() => {
-                    this.openVPage(EditMeInfo);
-                }}>
-                <div>
-                    <div>{userSpan(name, nick)}</div>
-                    <div className="small"><span className="text-muted">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
-                </div>
-            </LMR>
-        </div>;
+        return <div className="d-flex align-items-center justify-content-end">
+            <div>
+                {<Image className="w-3c h-3c mr-3" src={icon} />}
+            </div>
+            <div>
+                <div>{userSpan(name, nick)}</div>
+                <div className="small"><span className="text-muted">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
+            </div>
+        </div >;
     }
 }
 
