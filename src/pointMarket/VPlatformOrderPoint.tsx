@@ -81,7 +81,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
             return;
         }
 
-        let lastPlatformOrderId = await getLastPlatformOrder();
+        let lastPlatformOrderId = undefined; // = await getLastPlatformOrder();
         if (lastPlatformOrderId) {
             let rtn = await receivePoint(lastPlatformOrderId);
             if (rtn === 1) {
@@ -92,7 +92,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
         } else {
             // 无可用订单,保存积分码
             let Crtn = await addUsedCoupon();
-            tip = "积分码已记录，此积分码会在下次产生内部订单时自动使用。";
+            tip = "积分码已记录，此积分码会在7日内首次下单时自动使用。";
         }
         this.closePage();
         this.openVPage(VReceivePointSuccess, tip);
@@ -124,7 +124,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
         return <Page header="领取积分" right={null}>
             <div>
-                <div className="px-2 bg-white">
+                <div className="px-2 pb-1 bg-white">
                     <div className="row py-2">
                         <div className="col-3 text-muted pr">积分码:</div>
                         <div className="col-9 d-flex pl-0">
@@ -144,12 +144,8 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                         </div>
                     </div>
                     {tipsUI}
-                    <div className="pt-2 pb-3">
-                        <ol className="mr-3 small">
-                            <li>输入积分码，可获取可用订单获取的额外积分；</li>
-                            <li>暂无可用订单(平台订单尚未导入百灵威订单系统)的情况下，系统会记录您输入的积分码，待订单导入后获取额外积分；</li>
-                            <li>每个订单仅限提取一次积分。</li>
-                        </ol>
+                    <div className="alert alert-info">
+                        你在领取积分码后7个自然日内的第一个订单将获取到额外积分
                     </div>
                 </div>
             </div>

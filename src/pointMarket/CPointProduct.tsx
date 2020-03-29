@@ -62,9 +62,11 @@ export class CPointProduct extends CUqBase {
     }
 
     openPointDrawing = async (credits?: string) => {
+        /* 
         let lastPlatformId = await this.getLastPlatformOrder();
         if (lastPlatformId)
             this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
+        */
         this.openVPage(VPlatformOrderPoint, credits);
     }
 
