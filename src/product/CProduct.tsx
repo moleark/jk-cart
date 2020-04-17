@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { Query, tv, BoxId, PageItems } from 'tonva';
+import { Query, tv, BoxId, PageItems, QueryPager } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
@@ -8,6 +8,7 @@ import { VProductDelivery } from './VProductDelivery';
 import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice } from './VProductView';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 
+/*
 class PageProducts extends PageItems<any> {
 
     private searchProductQuery: Query;
@@ -28,12 +29,13 @@ class PageProducts extends PageItems<any> {
         this.pageStart = item === undefined ? 0 : item.seq;
     }
 }
-
+*/
 /**
  *
  */
 export class CProduct extends CUqBase {
-    pageProducts: PageProducts;
+    //pageProducts: PageProducts;
+    productsPager: QueryPager<any>;
 
     @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     @observable chemicalInfoContainer: { [productId: number]: any } = {};
@@ -44,16 +46,20 @@ export class CProduct extends CUqBase {
 
     searchByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
-        this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
+        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
+        this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
+        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
+        this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
         this.openVPage(VProductList, key);
     }
 
     async searchByCategory(category: any) {
         let { currentSalesRegion } = this.cApp;
-        this.pageProducts = new PageProducts(this.uqs.product.SearchProductByCategory);
+        //this.pageProducts = new PageProducts(this.uqs.product.SearchProductByCategory);
+        this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         let { productCategoryId, name } = category;
-        this.pageProducts.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
+        //this.pageProducts.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
+        await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id })
         this.openVPage(VProductList, name);
     }
 

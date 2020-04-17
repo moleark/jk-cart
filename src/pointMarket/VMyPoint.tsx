@@ -47,7 +47,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             },
             {
                 icon: 'history',
-                caption: '积分兑换历史',
+                caption: '兑换记录',
                 action: this.openExchangeHistory
             },
             {

@@ -24,7 +24,7 @@ export class VMember extends VPage<CMember> {
 
     render(member: any): JSX.Element {
 
-        return <this.content />;
+        return <this.page />;
     }
 
     private submitRecommendationCode() {
@@ -35,7 +35,7 @@ export class VMember extends VPage<CMember> {
         }
     }
 
-    private content = observer(() => {
+    private page = observer(() => {
         let { cApp, member } = this.controller;
         if (member === undefined)
             return <></>;

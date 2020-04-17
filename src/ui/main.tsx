@@ -21,14 +21,28 @@ export class VMain extends VPage<CApp> {
         let faceTabs = [
             { name: 'home', label: '首页', icon: 'home', content: cHome.tab, notify: undefined/*store.homeCount*/ },
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
-            { name: 'cart', label: '购物车', icon: 'shopping-cart', content: cCart.tab, notify: cart.count },
-            { name: 'me', label: '我的', icon: 'user', content: cMe.tab }
+            {
+                name: 'cart',
+                label: '购物车',
+                icon: 'shopping-cart',
+                //content: cCart.tab, 
+                page: cCart.tabPage,
+                notify: cart.count
+            },
+            {
+                name: 'me',
+                label: '我的',
+                icon: 'user',
+                //content: cMe.tab 
+                page: cMe.tabPage
+            }
         ].map(v => {
-            let { name, label, icon, content, notify } = v;
+            let { name, label, icon, content, page, notify } = v;
             return {
                 name: name,
                 caption: (selected: boolean) => TabCaptionComponent(label, icon, color(selected)),
                 content: content,
+                page: page,
                 notify: notify,
             }
         });
@@ -42,8 +56,6 @@ export class VMain extends VPage<CApp> {
                 <button type="button" className="btn btn-primary btn-sm">立即安装</button>
             </div>
         }
-        return <Page header={header} headerClassName="bg-warning" >
-            <Tabs tabs={faceTabs} />
-        </Page>;
+        return <Page header={header} headerClassName="bg-warning" tabsProps={{ tabs: faceTabs }} />
     }
 }

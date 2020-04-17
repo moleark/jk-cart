@@ -1,8 +1,10 @@
-import { UqUI, Tuid } from 'tonva';
-import tuid from './tuid';
-
+//import { UqUI, Tuid } from 'tonva';
+//import tuid from './tuid';
+/*
 const uqUI: UqUI = {
     tuid: tuid,
 }
 
 export default uqUI;
+*/
+export const product = 1;

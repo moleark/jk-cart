@@ -1,4 +1,5 @@
 import * as React from 'react';
+/*
 import { TuidUI } from 'tonva';
 
 const warehouse: TuidUI = {
@@ -13,3 +14,4 @@ const warehouse: TuidUI = {
 export default {
     warehouse: warehouse,
 }
+*/

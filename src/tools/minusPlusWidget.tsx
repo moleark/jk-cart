@@ -9,14 +9,15 @@ const keys = [107, 109, 110, 187, 189];
 export class MinusPlusWidget extends UpdownWidget {
     @observable protected value: any;
     @observable protected disabled: boolean;
-    @observable protected hasFocus: boolean;
+    // @observable protected hasFocus: boolean;
 
     protected isValidKey(key: number): boolean {
         if (keys.find(v => v === key) !== undefined) return false;
         return super.isValidKey(key);
     }
 
-    protected onBlur(evt: React.FocusEvent<any>) {
+	/*
+    protected onBlur = (evt: React.FocusEvent<any>) => {
         super.onBlur(evt);
         this.hasFocus = false;
     }
@@ -24,7 +25,8 @@ export class MinusPlusWidget extends UpdownWidget {
     protected onFocus(evt: React.FocusEvent<any>) {
         super.onFocus(evt);
         this.hasFocus = true;
-    }
+	}
+	*/
 
     protected onChange(evt: React.ChangeEvent<any>) {
     }

@@ -39,9 +39,13 @@ export class VCart extends VPage<CCart> {
         let content = amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-        return <button className="btn btn-success w-100" type="button" onClick={checkOut} disabled={amount <= 0}>
-            {content}
-        </button>;
+        return <div className="d-flex justify-content-center">
+            <button className="btn btn-success w-75 mx-5"
+                type="button"
+                onClick={checkOut} disabled={amount <= 0}>
+                {content}
+            </button>
+        </div>;
     });
 
     render(params: any): JSX.Element {
@@ -145,10 +149,33 @@ export class VCart extends VPage<CCart> {
                 {this.empty()}
             </>;
         }
+        return <>
+            <this.cartForm />
+            <this.CheckOutButton />
+        </>;
+		/*
         return <div className="bg-white d-flex flex-column h-100">
             {header}
             <this.cartForm />
-            <footer className="p-3"><this.CheckOutButton /></footer>
-        </div>
+            <footer className="p-3 d-flex justify-content-center"><this.CheckOutButton /></footer>
+		</div>
+		*/
     });
+
+    header() {
+        let header = <header className="py-2 text-center bg-info text-white">
+            <FA className="mr-3" name="shopping-cart" size="lg" />
+            <span >购物车</span>
+        </header>;
+        return header;
+    }
+	/*
+	footer() {
+		return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
+	}
+	*/
+
+    content() {
+        return <this.tab />
+    }
 }

@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+/*
 import { TuidUI, tv, UqUI } from 'tonva';
 
 export const addressUI: TuidUI = {
@@ -34,3 +36,4 @@ const uqUI: UqUI = {
 }
 
 export default uqUI;
+*/

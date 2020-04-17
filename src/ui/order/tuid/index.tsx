@@ -1,7 +1,8 @@
-import { cpccUI, addressUI, currencyUI } from '../../common';
-import { productUI } from '../../product/tuid/product';
+//import { cpccUI, addressUI, currencyUI } from '../../common';
+//import { productUI } from '../../product/tuid/product';
 import { contactUI } from '../../customer/tuid/contact';
 
+/*
 export default {
     productx: productUI,
     address: addressUI,
@@ -11,4 +12,4 @@ export default {
     county: cpccUI,
     contact: contactUI,
     currency: currencyUI,
-}
+}*/

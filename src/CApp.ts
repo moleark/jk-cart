@@ -42,15 +42,23 @@ export class CApp extends CAppBase {
         return new type(this);
     }
 
-    protected async internalStart() {
-        this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
-
-        this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
-
+	private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         if (this.isLogined) {
-            await this.currentUser.setUser(this.user);
+            this.currentUser.setUser(this.user);
         }
+	}
+
+    protected async internalStart() {
+		let [currentSalesRegion, currentLanguage] = await Promise.all([
+			this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN),
+			this.uqs.common.Language.load(GLOABLE.CHINESE),
+		]);
+		this.setUser();
+        //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
+		//this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
+		this.currentSalesRegion = currentSalesRegion;
+		this.currentLanguage = currentLanguage;
 
         this.cart = new Cart(this);
         await this.cart.init();

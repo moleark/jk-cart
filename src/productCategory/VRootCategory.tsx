@@ -71,8 +71,8 @@ export class VRootCategory extends View<CProductCategory> {
     }
 
     private content = () => {
-        let { rootCategories: categories } = this.controller;
-        return <>{categories.map((v: any) => this.renderRootCategory(v, undefined))}</>;
+        let { rootCategories } = this.controller;
+        return <>{rootCategories.map((v: any) => this.renderRootCategory(v, undefined))}</>;
         // return <>{categories2.map(v => <div key={v.productCategory.id}>{tv(v, e => this.renderRoot(e))}</div>)}</>;
     };
 
@@ -88,13 +88,13 @@ export class VRootCategory extends View<CProductCategory> {
 export function renderThirdCategory(subsub: string, total: number) {
     /*
     return <div className="py-1 px-1 text-muted small cat-sub-style">
-        {items.length === 0 ? <>该类产品数量: {total > 1000 ? '>1000' : total}</> : items.map((v: any) => v.name).join(' / ')}
+        {items.length === 0 ? <>产品数量: {total > 1000 ? '>1000' : total}</> : items.map((v: any) => v.name).join(' / ')}
     </div>
     */
     return <div className="py-1 px-1 text-muted small text-truncate">
         {
             subsub === undefined ?
-                <>该类产品数量: {total > 1000 ? '>1000' : total}</>
+                <>{total > 1000 ? '>1000' : total} 个产品</>
                 :
                 subsub
         }

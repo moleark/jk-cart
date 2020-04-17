@@ -46,7 +46,7 @@ export class VMe extends VPage<CMe> {
         let { user } = nav;
         if (user === undefined) return null;
         let { id, name, nick, icon } = user;
-        return <LMR className="py-2 cursor-pointer w-100"
+        return <LMR className="px-3 py-2 cursor-pointer w-100 bg-primary text-white"
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
             right={<FA className="align-self-end" name="angle-right" />}
             onClick={() => {
@@ -54,56 +54,62 @@ export class VMe extends VPage<CMe> {
             }}>
             <div>
                 <div>{userSpan(name, nick)}</div>
-                <div className="small"><span className="text-muted">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
+                <div className="small"><span className="text-light">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
             </div>
         </LMR>;
     });
 
     private orderStates = () => {
-
         let { openMyOrders } = this.controller;
+		let oss = [
+			{caption: '待审核', state: 'processing', icon: 'desktop'}, 
+			{caption: '待发货', state: 'completed', icon: 'truck'}, 
+			{caption: '所有订单', state: 'all', icon: 'file-text-o'}, 
+		];
+
         return <div className="d-flex justify-content-around w-100 my-3">
-            <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('processing')}>
-                <FA name="desktop" className="text-info fa-2x" />
-                <small>待审核</small>
-            </div>
-            <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('completed')}>
-                <FA name="truck" className="text-info fa-2x" />
-                <small>待发货</small>
-            </div>
-            <div className="d-flex flex-column align-items-center" onClick={() => openMyOrders('all')}>
-                <FA name="file-text-o" className="text-info fa-2x" />
-                <small>所有订单</small>
-            </div>
+			{
+				oss.map(((os, index) => {
+					let {caption, state, icon} = os;
+					return <div key={index} className="flex-fill d-flex flex-column align-items-center cursor-pointer" 
+						onClick={() => openMyOrders(state)}>
+						<FA name={icon} className="text-info fa-2x" />
+					<small>{caption}</small>
+					</div>;
+				}))
+			}
         </div>
     };
 
     render() {
-        return <this.content />;
-    }
+        return <this.page />;
+	}
+	content() {
+        return <this.page />;
+	}
+	header() {
+		return <this.meInfo />;
+	}
 
-    private content = observer(() => {
+    private page = observer(() => {
         const { user } = nav;
         let aboutRows: Prop[] = [
-            '',
-            {
-                type: 'component',
-                component: <IconText iconClass="text-info mr-2" icon="smile-o" text="关于百灵威" />,
-                onClick: this.about
-            },
             '',
             {
                 type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="phone" text="联系我们" />,
                 onClick: this.contactUs
             },
-            '',
+            {
+                type: 'component',
+                component: <IconText iconClass="text-info mr-2" icon="smile-o" text="关于百灵威" />,
+                onClick: this.about
+            },
             {
                 type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="隐私政策" />,
                 onClick: this.privacy
             },
-            '',
             {
                 type: 'component',
                 component: <div className="w-100 d-flex justify-content-between" onClick={this.aboutThisApp}>
@@ -133,19 +139,22 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     bk: '',
-                    component: <button className="btn btn-danger w-100" onClick={this.exit}>
-                        <FA name="sign-out" size="lg" /> 退出登录
-                </button>
+                    component: <div className="text-center flex-fill"><button className="btn btn-danger w-75" onClick={this.exit}>
+    	                    <FA name="sign-out" size="lg" /> 退出登录
+						</button>
+					</div>
                 },
             ];
 
             rows = [
+				/*
                 '',
                 {
                     type: 'component',
                     component: <this.meInfo />
-                },
-                '',
+				},
+				*/
+				'',				
                 {
                     type: 'component',
                     component: <this.orderStates />,
@@ -156,13 +165,11 @@ export class VMe extends VPage<CMe> {
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="地址管理" />,
                     onClick: this.openContactList
                 },
-                '',
                 {
                     type: 'component',
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="发票管理" />,
                     onClick: this.openInvoice
                 },
-                '',
                 {
                     type: 'component',
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,

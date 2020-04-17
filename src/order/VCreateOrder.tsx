@@ -152,17 +152,15 @@ export class VCreateOrder extends VPage<COrder> {
 
         let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
         let { currentUser } = cApp;
-        let footer = <div className="d-block">
-            <div className="w-100 px-3">
-                <div className="d-flex justify-content-left flex-grow-1">
-                    <span className="text-danger" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</span>
-                </div>
+        let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
+            <div className="d-flex justify-content-left">
+                <div className="text-danger flex-grow-1" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"
                     className={classNames('btn', 'w-30', { 'btn-danger': currentUser.allowOrdering, 'btn-secondary': !currentUser.allowOrdering })}
                     onClick={this.onSubmit} disabled={!currentUser.allowOrdering}>提交订单
                 </button>
             </div>
-        </div >;
+        </div>;
 
         let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?

@@ -3,6 +3,7 @@ import LabSupplies from './images/LabSupplies.png';
 import LifeScience from './images/LifeScience.png';
 import MaterialScience from './images/MaterialScience.png';
 import OrganicChemistry from './images/OrganicChemistry.png';
+import { env } from 'tonva';
 
 
 // 生产配置
@@ -69,5 +70,6 @@ const GLOABLE_TEST = {
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
 }
 
-// export { GLOABLE_PRODUCTION as GLOABLE };
-export { GLOABLE_TEST as GLOABLE };
+export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;
+//export { GLOABLE_PRODUCTION as GLOABLE };
+//export { GLOABLE_TEST as GLOABLE };

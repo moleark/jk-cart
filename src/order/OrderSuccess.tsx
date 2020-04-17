@@ -16,7 +16,7 @@ export class OrderSuccess extends VPage<COrder> {
                 <div>
                     <p className="text-primary"><span className="h4">下单成功！</span></p>
                     <p className="">
-                        订单编号: <span className="h5 text-info">{orderCreateResult.no}</span><br /><br />
+                        订单: <span className="h5 text-info">{orderCreateResult.no}</span><br /><br />
                         <span className="text-muted">我们会加紧处理，请注意查收短信。</span>
                     </p>
                 </div>

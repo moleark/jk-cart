@@ -270,7 +270,8 @@ class CartRemote extends CartStore {
     */
 
     async load(): Promise<CartItem2[]> {
-        return await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
+        let ret = await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
+        return ret && ret.$page as any;
     }
 
     /**

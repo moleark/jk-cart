@@ -8,6 +8,7 @@ import { CartPackRow, CartItem2 } from './Cart';
 export class CCart extends CUqBase {
 
     private selectedCartItems: CartItem2[];
+    tabPage: VCart = new VCart(this);
 
     protected async internalStart(param: any) {
         this.openVPage(VCart);

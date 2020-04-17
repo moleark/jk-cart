@@ -1,7 +1,7 @@
 import { contactUI } from './contact';
-import { addressUI, cpccUI } from '../../common';
+//import { addressUI, cpccUI } from '../../common';
 import { invoiceInfoUI, invoiceTypeUI } from './invoice';
-
+/*
 export default {
     contact: contactUI,
     address: addressUI,
@@ -12,3 +12,4 @@ export default {
     invoiceInfo: invoiceInfoUI,
     invoiceType: invoiceTypeUI
 }
+*/

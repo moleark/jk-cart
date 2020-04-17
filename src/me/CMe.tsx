@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Context, nav } from 'tonva';
+import { Context, nav, VPage } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
@@ -25,6 +25,7 @@ export class CMe extends CUqBase {
     }
 
     tab = () => this.renderView(VMe);
+    tabPage: VMe = new VMe(this);
 
     openMyOrders = async (state: string) => {
         let { cOrder } = this.cApp;
