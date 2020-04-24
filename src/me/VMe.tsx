@@ -61,35 +61,35 @@ export class VMe extends VPage<CMe> {
 
     private orderStates = () => {
         let { openMyOrders } = this.controller;
-		let oss = [
-			{caption: '待审核', state: 'processing', icon: 'desktop'}, 
-			{caption: '待发货', state: 'completed', icon: 'truck'}, 
-			{caption: '所有订单', state: 'all', icon: 'file-text-o'}, 
-		];
+        let oss = [
+            { caption: '待审核', state: 'processing', icon: 'desktop' },
+            { caption: '待发货', state: 'completed', icon: 'truck' },
+            { caption: '所有订单', state: 'all', icon: 'file-text-o' },
+        ];
 
         return <div className="d-flex justify-content-around w-100 my-3">
-			{
-				oss.map(((os, index) => {
-					let {caption, state, icon} = os;
-					return <div key={index} className="flex-fill d-flex flex-column align-items-center cursor-pointer" 
-						onClick={() => openMyOrders(state)}>
-						<FA name={icon} className="text-info fa-2x" />
-					<small>{caption}</small>
-					</div>;
-				}))
-			}
+            {
+                oss.map(((os, index) => {
+                    let { caption, state, icon } = os;
+                    return <div key={index} className="flex-fill d-flex flex-column align-items-center cursor-pointer"
+                        onClick={() => openMyOrders(state)}>
+                        <FA name={icon} className="text-info fa-2x" />
+                        <small>{caption}</small>
+                    </div>;
+                }))
+            }
         </div>
     };
 
     render() {
         return <this.page />;
-	}
-	content() {
+    }
+    content() {
         return <this.page />;
-	}
-	header() {
-		return <this.meInfo />;
-	}
+    }
+    header() {
+        return <this.meInfo />;
+    }
 
     private page = observer(() => {
         const { user } = nav;
@@ -140,9 +140,9 @@ export class VMe extends VPage<CMe> {
                     type: 'component',
                     bk: '',
                     component: <div className="text-center flex-fill"><button className="btn btn-danger w-75" onClick={this.exit}>
-    	                    <FA name="sign-out" size="lg" /> 退出登录
+                        <FA name="sign-out" size="lg" /> 退出登录
 						</button>
-					</div>
+                    </div>
                 },
             ];
 
@@ -154,10 +154,10 @@ export class VMe extends VPage<CMe> {
                     component: <this.meInfo />
 				},
 				*/
-				'',				
+                '',
                 {
                     type: 'component',
-                    component: <this.orderStates />,
+                    component: <>{this.orderStates()}</>,
                 },
                 '',
                 {

@@ -130,8 +130,8 @@ export class VCart extends VPage<CCart> {
             footer = undefined;
         }
         else {
-            content = <this.cartForm />;
-            footer = <this.CheckOutButton />;
+            content = React.createElement(this.cartForm);
+            footer = React.createElement(this.CheckOutButton);
         }
         return <Page header="购物车" footer={footer}>
             {content}
@@ -149,17 +149,12 @@ export class VCart extends VPage<CCart> {
                 {this.empty()}
             </>;
         }
+        let content = React.createElement(this.cartForm);
+        let footer = React.createElement(this.CheckOutButton);
         return <>
-            <this.cartForm />
-            <this.CheckOutButton />
+            {content}
+            {footer}
         </>;
-		/*
-        return <div className="bg-white d-flex flex-column h-100">
-            {header}
-            <this.cartForm />
-            <footer className="p-3 d-flex justify-content-center"><this.CheckOutButton /></footer>
-		</div>
-		*/
     });
 
     header() {

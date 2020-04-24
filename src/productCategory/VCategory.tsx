@@ -1,13 +1,19 @@
 import * as React from 'react';
 import { VPage, Page, FA } from 'tonva';
 import { CProductCategory } from './CProductCategory';
+import marked from 'marked';
 //import { tv } from 'tonva';
 import { renderThirdCategory } from './VRootCategory';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
 
 export class VCategory extends VPage<CProductCategory> {
 
+    @observable instruction: string;
     async open(categoryWaper: any) {
         this.openPage(this.page, categoryWaper);
+        let { getCategoryInstruction } = this.controller;
+        this.instruction = await getCategoryInstruction(0);
     }
 
     /*
@@ -41,9 +47,12 @@ export class VCategory extends VPage<CProductCategory> {
 
     private renderRootCategory = (item: any, parent: any, labelColor: string) => {
         let { productCategory, name, children } = item;
+        let instructionUi = this.instruction ?
+            <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (this.instruction || "") }} /> : null;
         return <div className="bg-white mb-3" key={name}>
             <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
                 <b>{name}</b>
+                {instructionUi}
             </div>
             <div className="cat-root-sub">
                 <div className="row no-gutters">
@@ -70,7 +79,7 @@ export class VCategory extends VPage<CProductCategory> {
         </div>;
     }
 
-    private page = (categoryWaper: any) => {
+    private page = observer((categoryWaper: any) => {
         let { cHome } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
@@ -79,5 +88,5 @@ export class VCategory extends VPage<CProductCategory> {
         return <Page header={header} right={cartLabel}>
             {this.renderRootCategory(item, parent, labelColor)}
         </Page>
-    }
+    })
 }

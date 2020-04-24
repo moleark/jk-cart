@@ -36,6 +36,7 @@ const GLOABLE_PRODUCTION = {
     TIPDISPLAYTIME: 3000,
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
+    CONTENTSITE: "https://web.jkchemical.com",
 }
 
 // 测试环境配置
@@ -68,6 +69,7 @@ const GLOABLE_TEST = {
     TIPDISPLAYTIME: 3000,
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
+    CONTENTSITE: "https://c.jkchemical.com/jk-web",
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

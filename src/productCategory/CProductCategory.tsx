@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { CUqBase } from '../CBase';
 import { VRootCategory } from './VRootCategory';
 import { VCategory } from './VCategory';
+import { GLOABLE } from "cartenv";
 import './cat.css';
 
 export class CProductCategory extends CUqBase {
@@ -14,10 +15,10 @@ export class CProductCategory extends CUqBase {
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
         let results = await this.uqs.product.GetRootCategory.query({
-            salesRegion: currentSalesRegion.id, 
-            language: currentLanguage.id 
+            salesRegion: currentSalesRegion.id,
+            language: currentLanguage.id
         });
-        let {first, secend, third} = results;
+        let { first, secend, third } = results;
         /*
         (first as any[]).forEach(element => {
             this.buildCategories(element, secend, third);
@@ -37,26 +38,34 @@ export class CProductCategory extends CUqBase {
         return this.renderView(VRootCategory);
     };
 
+    getCategoryInstruction = async (categoryId: number) => {
+        let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
+        if (res.ok) {
+            let content = await res.text();
+            return content;
+        }
+    };
+
     private async getCategoryChildren(parentCategoryId: number) {
         let { currentSalesRegion, currentLanguage } = this.cApp;
-        return await this.uqs.product.GetChildrenCategory.query({ 
+        return await this.uqs.product.GetChildrenCategory.query({
             parent: parentCategoryId,
-            salesRegion: currentSalesRegion.id, 
-            language: currentLanguage.id 
+            salesRegion: currentSalesRegion.id,
+            language: currentLanguage.id
         });
     }
 
-    private buildCategories(categoryWapper: any, firstCategory: any[], secendCategory: any[]):any {
-        let {productCategory} = categoryWapper;
-        let catId:number = productCategory.id, children:any[] = [];
+    private buildCategories(categoryWapper: any, firstCategory: any[], secendCategory: any[]): any {
+        let { productCategory } = categoryWapper;
+        let catId: number = productCategory.id, children: any[] = [];
         for (let f of firstCategory) {
             if (f.parent !== catId) continue;
             let pcid = f.productCategory.id;
             let len = secendCategory.length;
             let subsub = '';
-            for (let j=0; j<len; j++) {
+            for (let j = 0; j < len; j++) {
                 //element.children = secendCategory.filter((v: any) => v.parent === pcid);
-                let {name, parent} = secendCategory[j];
+                let { name, parent } = secendCategory[j];
                 if (parent !== pcid) continue;
                 if (subsub.length > 0) subsub += ' / ';
                 subsub += name;
