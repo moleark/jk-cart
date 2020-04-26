@@ -1,5 +1,5 @@
 import { CAppBase, IConstructor, User, nav } from "tonva";
-import { UQs } from "./uqs";
+//import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
 import { CHome } from "./home";
@@ -9,15 +9,15 @@ import { COrder } from "./order/COrder";
 import { CProductCategory } from "./productCategory/CProductCategory";
 import { CMember } from "./member";
 import { CMe } from "./me/CMe";
-import { CUqBase } from "./CBase";
+import { CUqApp } from "./CBase";
 import { VMain } from 'ui/main';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 
-export class CApp extends CAppBase {
-    get uqs(): UQs { return this._uqs as UQs };
+export class CApp extends CUqApp {
+    //get uqs(): UQs { return this._uqs as UQs };
 
     cart: Cart;
     topKey: any;
@@ -38,32 +38,34 @@ export class CApp extends CAppBase {
     cMe: CMe;
     cPointProduct: CPointProduct;
 
+	/*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
-    }
+	}
+	*/
 
-	private setUser() {
+    private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         if (this.isLogined) {
             this.currentUser.setUser(this.user);
         }
-	}
+    }
 
     protected async internalStart() {
-		let [currentSalesRegion, currentLanguage] = await Promise.all([
-			this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN),
-			this.uqs.common.Language.load(GLOABLE.CHINESE),
-		]);
-		this.setUser();
+        let [currentSalesRegion, currentLanguage] = await Promise.all([
+            this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN),
+            this.uqs.common.Language.load(GLOABLE.CHINESE),
+        ]);
+        this.setUser();
         //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
-		//this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
-		this.currentSalesRegion = currentSalesRegion;
-		this.currentLanguage = currentLanguage;
+        //this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
+        this.currentSalesRegion = currentSalesRegion;
+        this.currentLanguage = currentLanguage;
 
         this.cart = new Cart(this);
         await this.cart.init();
 
-        this.cProductCategory = this.newC(CProductCategory);
+        this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
         this.cCart = this.newC(CCart);
         this.cHome = this.newC(CHome);
         this.cProduct = this.newC(CProduct);
