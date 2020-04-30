@@ -36,8 +36,6 @@ export class CCoupon extends CUqBase {
         if (productids) {
             let { ProductX } = this.uqs.product;
             let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
-            // let promises: PromiseLike<void>[] = productidArray.map((v: any) => ProductX.load(v));
-            // products = await Promise.all(promises);
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
         this.openVPage(VSharedCoupon, { couponValidationResult, products });
@@ -47,12 +45,20 @@ export class CCoupon extends CUqBase {
         let { credits, productids } = param;
 
         let creditsValidationResult = await this.getCouponValidationResult(credits);
+        let { result, id, code, discount, preferential, validitydate, isValid } = creditsValidationResult;
+        if (result == 1) {
+            let { currentUser } = this.cApp;
+            await this.uqs.积分商城.WebuserCoupon.add({
+                webUser: currentUser && currentUser.id,
+                coupon: id,
+                createDate: new Date(),
+                expireDate: validitydate
+            })
+        }
         let products: any;
         if (productids) {
             let { ProductX } = this.uqs.product;
             let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
-            // let promises: PromiseLike<void>[] = productidArray.map((v: any) => ProductX.load(v));
-            // products = await Promise.all(promises);
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
         this.openVPage(VSharedCredit, { creditsValidationResult, products });
@@ -65,7 +71,6 @@ export class CCoupon extends CUqBase {
 
     renderProduct = (product: any) => {
         let { cProduct } = this.cApp;
-        // return cProduct.renderProduct(product);
         return cProduct.renderProductWithPrice(product);
     }
 }

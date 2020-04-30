@@ -1,4 +1,4 @@
-import { CAppBase, IConstructor, User, nav } from "tonva";
+import { CAppBase, IConstructor, User, nav, Elements } from "tonva";
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -121,15 +121,47 @@ export class CApp extends CUqApp {
     }
 
     showMain(initTabName?: string) {
-        let root = document.getElementById('root');
-        if (root)
-            this.openVPage(VMain, initTabName);
+        // let root = document.getElementById('root');
+        // if (root)
+        this.openVPage(VMain, initTabName);
 
         let divLogin = document.getElementById('login');
         if (divLogin) {
             // this.openPage(this.cCart.renderCartLabel());
             this.openPage(this.cMe.renderLoginState());
         }
+    }
+
+    protected afterStart(): Promise<void> {
+
+        let elements: Elements = {
+            aId: aTest,
+            bId: bTest,
+            cId: cTest,
+        }
+
+        let n = 1;
+        let hello = 'hello';
+
+        function aTest(element: HTMLElement) {
+            element.innerText = hello;
+        }
+
+        function bTest(element: HTMLElement) {
+            element.innerText = hello + ', world!';
+        };
+
+        function cTest(element: HTMLElement) {
+            element.innerText = hello + ', world!';
+        };
+
+        this.hookElements(elements);
+
+        window.onfocus = () => {
+            hello = hello + (++n);
+            this.hookElements(elements);
+        }
+        return;
     }
 
     async loginCallBack(user: User) {
