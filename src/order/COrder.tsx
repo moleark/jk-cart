@@ -266,7 +266,7 @@ export class COrder extends CUqBase {
                 promises.push(order.Order.mySheets(undefined, 1, -20));
                 promises.push(order.Order.mySheets("#", 1, -20));
                 let presult = await Promise.all(promises);
-                return presult[0].concat(presult[1]);
+                return presult[0].concat(presult[1]).sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
             default:
                 break;
         }

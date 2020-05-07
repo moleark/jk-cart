@@ -29,7 +29,7 @@
     "react-scripts": "^3.4.1",
     "react-slick": "^0.25.2",
     "slick-carousel": "^1.8.1",
-    "tonva": "^1.4.0",
+    "tonva": "^1.4.1",
     "typescript": "^3.6.3"
   },
   "scripts": {
