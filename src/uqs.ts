@@ -91,6 +91,11 @@ export interface UqPointShop {
     WebuserCouponUsed: Map;
 }
 
+export interface UqWebBuilder {
+    GetSlideShow: Query;
+}
+
+
 export interface UQs {
     order: UqOrder;
     product: UqProduct;
@@ -103,4 +108,5 @@ export interface UQs {
     salesTask: UqSalesTask;
     member: UqMember;
     积分商城: UqPointShop;
+    webBuilder: UqWebBuilder;
 }

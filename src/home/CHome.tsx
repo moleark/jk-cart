@@ -17,10 +17,10 @@ class HomeSections extends PageItems<any> {
         this.sectionTuid = sectionTuid;
     }
 
-	protected async loadResults(param:any, pageStart:any, pageSize:number):Promise<{[name:string]:any[]}> {
-		let ret = await this.sectionTuid.search("", pageStart, pageSize);
-		return {$page: ret};
-	}
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[] }> {
+        let ret = await this.sectionTuid.search("", pageStart, pageSize);
+        return { $page: ret };
+    }
     protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.sectionTuid.search("", pageStart, pageSize);
@@ -37,9 +37,10 @@ export class CHome extends CUqBase {
 
     //    cApp: CApp;
     homeSections: HomeSections;
-	sectionTuid: Tuid;
-	
-	banners = [banner1, banner3, banner5];
+    sectionTuid: Tuid;
+
+    banners: any[] = [];
+    //banners = [banner1, banner3, banner5];
 
     async internalStart(param: any) {
 
@@ -55,6 +56,13 @@ export class CHome extends CUqBase {
     renderCategoryRootList = () => {
         let { cProductCategory } = this.cApp;
         return cProductCategory.renderRootList();
+    }
+
+    getSlideShow = async () => {
+        let list = await this.uqs.webBuilder.GetSlideShow.table({});
+        list.forEach(v => {
+            this.banners.push(v.path);
+        })
     }
 
     tab = () => this.renderView(VHome);

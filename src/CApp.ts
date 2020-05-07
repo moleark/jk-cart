@@ -75,6 +75,8 @@ export class CApp extends CUqApp {
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
 
+        await this.cHome.getSlideShow();
+
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
