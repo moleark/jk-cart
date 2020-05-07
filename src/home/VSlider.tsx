@@ -19,9 +19,9 @@ export class VSlider extends View<CHome> {
     public render(param: any) {
         return <Slider {...sliderSetting} className="bg-white" >
             {this.controller.banners.map((banner, index) => <div key={index} >
-                <a href={banner.src} >
-                    <img src={banner.path} className="d-block w-100" alt="..."></img>
-                </a>
+
+                <img src={banner.path} className="d-block w-100" alt="..."></img>
+
             </div>)}
         </Slider>
     }
