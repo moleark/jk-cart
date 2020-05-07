@@ -61,7 +61,7 @@ export class CHome extends CUqBase {
     getSlideShow = async () => {
         let list = await this.uqs.webBuilder.GetSlideShow.table({});
         list.forEach(v => {
-            this.banners.push(v.path);
+            this.banners.push({ path: v.path, src: v.src });
         })
     }
 

@@ -17,9 +17,11 @@ const sliderSetting = {
 export class VSlider extends View<CHome> {
 
     public render(param: any) {
-        return <Slider {...sliderSetting} className="bg-white">
-            {this.controller.banners.map((banner, index) => <div key={index}>
-                <img src={banner} className="d-block w-100" alt="..."></img>
+        return <Slider {...sliderSetting} className="bg-white" >
+            {this.controller.banners.map((banner, index) => <div key={index} >
+                <a href={banner.src} >
+                    <img src={banner.path} className="d-block w-100" alt="..."></img>
+                </a>
             </div>)}
         </Slider>
     }
