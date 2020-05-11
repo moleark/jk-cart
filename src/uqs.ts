@@ -44,6 +44,10 @@ export interface UqWebUser {
     WebUserCustomer: Map;
     WebUserContacts: Map;
     WebUserBuyerAccount: Map;
+
+    WebUserVIPCard: Map;
+    WebUserCoupon: Map;
+    WebUserCouponUsed: Map;
 }
 
 export interface UqCustomer {
@@ -67,7 +71,10 @@ export interface UqWarehouse {
 }
 
 export interface UqSalesTask {
+    Coupon: Tuid;
     IsCanUseCoupon: Action;
+
+    VIPCardDiscount: Map;
 }
 
 export interface UqMember {
@@ -87,8 +94,9 @@ export interface UqPointShop {
     GetLastPlatFormOrder: Action;
     AddPlatformOrderPoint: Action;
     AddUsedCoupon: Action;
-    WebuserCoupon: Map;
-    WebuserCouponUsed: Map;
+
+    WebUserCredits: Map;
+    WebUserCreditsUsed: Map;
 }
 
 export interface UqWebBuilder {

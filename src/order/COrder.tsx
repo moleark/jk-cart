@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId } from 'tonva';
+import { BoxId, Tuid } from 'tonva';
 import { nav } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VCreateOrder } from './VCreateOrder';
@@ -28,7 +28,7 @@ export class COrder extends CUqBase {
     }
 
     private createOrderFromCart = async (cartItems: CartItem2[]) => {
-        let { currentUser, currentSalesRegion, currentCouponCode, currentCreditCode } = this.cApp;
+        let { currentUser, currentSalesRegion, currentCouponCode, currentCreditCode, cCoupon } = this.cApp;
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
@@ -77,7 +77,7 @@ export class COrder extends CUqBase {
 
         let currentCode = currentCouponCode || currentCreditCode;
         if (currentCode) {
-            let coupon = await this.cApp.cCoupon.getCouponValidationResult(currentCode);
+            let coupon = await cCoupon.getCouponValidationResult(currentCode);
             if (coupon.result === 1)
                 this.applyCoupon(coupon);
             else {
@@ -127,11 +127,34 @@ export class COrder extends CUqBase {
         return defaultSetting.invoiceInfo;
     }
 
+    /**
+     * 提交订单
+     */
     submitOrder = async () => {
+        let { uqs, cart, currentUser } = this.cApp;
+        let { order, webuser, 积分商城 } = uqs;
         let { orderItems } = this.orderData;
 
-        let result: any = await this.uqs.order.Order.save("order", this.orderData.getDataForSave());
-        await this.uqs.order.Order.action(result.id, result.flow, result.state, "submit");
+        let result: any = await order.Order.save("order", this.orderData.getDataForSave());
+        await order.Order.action(result.id, result.flow, result.state, "submit");
+        // 如果使用了coupon/credits，需要将其标记为已使用
+        let { id: couponId, code, types } = this.couponData;
+        if (couponId) {
+            let nowDate = new Date();
+            let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDay()}`;
+            switch (types) {
+                case 'coupon':
+                    webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
+                    webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    break;
+                case 'credits':
+                    积分商城.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
+                    积分商城.WebUserCreditsUsed.add({ webUser: currentUser.id, arr1: [{ credits: couponId, usedDate: usedDate }] });
+                    break;
+                default:
+                    break;
+            }
+        }
 
         let param: [{ productId: number, packId: number }] = [] as any;
         orderItems.forEach(e => {
@@ -139,7 +162,6 @@ export class COrder extends CUqBase {
                 param.push({ productId: e.product.id, packId: v.pack.id })
             })
         });
-        let { cart } = this.cApp;
         cart.removeFromCart(param);
 
         // 打开下单成功显示界面
@@ -173,25 +195,37 @@ export class COrder extends CUqBase {
     applyCoupon = async (coupon: any) => {
 
         this.removeCoupon();
-        let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types } = coupon;
+        let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types, discountSetting } = coupon;
         if (validationResult === 1 && code !== undefined && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
             this.orderData.coupon = id;
             this.couponData = coupon;
-            if (types === "coupon") {
-                if (discount) {
+            if (types === "coupon" || types === "vipcard") {
+                // if (discount) {
+                // 仍兼容原来统一折扣的模式
+                if ((discountSetting && discountSetting.length > 0) || discount) {
                     // this.orderData.couponOffsetAmount = Math.round(this.orderData.productAmount * discount) * -1;
-                    let { orderItems } = this.orderData;
+                    let { orderData, uqs, cApp } = this;
+                    let { orderItems } = orderData;
+                    let { AgentPrice } = uqs.product;
                     if (orderItems !== undefined && orderItems.length > 0) {
+                        // 获取每个明细中产品的agentprice;
                         let promises: PromiseLike<any>[] = [];
                         orderItems.forEach(e => {
-                            promises.push(this.uqs.product.AgentPrice.table({ product: e.product.id, salesRegion: this.cApp.currentSalesRegion.id }));
+                            promises.push(AgentPrice.table({ product: e.product.id, salesRegion: cApp.currentSalesRegion.id }));
                         });
                         let agentPrices = await Promise.all(promises);
+
                         if (agentPrices && agentPrices.length > 0) {
                             let couponOffsetAmount = 0;
                             for (let i = 0; i < orderItems.length; i++) {
                                 let oi = orderItems[i];
                                 let { product, packs } = oi;
+                                // 获取明细中产品的优惠券/VIP卡折扣
+                                if (discountSetting) {
+                                    let thisDiscountSetting = discountSetting.find((e: any) => Tuid.equ(e.brand, product.obj.brand));
+                                    discount = (thisDiscountSetting && thisDiscountSetting.discount) || discount || 0;
+                                }
+
                                 let eachProductAgentPrice = agentPrices[i];
                                 for (let j = 0; j < packs.length; j++) {
                                     let pk = packs[j];
@@ -201,13 +235,13 @@ export class COrder extends CUqBase {
                                             p.discountinued === 0 &&
                                             p.expireDate > Date.now());
                                     if (!agentPrice) break;
-                                    pk.price = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
+
+                                    // 折扣价格取agentPrice和折扣价格中较高者
+                                    let discountPrice = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
+                                    // pk.price = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
+                                    // 最终价格取折扣价格和显示的价格（可能会有市场活动价)中较低者
+                                    pk.price = Math.round(Math.min(pk.price, discountPrice));
                                     couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);
-                                    /*
-                                    if (agentPrice) {
-                                        pk.price = Math.round(agentPrice.retail * (1 - discount));
-                                    }
-                                    */
                                 };
                             };
                             this.orderData.couponOffsetAmount = Math.round(couponOffsetAmount);

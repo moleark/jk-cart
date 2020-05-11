@@ -109,6 +109,11 @@ export class CApp extends CUqApp {
                             await this.cCoupon.showSharedCredits(query);
                     }
                     break;
+                case "vipcard":
+                    this.showMain();
+                    if (query.vipcard)
+                        await this.cCoupon.showSharedVIPCard(query);
+                    break;
                 case "login":
                     this.cMe.showLogin();
                     break;

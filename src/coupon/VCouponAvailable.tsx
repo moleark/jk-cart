@@ -3,28 +3,24 @@ import { VPage, FA, Page, List, LMR, tv, EasyDate } from 'tonva';
 import { CCoupon } from './CCoupon';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { VVIPCard, VCredits } from './VVIPCard';
 import { GLOABLE } from 'cartenv';
-import { VVIPCard } from './VVIPCard';
 
-export class VCouponEdit extends VPage<CCoupon> {
+export class VCoupleAvailable extends VPage<CCoupon> {
 
-    private couponInput: HTMLInputElement;
-    private couponList: any[];
     private vipCardForWebUser: any;
+    private coupons: any[];
 
     @observable tips: string;
     async open(param: any) {
-        this.vipCardForWebUser = param.vipCard;
+        this.vipCardForWebUser = param.vipCardForWebUser;
+        this.coupons = param.couponsForWebUser.map((v: any) => v.coupon).concat(param.creditsForWebUser.map((v: any) => v.coupon));
         this.openPage(this.page);
     }
 
-    private applyCoupon = async () => {
-        let coupon = this.couponInput.value;
-        if (!coupon)
-            return;
-        await this.applySelectedCoupon(coupon);
-    }
-
+    /**
+     * 应用选择的vipcard等 
+     */
     private applySelectedCoupon = async (coupon: string) => {
         let ret = await this.controller.applyCoupon(coupon);
         switch (ret) {
@@ -57,11 +53,20 @@ export class VCouponEdit extends VPage<CCoupon> {
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
     }
 
-    private renderCoupon = (couponForUser: any) => {
-        let { id, coupon } = couponForUser;
-        return <div>{coupon}</div>
+    private renderCoupon = (coupon: any) => {
+        let { result, code, types } = coupon;
+        if (result === 1) {
+            let content = types === 'coupon' ? this.renderVm(VVIPCard, coupon) : this.renderVm(VCredits, coupon)
+            return <div className="d-block">
+                <div className="px-2 bg-white" onClick={() => this.applySelectedCoupon(code)}>
+                    {content}
+                </div>
+            </div>
+        } else
+            return null;
     }
 
+    /*
     private tipsUI = observer(() => {
         let tipsUI = <></>;
         if (this.tips) {
@@ -72,32 +77,21 @@ export class VCouponEdit extends VPage<CCoupon> {
         }
         return tipsUI;
     })
+    */
 
     private page = () => {
 
         let vipCardUI;
         if (this.vipCardForWebUser) {
             let { coupon } = this.vipCardForWebUser;
-            vipCardUI = <div onClick={() => this.applySelectedCoupon(coupon.code)}>{this.renderVm(VVIPCard, coupon)}</ div>;
+            vipCardUI = <div onClick={() => this.applySelectedCoupon(coupon.code)}>{this.renderVm(VVIPCard, coupon)}</div>
         }
 
-        return <Page header="填写优惠券/积分码">
+        return <Page header="可用优惠">
             <div className="px-2 bg-white">
-                <div className="row py-3 pr-3 my-1">
-                    <div className="col-4 col-sm-2 d-flex align-items-center text-muted"><span className="align-middle">优惠券/积分码:</span></div>
-                    <div className="col-8 col-sm-10 d-flex">
-                        <input ref={v => this.couponInput = v} type="number" className="form-control"></input>
-                    </div>
-                </div>
-                <div className="row my-1">
-                    <div className="col-12">
-                        <button className="btn btn-primary w-100" onClick={this.applyCoupon}>使用</button>
-                    </div>
-                </div>
-                {React.createElement(this.tipsUI)}
-
                 {vipCardUI}
             </div>
+            <List items={this.coupons} item={{ render: this.renderCoupon }} none={null}></List>
         </Page>
     }
 }
