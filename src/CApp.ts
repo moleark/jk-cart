@@ -25,8 +25,8 @@ export class CApp extends CUqApp {
     currentSalesRegion: any;
     currentLanguage: any;
     currentUser: WebUser;
-    currentCouponCode: string;
-    currentCreditCode: string;
+    // currentCouponCode: string;
+    // currentCreditCode: string;
 
     cHome: CHome;
     cCart: CCart;

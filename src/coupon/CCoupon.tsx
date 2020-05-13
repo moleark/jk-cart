@@ -1,5 +1,4 @@
 import { CUqBase } from '../CBase';
-import { VCouponEdit } from './VCouponEdit';
 import { VSharedCoupon } from './VSharedCoupon';
 import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
 import { VSharedCredit } from './VSharedCredit';

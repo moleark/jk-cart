@@ -89,8 +89,10 @@ export class CCart extends CUqBase {
     doCheckOut = async () => {
 
         let { cOrder } = this.cApp;
-        if (this.selectedCartItems === undefined) return;
-        await cOrder.start(this.selectedCartItems);
+        let { selectedCartItems } = this;
+        if (selectedCartItems === undefined) return;
+        await cOrder.createOrderFromCart(selectedCartItems);
+        // await cOrder.start(this.selectedCartItems);
     }
 
     tab = () => this.renderView(VCart);

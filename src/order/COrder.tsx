@@ -16,24 +16,26 @@ const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
-    //    cApp: CApp;
     @observable orderData: Order = new Order();
     @observable couponData: any = {};
     @observable buyerAccounts: any[] = [];
 
     protected async internalStart(param: any) {
+        /*
         let cart = param;
         await this.createOrderFromCart(cart);
         this.openVPage(VCreateOrder);
+        */
     }
 
-    private createOrderFromCart = async (cartItems: CartItem2[]) => {
-        let { currentUser, currentSalesRegion, currentCouponCode, currentCreditCode, cCoupon } = this.cApp;
+    createOrderFromCart = async (cartItems: CartItem2[]) => {
+        let { cApp, uqs } = this;
+        let { currentUser, currentSalesRegion, cCoupon } = cApp;
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
 
-        let buyerAccountQResult = await this.uqs.webuser.WebUserBuyerAccount.query({ webUser: currentUser.id })
+        let buyerAccountQResult = await uqs.webuser.WebUserBuyerAccount.query({ webUser: currentUser.id })
         if (buyerAccountQResult) {
             this.buyerAccounts = buyerAccountQResult.ret;
             if (this.buyerAccounts && this.buyerAccounts.length === 1) {
@@ -75,6 +77,7 @@ export class COrder extends CUqBase {
                 this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
         }
 
+        /*
         let currentCode = currentCouponCode || currentCreditCode;
         if (currentCode) {
             let coupon = await cCoupon.getCouponValidationResult(currentCode);
@@ -85,6 +88,8 @@ export class COrder extends CUqBase {
                 this.cApp.currentCreditCode = undefined;
             }
         }
+        */
+        this.openVPage(VCreateOrder);
     }
 
     private defaultSetting: any;
@@ -136,7 +141,8 @@ export class COrder extends CUqBase {
         let { orderItems } = this.orderData;
 
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
-        await order.Order.action(result.id, result.flow, result.state, "submit");
+        let { id: orderId, flow, state } = result;
+        await order.Order.action(orderId, flow, state, "submit");
         // 如果使用了coupon/credits，需要将其标记为已使用
         let { id: couponId, code, types } = this.couponData;
         if (couponId) {
@@ -203,7 +209,6 @@ export class COrder extends CUqBase {
                 // if (discount) {
                 // 仍兼容原来统一折扣的模式
                 if ((discountSetting && discountSetting.length > 0) || discount) {
-                    // this.orderData.couponOffsetAmount = Math.round(this.orderData.productAmount * discount) * -1;
                     let { orderData, uqs, cApp } = this;
                     let { orderItems } = orderData;
                     let { AgentPrice } = uqs.product;
