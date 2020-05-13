@@ -103,10 +103,13 @@ export class CApp extends CUqApp {
                 case "credits":
                     this.showMain();
                     if (query.credits) {
+                        await this.cCoupon.showSharedCredits(query);
+                        /*
                         if (query.platform === "1")
                             await this.cPointProduct.openPointDrawing(query.credits);
                         else
                             await this.cCoupon.showSharedCredits(query);
+                        */
                     }
                     break;
                 case "vipcard":

@@ -87,14 +87,25 @@ export class VVIPCard extends View<CCoupon> {
 export class VCredits extends View<CCoupon> {
 
     render(param: any): JSX.Element {
-        let { result, id, code, discount, preferential, validitydate, isValid } = param;
+        let { result, id, code, discount, preferential, validitydate, isValid, types } = param;
 
         let couponUi;
         if (result !== 1 || !isValid) {
             // this.controller.cApp.currentCreditCode = undefined;
+            let invalidTip = `${cardTypeName[types]}【${code}】无效，请与您的专属销售人员联系。`;
+            switch (result) {
+                case 4:
+                    invalidTip = `${cardTypeName[types]}【${code}】不可重复领用。`;
+                    break;
+                case 6:
+                    invalidTip = `您不能领用自己发出的${cardTypeName[types]}【${code}】。`;
+                    break;
+                default:
+                    break;
+            }
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                积分券【{code}】无效，请与您的专属销售人员联系。
+                {invalidTip}
             </div>
         } else {
             // this.controller.cApp.currentCreditCode = code;
