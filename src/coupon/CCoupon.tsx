@@ -8,6 +8,7 @@ import { VCoupleAvailable } from './VCouponAvailable';
 export class CCoupon extends CUqBase {
 
     @observable couponDrawed: boolean;
+    @observable sharedCouponValidationResult: any;
     couponPager: QueryPager<any>;
 
     applyCoupon = async (coupon: string) => {
@@ -83,8 +84,8 @@ export class CCoupon extends CUqBase {
         let { vipcard: vipCardCode, productids } = param;
 
         this.couponDrawed = false;
-        let vipCardValidationResult = await this.getCouponValidationResult(vipCardCode);
-        let { result } = vipCardValidationResult;
+        this.sharedCouponValidationResult = await this.getCouponValidationResult(vipCardCode);
+        let { result } = this.sharedCouponValidationResult;
 
         // 自动领取VIP卡
         let { currentUser } = this.cApp;
@@ -92,8 +93,7 @@ export class CCoupon extends CUqBase {
         if (result == 1 && currentUserId) {
             // TODO:判断是不是发给你的VIPCard
             // let vipCardForWebUser = await this.uqs.webuser.WebUserVIPCard.obj({ webUser: currentUserId, vip });
-            this.drawCoupon(vipCardValidationResult);
-            this.couponDrawed = true;
+            this.drawCoupon(this.sharedCouponValidationResult);
         }
         let products: any;
         if (productids) {
@@ -101,7 +101,7 @@ export class CCoupon extends CUqBase {
             let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
-        this.openVPage(VSharedCoupon, { couponValidationResult: vipCardValidationResult, products });
+        this.openVPage(VSharedCoupon, { products });
     }
 
     /**
@@ -111,14 +111,13 @@ export class CCoupon extends CUqBase {
         let { coupon, productids } = param;
 
         this.couponDrawed = false;
-        let couponValidationResult = await this.getCouponValidationResult(coupon);
-        let { result } = couponValidationResult;
+        this.sharedCouponValidationResult = await this.getCouponValidationResult(coupon);
+        let { result } = this.sharedCouponValidationResult;
         // 自动领取积分券
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
-        if (result == 1 && currentUserId) {
-            this.drawCoupon(couponValidationResult);
-            this.couponDrawed = true;
+        if (result === 1 && currentUserId) {
+            this.drawCoupon(this.sharedCouponValidationResult);
         }
         let products: any;
         if (productids) {
@@ -126,7 +125,7 @@ export class CCoupon extends CUqBase {
             let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
-        this.openVPage(VSharedCoupon, { couponValidationResult, products });
+        this.openVPage(VSharedCoupon, { products });
     }
 
     /**
@@ -136,14 +135,13 @@ export class CCoupon extends CUqBase {
         this.couponDrawed = false;
         let { credits, productids } = param;
 
-        let creditsValidationResult = await this.getCouponValidationResult(credits);
-        let { result } = creditsValidationResult;
+        this.sharedCouponValidationResult = await this.getCouponValidationResult(credits);
+        let { result } = this.sharedCouponValidationResult;
         // 自动领取积分券
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
         if (result == 1 && currentUserId) {
-            this.drawCoupon(creditsValidationResult);
-            this.couponDrawed = true;
+            this.drawCoupon(this.sharedCouponValidationResult);
         }
 
         let products: any;
@@ -152,7 +150,7 @@ export class CCoupon extends CUqBase {
             let productidArray = productids.split('-').filter((v: any) => /^\d{1,10}$/.test(v));
             products = productidArray.map((v: any) => ProductX.boxId(v));
         }
-        this.openVPage(VSharedCredit, { creditsValidationResult, products });
+        this.openVPage(VSharedCredit, { products });
     }
 
     loginWhenDrawCoupon = async (credits: any) => {
@@ -162,8 +160,12 @@ export class CCoupon extends CUqBase {
             await cApp.currentUser.setUser(user);
             await cApp.loginCallBack(user);
             this.closePage(1);
-            await this.drawCoupon(credits);
-            this.couponDrawed = true;
+            let { code } = credits;
+            this.sharedCouponValidationResult = await this.getCouponValidationResult(code);
+            let { result } = this.sharedCouponValidationResult;
+            if (result === 1) {
+                await this.drawCoupon(this.sharedCouponValidationResult);
+            }
         };
         if (!this.isLogined)
             nav.showLogin(loginCallback, true);
@@ -174,7 +176,9 @@ export class CCoupon extends CUqBase {
         let { currentUser } = cApp;
         let { id: currentUserId } = currentUser;
         let { 积分商城, webuser } = uqs;
-        let { id: creditsId, code, validitydate, types } = credits;
+        let { result, id: creditsId, code, validitydate, types } = credits;
+        if (result !== 1)
+            return;
         switch (types) {
             case 'credits':
                 let drawedResult = await 积分商城.WebUserCredits.obj({ webUser: currentUserId, credits: creditsId });
@@ -226,6 +230,7 @@ export class CCoupon extends CUqBase {
             default:
                 break;
         }
+        this.couponDrawed = true;
     }
 
     async showProductDetail(product: BoxId) {

@@ -4,6 +4,26 @@ import { View, FA, EasyDate, LMR, tv } from 'tonva';
 import { observer } from 'mobx-react';
 
 const cardTypeName: any = { 'coupon': '优惠券', 'credits': '积分券', 'vipcard': 'VIP卡' }
+function getTips(result: number, types: string, code: string) {
+    let invalidTip = `${cardTypeName[types]}【${code}】无效，请与您的专属销售人员联系。`;
+    switch (result) {
+        case 0:
+            invalidTip = `${cardTypeName[types]}【${code}】不存在，请与您的专属销售人员联系。`;
+            break;
+        case 2:
+            invalidTip = `该${cardTypeName[types]}【${code}】已失效，请与您的专属销售人员联系。`;
+            break;
+        case 4:
+            invalidTip = `该${cardTypeName[types]}【${code}】已经使用过，不可重复领用。`;
+            break;
+        case 6:
+            invalidTip = `您不能领用自己发出的${cardTypeName[types]}【${code}】。`;
+            break;
+        default:
+            break;
+    }
+    return invalidTip;
+}
 
 export class VVIPCard extends View<CCoupon> {
 
@@ -18,20 +38,9 @@ export class VVIPCard extends View<CCoupon> {
         let couponUi;
         if ((result !== 1 || !isValid) && types === 'coupon') {
             // this.controller.cApp.currentCouponCode = undefined;
-            let invalidTip = `${cardTypeName[types]}【${code}】无效，请与您的专属销售人员联系。`;
-            switch (result) {
-                case 4:
-                    invalidTip = `${cardTypeName[types]}【${code}】不可重复领用。`;
-                    break;
-                case 6:
-                    invalidTip = `您不能领用自己发出的${cardTypeName[types]}【${code}】。`;
-                    break;
-                default:
-                    break;
-            }
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                {invalidTip}
+                {getTips(result, types, code)}
             </div>
         } else {
             // this.controller.cApp.currentCouponCode = code;
@@ -92,20 +101,9 @@ export class VCredits extends View<CCoupon> {
         let couponUi;
         if (result !== 1 || !isValid) {
             // this.controller.cApp.currentCreditCode = undefined;
-            let invalidTip = `${cardTypeName[types]}【${code}】无效，请与您的专属销售人员联系。`;
-            switch (result) {
-                case 4:
-                    invalidTip = `${cardTypeName[types]}【${code}】不可重复领用。`;
-                    break;
-                case 6:
-                    invalidTip = `您不能领用自己发出的${cardTypeName[types]}【${code}】。`;
-                    break;
-                default:
-                    break;
-            }
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                {invalidTip}
+                {getTips(result, types, code)}
             </div>
         } else {
             // this.controller.cApp.currentCreditCode = code;
