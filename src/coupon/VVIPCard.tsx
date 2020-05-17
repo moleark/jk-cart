@@ -36,7 +36,7 @@ export class VVIPCard extends View<CCoupon> {
         let { result, id, code, discount, preferential, validitydate, isValid, types, vipCardType } = param;
 
         let couponUi;
-        if ((result !== 1 || !isValid) && types === 'coupon') {
+        if (result !== 1 || !isValid) {
             // this.controller.cApp.currentCouponCode = undefined;
             couponUi = <div className="alert alert-primary my-1" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>

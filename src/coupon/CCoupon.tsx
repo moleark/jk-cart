@@ -78,7 +78,7 @@ export class CCoupon extends CUqBase {
     }
 
     /**
-     * 
+     * 领取VIP卡 
      */
     showSharedVIPCard = async (param: any) => {
         let { vipcard: vipCardCode, productids } = param;
@@ -90,9 +90,7 @@ export class CCoupon extends CUqBase {
         // 自动领取VIP卡
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
-        if (result == 1 && currentUserId) {
-            // TODO:判断是不是发给你的VIPCard
-            // let vipCardForWebUser = await this.uqs.webuser.WebUserVIPCard.obj({ webUser: currentUserId, vip });
+        if (result === 1 && currentUserId) {
             this.drawCoupon(this.sharedCouponValidationResult);
         }
         let products: any;
@@ -140,7 +138,7 @@ export class CCoupon extends CUqBase {
         // 自动领取积分券
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
-        if (result == 1 && currentUserId) {
+        if (result === 1 && currentUserId) {
             this.drawCoupon(this.sharedCouponValidationResult);
         }
 

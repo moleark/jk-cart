@@ -11,6 +11,7 @@ import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
 import { CartItem2 } from '../cart/Cart';
+import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -202,9 +203,12 @@ export class COrder extends CUqBase {
 
         this.removeCoupon();
         let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types, discountSetting } = coupon;
-        if (validationResult === 1 && code !== undefined && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
-            this.orderData.coupon = id;
+        if (validationResult === 1 && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
             this.couponData = coupon;
+            let orderPriceStrategy: OrderPriceStrategy = createOrderPriceStrategy(coupon);
+            orderPriceStrategy.applyTo(this.orderData, this.uqs);
+            /*
+            this.orderData.coupon = id;
             if (types === "coupon" || types === "vipcard") {
                 // if (discount) {
                 // 仍兼容原来统一折扣的模式
@@ -265,6 +269,11 @@ export class COrder extends CUqBase {
             if (types === "credits") {
                 this.orderData.point = Math.round(this.orderData.productAmount * 2);
             }
+            */
+            // 运费和运费减免
+            this.orderData.freightFee = FREIGHTFEEFIXED;
+            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
+                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
         }
     }
 
