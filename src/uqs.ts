@@ -75,6 +75,7 @@ export interface UqSalesTask {
     IsCanUseCoupon: Action;
 
     VIPCardDiscount: Map;
+    BottomDiscount: Map;
 }
 
 export interface UqMember {

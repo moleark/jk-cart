@@ -24,14 +24,14 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private packsRow = (item: CartPackRow, index: number) => {
-        let { pack, quantity, price, retail, currency } = item;
+        let { pack, quantity, retail, priceInit } = item;
 
         return <div key={index} className="px-2 py-2 border-top">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
-                    <span className="text-danger h5"><small>¥</small>{parseFloat((retail * quantity).toFixed(2))}</span>
-                    <small className="text-muted">(¥{parseFloat(retail.toFixed(2))} × {quantity})</small>
+                    <span className="text-danger h5"><small>¥</small>{parseFloat((priceInit * quantity).toFixed(2))}</span>
+                    <small className="text-muted">(¥{parseFloat(priceInit.toFixed(2))} × {quantity})</small>
                 </div>
             </div>
             <div>{this.controller.renderDeliveryTime(pack)}</div>

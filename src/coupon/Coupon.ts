@@ -10,7 +10,6 @@ export class CouponBase {
 
     protected expiredDate: Date;
 
-    // let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types, discountSetting } = coupon;
     getCodeShow() {
         let codeShow = String(this.code);
         let p1 = codeShow.substr(0, 4);
@@ -57,16 +56,32 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
         orderData.coupon = this.id
         if (this.isAvaliable()) {
             if (this.discount) {
-                let { orderItems } = orderData;
-                let { AgentPrice } = uqs.product;
+                let { orderItems, salesRegion } = orderData;
                 if (orderItems !== undefined && orderItems.length > 0) {
-                    // 获取每个明细中产品的agentprice;
-                    let promises: PromiseLike<any>[] = [];
-                    orderItems.forEach((e: any) => {
-                        promises.push(AgentPrice.table({ product: e.product.id, salesRegion: orderData.salesRegion.id }));
-                    });
-                    let agentPrices = await Promise.all(promises);
+                    let { salesTask, product: uqsProduct } = uqs;
+                    let couponOffsetAmount = 0;
+                    for (let i = 0; i < orderItems.length; i++) {
+                        let oi = orderItems[i];
+                        let { product, packs } = oi;
+                        let { ProductX } = uqsProduct;
+                        let productTuid: any = await ProductX.load(product)
+                        // 获取品牌的折扣
+                        let { BottomDiscount } = salesTask;
+                        let brandDiscountMap: any = await BottomDiscount.obj({ brand: productTuid.brand, salesRegion: salesRegion.id });
 
+                        for (let j = 0; j < packs.length; j++) {
+                            let pk = packs[j];
+                            // 折扣价格取底线折扣价和折扣价格中较高者
+                            let lastDiscount = Math.min((brandDiscountMap ? brandDiscountMap.discount : 0), this.discount);
+                            let discountPrice = Math.round(pk.retail * (1 - lastDiscount));
+                            // 最终价格取折扣价格和显示的价格（可能会有市场活动价)中较低者
+                            pk.price = Math.round(Math.min(pk.price, discountPrice));
+                            couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);
+                        };
+                    };
+                    orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
+
+                    /*
                     if (agentPrices && agentPrices.length > 0) {
                         let couponOffsetAmount = 0;
                         for (let i = 0; i < orderItems.length; i++) {
@@ -92,6 +107,7 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
                         };
                         orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
                     };
+                    */
                 }
             }
 
@@ -115,7 +131,7 @@ export class CouponSale extends Coupon implements OrderPriceStrategy {
                     let couponOffsetAmount = 0;
                     for (let i = 0; i < orderItems.length; i++) {
                         let oi = orderItems[i];
-                        let { product, packs } = oi;
+                        let { packs } = oi;
 
                         for (let j = 0; j < packs.length; j++) {
                             let pk = packs[j];

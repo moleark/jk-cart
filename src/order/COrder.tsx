@@ -10,8 +10,9 @@ import { VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
-import { CartItem2 } from '../cart/Cart';
+import { CartItem2, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
+import { PackRow } from 'product/Product';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -67,7 +68,8 @@ export class COrder extends CUqBase {
                 item.product = e.product;
                 item.packs = e.packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
                 item.packs.forEach((pk) => {
-                    pk.retail = pk.price;
+                    // pk.retail = pk.price;
+                    pk.priceInit = pk.price;
                 })
                 return item;
             });
@@ -202,7 +204,7 @@ export class COrder extends CUqBase {
     applyCoupon = async (coupon: any) => {
 
         this.removeCoupon();
-        let { result: validationResult, id, code, discount, preferential, validitydate, isValid, types, discountSetting } = coupon;
+        let { result: validationResult, validitydate, isValid } = coupon;
         if (validationResult === 1 && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
             this.couponData = coupon;
             let orderPriceStrategy: OrderPriceStrategy = createOrderPriceStrategy(coupon);
@@ -286,6 +288,7 @@ export class COrder extends CUqBase {
         this.orderData.couponOffsetAmount = 0;
         this.orderData.couponRemitted = 0;
         this.orderData.point = 0;
+        this.orderData.orderItems.forEach((e: OrderItem) => e.packs.forEach((v: CartPackRow) => v.price = v.priceInit));
     }
 
 

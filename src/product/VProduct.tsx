@@ -100,7 +100,7 @@ export class VProduct extends VPage<CProduct> {
         let { cApp } = this.controller;
         let { cart } = cApp;
         if (value > 0)
-            await cart.add(this.productBox, pack, value, price, currency);
+            await cart.add(this.productBox, pack, value, price, retail, currency);
         else
             await cart.removeFromCart([{ productId: this.productBox.id, packId: pack.id }]);
     }
