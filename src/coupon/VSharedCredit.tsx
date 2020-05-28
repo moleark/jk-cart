@@ -1,15 +1,13 @@
 import * as React from 'react';
+/*
 import { CCoupon } from './CCoupon';
 import { VPage, Page, List } from 'tonva';
 import { observer } from 'mobx-react';
 import { VCredits } from './VVIPCard';
-
 export class VSharedCredit extends VPage<CCoupon> {
 
-    // private creditsValidationResult: any;
     private products: any[] = [];
     async open(param: any) {
-        // this.creditsValidationResult = param.creditsValidationResult;
         this.products = param.products || [];
         this.openPage(this.page);
     }
@@ -37,3 +35,4 @@ export class VSharedCredit extends VPage<CCoupon> {
         </Page>
     })
 }
+*/

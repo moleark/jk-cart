@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { VPage, FA, Page, List, LMR, tv, EasyDate } from 'tonva';
+import { VPage, Page, List } from 'tonva';
 import { CCoupon } from './CCoupon';
-import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { VVIPCard, VCredits } from './VVIPCard';
+import { VVIPCard, VCredits, VCoupon } from './VVIPCard';
 import { GLOABLE } from 'cartenv';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
@@ -13,8 +12,9 @@ export class VCoupleAvailable extends VPage<CCoupon> {
 
     @observable tips: string;
     async open(param: any) {
-        this.vipCardForWebUser = param.vipCardForWebUser;
-        this.coupons = param.couponsForWebUser.map((v: any) => v.coupon).concat(param.creditsForWebUser.map((v: any) => v.coupon));
+        let { vipCardForWebUser, couponsForWebUser } = param;
+        this.vipCardForWebUser = vipCardForWebUser;
+        this.coupons = couponsForWebUser.map((v: any) => v.coupon).concat(param.creditsForWebUser.map((v: any) => v.coupon));
         this.openPage(this.page);
     }
 

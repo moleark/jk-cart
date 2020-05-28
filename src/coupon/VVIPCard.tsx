@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CCoupon } from './CCoupon';
 import { View, FA, EasyDate, LMR, tv } from 'tonva';
-import { observer } from 'mobx-react';
+import { VIPCard } from './Coupon';
 
 const cardTypeName: any = { 'coupon': '优惠券', 'credits': '积分券', 'vipcard': 'VIP卡' }
 function getTips(result: number, types: string, code: string) {
@@ -25,14 +25,39 @@ function getTips(result: number, types: string, code: string) {
     return invalidTip;
 }
 
-export class VVIPCard extends View<CCoupon> {
+export class VCoupon extends View<CCoupon> {
 
-    private showDiscountSetting = (vipCardId: number, event: React.MouseEvent) => {
-        event.preventDefault();
-        this.controller.showDiscountSetting(vipCardId);
+    protected coupon: any;
+    protected renderRight = (): JSX.Element => {
+        return null;
+    }
+
+    protected renderCardDescription = (): JSX.Element => {
+        let { discount, vipCardType } = this.coupon;
+        let cardDescription: any;
+        if (typeof discount === 'number') {
+            if (discount !== 0) {
+                let discountShow: any;
+                discountShow = (1 - discount) * 10;
+                cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{discountShow === 10 ? '无折扣' : <>{discountShow.toFixed(1)} 折</>}</big></div>
+            } else {
+                if (vipCardType) {
+                    cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{tv(vipCardType, v => v.name)}</big></div>
+                }
+            }
+        }
+        return cardDescription;
+    }
+
+    protected getCodeShow = (code: number) => {
+        let codeShow = String(code);
+        let p1 = codeShow.substr(0, 4);
+        let p2 = codeShow.substr(4);
+        codeShow = p1 + ' ' + p2;
     }
 
     render(param: any): JSX.Element {
+        this.coupon = param
         let { result, id, code, discount, preferential, validitydate, isValid, types, vipCardType } = param;
 
         let couponUi;
@@ -44,47 +69,27 @@ export class VVIPCard extends View<CCoupon> {
             </div>
         } else {
             // this.controller.cApp.currentCouponCode = code;
-            let codeShow = String(code);
-            let p1 = codeShow.substr(0, 4);
-            let p2 = codeShow.substr(4);
-            codeShow = p1 + ' ' + p2;
-
-            let aleft = <div><FA name='th-large' className='my-2 mr-3 text-warning' />{codeShow}</div>;
+            /*
             let bcenter: any;
             if (preferential)
                 bcenter = <div className="text-muted"><small>优惠：<span className="mx-3">￥{preferential}</span></small></div>;
+            */
 
-            let content = <div className="float-right">
+            let content = <div className="float-right pr-3">
                 <div className="pb-1">
-                    <FA name='th-large' className='mr-1 text-warning' />{codeShow}
+                    <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
                     <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
                 </div>
                 <div><small className="text-success">此{cardTypeName[types]}全场通用</small></div>
             </div>;
 
-            let cardDescription: any;
-            if (typeof discount === 'number') {
-                if (discount !== 0) {
-                    let discountShow: any;
-                    discountShow = (1 - discount) * 10;
-                    cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{discountShow === 10 ? '无折扣' : <>{discountShow.toFixed(1)} 折</>}</big></div>
-                } else {
-                    if (vipCardType) {
-                        cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{tv(vipCardType, v => v.name)}</big></div>
-                    }
-                }
-            }
             let left = <div>
                 <span className="text-muted"><small>{cardTypeName[types]}</small></span>
-                {cardDescription}
+                {this.renderCardDescription()}
             </div>;
 
-            let right = <span className="ml-3 my-3" onClick={(event) => this.showDiscountSetting(id, event)}>
-                <FA name="chevron-right" className="corsor-pointer"></FA>
-            </span>;
-
-            couponUi = <div className="bg-white py-3 pl-3 mb-1">
-                <LMR left={left} right={right}>
+            couponUi = <div className="bg-white py-3 pl-3 pr-2 mb-1">
+                <LMR left={left} right={this.renderRight()}>
                     {content}
                 </LMR>
             </div>
@@ -93,9 +98,31 @@ export class VVIPCard extends View<CCoupon> {
     }
 }
 
-export class VCredits extends View<CCoupon> {
+export class VVIPCard extends VCoupon {
 
+    private showDiscountSetting = (vipCardId: VIPCard, event: React.MouseEvent) => {
+        event.stopPropagation();
+        this.controller.showDiscountSetting(vipCardId);
+    }
+
+    protected renderRight = (): JSX.Element => {
+        return <span className="ml-3 my-3" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>
+            <FA name="chevron-right" className="corsor-pointer"></FA>
+        </span>;
+    }
+}
+
+export class VCredits extends VCoupon {
+
+
+    protected renderCardDescription = (): JSX.Element => {
+        return <div className="mr-3 font-weight-bold text-danger"><big>双倍积分</big></div>
+    }
+
+    /*
     render(param: any): JSX.Element {
+        let { coupon, onClick } = param;
+        this.coupon = coupon;
         let { result, id, code, discount, preferential, validitydate, isValid, types } = param;
 
         let couponUi;
@@ -107,29 +134,26 @@ export class VCredits extends View<CCoupon> {
             </div>
         } else {
             // this.controller.cApp.currentCreditCode = code;
-            let codeShow = String(code);
-            let p1 = codeShow.substr(0, 4);
-            let p2 = codeShow.substr(4);
-            codeShow = p1 + ' ' + p2;
-
-            let right = <div>
+            let content = <div onClick={() => onClick(code)}>
                 <div className="pb-1">
-                    <FA name='th-large' className='mr-1 text-warning' />{codeShow}
+                    <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
                     <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
                 </div>
-                <div><small className="text-success">此积分券全场通用</small></div>
+                <div><small className="text-success">此{cardTypeName[types]}全场通用</small></div>
             </div>;
 
-            let left = <div>
-                <span className="text-muted"><small>积分券</small></span>
-                <div className="mr-3 font-weight-bold text-danger"><big>双倍积分</big></div>
+            let left = <div onClick={() => onClick(code)}>
+                <span className="text-muted"><small>{cardTypeName[types]}</small></span>
+                {this.renderCardDescription()}
             </div>;
 
             couponUi = <div className="bg-white p-3 mb-1">
-                <LMR left={left} right={right}>
+                <LMR left={left}>
+                    {content}
                 </LMR>
             </div>
         }
         return couponUi;
     }
+    */
 }
