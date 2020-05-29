@@ -26,9 +26,9 @@ export class VHome extends VPage<CHome> {
         let siteHeader = this.renderVm(VSiteHeader);
         return <>
             {siteHeader}
-			<div style={{maxHeight:'50vmin', overflow: 'hidden'}}>
-            	{this.renderVm(VSlider)}
-			</div>
+            <div>
+                {this.renderVm(VSlider)}
+            </div>
             {renderCategoryRootList()}
         </>
     };
