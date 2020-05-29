@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "./static/css/main.6f20aac4.chunk.css",
-    "main.js": "./static/js/main.99059293.chunk.js",
-    "main.js.map": "./static/js/main.99059293.chunk.js.map",
+    "main.css": "./static/css/main.c48a7d1a.chunk.css",
+    "main.js": "./static/js/main.13034e85.chunk.js",
+    "main.js.map": "./static/js/main.13034e85.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.d75b08e7.js",
     "runtime-main.js.map": "./static/js/runtime-main.d75b08e7.js.map",
-    "static/css/2.cb63ff8f.chunk.css": "./static/css/2.cb63ff8f.chunk.css",
-    "static/js/2.494ffefc.chunk.js": "./static/js/2.494ffefc.chunk.js",
-    "static/js/2.494ffefc.chunk.js.map": "./static/js/2.494ffefc.chunk.js.map",
+    "static/css/2.2832e004.chunk.css": "./static/css/2.2832e004.chunk.css",
+    "static/js/2.ece9ef08.chunk.js": "./static/js/2.ece9ef08.chunk.js",
+    "static/js/2.ece9ef08.chunk.js.map": "./static/js/2.ece9ef08.chunk.js.map",
     "static/js/3.fb750841.chunk.js": "./static/js/3.fb750841.chunk.js",
     "static/js/3.fb750841.chunk.js.map": "./static/js/3.fb750841.chunk.js.map",
     "static/js/4.1d1e31d5.chunk.js": "./static/js/4.1d1e31d5.chunk.js",
     "static/js/4.1d1e31d5.chunk.js.map": "./static/js/4.1d1e31d5.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.eea66ae6fff48b8501ed9935d054ede0.js": "./precache-manifest.eea66ae6fff48b8501ed9935d054ede0.js",
+    "precache-manifest.5ca4dfe3ca90dd89b51b4216015c697d.js": "./precache-manifest.5ca4dfe3ca90dd89b51b4216015c697d.js",
     "service-worker.js": "./service-worker.js",
-    "static/css/2.cb63ff8f.chunk.css.map": "./static/css/2.cb63ff8f.chunk.css.map",
-    "static/css/main.6f20aac4.chunk.css.map": "./static/css/main.6f20aac4.chunk.css.map",
-    "static/js/2.494ffefc.chunk.js.LICENSE.txt": "./static/js/2.494ffefc.chunk.js.LICENSE.txt",
+    "static/css/2.2832e004.chunk.css.map": "./static/css/2.2832e004.chunk.css.map",
+    "static/css/main.c48a7d1a.chunk.css.map": "./static/css/main.c48a7d1a.chunk.css.map",
+    "static/js/2.ece9ef08.chunk.js.LICENSE.txt": "./static/js/2.ece9ef08.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
     "static/media/LifeScience.png": "./static/media/LifeScience.5c2e6ff5.png",
@@ -30,9 +30,9 @@
   },
   "entrypoints": [
     "static/js/runtime-main.d75b08e7.js",
-    "static/css/2.cb63ff8f.chunk.css",
-    "static/js/2.494ffefc.chunk.js",
-    "static/css/main.6f20aac4.chunk.css",
-    "static/js/main.99059293.chunk.js"
+    "static/css/2.2832e004.chunk.css",
+    "static/js/2.ece9ef08.chunk.js",
+    "static/css/main.c48a7d1a.chunk.css",
+    "static/js/main.13034e85.chunk.js"
   ]
 }
