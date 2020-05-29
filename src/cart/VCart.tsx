@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField } from 'tonva';
+import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom } from 'tonva';
 import { FA } from 'tonva';
 import { tv } from 'tonva';
 import { MinusPlusWidget } from '../tools';
@@ -102,9 +102,9 @@ export class VCart extends VPage<CCart> {
                             quantity: {
                                 widget: 'custom',
                                 className: 'text-center',
-                                WidgetClass: MinusPlusWidget,
-                                onChanged: this.controller.onQuantityChanged as any
-                            }
+                                WidgetClass: MinusPlusWidget as any,
+                                onChanged: this.controller.onQuantityChanged
+                            } as UiCustom
                         },
                     } as UiArr
                 }
@@ -149,6 +149,7 @@ export class VCart extends VPage<CCart> {
                 {this.empty()}
             </>;
         }
+
         let content = React.createElement(this.cartForm);
         let footer = React.createElement(this.CheckOutButton);
         return <>
@@ -160,7 +161,7 @@ export class VCart extends VPage<CCart> {
     header() {
         let header = <header className="py-2 text-center bg-info text-white">
             <FA className="mr-3" name="shopping-cart" size="lg" />
-            <span >购物车</span>
+            <span>购物车</span>
         </header>;
         return header;
     }

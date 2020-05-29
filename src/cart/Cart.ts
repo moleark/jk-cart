@@ -134,14 +134,14 @@ export class Cart {
     */
 
     getQuantity(productId: number, packId: number): number {
-        let cp = this.cartItems.find(v => v.$isDeleted !== true && v.product.id === productId);
+        let cp = this.cartItems.find(v => v.$isDeleted !== true && Tuid.equ(v.product, productId));
         if (!cp) return 0;
         let cpp = cp.packs.find(v => v.pack.id === packId);
         return cpp === undefined ? 0 : cpp.quantity;
     }
 
     isDeleted(productId: number): boolean {
-        let i = this.cartItems.findIndex(v => v.$isDeleted === true && v.product.id === productId);
+        let i = this.cartItems.findIndex(v => v.$isDeleted === true && Tuid.equ(v.product, productId));
         return i !== -1;
     }
 
@@ -156,8 +156,7 @@ export class Cart {
      *
      */
     add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
-
-        let cartItemExists = this.cartItems.find((e) => e.product.id === product.id);
+        let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
         if (!cartItemExists) {
             cartItemExists = {
                 product: product,
@@ -173,7 +172,7 @@ export class Cart {
             if ($isDeleted === true)
                 packs.splice(0);
 
-            let packExists: CartPackRow = packs.find(e => e.pack.id === pack.id);
+            let packExists: CartPackRow = packs.find(e => Tuid.equ(e.pack, pack));
             if (packExists === undefined) {
                 let added = false;
                 for (let index = packs.length - 1; index >= 0; index--) {
