@@ -1,23 +1,22 @@
 import * as React from 'react';
-import { CCoupon } from './CCoupon';
+import { CCoupon, COUPONBASE } from './CCoupon';
 import { View, FA, EasyDate, LMR, tv } from 'tonva';
 import { VIPCard } from './Coupon';
 
-const cardTypeName: any = { 'coupon': '优惠券', 'credits': '积分券', 'vipcard': 'VIP卡' }
 function getTips(result: number, types: string, code: string) {
-    let invalidTip = `${cardTypeName[types]}【${code}】无效，请与您的专属销售人员联系。`;
+    let invalidTip = `${COUPONBASE[types]['name']}【${code}】无效，请与您的专属销售人员联系。`;
     switch (result) {
         case 0:
-            invalidTip = `${cardTypeName[types]}【${code}】不存在，请与您的专属销售人员联系。`;
+            invalidTip = `${COUPONBASE[types]['name']}【${code}】不存在，请与您的专属销售人员联系。`;
             break;
         case 2:
-            invalidTip = `该${cardTypeName[types]}【${code}】已失效，请与您的专属销售人员联系。`;
+            invalidTip = `该${COUPONBASE[types]['name']}【${code}】已失效，请与您的专属销售人员联系。`;
             break;
         case 4:
-            invalidTip = `该${cardTypeName[types]}【${code}】已经使用过，不可重复领用。`;
+            invalidTip = `该${COUPONBASE[types]['name']}【${code}】已经使用过，不可重复领用。`;
             break;
         case 6:
-            invalidTip = `您不能领用自己发出的${cardTypeName[types]}【${code}】。`;
+            invalidTip = `您不能领用自己发出的${COUPONBASE[types]['name']}【${code}】。`;
             break;
         default:
             break;
@@ -80,11 +79,11 @@ export class VCoupon extends View<CCoupon> {
                     <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
                     <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
                 </div>
-                <div><small className="text-success">此{cardTypeName[types]}全场通用</small></div>
+                <div><small className="text-success">此{COUPONBASE[types]['name']}全场通用</small></div>
             </div>;
 
             let left = <div>
-                <span className="text-muted"><small>{cardTypeName[types]}</small></span>
+                <span className="text-muted"><small>{COUPONBASE[types]['name']}</small></span>
                 {this.renderCardDescription()}
             </div>;
 

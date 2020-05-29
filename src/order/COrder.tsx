@@ -32,7 +32,7 @@ export class COrder extends CUqBase {
 
     createOrderFromCart = async (cartItems: CartItem2[]) => {
         let { cApp, uqs } = this;
-        let { currentUser, currentSalesRegion, cCoupon } = cApp;
+        let { currentUser, currentSalesRegion } = cApp;
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();

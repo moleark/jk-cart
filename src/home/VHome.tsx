@@ -26,7 +26,7 @@ export class VHome extends VPage<CHome> {
         let siteHeader = this.renderVm(VSiteHeader);
         return <>
             {siteHeader}
-            <div>
+            <div className="mb-3">
                 {this.renderVm(VSlider)}
             </div>
             {renderCategoryRootList()}

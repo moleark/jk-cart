@@ -3,9 +3,6 @@ import { PageItems } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
-import banner1 from '../images/20200306_banner-01.jpg';
-import banner3 from '../images/20200306_banner-03.jpg';
-import banner5 from '../images/20200306_banner-05.jpg';
 
 class HomeSections extends PageItems<any> {
 
@@ -35,13 +32,10 @@ class HomeSections extends PageItems<any> {
 
 export class CHome extends CUqBase {
 
-    //    cApp: CApp;
     homeSections: HomeSections;
     sectionTuid: Tuid;
 
     banners: any[] = [];
-    //banners = [banner1, banner3, banner5];
-
     async internalStart(param: any) {
 
         let { cProductCategory } = this.cApp;

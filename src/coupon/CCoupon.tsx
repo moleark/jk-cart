@@ -4,6 +4,13 @@ import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
 import { observable } from 'mobx';
 import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
+import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
+
+export const COUPONBASE: any = {
+    'coupon': { 'name': '优惠券', 'view': VCoupon },
+    'credits': { 'name': '积分券', 'view': VCredits },
+    'vipcard': { 'name': 'VIP卡', 'view': VVIPCard }
+}
 
 export class CCoupon extends CUqBase {
 

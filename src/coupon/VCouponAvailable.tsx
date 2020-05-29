@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VPage, Page, List } from 'tonva';
-import { CCoupon } from './CCoupon';
+import { CCoupon, COUPONBASE } from './CCoupon';
 import { observable } from 'mobx';
 import { VVIPCard, VCredits, VCoupon } from './VVIPCard';
 import { GLOABLE } from 'cartenv';
@@ -56,7 +56,8 @@ export class VCoupleAvailable extends VPage<CCoupon> {
     private renderCoupon = (coupon: any) => {
         let { result, code, types } = coupon;
         if (result === 1) {
-            let content = types === 'coupon' ? this.renderVm(VVIPCard, coupon) : this.renderVm(VCredits, coupon)
+            let content = this.renderVm(COUPONBASE[types]['view'], coupon);
+            // let content = types === 'coupon' ? this.renderVm(VCoupon, coupon) : this.renderVm(VCredits, coupon)
             return <div className="d-block">
                 <div className="px-2 bg-white" onClick={() => this.applySelectedCoupon(code)}>
                     {content}
