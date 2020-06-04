@@ -6,7 +6,7 @@ import { CHome } from './CHome';
 export class VSiteHeader extends View<CHome> {
     render() {
         let currentSalesRegion = <FA name="globe" />
-        let left = <img className="m-1" src={logo} alt="logo" style={{ height: "3rem", width: "3rem" }} />;
+        let left = <img className="m-1 ml-2" src={logo} alt="logo" style={{ height: "3rem", width: "2.5rem" }} />;
         //let cart = this.controller.cApp.cCart.renderCartLabel();
         let right = undefined;
         /*
