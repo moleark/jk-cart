@@ -19,7 +19,8 @@ const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
     @observable orderData: Order = new Order();
-    @observable couponData: any = {};
+    @observable couponAppliedData: any = {};
+    hasAnyCoupon: boolean;
     @observable buyerAccounts: any[] = [];
 
     protected async internalStart(param: any) {
@@ -36,6 +37,7 @@ export class COrder extends CUqBase {
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
+        this.hasAnyCoupon = await this.hasCoupons();
 
         let buyerAccountQResult = await uqs.webuser.WebUserBuyerAccount.query({ webUser: currentUser.id })
         if (buyerAccountQResult) {
@@ -147,7 +149,7 @@ export class COrder extends CUqBase {
         let { id: orderId, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
         // 如果使用了coupon/credits，需要将其标记为已使用
-        let { id: couponId, code, types } = this.couponData;
+        let { id: couponId, code, types } = this.couponAppliedData;
         if (couponId) {
             let nowDate = new Date();
             let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDay()}`;
@@ -198,6 +200,20 @@ export class COrder extends CUqBase {
         }
     }
 
+    private hasCoupons = async (): Promise<boolean> => {
+        let { cCoupon, currentUser } = this.cApp;
+        let { id: currentUserId } = currentUser;
+        if (await cCoupon.getValidCreditsForWebUser(currentUserId))
+            return true;
+        let validCoupons = await cCoupon.getValidCouponsForWebUser(currentUserId);
+        if (validCoupons && validCoupons.length > 0)
+            return true;
+        let validCredits = await cCoupon.getValidCreditsForWebUser(currentUserId);
+        if (validCredits && validCoupons.length > 0)
+            return true;
+        return false;
+    }
+
     /**
      * 使用优惠券后计算折扣金额和抵扣额
      */
@@ -206,7 +222,7 @@ export class COrder extends CUqBase {
         this.removeCoupon();
         let { result: validationResult, validitydate, isValid } = coupon;
         if (validationResult === 1 && isValid === 1 && new Date(validitydate).getTime() > Date.now()) {
-            this.couponData = coupon;
+            this.couponAppliedData = coupon;
             let orderPriceStrategy: OrderPriceStrategy = createOrderPriceStrategy(coupon);
             orderPriceStrategy.applyTo(this.orderData, this.uqs);
             /*
@@ -284,13 +300,12 @@ export class COrder extends CUqBase {
      */
     removeCoupon = () => {
         this.orderData.coupon = undefined;
-        this.couponData = {};
+        this.couponAppliedData = {};
         this.orderData.couponOffsetAmount = 0;
         this.orderData.couponRemitted = 0;
         this.orderData.point = 0;
         this.orderData.orderItems.forEach((e: OrderItem) => e.packs.forEach((v: CartPackRow) => v.price = v.priceInit));
     }
-
 
     /*
     * 打开我的订单列表（在“我的”界面使用）

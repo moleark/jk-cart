@@ -58,11 +58,12 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private renderCoupon = observer((param: any) => {
-        let { couponData } = this.controller;
-        if (couponData['id'] === undefined) {
-            return <span className="text-primary">使用优惠券/积分码</span>;
+        let { couponAppliedData, hasAnyCoupon } = this.controller;
+        if (couponAppliedData['id'] === undefined) {
+            let tip = hasAnyCoupon ? "有可用优惠卡/券，点击使用" : "输入优惠券/积分码";
+            return <span className="text-primary">{tip}</span>;
         } else {
-            let { id, code, discount, preferential, validitydate, isValid, types } = couponData;
+            let { code, types } = couponAppliedData;
             let { couponOffsetAmount, couponRemitted, point } = param;
             let offsetUI, remittedUI, noOffsetUI;
             if (types === "credits") {
@@ -232,7 +233,7 @@ export class VCreateOrder extends VPage<COrder> {
         }
 
         let couponUI = <div className="row py-3 bg-white mb-1" onClick={onCouponEdit}>
-            <div className="col-4 col-sm-2 pb-2 text-muted">优惠券/积分码:</div>
+            <div className="col-4 col-sm-2 pb-2 text-muted">优惠卡券:</div>
             <div className="col-8 col-sm-10">
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {React.createElement(this.renderCoupon,
