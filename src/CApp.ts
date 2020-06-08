@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { CAppBase, IConstructor, User, nav, Elements } from "tonva";
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
@@ -15,6 +17,7 @@ import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
+import { VLoginState } from "me/VLoginState";
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -142,24 +145,16 @@ export class CApp extends CUqApp {
         }
     }
 
-    protected afterStart(): Promise<void> {
-
+    protected afterStart = async () => {
         let elements: Elements = {
-            aId: aTest,
-            bId: bTest,
-            cId: cTest,
+            login: this.aTest,
+            productlist: this.productList,
+            productdetail: this.productDetail,
         }
 
         let n = 1;
         let hello = 'hello';
 
-        function aTest(element: HTMLElement) {
-            element.innerText = hello;
-        }
-
-        function bTest(element: HTMLElement) {
-            element.innerText = hello + ', world!';
-        };
 
         function cTest(element: HTMLElement) {
             element.innerText = hello + ', world!';
@@ -172,6 +167,42 @@ export class CApp extends CUqApp {
             this.hookElements(elements);
         }
         return;
+    }
+
+    private aTest = (element: HTMLElement) => {
+        //element.innerText = hello;
+        ReactDOM.render(this.cMe.renderLoginState(), element);
+        // element.innerHTML = '<div><button className="btn btn-primary w-100 my-2"><FA name="sign-out" size="lg" />登录</button>&nbsp;&nbsp;&nbsp;<button className="btn btn-primary w-100 my-2" ><FA name="sign-out" size="lg" />注册</button></div>';
+        //element.onclick = () => nav.showLogin(undefined, true);
+    }
+
+    private productList = (element: HTMLElement) => {
+        // console.log("productlist");
+
+        let { location } = document;
+        let { search } = location;
+        if (search) {
+            let query: any = qs.parse(search.toLowerCase());
+            let { type, key } = query;
+            if (type === "search") {
+                ReactDOM.render(this.cProduct.renderProductList(key), element);
+            }
+        }
+    }
+
+    private productDetail = async (element: HTMLElement) => {
+        // console.log("productDetail");
+
+        let { location } = document;
+        let { pathname } = location;
+        if (pathname) {
+            // console.log(pathname);
+            let productid = pathname.split('/')[2];
+            // console.log(productid);
+            if (productid) {
+                ReactDOM.render(await this.cProduct.renderProductWeb(productid), element);
+            }
+        }
     }
 
     async loginCallBack(user: User) {
