@@ -4,16 +4,18 @@ import { CProductCategory } from './CProductCategory';
 import marked from 'marked';
 //import { tv } from 'tonva';
 import { renderThirdCategory } from './VRootCategory';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
+import $ from 'jquery';
 
 export class VCategory extends VPage<CProductCategory> {
 
-    @observable instruction: string;
-    async open(categoryWaper: any) {
-        this.openPage(this.page, categoryWaper);
-        let { getCategoryInstruction } = this.controller;
-        this.instruction = await getCategoryInstruction(0);
+    instruction: string;
+    async open(categoryWapper: any) {
+
+        this.instruction = categoryWapper.instruction;
+        this.openPage(this.page, categoryWapper);
+        // let { getCategoryInstruction } = this.controller;
+        // this.instruction = await getCategoryInstruction(0);
     }
 
     /*
@@ -47,8 +49,12 @@ export class VCategory extends VPage<CProductCategory> {
 
     private renderRootCategory = (item: any, parent: any, labelColor: string) => {
         let { productCategory, name, children } = item;
-        let instructionUi = this.instruction ?
-            <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (this.instruction || "") }} /> : null;
+        let instructionUi;
+        if (this.instruction) {
+            let instr: JQuery<Element> = $(this.instruction);
+            $("a[href*='jkchemical.com']", instr).addClass('d-none');
+            instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+        }
         return <div className="bg-white mb-3" key={name}>
             <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
                 <b>{name}</b>
@@ -79,12 +85,12 @@ export class VCategory extends VPage<CProductCategory> {
         </div>;
     }
 
-    private page = observer((categoryWaper: any) => {
+    private page = observer((categoryWapper: any) => {
         let { cHome } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
 
-        let { categoryWaper: item, parent, labelColor } = categoryWaper;
+        let { categoryWapper: item, parent, labelColor } = categoryWapper;
         return <Page header={header} right={cartLabel}>
             {this.renderRootCategory(item, parent, labelColor)}
         </Page>

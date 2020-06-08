@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CProduct } from './CProduct';
 import {
     VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
-    ObjectSchema, RowContext, UiCustom, FormField, BoxId
+    ObjectSchema, RowContext, UiCustom, FormField, BoxId, View
 } from 'tonva';
 import { tv } from 'tonva';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
@@ -10,6 +10,7 @@ import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
+import { ProductItem } from '../tools/ProductItem';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -22,19 +23,15 @@ const schema: ItemSchema[] = [
     { name: 'futureDeliveryTimeDescription', type: 'string' }
 ];
 
-export class VProduct extends VPage<CProduct> {
+export class VProduct_Web extends View<CProduct> {
+
     private productBox: BoxId;
     private discount: number;
-
-    async open(param: any) {
-        let { productData, product, discount } = param;
-        this.productBox = product;
-        this.discount = discount;
-        this.openPage(this.page, productData);
-    }
+    private product: any;
 
     private renderProduct = (product: MainProductChemical) => {
-
+        // console.log(this.product);
+        // console.log(product);
         let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
         return <div className="mb-3 px-2">
             <div className="py-2"><strong>{description}</strong></div>
@@ -129,30 +126,17 @@ export class VProduct extends VPage<CProduct> {
         </>;
     }
 
-    private page = (product: any) => {
 
+    render(param: any): JSX.Element {
+
+        let { productData, product, discount } = param;
+        this.productBox = product;
+        this.discount = discount;
+        this.product = productData;
         let { cApp } = this.controller;
-        let header = cApp.cHome.renderSearchHeader();
-        let cartLabel = cApp.cCart.renderCartLabel();
-        if (true) {
-            let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
-            viewProduct.model = product;
+        let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
+        viewProduct.model = this.product;
 
-            return <Page header={header} right={cartLabel}>
-                <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
-            </Page>
-        } else {
-            /*
-            下面的做法大概不行，因为嵌套的层次较深，且都是observer的，上层observable的变化会嵌套执行下层的代码，而下层代码的render
-            会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
-            */
-            let { controller, productBox } = this;
-            let { renderProductWithPrice } = controller;
-            return <Page header={header} right={cartLabel}>
-                <div className="px-2 py-2 bg-white mb-3">
-                    {renderProductWithPrice(productBox)}
-                </div>
-            </Page>
-        }
+        return <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
     }
 }

@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { GLOABLE } from 'cartenv';
 
 export class VCreateOrder extends VPage<COrder> {
+
     @observable private useShippingAddress: boolean = true;
     @observable private shippingAddressIsBlank: boolean = false;
     @observable private invoiceAddressIsBlank: boolean = false;
@@ -23,14 +24,14 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private packsRow = (item: CartPackRow, index: number) => {
-        let { pack, quantity, price, retail, currency } = item;
+        let { pack, quantity, retail, priceInit } = item;
 
         return <div key={index} className="px-2 py-2 border-top">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
-                    <span className="text-danger h5"><small>¥</small>{parseFloat((retail * quantity).toFixed(2))}</span>
-                    <small className="text-muted">(¥{parseFloat(retail.toFixed(2))} × {quantity})</small>
+                    <span className="text-danger h5"><small>¥</small>{parseFloat((priceInit * quantity).toFixed(2))}</span>
+                    <small className="text-muted">(¥{parseFloat(priceInit.toFixed(2))} × {quantity})</small>
                 </div>
             </div>
             <div>{this.controller.renderDeliveryTime(pack)}</div>
@@ -57,11 +58,12 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private renderCoupon = observer((param: any) => {
-        let { couponData } = this.controller;
-        if (couponData['id'] === undefined) {
-            return <span className="text-primary">使用优惠券/积分码</span>;
+        let { couponAppliedData, hasAnyCoupon } = this.controller;
+        if (couponAppliedData['id'] === undefined) {
+            let tip = hasAnyCoupon ? "有可用优惠卡/券，点击使用" : "输入优惠券/积分码";
+            return <span className="text-primary">{tip}</span>;
         } else {
-            let { id, code, discount, preferential, validitydate, isValid, types } = couponData;
+            let { code, types } = couponAppliedData;
             let { couponOffsetAmount, couponRemitted, point } = param;
             let offsetUI, remittedUI, noOffsetUI;
             if (types === "credits") {
@@ -166,7 +168,8 @@ export class VCreateOrder extends VPage<COrder> {
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>
             : null;
-        let invoiceAddressBlankTip = this.invoiceAddressIsBlank ? <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票地址</div> : null;
+        let invoiceAddressBlankTip = this.invoiceAddressIsBlank ?
+            <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票地址</div> : null;
 
         let divInvoiceContact: any = null;
         if (this.useShippingAddress === false) {
@@ -229,24 +232,28 @@ export class VCreateOrder extends VPage<COrder> {
             }
         }
 
-        let couponUI = <></>;
-        if (1 === 1) {
-            couponUI = <div className="row py-3 bg-white mb-1" onClick={onCouponEdit}>
-                <div className="col-4 col-sm-2 pb-2 text-muted">优惠券/积分码:</div>
-                <div className="col-8 col-sm-10">
-                    <LMR className="w-100 align-items-center" right={chevronRight}>
-                        <this.renderCoupon couponOffsetAmount={orderData.couponOffsetAmount} couponRemitted={orderData.couponRemitted} point={orderData.point} />
-                    </LMR>
-                </div>
+        let couponUI = <div className="row py-3 bg-white mb-1" onClick={onCouponEdit}>
+            <div className="col-4 col-sm-2 pb-2 text-muted">优惠卡券:</div>
+            <div className="col-8 col-sm-10">
+                <LMR className="w-100 align-items-center" right={chevronRight}>
+                    {React.createElement(this.renderCoupon,
+                        {
+                            couponOffsetAmount: orderData.couponOffsetAmount,
+                            couponRemitted: orderData.couponRemitted,
+                            point: orderData.point
+                        })}
+                </LMR>
             </div>
-        }
+        </div>
 
         return <Page header="订单预览" footer={footer}>
             <div className="px-2">
                 <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
                     <div className="col-4 col-sm-2 pb-2 text-muted">收货地址:</div>
                     <div className="col-8 col-sm-10">
-                        <LMR className="w-100 align-items-center" right={chevronRight}>{tv(orderData.shippingContact, undefined, undefined, this.nullContact)}</LMR>
+                        <LMR className="w-100 align-items-center" right={chevronRight}>
+                            {tv(orderData.shippingContact, undefined, undefined, this.nullContact)}
+                        </LMR>
                         {shippingAddressBlankTip}
                     </div>
                 </div>
@@ -263,6 +270,6 @@ export class VCreateOrder extends VPage<COrder> {
                 </div >
                 {couponUI}
             </div>
-        </Page >
+        </Page>
     })
 }

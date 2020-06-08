@@ -113,7 +113,7 @@ export const webUserUiSchema: UiSchema = {
     items: {
         firstName: {
             widget: 'text', label: '真实姓名',
-            placeholder: '化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。为此，需要您重新提供非虚拟的、可核查的信息。',
+            placeholder: '真实姓名',
             rules: nameValidation
         } as UiTextItem,
         gender: { widget: 'radio', label: '性别', list: [{ value: '1', title: '男' }, { value: '0', title: '女' }] } as UiRadio,

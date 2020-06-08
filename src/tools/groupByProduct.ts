@@ -1,11 +1,13 @@
+import { CartPackRow } from "cart/Cart";
 
 export function groupByProduct(packItems: any[]) {
     let result: any[] = [];
     for (let packItem of packItems.sort((a, b) => a.price - b.price)) {
-        let { product, pack, quantity, price, currency } = packItem;
-        let packRow: any = {
+        let { product, pack, quantity, price, retail, currency } = packItem;
+        let packRow: CartPackRow = {
             pack: pack,
             price: price,
+            retail: retail,
             quantity: quantity,
             currency: currency && currency.id
         }

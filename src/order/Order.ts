@@ -34,6 +34,9 @@ export class Order {
     // @computed get productAmount() {
     //     return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
     // };
+    /**
+     * 商品总额(未应用券的价格)
+     */
     @computed get productAmount() {
         return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subListAmount, 0).toFixed(2));
     };
@@ -90,7 +93,7 @@ export class OrderItem {
     }
     @computed get subListAmount() {
         return this.packs.reduce((p, c) => {
-            return p + c.retail * c.quantity
+            return p + c.priceInit * c.quantity
         }, 0);
     }
 }

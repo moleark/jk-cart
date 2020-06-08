@@ -88,7 +88,8 @@ export class CProductCategory extends CUqBase {
         let results = await this.getCategoryChildren(productCategoryId);
         if (results.first.length !== 0) {
             let rootCategory = this.buildCategories(categoryWaper, results.first, results.secend);
-            this.openVPage(VCategory, { categoryWaper: rootCategory, parent, labelColor });
+            let instruction = await this.getCategoryInstruction(productCategoryId);
+            this.openVPage(VCategory, { categoryWapper: rootCategory, parent, labelColor, instruction });
         } else {
             let { cProduct } = this.cApp;
             await cProduct.searchByCategory({ productCategoryId, name });

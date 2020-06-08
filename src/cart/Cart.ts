@@ -14,8 +14,19 @@ export interface CartItem2 {
 }
 
 export interface CartPackRow extends PackRow {
+    /**
+     * 销售成交价（在购物车中是目录价或市场活动价或协议价的最小值），订单中还会经过券的计算
+     */
     price: number;
-    retail?: number;
+
+    /**
+     * 订单中的初始销售成交价（订单中应用折扣券之前的价格）
+     */
+    priceInit?: number;
+    /**
+     * 订单中目录价
+     */
+    retail: number;
     currency: any;
 }
 
@@ -59,11 +70,30 @@ export class Cart {
     }
 
     async init(): Promise<void> {
-        if (this.cApp.isLogined)
+        let { isLogined, uqs, currentSalesRegion } = this.cApp;
+        if (isLogined)
             this.cartStore = new CartRemote(this.cApp);
         else
             this.cartStore = new CartLocal(this.cApp);
         let cartData = await this.cartStore.load();
+
+        // 初始化购物车中产品的目录价
+        let { product } = uqs;
+        let { PriceX } = product;
+        let promises: PromiseLike<void>[] = [];
+        cartData.forEach((e: any) => promises.push(PriceX.obj({ product: e.product, pack: e.pack, salesRegion: currentSalesRegion })));
+        let prices = await Promise.all(promises);
+        for (let index = cartData.length - 1; index >= 0; index--) {
+            let e: any = cartData[index];
+            let priceMap: any = prices.find((v: any) => Tuid.equ(v.product, e.product)
+                && Tuid.equ(v.pack, e.pack) && v.discountinued === 0 && v.expireDate > Date.now());
+            if (priceMap && priceMap.retail) {
+                e.retail = priceMap.retail;
+            } else {
+                cartData.splice(index, 1);
+            }
+        }
+
         let cartDataGrouped = groupByProduct(cartData);
         if (cartDataGrouped && cartDataGrouped.length > 0) {
             for (let i = 0; i < cartDataGrouped.length; i++) {
@@ -104,14 +134,14 @@ export class Cart {
     */
 
     getQuantity(productId: number, packId: number): number {
-        let cp = this.cartItems.find(v => v.$isDeleted !== true && v.product.id === productId);
+        let cp = this.cartItems.find(v => v.$isDeleted !== true && Tuid.equ(v.product, productId));
         if (!cp) return 0;
         let cpp = cp.packs.find(v => v.pack.id === packId);
         return cpp === undefined ? 0 : cpp.quantity;
     }
 
     isDeleted(productId: number): boolean {
-        let i = this.cartItems.findIndex(v => v.$isDeleted === true && v.product.id === productId);
+        let i = this.cartItems.findIndex(v => v.$isDeleted === true && Tuid.equ(v.product, productId));
         return i !== -1;
     }
 
@@ -125,13 +155,12 @@ export class Cart {
     /**
      *
      */
-    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, currency: any) => {
-
-        let cartItemExists = this.cartItems.find((e) => e.product.id === product.id);
+    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
+        let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
         if (!cartItemExists) {
             cartItemExists = {
                 product: product,
-                packs: [{ pack: pack, quantity: quantity, price: price, currency: currency }],
+                packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency }],
                 $isSelected: true,
                 $isDeleted: false,
                 createdate: Date.now()
@@ -143,18 +172,18 @@ export class Cart {
             if ($isDeleted === true)
                 packs.splice(0);
 
-            let packExists: CartPackRow = packs.find(e => e.pack.id === pack.id);
+            let packExists: CartPackRow = packs.find(e => Tuid.equ(e.pack, pack));
             if (packExists === undefined) {
                 let added = false;
                 for (let index = packs.length - 1; index >= 0; index--) {
                     if (packs[index].price < price) {
-                        packs.splice(index + 1, 0, { pack: pack, quantity: quantity, price: price, currency: currency });
+                        packs.splice(index + 1, 0, { pack: pack, quantity: quantity, price: price, retail: retail, currency: currency });
                         added = true;
                         break;
                     }
                 }
                 if (!added)
-                    packs.unshift({ pack: pack, quantity: quantity, price: price, currency: currency })
+                    packs.unshift({ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency })
                 // packs.push();
             }
             else {

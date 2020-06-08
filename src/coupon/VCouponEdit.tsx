@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { VPage, FA, Page } from 'tonva';
+import { VPage, FA, Page, List, LMR, tv, EasyDate } from 'tonva';
 import { CCoupon } from './CCoupon';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
+import { VVIPCard } from './VVIPCard';
 
 export class VCouponEdit extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
+    private couponList: any[];
+    private vipCardForWebUser: any;
+
     @observable tips: string;
     async open(param: any) {
-        if (param !== undefined) {
-
-        }
+        this.vipCardForWebUser = param.vipCard;
         this.openPage(this.page);
     }
 
@@ -20,6 +22,10 @@ export class VCouponEdit extends VPage<CCoupon> {
         let coupon = this.couponInput.value;
         if (!coupon)
             return;
+        await this.applySelectedCoupon(coupon);
+    }
+
+    private applySelectedCoupon = async (coupon: string) => {
         let ret = await this.controller.applyCoupon(coupon);
         switch (ret) {
             case -1:
@@ -51,7 +57,12 @@ export class VCouponEdit extends VPage<CCoupon> {
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
     }
 
-    private page = observer(() => {
+    private renderCoupon = (couponForUser: any) => {
+        let { id, coupon } = couponForUser;
+        return <div>{coupon}</div>
+    }
+
+    private tipsUI = observer(() => {
         let tipsUI = <></>;
         if (this.tips) {
             tipsUI = <div className="alert alert-primary" role="alert">
@@ -59,6 +70,17 @@ export class VCouponEdit extends VPage<CCoupon> {
                 {this.tips}
             </div>
         }
+        return tipsUI;
+    })
+
+    private page = () => {
+
+        let vipCardUI;
+        if (this.vipCardForWebUser) {
+            let { coupon } = this.vipCardForWebUser;
+            vipCardUI = <div onClick={() => this.applySelectedCoupon(coupon.code)}>{this.renderVm(VVIPCard, coupon)}</ div>;
+        }
+
         return <Page header="填写优惠券/积分码">
             <div className="px-2 bg-white">
                 <div className="row py-3 pr-3 my-1">
@@ -72,8 +94,10 @@ export class VCouponEdit extends VPage<CCoupon> {
                         <button className="btn btn-primary w-100" onClick={this.applyCoupon}>使用</button>
                     </div>
                 </div>
-                {tipsUI}
+                {React.createElement(this.tipsUI)}
+
+                {vipCardUI}
             </div>
         </Page>
-    })
+    }
 }

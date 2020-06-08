@@ -7,6 +7,9 @@ import { LoaderProductChemicalWithPrices } from './itemLoader';
 import { VProductDelivery } from './VProductDelivery';
 import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice } from './VProductView';
 import { VChemicalInfoInCart } from './VChemicalInfo';
+import { VProductList_Web } from './VProductList_Web';
+import { VProduct_Web } from './VProduct_Web';
+import { ProductItem } from '../tools/ProductItem';
 
 /*
 class PageProducts extends PageItems<any> {
@@ -42,6 +45,7 @@ export class CProduct extends CUqBase {
 
     protected async internalStart(param: any) {
         this.searchByKey(param);
+        this.openVPage(VProductList, param);
     }
 
     searchByKey(key: string) {
@@ -50,7 +54,14 @@ export class CProduct extends CUqBase {
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
         //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
-        this.openVPage(VProductList, key);
+    }
+
+    searchWebByKey(key: string) {
+        let { currentSalesRegion } = this.cApp;
+        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
+        this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 3, 3);
+        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
+        this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
     }
 
     async searchByCategory(category: any) {
@@ -174,5 +185,25 @@ export class CProduct extends CUqBase {
 
     renderCartProduct = (product: BoxId) => {
         return this.renderView(VCartProuductView, product);
+    }
+
+
+    renderProductList = (key: string) => {
+        this.searchWebByKey(key);
+        return this.renderView(VProductList_Web, key)
+    }
+
+    renderProductWeb = async (key: string) => {
+        if (key) {
+            let discount = 0;
+            let loader = new LoaderProductChemicalWithPrices(this.cApp);
+            let productData = await loader.load(key);
+            let param: ProductItem = {
+                product: key,
+                productData: productData,
+                discount: discount,
+            }
+            return this.renderView(VProduct_Web, param);
+        }
     }
 }

@@ -16,7 +16,7 @@ export class VMyOrders extends VPage<COrder> {
 	*/
 	@observable private list: any[];
 	private currentState: string;
-	private tabs:TabProp[];
+	private tabs: TabProp[];
 
 	/*
     async open(param: any) {
@@ -24,17 +24,17 @@ export class VMyOrders extends VPage<COrder> {
         this.openPage(this.page);
 	}
 	*/
-	
+
 	init(param: any) {
-        this.currentState = param;
-        let { getMyOrders } = this.controller;
+		this.currentState = param;
+		let { getMyOrders } = this.controller;
 		let oss = [
-			{caption: '待审核', state: 'processing', icon: 'desktop'}, 
-			{caption: '待发货', state: 'completed', icon: 'truck'}, 
-			{caption: '所有订单', state: 'all', icon: 'file-text-o'}, 
+			{ caption: '待审核', state: 'processing', icon: 'desktop' },
+			{ caption: '待发货', state: 'completed', icon: 'truck' },
+			{ caption: '所有订单', state: 'all', icon: 'file-text-o' },
 		];
 		this.tabs = oss.map(v => {
-			let {caption, state, icon} = v;
+			let { caption, state, icon } = v;
 			return {
 				name: caption,
 				caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
@@ -50,32 +50,33 @@ export class VMyOrders extends VPage<COrder> {
 		});
 	}
 
-    private renderOrder = (order: any, index: number) => {
-        let { openOrderDetail } = this.controller;
-        let { id, no, date, discription, flow } = order;
-        return <div className="m-3 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
-            <div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
-            <div className="small text-muted"><EasyDate date={date} /></div>
-        </div>;
+	private renderOrder = (order: any, index: number) => {
+		let { openOrderDetail } = this.controller;
+		let { id, no, date, discription, flow } = order;
+		return <div className="m-3 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
+			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
+			<div className="small text-muted"><EasyDate date={date} /></div>
+		</div>;
 	}
-	
+
 	header() {
 		return '我的订单';
 	}
-	content():JSX.Element {
+
+	content(): JSX.Element {
 		return <Tabs tabs={this.tabs} tabPosition="top" />;
 	}
 
-    private page = () => {
+	private page = () => {
 
-        let { getMyOrders } = this.controller;
+		let { getMyOrders } = this.controller;
 		let oss = [
-			{caption: '待审核', state: 'processing', icon: 'desktop'}, 
-			{caption: '待发货', state: 'completed', icon: 'truck'}, 
-			{caption: '所有订单', state: 'all', icon: 'file-text-o'}, 
+			{ caption: '待审核', state: 'processing', icon: 'desktop' },
+			{ caption: '待发货', state: 'completed', icon: 'truck' },
+			{ caption: '所有订单', state: 'all', icon: 'file-text-o' },
 		];
 		let tabs = oss.map(v => {
-			let {caption, state, icon} = v;
+			let { caption, state, icon } = v;
 			return {
 				name: caption,
 				caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
@@ -125,10 +126,10 @@ export class VMyOrders extends VPage<COrder> {
             }
 		}];
 		*/
-        // return <Page header="我的订单" tabs={tabs} tabPosition="top" />
-        //return <Tabs tabs={tabs} tabPosition='top' />
-        return <Page header="我的订单">
-            <Tabs tabs={tabs} tabPosition="top" />
-        </Page>
-    }
+		// return <Page header="我的订单" tabs={tabs} tabPosition="top" />
+		//return <Tabs tabs={tabs} tabPosition='top' />
+		return <Page header="我的订单">
+			<Tabs tabs={tabs} tabPosition="top" />
+		</Page>
+	}
 }
