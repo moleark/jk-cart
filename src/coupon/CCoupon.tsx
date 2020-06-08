@@ -266,7 +266,7 @@ export class CCoupon extends CUqBase {
         this.couponDrawed = true;
     }
 
-    async showProductDetail(product: BoxId) {
+    async showProductDetail(product: number) {
         let { cProduct } = this.cApp;
         await cProduct.showProductDetail(product);
     }
