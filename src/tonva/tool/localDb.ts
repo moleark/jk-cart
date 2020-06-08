@@ -39,13 +39,10 @@ export class LocalCache {
         }
     }
     set(value:any) {
-		try {
-			let t = JSON.stringify(value);
-			this.local.setItem(this.key, t);
-		}
-		catch (err) {
-			debugger;
-		}
+		let t = JSON.stringify(value, (key, value) => {
+			if (key !== '_tuid') return value;
+		});
+		this.local.setItem(this.key, t);
     }
     remove(local?:Local) {
         if (local === undefined) {

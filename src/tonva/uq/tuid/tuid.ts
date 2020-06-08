@@ -18,11 +18,6 @@ export abstract class Tuid extends Entity {
     cached: boolean;
     unique: string[];
 
-    /*
-    constructor(uq:UqMan, name:string, typeId:number) {
-        super(uq, name, typeId)
-    }*/
-
     public setSchema(schema:any) {
         super.setSchema(schema);
         let {id} = schema;
