@@ -37,46 +37,82 @@ export class CCoupon extends CUqBase {
     }
 
     protected async internalStart(param: any) {
-        let { currentUser, uqs } = this.cApp;
-        let { webuser, 积分商城 } = uqs;
-        let { WebUserVIPCard, WebUserCoupon } = webuser;
+        let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
-        let vipCardForWebUser: any = await WebUserVIPCard.obj({ webUser: currentUserId });
-        if (vipCardForWebUser) {
-            let { expiredDate, vipCardCode } = vipCardForWebUser
-            if (expiredDate.getTime() > Date.now()) {
-                vipCardForWebUser.coupon = await this.getCouponValidationResult(vipCardCode)
+
+        let validVIPCardForWebUser = await this.getValidVipCardForWebUser(currentUserId);
+        if (validVIPCardForWebUser) {
+            validVIPCardForWebUser.coupon = await this.getCouponValidationResult(validVIPCardForWebUser.vipCardCode)
+        }
+
+        let validCouponsForWebUser = await this.getValidCouponsForWebUser(currentUserId);
+        if (validCouponsForWebUser.length > 0) {
+            for (let i = 0; i < validCouponsForWebUser.length; i++) {
+                let e = validCouponsForWebUser[i];
+                e.coupon = await this.getCouponValidationResult(e.couponCode);
             }
         }
 
+        let validCreditsForWebUser = await this.getValidCreditsForWebUser(currentUserId);
+        if (validCreditsForWebUser.length > 0) {
+            for (let i = 0; i < validCreditsForWebUser.length; i++) {
+                let e = validCreditsForWebUser[i];
+                e.coupon = await this.getCouponValidationResult(e.creditsCode);
+            }
+        }
+        this.openVPage(VCoupleAvailable, {
+            'vipCardForWebUser': validVIPCardForWebUser,
+            'couponsForWebUser': validCouponsForWebUser,
+            'creditsForWebUser': validCreditsForWebUser
+        });
+    }
+
+    /**
+     * 
+     * @param currentUserId 
+     */
+    getValidVipCardForWebUser = async (currentUserId: number): Promise<any> => {
+        let { uqs } = this.cApp;
+        let { webuser } = uqs;
+        let { WebUserVIPCard } = webuser;
+        let vipCardForWebUser: any = await WebUserVIPCard.obj({ webUser: currentUserId });
+        if (vipCardForWebUser) {
+            let { expiredDate } = vipCardForWebUser
+            if (expiredDate.getTime() > Date.now()) {
+                return vipCardForWebUser;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param currentUserId 
+     */
+    getValidCouponsForWebUser = async (currentUserId: number): Promise<any[]> => {
+        let { uqs } = this.cApp;
+        let { webuser } = uqs;
+        let { WebUserCoupon } = webuser;
         let couponsForWebUser: any[] = await WebUserCoupon.table({ webUser: currentUserId });
         let validCouponsForWebUser: any[] = [];
         if (couponsForWebUser) {
             validCouponsForWebUser = couponsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
-            if (validCouponsForWebUser.length > 0) {
-                for (let i = 0; i < validCouponsForWebUser.length; i++) {
-                    let e = validCouponsForWebUser[i];
-                    e.coupon = await this.getCouponValidationResult(e.couponCode);
-                }
-            }
         }
+        return validCouponsForWebUser;
+    }
 
+    /**
+     * 
+     * @param currentUserId 
+     */
+    getValidCreditsForWebUser = async (currentUserId: number): Promise<any[]> => {
+        let { uqs } = this.cApp;
+        let { 积分商城 } = uqs;
         let creditsForWebUser: any[] = await 积分商城.WebUserCredits.table({ webUser: currentUserId });
         let validCreditsForWebUser: any[] = [];
         if (creditsForWebUser) {
             validCreditsForWebUser = creditsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
-            if (validCreditsForWebUser.length > 0) {
-                for (let i = 0; i < validCreditsForWebUser.length; i++) {
-                    let e = validCreditsForWebUser[i];
-                    e.coupon = await this.getCouponValidationResult(e.creditsCode);
-                }
-            }
         }
-        this.openVPage(VCoupleAvailable, {
-            'vipCardForWebUser': vipCardForWebUser,
-            'couponsForWebUser': validCouponsForWebUser,
-            'creditsForWebUser': validCreditsForWebUser
-        });
+        return validCreditsForWebUser;
     }
 
     /**
@@ -230,7 +266,7 @@ export class CCoupon extends CUqBase {
         this.couponDrawed = true;
     }
 
-    async showProductDetail(product: BoxId) {
+    async showProductDetail(product: number) {
         let { cProduct } = this.cApp;
         await cProduct.showProductDetail(product);
     }
