@@ -123,6 +123,12 @@ export class CApp extends CUqApp {
                 case "login":
                     this.cMe.showLogin();
                     break;
+                case "cart":
+                    this.cCart.start();
+                    break;
+                case "productlist":
+                    this.cProduct.start(query.key);
+                    break;
                 default:
                     this.showMain();
                     break;
@@ -150,6 +156,7 @@ export class CApp extends CUqApp {
             login: this.aTest,
             productlist: this.productList,
             productdetail: this.productDetail,
+            carts: this.carts,
         }
 
         let n = 1;
@@ -171,9 +178,7 @@ export class CApp extends CUqApp {
 
     private aTest = (element: HTMLElement) => {
         //element.innerText = hello;
-        ReactDOM.render(this.cMe.renderLoginState(), element);
-        // element.innerHTML = '<div><button className="btn btn-primary w-100 my-2"><FA name="sign-out" size="lg" />登录</button>&nbsp;&nbsp;&nbsp;<button className="btn btn-primary w-100 my-2" ><FA name="sign-out" size="lg" />注册</button></div>';
-        //element.onclick = () => nav.showLogin(undefined, true);
+        ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
 
     private productList = (element: HTMLElement) => {
@@ -204,6 +209,18 @@ export class CApp extends CUqApp {
             }
         }
     }
+
+    private carts = (element: HTMLElement) => {
+        console.log("carts");
+        //element.innerText = "hello";
+        let { location } = document;
+        let { pathname } = location;
+        if (pathname) {
+            console.log(pathname);
+            ReactDOM.render(this.cCart.tab(), element);
+        }
+    }
+
 
     async loginCallBack(user: User) {
         /*

@@ -8,6 +8,7 @@ import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
+import { VLoginState_Web } from './VLoginState_Web';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -80,5 +81,14 @@ export class CMe extends CUqBase {
     renderCarLabel = () => {
         let { cCart } = this.cApp;
         return cCart.renderCartLabel();
+    }
+
+    renderLoginState_Web() {
+        return this.renderView(VLoginState_Web);
+    }
+
+    renderCarLabel_Web() {
+        let { cCart } = this.cApp;
+        return cCart.renderCartLabel_Web();
     }
 }
