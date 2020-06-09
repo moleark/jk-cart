@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { CCoupon } from './CCoupon';
+import { CCoupon, COUPONBASE } from './CCoupon';
 import { VPage, Page, List } from 'tonva';
 import { observer } from 'mobx-react';
-import { VCoupon, VVIPCard, VCredits } from './VVIPCard';
 import { observable } from 'mobx';
+import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 
 export class VSharedCoupon extends VPage<CCoupon> {
 
@@ -55,10 +55,14 @@ export class VSharedCoupon extends VPage<CCoupon> {
     })
 
     private renderCouponBase = (sharedCouponValidationResult: any) => {
-        let { types } = sharedCouponValidationResult;
+        let { types, discount } = sharedCouponValidationResult;
+        // return <>{this.renderVm(COUPONBASE[types]['view'], sharedCouponValidationResult)}</>;
         switch (types) {
             case 'coupon':
-                return <>{this.renderVm(VCoupon, sharedCouponValidationResult)}</>;
+                if (discount)
+                    return <>{this.renderVm(VCoupon, sharedCouponValidationResult)}</>;
+                else
+                    return <>{this.renderVm(VVIPCard, sharedCouponValidationResult)}</>;
                 break;
             case 'credits':
                 return <>{this.renderVm(VCredits, sharedCouponValidationResult)}</>;

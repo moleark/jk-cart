@@ -2,9 +2,10 @@ import * as React from 'react';
 import { VPage, Page, List, FA, LMR } from 'tonva';
 import { CCoupon, COUPONBASE } from './CCoupon';
 import { observable } from 'mobx';
-import { VVIPCard, VCredits, VCoupon } from './VVIPCard';
+import { VVIPCard, VCoupon, VCredits } from './VVIPCard';
 import { GLOABLE } from 'cartenv';
 import { observer } from 'mobx-react';
+import { Credits } from './Coupon';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
 
@@ -65,10 +66,14 @@ export class VCoupleAvailable extends VPage<CCoupon> {
     }
 
     private renderCoupon = (coupon: any) => {
-        let { result, code, types } = coupon;
+        let { result, code, types, discount } = coupon;
         if (result === 1) {
-            let content = this.renderVm(COUPONBASE[types]['view'], coupon);
-            // let content = types === 'coupon' ? this.renderVm(VCoupon, coupon) : this.renderVm(VCredits, coupon)
+            // let content = this.renderVm(COUPONBASE[types]['view'], coupon);
+            let content = null;
+            if (types === "coupon")
+                content = discount ? this.renderVm(VCoupon, coupon) : this.renderVm(VVIPCard, coupon);
+            else if (types === "credits")
+                content = this.renderVm(VCredits, coupon);
             return <div className="d-block">
                 <div className="px-2 bg-white" onClick={() => this.applySelectedCoupon(code)}>
                     {content}
