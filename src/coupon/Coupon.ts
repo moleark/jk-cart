@@ -31,7 +31,7 @@ export function createOrderPriceStrategy(couponData: any): OrderPriceStrategy {
     let { id, code, discount, preferential, validitydate, isValid, types, discountSetting } = couponData;
     switch (types) {
         case "coupon":
-            if (discountSetting)
+            if (discountSetting && discountSetting.length > 0)
                 return new VIPCard(id, code, validitydate, isValid, discountSetting);
             else
                 return new Coupon(id, code, validitydate, isValid, discount, preferential);
