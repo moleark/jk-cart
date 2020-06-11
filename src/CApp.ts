@@ -17,7 +17,7 @@ import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
-import { VLoginState } from "me/VLoginState";
+import { CYncProjects } from "ync/CYncProjects";
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -40,6 +40,8 @@ export class CApp extends CUqApp {
     cMember: CMember;
     cMe: CMe;
     cPointProduct: CPointProduct;
+
+    cYncProjects: CYncProjects;
 
 	/*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
@@ -77,6 +79,8 @@ export class CApp extends CUqApp {
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
+
+        this.cYncProjects = this.newC(CYncProjects);
 
         await this.cHome.getSlideShow();
 
@@ -123,11 +127,17 @@ export class CApp extends CUqApp {
                 case "login":
                     this.cMe.showLogin();
                     break;
+                case "loginout":
+                    this.cMe.showLoginOut();
+                    break;
                 case "cart":
                     this.cCart.start();
                     break;
                 case "productlist":
                     this.cProduct.start(query.key);
+                    break;
+                case "me":
+                    this.cMe.openMyOrders('all');
                     break;
                 default:
                     this.showMain();

@@ -18,7 +18,7 @@ export class VCartLabel_Web extends View<CCart> {
         let { cart } = this.controller.cApp;
         let count: any = cart.count.get();
         let badge, onClick, pointer;
-        if (count >= 0) {
+        if (count > 0) {
             onClick = this.showCart;
             pointer = 'cursor-pointer';
             if (count < 100) badge = <u>{count}</u>;
