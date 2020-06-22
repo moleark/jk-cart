@@ -51,17 +51,17 @@ export class VPointSign extends VPage<CPointProduct> {
     private renderItem = (item: any) => {
         let { comments, point, date } = item;
 
-        let left = <div className="small text-muted"><b>{comments}</b></div>
-        let right = <div className="small"><EasyTime date={date}></EasyTime></div>
-        let contents = <div className="text-danger text-center pl-5 small">+{point}</div>
-        return <LMR left={left} right={right} className="d-flex px-3 py-2">{contents}</LMR>
-        /* return <div className="w-100 d-flex flex-column px-3 py-2">
-             <div className="d-flex justify-content-between">
-                 <div className="text-muted"><small><b>{comments}</b></small></div>
-                 <div className="ml-4 pl-4" style={{ color: "red" }}><small>+{point}</small></div>
-                 <div><small><EasyTime date={date}></EasyTime></small></div>
-             </div>
-         </div >*/
+        // let left = <div className="small text-muted"><b>{comments}</b></div>
+        // let right = <div className="small"><EasyTime date={date}></EasyTime></div>
+        // let contents = <div className="text-danger text-center pl-5 small">+{point}</div>
+        // return <LMR left={left} right={right} className="d-flex px-3 py-2">{contents}</LMR>
+        return <div className="w-100 d-flex flex-column px-3 py-2">
+            <div className="d-flex justify-content-between">
+                <div className="text-muted"><small><b>{comments}</b></small></div>
+                <div style={{ color: "red" }}><small>+{point}</small></div>
+                <div className="float-right" style={{ width: "4rem" }}><small><EasyTime date={date}></EasyTime></small></div>
+            </div>
+        </div >
 
     }
 
