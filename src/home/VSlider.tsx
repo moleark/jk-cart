@@ -12,16 +12,25 @@ const sliderSetting = {
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: false
+    arrows: false,
+    isArrows: true,
+    isDots: true
 };
 
 export class VSlider extends View<CHome> {
 
     public render(param: any) {
+
+        let { banners } = this.controller;
+        let random = Math.floor(Math.random() * 10 % banners.length);
+        return <img src={banners[random].path} className="d-block w-100" alt="..."></img>
+
+        /**
         return <Slider {...sliderSetting} className="bg-white" >
             {this.controller.banners.map((banner, index) => <div key={index} >
                 <img src={banner.path} className="d-block w-100" alt="..."></img>
             </div>)}
         </Slider>
+        **/
     }
 }

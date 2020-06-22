@@ -31,7 +31,10 @@ export function createOrderPriceStrategy(couponData: any): OrderPriceStrategy {
     let { id, code, discount, preferential, validitydate, isValid, types, discountSetting } = couponData;
     switch (types) {
         case "coupon":
-            return new Coupon(id, code, validitydate, isValid, discount, preferential);
+            if (discountSetting && discountSetting.length > 0)
+                return new VIPCard(id, code, validitydate, isValid, discountSetting);
+            else
+                return new Coupon(id, code, validitydate, isValid, discount, preferential);
             break;
         case "coupon_sale":
             return new CouponSale(id, code, validitydate, isValid, discount, preferential);
@@ -47,6 +50,9 @@ export function createOrderPriceStrategy(couponData: any): OrderPriceStrategy {
     }
 }
 
+/**
+ * 优惠券的价格验证策略：成交价格取优惠券折扣价与所购产品品牌折扣价中较高者
+ */
 export class Coupon extends CouponBase implements OrderPriceStrategy {
 
     constructor(protected id: BoxId, code: number, expiredDate: Date, isValid: boolean, protected discount: number, protected preferential: number) {
@@ -117,9 +123,11 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
         }
     }
 
-
 }
 
+/**
+ * 销售发放的优惠券的价格验证策略（未使用） 
+ */
 export class CouponSale extends Coupon implements OrderPriceStrategy {
 
     async applyTo(orderData: Order, uqs: UQs) {
@@ -151,6 +159,9 @@ export class CouponSale extends Coupon implements OrderPriceStrategy {
     }
 }
 
+/**
+ * VIP卡的价格策略:品牌包含在VIP卡折扣表中的，价格为目录价 * 对应的(1-discount)，否则为目录价
+ */
 export class VIPCard extends CouponBase implements OrderPriceStrategy {
 
     constructor(protected id: BoxId, code: number, expiredDate: Date, isValid: boolean, private discountSetting: any[]) {
@@ -180,7 +191,6 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
             }
         }
     }
-
 
 }
 

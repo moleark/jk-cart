@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RowContext, nav, User, BoxId } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VCartLabel } from './VCartLabel';
+import { VCartLabel_Web } from './VCartLabel_Web';
 import { VCart } from './VCart';
 import { CartPackRow, CartItem2 } from './Cart';
 
@@ -20,6 +21,10 @@ export class CCart extends CUqBase {
      */
     renderCartLabel() {
         return this.renderView(VCartLabel);
+    }
+
+    renderCartLabel_Web() {
+        return this.renderView(VCartLabel_Web);
     }
 
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
