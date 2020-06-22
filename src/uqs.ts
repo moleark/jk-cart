@@ -95,9 +95,13 @@ export interface UqPointShop {
     GetLastPlatFormOrder: Action;
     AddPlatformOrderPoint: Action;
     AddUsedCoupon: Action;
-
+    GetPointHistory: Query;
+    GetPointSigninHistory: Query;
     WebUserCredits: Map;
     WebUserCreditsUsed: Map;
+    SigninSheet: Sheet;
+    checkIsSignin: Query;
+    Signin: Action;
 }
 
 export interface UqWebBuilder {

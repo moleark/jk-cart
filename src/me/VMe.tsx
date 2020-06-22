@@ -188,7 +188,6 @@ export class VMe extends VPage<CMe> {
     })
 }
 
-
 export function userSpan(name: string, nick: string): JSX.Element {
     return nick ?
         <><b>{nick} &nbsp; <small className="muted">{name}</small></b></>

@@ -2,6 +2,7 @@ import { AppConfig } from "tonva";
 import { jnkTop } from "./me/loginTop";
 import { tvs } from "./tvs";
 import { GLOABLE } from "cartenv";
+import { sign } from "crypto";
 
 export { CApp } from './CApp';
 
