@@ -84,8 +84,9 @@ export class VMyPoint extends VPage<CPointProduct> {
                         </div>
                     </div>
                 </div>
+
                 <div className="d-flex justify-content-between my-2 px-3 bg-white w-100">
-                    {this.pointblock("领取积分", this.openPointDrawing, "get-pocket", "text-info", " #ccc")}
+                    {this.pointblock("领积分码", this.openPointDrawing, "get-pocket", "text-info", " #ccc")}
                     {this.pointblock("积分兑换", this.openPointProduct, "exchange", "text-success", " #99CCFF")}
                     {this.pointblock("兑换记录", this.openExchangeHistory, "history", "text-info", " #EEae0e")}
                 </div>

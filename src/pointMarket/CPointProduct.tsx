@@ -215,7 +215,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 获取当前webuser对应customer的最近一个订单
+     * 获取当前webuser对应customer的最近一个订单 TODO:delete
      */
     getLastPlatformOrder = async () => {
 
@@ -246,7 +246,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 领取积分
+     * 领取积分码 TODO:delete
      */
     receivePoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
@@ -291,7 +291,7 @@ export class CPointProduct extends CUqBase {
 
 
     /**
-     *
+     * TODO: delete
      */
     addUsedCoupon = async () => {
         let { AddUsedCoupon } = this.uqs.积分商城;
