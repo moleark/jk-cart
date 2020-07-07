@@ -250,11 +250,9 @@ export class WebUser {
     }
 
     async getPoints() {
-        if (this.currentCustomer !== undefined) {
-            return await this.currentCustomer.getPoints();
-        }
-        return [];
+        return await this.uqs.积分商城.getPoints.table({ webuser: this.id });
     }
+
 };
 
 export class Customer {
@@ -310,10 +308,6 @@ export class Customer {
 
     async setDefaultSettings() {
         await this.uqs.customer.CustomerSetting.add(this.customerSettings);
-    }
-
-    async getPoints() {
-        return await this.uqs.积分商城.getPoints.table({ customer: this.id });
     }
 
 }
