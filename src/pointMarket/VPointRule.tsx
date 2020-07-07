@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Page } from 'tonva';
-import moment from 'moment';
 
 export class VPointRule extends React.Component {
 

@@ -65,7 +65,8 @@ export class LoaderProductChemicalWithPrices extends Loader<MainSubs<MainProduct
         let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
         if (currentUser.hasCustomer) {
             let discountSetting = await customerDiscount.GetDiscount.obj({ brand: data.main.brand.id, customer: currentUser.currentCustomer });
-            discount = discountSetting && discountSetting.discount;
+            if (discountSetting && discountSetting.discount)
+                discount = discountSetting.discount;
         }
 
         let { id: currentSalesRegionId } = currentSalesRegion;
