@@ -197,6 +197,7 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
 
 export class Credits extends CouponBase implements OrderPriceStrategy {
     async applyTo(orderData: Order, uqs: UQs) {
+        orderData.coupon = this.id
         orderData.point = Math.round(orderData.productAmount * 2);
     }
 }
