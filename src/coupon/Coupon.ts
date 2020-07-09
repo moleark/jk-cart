@@ -182,7 +182,7 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
 
                     for (let j = 0; j < packs.length; j++) {
                         let pk = packs[j];
-                        pk.priceInit = pk.price === Math.round(pk.retail * (1 - discount)) ? pk.retail : pk.price;                      
+                        pk.priceInit = pk.price === Math.round(pk.retail * (1 - discount)) ? pk.retail : pk.price;
                         // 最终价格取折扣价格和显示的价格（可能会有市场活动价)中较低者
                         pk.price = Math.round(Math.min(pk.price, pk.retail * (1 - discount)));
                         couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);

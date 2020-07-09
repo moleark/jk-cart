@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { BoxId, RowContext, nav, User } from 'tonva';
+import { BoxId, RowContext, nav, User, QueryPager, tv } from 'tonva';
 import { CUqBase } from 'CBase';
-import { observable } from 'mobx';
+import { observable, keys } from 'mobx';
 import { VPointProduct } from 'pointMarket/VPointProduct';
 import { VExchangeOrder } from './VExchangeOrder';
 import { VMyPoint } from './VMyPoint';
@@ -11,6 +11,8 @@ import { pointOrder, OrderItem } from './pointOrder';
 import { VExchangeHistoryDetail } from './VExchangeHistoryDetail';
 import { VExchangeHistory } from './VExchangeHistory';
 import { VPlatformOrderPoint } from './VPlatformOrderPoint';
+import { VPointDetails } from './VPointDetails';
+import { VPointSign } from './VPointSign';
 
 export class CPointProduct extends CUqBase {
 
@@ -26,9 +28,15 @@ export class CPointProduct extends CUqBase {
     @observable couponId: number;                   /*积分码 */
     @observable platformOrderId: any;               /*平台合同号 */
     @observable platformOrder: any[] = [];          /*平台合同 */
+    @observable pagePointHistory: QueryPager<any>;   /*积分详情 */
+    @observable IsSignin: any;
+    @observable signinPageHistory: QueryPager<any>;
 
     protected async internalStart(param: any) {
+        await this.getPointHistory();   /*获取积分记录*/
         await this.refreshMypoint();
+        await this.isSignined();       /* 是否签到 */
+        await this.getSigninHistory()  /* 签到记录 */
         this.openVPage(VMyPoint);
     }
 
@@ -51,7 +59,7 @@ export class CPointProduct extends CUqBase {
         this.pointProducts = await this.getPointsProducts();
         this.openVPage(VPointProduct);
     }
-
+    /* 积分兑换记录 */
     openExchangeHistory = async () => {
         let promises: PromiseLike<any>[] = [];
         promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20));
@@ -60,7 +68,7 @@ export class CPointProduct extends CUqBase {
         let exchangeHistory = presult[0].concat(presult[1]);
         this.openVPage(VExchangeHistory, exchangeHistory);
     }
-
+    /*领取积分 */
     openPointDrawing = async (credits?: string) => {
         /* 
         let lastPlatformId = await this.getLastPlatformOrder();
@@ -80,6 +88,52 @@ export class CPointProduct extends CUqBase {
     openOrderDetail = async (orderId: number) => {
         let order = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
         this.openVPage(VExchangeHistoryDetail, order);
+    }
+    /* 展示 积分详情*/
+    pointDetails = async () => {
+        this.getPointHistory();
+        this.openVPage(VPointDetails);
+    }
+    /*获取积分详情的数据*/
+    getPointHistory = () => {
+        this.pagePointHistory = new QueryPager(this.uqs.积分商城.GetPointHistory, 15, 30);
+        this.pagePointHistory.first({ key: "" });
+    }
+
+    /*签到*/
+    openPointSign = async () => {
+        this.openVPage(VPointSign)
+    }
+
+    /*签到添加积分到*/
+    addSigninSheet = async (customer: any, amount: any) => {
+        let { Signin } = this.uqs.积分商城;
+        customer = this.cApp.currentUser.currentCustomer;
+        customer = customer ? customer : this.user.id;
+        await Signin.submit({ webbuser: this.user.id, customer: customer, amount: amount });
+        await this.getSigninHistory()
+        this.isSignined()
+        // await this.getPointHistory();
+
+        /**
+        let result: any = await SigninSheet.save("SigninSheet", { customer: customer, amount: amount });
+        console.log(this.cApp.currentUser);
+        let { id, flow, state } = result;
+        await SigninSheet.action(id, flow, state, "submit");
+        await Signin.submit({ webbuser: 47, customer: 47, amount: 3 });
+        **/
+    }
+    /* 是否签到*/
+    isSignined = async () => {
+        let { checkIsSignin } = this.uqs.积分商城;
+        let list = await checkIsSignin.query({});
+        let { ret } = list;
+        this.IsSignin = ret[0].result;
+    }
+    /* 获取签到记录*/
+    getSigninHistory = async () => {
+        this.signinPageHistory = new QueryPager(this.uqs.积分商城.GetPointSigninHistory, 15, 30);
+        this.signinPageHistory.first({})
     }
 
     renderOrderItemProduct = (product: BoxId) => {
@@ -161,7 +215,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 获取当前webuser对应customer的最近一个订单
+     * 获取当前webuser对应customer的最近一个订单 TODO:delete
      */
     getLastPlatformOrder = async () => {
 
@@ -192,7 +246,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 领取积分
+     * 领取积分码 TODO:delete
      */
     receivePoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
@@ -237,7 +291,7 @@ export class CPointProduct extends CUqBase {
 
 
     /**
-     *
+     * TODO: delete
      */
     addUsedCoupon = async () => {
         let { AddUsedCoupon } = this.uqs.积分商城;

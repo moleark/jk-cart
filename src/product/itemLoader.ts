@@ -66,7 +66,8 @@ export class LoaderProductChemicalWithPrices extends Loader<MainSubs<MainProduct
         //线上客户是否是线下客户 协议折扣  discount
         if (currentUser.hasCustomer) {
             let discountSetting = await customerDiscount.GetDiscount.obj({ brand: data.main.brand.id, customer: currentUser.currentCustomer });
-            discount = discountSetting && discountSetting.discount;
+            if (discountSetting && discountSetting.discount)
+                discount = discountSetting.discount;
         }
 
         // 协议客户与vip客户不同存

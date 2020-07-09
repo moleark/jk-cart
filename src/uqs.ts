@@ -89,15 +89,24 @@ export interface UqPointShop {
     PointExchangeSheet: Sheet;
     getPoints: Query;
     GetPointProduct: Query;
+
+    // TODO：delete
     AddPoint: Action;
     IsCanUseOrder: Action;
+
+    // TODO：delete
     GetPlatFormOrder: Query;
     GetLastPlatFormOrder: Action;
     AddPlatformOrderPoint: Action;
     AddUsedCoupon: Action;
 
+    GetPointHistory: Query;
+    GetPointSigninHistory: Query;
     WebUserCredits: Map;
     WebUserCreditsUsed: Map;
+    SigninSheet: Sheet;
+    checkIsSignin: Query;
+    Signin: Action;
 }
 
 export interface UqWebBuilder {

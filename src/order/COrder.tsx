@@ -12,13 +12,15 @@ import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
 import { CartItem2, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
-import { PackRow } from 'product/Product';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
     @observable orderData: Order = new Order();
+    /**
+     * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
+     */
     @observable couponAppliedData: any = {};
     hasAnyCoupon: boolean;
     @observable buyerAccounts: any[] = [];

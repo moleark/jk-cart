@@ -27,8 +27,9 @@ export class VContact extends VPage<CSelectContact> {
             id: { visible: false },
             name: { widget: 'text', label: '姓名', placeholder: '姓名', rules: nameValidation } as UiInputItem,
             organizationName: { widget: 'text', label: '单位名称', placeholder: '单位名称', rules: organizationNameValidation } as UiInputItem,
-            mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiInputItem, telephone: { widget: 'text', label: '电话', placeholder: '电话', rules: telephoneValidation } as UiInputItem,
-            email: { widget: 'email', label: 'Email', rules: emailValidation, placeholder: 'Email' } as UiInputItem,
+            mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiInputItem,
+            telephone: { widget: 'text', label: '电话', placeholder: '电话', rules: telephoneValidation } as UiInputItem,
+            email: { widget: 'email', label: 'Email', placeholder: 'Email', rules: emailValidation } as UiInputItem,
             address: {
                 widget: 'id', label: '所在地区', placeholder: '所在地区',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),
