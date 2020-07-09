@@ -124,6 +124,12 @@ export class CCoupon extends CUqBase {
         vipCard.discountSetting = await this.getCouponDiscountSetting(types, id);
         this.openVPage(VVIPCardDiscount, vipCard);
     }
+    /**
+     * 获取卡券的有效折扣  
+     */
+    getValidDiscounts = async (types: string, id: number)=>{
+        return await this.getCouponDiscountSetting(types, id);
+    }
 
     private getCouponDiscountSetting = async (types: string, couponId: number) => {
         if (types === 'vipcard' || types === 'coupon') {

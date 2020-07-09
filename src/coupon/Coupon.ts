@@ -182,6 +182,7 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
 
                     for (let j = 0; j < packs.length; j++) {
                         let pk = packs[j];
+                        pk.priceInit = pk.price === Math.round(pk.retail * (1 - discount)) ? pk.retail : pk.price;                      
                         // 最终价格取折扣价格和显示的价格（可能会有市场活动价)中较低者
                         pk.price = Math.round(Math.min(pk.price, pk.retail * (1 - discount)));
                         couponOffsetAmount += Math.round(pk.quantity * (pk.retail - pk.price) * -1);
@@ -197,6 +198,25 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
 
 export class Credits extends CouponBase implements OrderPriceStrategy {
     async applyTo(orderData: Order, uqs: UQs) {
+        orderData.coupon = this.id;
+        if (this.isAvaliable()) {
+            let { orderItems } = orderData;
+            if (orderItems !== undefined && orderItems.length > 0) {
+                let couponOffsetAmount = 0;
+                for (let i = 0; i < orderItems.length; i++) {
+                    let oi = orderItems[i];
+                    let { packs } = oi;
+                    for (let j = 0; j < packs.length; j++) {
+                        let pk = packs[j];
+                        pk.priceInit = pk.price;
+                        //双倍积分 无折扣 取最大的价格 
+                        pk.price = Math.round(Math.max(pk.price, pk.retail));
+                        couponOffsetAmount = 0;
+                    };
+                };
+                orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
+            }
+        }
         orderData.point = Math.round(orderData.productAmount * 2);
     }
 }

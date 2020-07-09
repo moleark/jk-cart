@@ -26,6 +26,9 @@ export class Order {
             (this.couponRemitted ? this.couponRemitted : 0)).toFixed(2));
     };
     */
+    /**
+     * 总金额
+     */
     @computed get amount() {
         return parseFloat((this.orderItems.reduce((pv, cv) => (pv + cv.subAmount), 0) +
             (this.freightFee ? this.freightFee : 0) +
@@ -35,7 +38,7 @@ export class Order {
     //     return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
     // };
     /**
-     * 商品总额(未应用券的价格)
+     * 商品总额(未应用券的价格) -----> 已修 应用目录价计算(总额恒定)
      */
     @computed get productAmount() {
         return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subListAmount, 0).toFixed(2));
@@ -93,7 +96,7 @@ export class OrderItem {
     }
     @computed get subListAmount() {
         return this.packs.reduce((p, c) => {
-            return p + c.priceInit * c.quantity
+            return p + c.retail * c.quantity
         }, 0);
     }
 }

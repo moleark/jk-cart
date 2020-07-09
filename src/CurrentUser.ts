@@ -56,6 +56,8 @@ export class WebUser {
     address: BoxId;
     addressString: string;
     zipCode: string;
+    VIPDiscount: any;
+    webUserVIPCard: any;
     @computed get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
@@ -90,7 +92,7 @@ export class WebUser {
     private async loadWebUser() {
         let { id, _user } = this;
         if (this._user !== undefined) {
-            let { webuser: webUserTuid } = this.uqs;
+            let { webuser: webUserTuid, salesTask } = this.uqs;
             let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount } = webUserTuid;
             let webUser = await WebUser.load(this.id);
             if (webUser) {
@@ -100,7 +102,13 @@ export class WebUser {
                 this.salutation = salutation;
                 this.organizationName = organizationName;
                 this.departmentName = departmentName;
+                this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
+                if (this.webUserVIPCard !== undefined) {
+                    // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
+                    this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
+                }
             }
+           
 
             let contact = await WebUserContact.obj({ "webUser": id });
             if (contact) {

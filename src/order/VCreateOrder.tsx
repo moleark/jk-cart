@@ -24,14 +24,19 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private packsRow = (item: CartPackRow, index: number) => {
-        let { pack, quantity, retail, priceInit } = item;
+        let { pack, quantity, retail, price, priceInit } = item;
 
+        let retailUI: any;
+        if (price!==retail) {
+            retailUI = <del>¥{retail}</del>;
+        }
         return <div key={index} className="px-2 py-2 border-top">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
-                    <span className="text-danger h5"><small>¥</small>{parseFloat((priceInit * quantity).toFixed(2))}</span>
-                    <small className="text-muted">(¥{parseFloat(priceInit.toFixed(2))} × {quantity})</small>
+                    <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
+                    <span className="text-danger h5"><small>¥</small>{parseFloat((price * quantity).toFixed(2))}</span>
+                    <small className="text-muted">(¥{parseFloat(price.toFixed(2))} × {quantity})</small>
                 </div>
             </div>
             <div>{this.controller.renderDeliveryTime(pack)}</div>
@@ -58,7 +63,7 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private renderCoupon = observer((param: any) => {
-        let { couponAppliedData, hasAnyCoupon } = this.controller;
+        let { couponAppliedData, hasAnyCoupon,removeCoupon } = this.controller;
         if (couponAppliedData['id'] === undefined) {
             let tip = hasAnyCoupon ? "有可用优惠卡/券，点击使用" : "输入优惠券/积分码";
             return <span className="text-primary">{tip}</span>;
@@ -66,6 +71,11 @@ export class VCreateOrder extends VPage<COrder> {
             let { code, types } = couponAppliedData;
             let { couponOffsetAmount, couponRemitted, point } = param;
             let offsetUI, remittedUI, noOffsetUI;
+            let cancelCouponUI = <div
+                className="position-absolute text-primary border text-center border-primary dropdown-menu-right rounded-circle"
+                style={{ border: 1, cursor: 'pointer', width: 19, height: 19, lineHeight: 1, top: 5, right: 5 }}
+                onClick={(e) => { e.stopPropagation(); removeCoupon(); }}
+            >&times;</div>
             if (types === "credits") {
                 offsetUI = <div className="d-flex flex-row justify-content-between">
                     <div className="text-muted">积分:</div>
@@ -88,11 +98,12 @@ export class VCreateOrder extends VPage<COrder> {
             } else {
                 noOffsetUI = <div>谢谢惠顾</div>;
             }
-            return <div className="mr-2">
+            return <div className="mr-2 position-relative border-primary border p-3 rounded">
                 <div className="text-success">{code.substr(0, 4)} {code.substr(4)}</div>
                 {offsetUI}
                 {remittedUI}
                 {noOffsetUI}
+                {cancelCouponUI}
             </div>
         }
     });
