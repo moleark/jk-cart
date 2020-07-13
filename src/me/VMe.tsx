@@ -24,7 +24,10 @@ export class VMe extends VPage<CMe> {
     private privacy = () => {
         this.controller.openPrivacy();
     }
-    private aboutThisApp = () => nav.push(<AboutThisApp />);
+    private aboutThisApp = () => {
+        // nav.push(<AboutThisApp />);
+        this.openVPage(AboutThisApp)
+    }
 
     private changePassword = async () => {
         await nav.changePassword();
@@ -187,7 +190,6 @@ export class VMe extends VPage<CMe> {
         return <PropGrid rows={rows} values={{}} />;
     })
 }
-
 
 export function userSpan(name: string, nick: string): JSX.Element {
     return nick ?

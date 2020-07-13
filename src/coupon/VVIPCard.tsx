@@ -31,18 +31,19 @@ export class VCoupon extends View<CCoupon> {
         return null;
     }
 
+    private showDiscountSetting = (vipCardId: VIPCard, event: React.MouseEvent) => {
+        event.stopPropagation();
+        this.controller.showDiscountSetting(vipCardId);
+    }
+
     protected renderCardDescription = (): JSX.Element => {
-        let { discount, vipCardType } = this.coupon;
+        let { discount } = this.coupon;
         let cardDescription: any;
         if (typeof discount === 'number') {
             if (discount !== 0) {
                 let discountShow: any;
                 discountShow = (1 - discount) * 10;
                 cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{discountShow === 10 ? '无折扣' : <>{discountShow.toFixed(1)} 折</>}</big></div>
-            } else {
-                if (vipCardType) {
-                    cardDescription = <div className="mr-3 font-weight-bold text-danger"><big>{tv(vipCardType, v => v.name)}</big></div>
-                }
             }
         }
         return cardDescription;
@@ -73,13 +74,21 @@ export class VCoupon extends View<CCoupon> {
             if (preferential)
                 bcenter = <div className="text-muted"><small>优惠：<span className="mx-3">￥{preferential}</span></small></div>;
             */
+            let tipUI = null;
+            if (discount)
+                tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
+            else
+                tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+
 
             let content = <div className="float-right pr-3">
                 <div className="pb-1">
                     <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
                     <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
                 </div>
-                <div><small className="text-success">此{COUPONBASE[types]['name']}全场通用</small></div>
+                <div className="float-right">
+                    {tipUI}
+                </div>
             </div>;
 
             let left = <div>
@@ -99,6 +108,7 @@ export class VCoupon extends View<CCoupon> {
 
 export class VVIPCard extends VCoupon {
 
+    /*
     private showDiscountSetting = (vipCardId: VIPCard, event: React.MouseEvent) => {
         event.stopPropagation();
         this.controller.showDiscountSetting(vipCardId);
@@ -109,6 +119,7 @@ export class VVIPCard extends VCoupon {
             <FA name="chevron-right" className="corsor-pointer"></FA>
         </span>;
     }
+    */
 }
 
 export class VCredits extends VCoupon {

@@ -12,13 +12,15 @@ import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
 import { CartItem2, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
-import { PackRow } from 'product/Product';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
     @observable orderData: Order = new Order();
+    /**
+     * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
+     */
     @observable couponAppliedData: any = {};
     hasAnyCoupon: boolean;
     @observable buyerAccounts: any[] = [];
@@ -33,7 +35,7 @@ export class COrder extends CUqBase {
 
     createOrderFromCart = async (cartItems: CartItem2[]) => {
         let { cApp, uqs } = this;
-        let { currentUser, currentSalesRegion } = cApp;
+        let { currentUser, currentSalesRegion, cCoupon } = cApp;
         this.orderData.webUser = currentUser.id;
         this.orderData.salesRegion = currentSalesRegion.id;
         this.removeCoupon();
@@ -80,6 +82,8 @@ export class COrder extends CUqBase {
             this.orderData.freightFee = FREIGHTFEEFIXED;
             if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
                 this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
+            else
+                this.orderData.freightFeeRemitted = 0;            
         }
 
         /*
@@ -94,6 +98,18 @@ export class COrder extends CUqBase {
             }
         }
         */
+        if (currentUser.webUserVIPCard !== undefined) {
+            let coupon = await cCoupon.getCouponValidationResult(
+                currentUser.webUserVIPCard.vipCardCode.toString()
+            );
+            let { result, types, id } = coupon;
+            if (result === 1) {
+                if (types === "vipcard" || types === "coupon") {
+                    coupon.discountSetting = await cCoupon.getValidDiscounts(types, id);
+                }
+                this.applyCoupon(coupon);
+            }
+        }
         this.openVPage(VCreateOrder);
     }
 
@@ -292,6 +308,8 @@ export class COrder extends CUqBase {
             this.orderData.freightFee = FREIGHTFEEFIXED;
             if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
                 this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
+            else
+                this.orderData.freightFeeRemitted = 0;
         }
     }
 

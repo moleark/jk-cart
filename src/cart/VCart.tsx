@@ -18,6 +18,7 @@ const cartSchema = [
                 name: 'packs', type: 'arr', arr: [
                     { name: 'pack', type: 'object' } as ObjectSchema,
                     { name: 'price', type: 'number' } as NumSchema,
+                    { name: 'retail', type: 'number' } as NumSchema,
                     { name: 'quantity', type: 'number' } as NumSchema,
                     { name: 'currency', type: 'object' } as ObjectSchema
                 ]

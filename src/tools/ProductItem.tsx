@@ -1,6 +1,7 @@
+import { BoxId } from 'tonva';
 
 export class ProductItem {
-    product: string;
+    product: BoxId;
     discount: number;
     productData: any;
 }

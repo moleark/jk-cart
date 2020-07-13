@@ -193,13 +193,13 @@ export class CProduct extends CUqBase {
         return this.renderView(VProductList_Web, key)
     }
 
-    renderProductWeb = async (key: string) => {
+    renderProductWeb = async (key: any) => {
         if (key) {
             let discount = 0;
             let loader = new LoaderProductChemicalWithPrices(this.cApp);
             let productData = await loader.load(key);
             let param: ProductItem = {
-                product: key,
+                product: this.cApp.uqs.product.ProductX.boxId(key),
                 productData: productData,
                 discount: discount,
             }

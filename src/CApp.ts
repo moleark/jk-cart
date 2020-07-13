@@ -17,7 +17,7 @@ import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
-import { VLoginState } from "me/VLoginState";
+import { CYncProjects } from "ync/CYncProjects";
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -41,6 +41,8 @@ export class CApp extends CUqApp {
     cMe: CMe;
     cPointProduct: CPointProduct;
 
+    cYncProjects: CYncProjects;
+
 	/*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -55,9 +57,12 @@ export class CApp extends CUqApp {
     }
 
     protected async internalStart() {
+        let { uqs } = this;
+        let { common } = uqs;
+        let { SalesRegion, Language } = common;
         let [currentSalesRegion, currentLanguage] = await Promise.all([
-            this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN),
-            this.uqs.common.Language.load(GLOABLE.CHINESE),
+            SalesRegion.load(GLOABLE.SALESREGION_CN),
+            Language.load(GLOABLE.CHINESE),
         ]);
         this.setUser();
         //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
@@ -77,6 +82,8 @@ export class CApp extends CUqApp {
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
+
+        this.cYncProjects = this.newC(CYncProjects);
 
         await this.cHome.getSlideShow();
 
@@ -123,6 +130,18 @@ export class CApp extends CUqApp {
                 case "login":
                     this.cMe.showLogin();
                     break;
+                case "loginout":
+                    this.cMe.showLoginOut();
+                    break;
+                case "cart":
+                    this.cCart.start();
+                    break;
+                case "productlist":
+                    this.cProduct.start(query.key);
+                    break;
+                case "me":
+                    this.cMe.openMyOrders('all');
+                    break;
                 default:
                     this.showMain();
                     break;
@@ -150,6 +169,7 @@ export class CApp extends CUqApp {
             login: this.aTest,
             productlist: this.productList,
             productdetail: this.productDetail,
+            carts: this.carts,
         }
 
         let n = 1;
@@ -171,9 +191,7 @@ export class CApp extends CUqApp {
 
     private aTest = (element: HTMLElement) => {
         //element.innerText = hello;
-        ReactDOM.render(this.cMe.renderLoginState(), element);
-        // element.innerHTML = '<div><button className="btn btn-primary w-100 my-2"><FA name="sign-out" size="lg" />登录</button>&nbsp;&nbsp;&nbsp;<button className="btn btn-primary w-100 my-2" ><FA name="sign-out" size="lg" />注册</button></div>';
-        //element.onclick = () => nav.showLogin(undefined, true);
+        ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
 
     private productList = (element: HTMLElement) => {
@@ -204,6 +222,18 @@ export class CApp extends CUqApp {
             }
         }
     }
+
+    private carts = (element: HTMLElement) => {
+        console.log("carts");
+        //element.innerText = "hello";
+        let { location } = document;
+        let { pathname } = location;
+        if (pathname) {
+            console.log(pathname);
+            ReactDOM.render(this.cCart.tab(), element);
+        }
+    }
+
 
     async loginCallBack(user: User) {
         /*

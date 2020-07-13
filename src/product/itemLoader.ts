@@ -63,11 +63,24 @@ export class LoaderProductChemicalWithPrices extends Loader<MainSubs<MainProduct
 
         let discount = 0;
         let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
+        //线上客户是否是线下客户 协议折扣  discount
         if (currentUser.hasCustomer) {
             let discountSetting = await customerDiscount.GetDiscount.obj({ brand: data.main.brand.id, customer: currentUser.currentCustomer });
-            discount = discountSetting && discountSetting.discount;
+            if (discountSetting && discountSetting.discount)
+                discount = discountSetting.discount;
         }
 
+        // 协议客户与vip客户不同存
+        // let webUserVIPCard = await webuser.WebUserVIPCard.obj({ webUser: currentUser });
+        if (currentUser.webUserVIPCard !== undefined) {
+            let brandDiscounts = currentUser.VIPDiscount;
+            // await salesTask.VIPCardDiscount.query({ coupon: webUserVIPCard.coupon });  调试修改为 await salesTask.VIPCardDiscount.query({ coupon: webUserVIPCard.vipCard});
+            let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === data.main.brand.id);
+            // 协议与vip折扣比较 取其大值  (两者不可同存)
+            // if (brandDiscount && brandDiscount > discount)
+            discount = brandDiscount && brandDiscount.discount;         
+        }
+        
         let { id: currentSalesRegionId } = currentSalesRegion;
         let prices = await product.PriceX.table({ product: productId, salesRegion: currentSalesRegionId });
         data.subs = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
