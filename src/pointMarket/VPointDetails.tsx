@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, EasyDate, tv } from 'tonva';
+import { VPage, Page, List, EasyDate, tv, Scroller } from 'tonva';
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 
@@ -18,8 +18,8 @@ export class VPointDetails extends VPage<CPointProduct> {
 
     });
 
-    protected onScrollBottom = () => {
-        this.controller.pagePointHistory.more();
+    protected onScrollBottom = async (scroller: Scroller) => {
+		this.controller.pagePointHistory.more();
     }
 
     private renderItem = (item: any) => {
