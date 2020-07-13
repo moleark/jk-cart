@@ -14,10 +14,13 @@ interface State {
 export class ReloadPage extends React.Component<Props, State> {
     private timerHandler:any;
     constructor(props:Props) {
-        super(props);
-        this.state = {seconds: props.seconds};
+		super(props);
+		let {seconds} = props;
+		if (seconds===undefined) return;
+        this.state = {seconds};
+		if (seconds <= 0) return;
         this.timerHandler = setInterval(() => {
-            let seconds = this.state.seconds;
+			let {seconds} = this.state;
             seconds--;
             if (seconds <= 0) {
                 this.reload();
@@ -32,12 +35,22 @@ export class ReloadPage extends React.Component<Props, State> {
         nav.reload();
     }
     render() {
+		let {seconds} = this.state;
+		let title:string, msg:string;		
+		if (seconds > 0) {
+			title = '程序升级中...';
+			msg = this.state.seconds + '秒钟之后自动重启动';
+		}
+		else {
+			title = '程序需要升级';
+			msg = '请点击下面按钮重启';
+		}
         return <Page header={false}>
             <div className="text-center p-5">
                 <div className="text-info py-5">
-                    程序升级中...
-                    <br/>
-                    {this.state.seconds}秒钟之后自动重启动
+					<span className="text-danger">{title}</span>
+					<br/>
+					{msg}
                     <br/>
                     <span className="small text-muted">{this.props.message}</span>
                 </div>

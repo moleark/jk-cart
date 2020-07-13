@@ -4,7 +4,9 @@ import { ActionCaller } from './caller';
 export class Action extends Entity {
     get typeName(): string { return 'action';}
     async submit(data:object) {
-        return await new ActionSubmitCaller(this, data).request();
+		let caller = new ActionSubmitCaller(this, data)
+		let ret = await caller.request();
+		return ret;
     }
     async submitReturns(data:object):Promise<{[ret:string]:any[]}> {
        return await new SubmitReturnsCaller(this, data).request();
@@ -16,7 +18,9 @@ export class Action extends Entity {
 
 export class ActionSubmitCaller extends ActionCaller {
     get path():string {return 'action/' + this.entity.name;}
-    buildParams():any {return {data: this.entity.pack(this.params)}}
+    buildParams():any {
+		return {data: this.entity.pack(this.params)}
+	}
 }
 
 class SubmitReturnsCaller extends ActionSubmitCaller {

@@ -20,19 +20,21 @@ export abstract class CBase extends Controller {
 		return this._cApp.internalT(str);
 	}
 
-    protected newC<T extends CBase>(type: IConstructor<T>):T {
-        return new type(this.cApp);
+    protected newC<T extends CBase>(type: IConstructor<T>, param?:any):T {
+		let c = new type(this.cApp);
+		c.init(param);
+		return c;
     }
 
-    protected newSub<T extends CSub>(type: IConstructor<T>):T {
+    protected newSub<O extends CBase, T extends CSub<O>>(type: IConstructor<T>):T {
         return new type(this);
     }
 }
 
-export abstract class CSub extends CBase {
-    protected _owner: CBase;
+export abstract class CSub<T extends CBase> extends CBase {
+    protected _owner: T;
 
-    constructor(owner: CBase) {
+    constructor(owner: T) {
         super(owner.cApp);
         this._owner = owner;
 	}

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import _ from 'lodash';
-import {nav, Page, resOptions} from '../components';
-import { User, env } from '../tool';
+import { Page, Image, UserView } from '../components';
+import { env, User } from '../tool';
 import { Controller } from './controller';
 import { VPage } from './vpage';
 
@@ -18,24 +17,19 @@ export abstract class View<C extends Controller> {
 		this.t = controller.t;
     }
 
-    protected get isDev() {return  env.isDevelopment}
-
+	protected get isDev() {return  env.isDevelopment}
+	protected isMe(id:any) {return this.controller.isMe(id)}
     abstract render(param?:any): JSX.Element;
 
     protected renderVm(vm: new (controller: C)=>View<C>, param?:any) {
         return (new vm(this.controller)).render(param);
     }
 
-    protected async openVPage(vp: new (controller: C)=>VPage<C>, param?:any):Promise<void> {
-        await (new vp(this.controller)).open(param);
+    protected async openVPage(vp: new (controller: C)=>VPage<C>, param?:any, afterBack?:()=>Promise<void>):Promise<void> {
+        await (new vp(this.controller)).open(param, afterBack);
     }
 
     protected async event(type:string, value?:any) {
-        /*
-        if (this._resolve_$_ !== undefined) {
-            await this._resolve_$_({type:type, value:value});
-            return;
-        }*/
         await this.controller.event(type, value);
     }
 
@@ -46,6 +40,31 @@ export abstract class View<C extends Controller> {
     protected returnCall(value:any) {
         this.controller.returnCall(value);
     }
+
+	protected renderUser(user:any, imageClassName?:string, textClassName?:string) {
+		let renderUser = (user:User) => {
+			let {name, nick, icon} = user;
+			return <>
+				<Image src={icon} className={imageClassName || 'w-1c h-1c mr-2'} />
+				<span className={textClassName}>{nick || name}</span>
+			</>;
+		}
+		return <UserView user={user} render={renderUser} />
+	}
+
+	protected renderUserText(user:any) {
+		let renderUser = (user:User) => {
+			let {name, nick} = user;
+			return <>{nick || name}</>;
+		}
+		return <UserView user={user} render={renderUser} />
+	}
+
+	protected renderMe(imageClassName?:string, textClassName?:string) {
+		let {user} = this.controller;
+		if (!user) return;
+		return this.renderUser(user.id, imageClassName, textClassName);
+	}
 
     protected openPage(view: React.StatelessComponent<any>, param?:any) {
         let type = typeof param;
@@ -63,8 +82,8 @@ export abstract class View<C extends Controller> {
         this.controller.replacePage(React.createElement(view, param));
     }
 
-    protected openPageElement(page: JSX.Element) {
-        this.controller.openPage(page);
+    protected openPageElement(page: JSX.Element, onClosePage?: ()=>void) {
+        this.controller.openPage(page, onClosePage);
     }
 
     protected replacePageElement(page: JSX.Element) {
@@ -89,5 +108,9 @@ export abstract class View<C extends Controller> {
 
     protected regConfirmClose(confirmClose: ()=>Promise<boolean>) {
         this.controller.regConfirmClose(confirmClose);
-    }
+	}
+
+	protected popToTopPage() {
+		this.controller.popToTopPage();
+	}
 }

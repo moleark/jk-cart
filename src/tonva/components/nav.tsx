@@ -10,7 +10,7 @@ import {appUrl, setAppInFrame, getExHash, getExHashPos} from '../net/appBridge';
 import {LocalData, env} from '../tool';
 import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, appInFrame, host, resUrlFromHost} from '../net';
 import { WsBase, wsBridge } from '../net/wsChannel';
-import { resOptions } from './res';
+import { resOptions } from '../res/res';
 import { Loading } from './loading';
 
 import 'font-awesome/css/font-awesome.min.css';
@@ -855,9 +855,13 @@ export class Nav {
     }
 
     showReloadPage(msg: string) {
-        let seconds = 5;
-        this.push(<ReloadPage message={msg} seconds={seconds} />);
-        env.setTimeout(undefined, this.reload, seconds*1000);
+        let seconds = -1;
+		this.push(<ReloadPage message={msg} seconds={seconds} />);
+		/*
+		if (seconds > 0) {
+			env.setTimeout(undefined, this.reload, seconds*1000);
+		}
+		*/
     }
 
     reload = async () => {
@@ -869,7 +873,22 @@ export class Nav {
             let registration =await Promise.race([waiting, navigator.serviceWorker.ready]);
             if (registration) registration.unregister();
         }
-        window.document.location.reload();
+		window.document.location.reload();
+		// dcloud hbuilder里面的app自动升级，需要清webview的缓存
+		let plus = (window as any).plus;
+		if (plus) {
+			let webview = plus.webview;
+			if (webview) {
+				if (webview.reload) webview.reload(true);
+			}
+			else {
+				let webView = plus.webView;
+				if (webView) {
+					if (webView.reload) webView.reload(true);
+				}
+			}
+			//plus.webview.reload(true)
+		}
     }
 
     resetAll = () => {

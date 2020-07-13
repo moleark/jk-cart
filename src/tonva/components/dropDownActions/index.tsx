@@ -57,13 +57,16 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
         if (isRight === undefined) isRight = true;
         let hasIcon = actions.some(v => v.icon!==undefined);
         let {dropdownOpen} = this.state;
-        //isOpen={this.state.dropdownOpen} toggle={this.toggle}
-        return <div className={classNames('dropdown', className)}>
-            <button ref={v=>this.button=v} className="cursor-pointer dropdown-toggle btn btn-sm"
+		//isOpen={this.state.dropdownOpen} toggle={this.toggle}
+		let cn = 'cursor-pointer dropdown-toggle btn btn-sm ';
+		if (className) cn += className;
+        return <div className={'dropdown'}>
+			<button ref={v=>this.button=v} 
+				className={cn}
                 data-toggle="dropdown"
                 aria-expanded={dropdownOpen}
                 onClick={this.toggle}>
-                <i className={classNames('fa', 'fa-'+(icon||'ellipsis-v'))} />
+                <i className={classNames('fa fa-fw ', 'fa-'+(icon||'ellipsis-v'))} />
             </button>
             <div ref={v => this.menu=v} className={classNames({"dropdown-menu":true, "dropdown-menu-right":isRight, "show":dropdownOpen})}>
                 {

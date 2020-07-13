@@ -1,15 +1,15 @@
 import * as React from 'react';
 //import _ from 'lodash';
 import { observer } from 'mobx-react';
-import { Schema, UiSchema, ItemSchema, UiItem, UiSelectBase, UiRadio, UiTagSingle, UiTagMulti } from '../schema';
+import { Schema, UiSchema, ItemSchema, UiItem, UiRadio, UiTagSingle, UiTagMulti } from '../schema';
 import { ItemEdit } from './itemEdit';
 import { StringItemEdit } from './stringItemEdit';
 import { ImageItemEdit } from './imageItemEdit';
-import { Image } from '../image';
 import { RadioItemEdit } from './radioItemEdit';
 import { SelectItemEdit } from './selectItemEdit';
 import { IdItemEdit } from './idItemEdit';
 import { TagSingleItemEdit, TagMultiItemEdit } from './tagItemEdit';
+import { TextAreaItemEdit } from './textAreaItemEdit';
 
 export interface EditProps {
     className?: string;
@@ -90,7 +90,7 @@ export class Edit extends React.Component<EditProps> {
 		</div>;
     }
 
-	private rowClick = async (itemEdit:ItemEdit/*, itemSchema: ItemSchema, uiItem: UiItem, label:string, value: any*/) => {
+	private rowClick = async (itemEdit:ItemEdit) => {
 		if (itemEdit === undefined) {
 			alert('item has no edit');
 			return;
@@ -126,7 +126,8 @@ export class Edit extends React.Component<EditProps> {
         }
         catch (err) {
             // 如果直接back，会触发reject，就到这里了
-            console.log('no value changed');
+			console.log('no value changed');
+			console.error(err);
         }
     }
 }
@@ -140,9 +141,11 @@ function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, val
         switch (uiItem.widget) {
             default: break;
             case 'id': itemEdit = IdItemEdit; break;
-            case 'text': itemEdit = StringItemEdit; break;
+			case 'text': itemEdit = StringItemEdit; break;
+			case 'textarea': itemEdit = TextAreaItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;
-            case 'select': itemEdit = SelectItemEdit; break;
+			case 'select': itemEdit = SelectItemEdit; break;
+			case 'range': itemEdit = StringItemEdit; break;
             case 'radio': 
 				ie = new RadioItemEdit(itemSchema, uiItem as UiRadio, label, value);
 				break;

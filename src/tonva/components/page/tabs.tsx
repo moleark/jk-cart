@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { IVPage } from './page';
 import { IObservableValue } from 'mobx/lib/internal';
 import '../../css/va-tab.css';
+import { ScrollView } from './scrollView';
 
 export type TabCaption = (selected:boolean) => JSX.Element;
 
@@ -17,6 +18,10 @@ export interface TabProp {
     load?: () => Promise<void>;
 	onShown?: () => Promise<void>;
 	isSelected?: boolean;
+	onScroll?: () => void;
+	onScrollTop?: () => Promise<boolean>;
+	onScrollBottom?: () => Promise<void>;
+	className?: string;
 }
 
 export interface TabsProps {
@@ -40,12 +45,16 @@ class Tab {
 	page: IVPage;
     notify: IObservableValue<number>;
     load?: () => Promise<void>;
-    onShown?: () => Promise<void>;
+	onShown?: () => Promise<void>;
+	onScroll?: () => void;
+	onScrollTop?: () => Promise<boolean>;
+	onScrollBottom?: () => Promise<void>;
+	className?: string;
 
     private _content: JSX.Element;
     
     get content(): JSX.Element {
-		if (this.load && this.loaded === false) return;
+		if (this.load && this.loaded === false) return null;
 		if (this.selected === false) return this._content;
 		if (!this._content) {
 			if (this.contentBuilder !== undefined) {
@@ -86,18 +95,18 @@ export class TabsView {
 	private props: TabsProps;
     private size: string;
     private tabBg: string;
-    private contentBg: string;
+    //private contentBg: string;
     private sep: string;
     @observable private selectedTab: Tab;
     @observable private tabArr: Tab[];
 
     constructor(props: TabsProps) {
 		this.props = props;
-		let {size, tabs, tabBg: tabBack, contentBg: contentBack, sep, selected} = props;
+		let {size, tabs, tabBg: tabBack, sep, selected} = props;
 		this.size = size || 'md';
         this.tabArr = tabs.map(v => {
             let tab = new Tab();
-            let {name, caption, content, page, notify, load, onShown, isSelected} = v;
+            let {name, caption, content, page, notify, load, onShown, isSelected, onScroll, onScrollTop, onScrollBottom, className} = v;
 			tab.name = name;
 			if (isSelected === true || name === selected) {
 				this.selectedTab = tab;
@@ -113,11 +122,15 @@ export class TabsView {
 			}
             tab.notify = notify;
             tab.load = load;
-            tab.onShown = onShown;
+			tab.onShown = onShown;
+			tab.onScroll = onScroll;
+			tab.onScrollTop = onScrollTop;
+			tab.onScrollBottom = onScrollBottom;
+			tab.className = className;
             return tab;
         });
         this.tabBg = tabBack;
-        this.contentBg = contentBack;
+        //this.contentBg = contentBack;
         this.sep = sep;
         if (this.selectedTab === undefined) {
 			this.selectedTab = this.tabArr[0];
@@ -213,8 +226,8 @@ export class TabsView {
 		return <>
 			{this.tabArr.map((v,index) => {
 				let {tabPosition} = this.props;
-				let {content, page} = v;
-				let tabs = <this.tabs />;
+				let {content, page, onScroll, onScrollTop, onScrollBottom, className} = v;
+				let tabs = React.createElement(this.tabs);
 				let pageHeader:any, pageFooter:any;
 				if (page !== undefined) {
 					pageHeader = page.header();
@@ -257,13 +270,13 @@ export class TabsView {
 
 				let style:React.CSSProperties;
 				if (v.selected===false) style = displayNone;
-				return <div key={index} className={classNames('tv-page', this.contentBg)} style={style}>
-					<article>
-						{header}
-						{content}
-						{footer}
-					</article>
-				</div>;
+				return <ScrollView key={index} className={className}
+					style={style}
+					onScroll={onScroll} onScrollTop={onScrollTop} onScrollBottom={onScrollBottom}>
+					{header}
+					{content}
+					{footer}
+				</ScrollView>;
 			})}
 		</>;
 	});
@@ -271,14 +284,12 @@ export class TabsView {
     render() {
 		let {tabPosition} = this.props;
 		let tabs = <this.tabs />;
-		let cnContainer:string, header:any, footer:any;
+		let header:any, footer:any;
 		let visibility:React.CSSProperties = {display:'none'};
 		if (tabPosition === 'top') {
-			cnContainer = 'tv-page-header';
 			header = <header>{tabs}</header>;
 		}
 		else {
-			cnContainer = 'tv-page-footer';
 			footer = <footer>{tabs}</footer>;
 		}
 		return <>
@@ -286,7 +297,7 @@ export class TabsView {
 			{this.tabArr.map((v,index) => {
 				let style:React.CSSProperties;
 				if (v.selected===false) style = visibility;
-				return <div key={index} className={classNames(this.contentBg)} style={style}>
+				return <div key={index} className={classNames(v.className)} style={style}>
 					{v.content}
 				</div>;
 			})}
@@ -309,10 +320,18 @@ export class TabsView {
 		return this.tabsView.render();
     }
 };
-/*
-{
-	tabPosition === 'top'? 
-		<>{tabs}{content}</> :
-		<>{content}{tabs}</>
-}
-*/
+
+@observer export class RootTabs extends React.Component<TabsProps> {
+	private readonly tabsView: TabsView;
+    constructor(props: TabsProps) {
+		super(props);
+		this.tabsView = new TabsView(props);
+		setTimeout(() => {
+			this.tabsView.tabClick(undefined);
+		}, 100);
+    }
+
+    render() {
+		return React.createElement(this.tabsView.content);
+    }
+};

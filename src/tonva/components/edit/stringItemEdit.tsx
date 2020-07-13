@@ -9,7 +9,7 @@ export class StringItemEdit extends ItemEdit {
     get uiItem(): UiTextItem {return this._uiItem as UiTextItem}
     protected async internalStart():Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let element = React.createElement(this.page, {resolve:resolve, reject:reject});
+            let element = React.createElement(this.page, {resolve, reject});
             nav.push(element,reject);
         });
     }
@@ -29,18 +29,26 @@ export class StringItemEdit extends ItemEdit {
     }
 
     private page = observer((props:{resolve:(value:any)=>void, reject: (resean?:any)=>void}):JSX.Element => {
-        let {resolve} = props;
+		let {resolve} = props;
+		let onSave = () => {
+			this.verifyValue();
+			if (this.error === undefined) {
+				let val = this.newValue;
+				resolve(val);				
+			}
+		}
         let right = <button
-            className="btn btn-sm btn-success align-self-center"
+            className="btn btn-sm btn-success align-self-center mr-2"
             disabled={!this.isChanged}
-            onClick={()=>{
-                this.verifyValue();
-                if (this.error === undefined) resolve(this.newValue);
-            }}>保存</button>;
+            onClick={onSave}>保存</button>;
+		let onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+			if (evt.keyCode === 13) onSave();
+		}
         return <Page header={this.label} right={right}>
             <div className="m-3">
                 <input type="text" 
-                    onChange={this.onChange}
+					onChange={this.onChange}
+					onKeyDown={onKeyDown}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}
                     className="form-control" 
