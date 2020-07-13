@@ -17,8 +17,8 @@ export abstract class CUqApp extends CAppBase {
     get uqs(): UQs { return this._uqs };
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
-		let c = new type(this);
-		c.init();
-		return c;
+        let c = new type(this);
+        c.init();
+        return c;
     }
 }

@@ -19,7 +19,7 @@ export class VPointDetails extends VPage<CPointProduct> {
     });
 
     protected onScrollBottom = async (scroller: Scroller) => {
-		this.controller.pagePointHistory.more();
+        this.controller.pagePointHistory.more();
     }
 
     private renderItem = (item: any) => {
