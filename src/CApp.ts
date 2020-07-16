@@ -57,9 +57,12 @@ export class CApp extends CUqApp {
     }
 
     protected async internalStart() {
+        let { uqs } = this;
+        let { common } = uqs;
+        let { SalesRegion, Language } = common;
         let [currentSalesRegion, currentLanguage] = await Promise.all([
-            this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN),
-            this.uqs.common.Language.load(GLOABLE.CHINESE),
+            SalesRegion.load(GLOABLE.SALESREGION_CN),
+            Language.load(GLOABLE.CHINESE),
         ]);
         this.setUser();
         //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
