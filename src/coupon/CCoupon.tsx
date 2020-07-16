@@ -35,8 +35,10 @@ export class CCoupon extends CUqBase {
         let { currentUser } = this.cApp;
         return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
     }
-
-    protected async internalStart(param: any) {
+    /**
+     * 获取用户有效的优惠券/vip卡
+     */
+    getValidCardForWebUser = async () => {
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
 
@@ -60,11 +62,43 @@ export class CCoupon extends CUqBase {
                 e.coupon = await this.getCouponValidationResult(e.creditsCode);
             }
         }
-        this.openVPage(VCoupleAvailable, {
+
+        return {
             'vipCardForWebUser': validVIPCardForWebUser,
             'couponsForWebUser': validCouponsForWebUser,
             'creditsForWebUser': validCreditsForWebUser
-        });
+        }
+    }
+    protected async internalStart(param: any) {
+        let result = await this.getValidCardForWebUser();
+
+        this.openVPage(VCoupleAvailable, result);
+    }
+    applySelectedCoupon = async (coupon: string) => {
+        if (!coupon)
+            return "请输入您的优惠卡/券号";
+        else {
+            let ret = await this.applyCoupon(coupon);
+            switch (ret) {
+                case -1:
+                    return '对不起，当前服务器繁忙，请稍后再试。';
+                case 1:
+                    return '有效';
+                case 0:
+                    return "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。";
+                case 2:
+                    return '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。';
+                case 3:
+                case 5:
+                    return '优惠券无效，请重新输入或与您的专属销售人员联系。';
+                case 6:
+                    return '不允许使用本人优惠券！';
+                case 4:
+                    return '该优惠券已经被使用过了，不允许重复使用。';
+                default:
+                    break;
+            }
+        }
     }
 
     /**
@@ -127,7 +161,7 @@ export class CCoupon extends CUqBase {
     /**
      * 获取卡券的有效折扣  
      */
-    getValidDiscounts = async (types: string, id: number)=>{
+    getValidDiscounts = async (types: string, id: number) => {
         return await this.getCouponDiscountSetting(types, id);
     }
 
@@ -165,6 +199,19 @@ export class CCoupon extends CUqBase {
         await this.autoDrawCouponBase(credits);
         let products = this.getProducts(productids);
         this.openVPage(VSharedCoupon, { products });
+    }
+    /**
+     * 领取兑换优惠券 
+     */
+    receiveCoupon = async (param: string) => {
+        let res = await this.getCouponValidationResult(param);
+        let { result, types, } = res;
+        if (result === 1) {
+            if (types === 'vipcard') this.showSharedVIPCard(result);
+            if (types === 'coupon') this.showSharedCoupon(result);
+            if (types === 'credits') this.showSharedCredits(result);
+        }
+        // await this.autoDrawCouponBase(credits);
     }
 
     private autoDrawCouponBase = async (couponBaseCode: string) => {

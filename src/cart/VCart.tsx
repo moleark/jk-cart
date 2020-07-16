@@ -33,20 +33,30 @@ export class VCart extends VPage<CCart> {
     }
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, cApp } = this.controller;
+        let { checkOut, strikeOut, cApp } = this.controller;
         let { cart } = cApp;
         let amount = cart.amount.get();
-        let check = "去结算";
-        let content = amount > 0 ?
+        let check = cart.editButton.get() ? '删除' : "去结算";
+        let content = cart.editButton.get() ? <>{check}</> : amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-        return <div className="d-flex justify-content-center">
-            <button className="btn btn-success w-75 mx-5"
-                type="button"
-                onClick={checkOut} disabled={amount <= 0}>
-                {content}
-            </button>
-        </div>;
+        if (cart.editButton.get()) {
+            return <div className="d-flex justify-content-end">
+                <button className="btn btn-success w-25 mx-5"
+                    type="button"
+                    onClick={strikeOut}>
+                    {content}
+                </button>
+            </div>;
+        } else {
+            return <div className="d-flex justify-content-center">
+                <button className="btn btn-success w-75 mx-5"
+                    type="button"
+                    onClick={checkOut} disabled={amount <= 0}>
+                    {content}
+                </button>
+            </div>;
+        }
     });
 
     render(params: any): JSX.Element {
@@ -122,10 +132,18 @@ export class VCart extends VPage<CCart> {
     private empty() {
         return <div className="py-5 text-center bg-white">你的购物车空空如也</div>
     }
-
+    /**
+     * 是否编辑
+     */
+    private whetherToEdit = () => {
+        let { cart } = this.controller.cApp;
+        cart.editButton.set(!cart.editButton.get());
+    }
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
         let footer: any, content: any;
+        let cancel = cart.editButton.get() ? '取消' : '编辑';
+        let right = <small className="mr-3" onClick={this.whetherToEdit}>{cancel}</small>
         if (cart.count.get() === 0 && cart.cartItems.length === 0) {
             content = this.empty();
             footer = undefined;
@@ -134,7 +152,7 @@ export class VCart extends VPage<CCart> {
             content = React.createElement(this.cartForm);
             footer = React.createElement(this.CheckOutButton);
         }
-        return <Page header="购物车" footer={footer}>
+        return <Page header="购物车" right={right} footer={footer}>
             {content}
         </Page>;
     })
@@ -160,9 +178,12 @@ export class VCart extends VPage<CCart> {
     });
 
     header() {
-        let header = <header className="py-2 text-center bg-info text-white">
+        let { cart } = this.controller.cApp;
+        let cancel = cart.editButton.get() ? '取消' : '编辑';
+        let header = <header className="py-2 text-center bg-info text-white position-relative">
             <FA className="mr-3" name="shopping-cart" size="lg" />
             <span>购物车</span>
+            <small className="position-absolute" onClick={this.whetherToEdit} style={{ right: 20 }} >{cancel}</small>
         </header>;
         return header;
     }

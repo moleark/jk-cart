@@ -42,7 +42,7 @@ export class Cart {
     cartItems: CartItem2[];
     count = observable.box<number>(0);
     amount = observable.box<number>(0);
-
+    editButton = observable.box<boolean>(false);
     constructor(cApp: CApp) {
         this.cApp = cApp;
         this.cartItems = this.data.list;
@@ -197,6 +197,14 @@ export class Cart {
         }
 
         await this.cartStore.storeCart(product, pack, quantity, price, currency);
+    }
+    removeStrike = async (data: any) => {
+        console.log(data);
+        // data.forEach((el: CartItem2) => {
+        //     el.packs.forEach(async (v: any) => {
+        //         await this.cartStore.storeCart(el.product, v.pack, v.quantity, v.price, v.currency);
+        //     })
+        // });
     }
 
     /**

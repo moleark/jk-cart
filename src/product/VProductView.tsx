@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import classNames from 'classnames';
+import { VProductCollection } from 'customer/VProductCollection';
 
 export class VCartProuductView extends View<CProduct> {
 
@@ -288,7 +289,7 @@ export function productPropItem(caption: string, value: any, captionClass?: stri
  */
 export function renderProduct(product: any) {
     let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
-    return <div className="d-block mb-4 px-3">
+    return <div className="d-block mb-4 px-3 bg-white alert alert-dark">
         <div className="py-2">
             <div><strong>{description}</strong></div>
             <div>{descriptionC}</div>
@@ -309,4 +310,19 @@ export function renderProduct(product: any) {
             </div>
         </div>
     </div>
+}
+
+/**
+ * 收藏列表（有收藏与取消功能）
+ */
+export class VProductCarryFavorites extends View<CProduct>{
+    render(param: any): JSX.Element {
+        let { product } = param;
+        return <div className="position-relative">
+            {renderProduct(product)}
+            <div className='position-absolute' style={{ top: 5, right: -10 }}>
+                {this.renderVm(VProductCollection, product)}
+            </div>
+        </div>
+    }
 }

@@ -5,7 +5,7 @@ import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
 import { VProductDelivery } from './VProductDelivery';
-import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice } from './VProductView';
+import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice, VProductCarryFavorites } from './VProductView';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
@@ -93,6 +93,19 @@ export class CProduct extends CUqBase {
             let productData = await loader.load(productId);
             this.openVPage(VProduct, { productData, product, discount });
         }
+    }
+
+    /**
+     * 收藏或取消
+     */
+    favoriteOrCancel = async (product: BoxId) => {
+        //调uq  this.uqs product的状态判断
+        let { currentUser } = this.cApp;
+        // await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: product });
+        // await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: product });
+    }
+    renderProductCarryFavorites = (product: BoxId) => {
+        return this.renderView(VProductCarryFavorites, { product: product });
     }
 
     renderProductPrice = (product: BoxId, discount: number) => {

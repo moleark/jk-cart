@@ -56,6 +56,26 @@ export class CCart extends CUqBase {
             cProduct.showProductDetail(product);
         }
     }
+    /**
+     * 商品从购物车永久性删除
+     */
+    strikeOut = async () => {
+        let { cart } = this.cApp;
+        this.selectedCartItems = cart.getSelectedItems();
+        await cart.removeStrike(this.selectedCartItems)
+
+
+        // let combinedData = this.selectedCartItems.map((el: CartItem2) => {
+        //     return el.packs.map((v: any) => {
+        //         return {
+        //             productId: el.product, packId: v.pack
+        //         }
+        //     })
+        // }).flat();
+        // combinedData.forEach(async (el: any) => {
+        //     await cart.removeFromCart(el);
+        // })
+    }
 
     checkOut = async () => {
         let { cart } = this.cApp;

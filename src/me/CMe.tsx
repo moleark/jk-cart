@@ -6,6 +6,8 @@ import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
+import { CCouponManage } from '../customer/CCouponManage';
+import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
@@ -51,6 +53,22 @@ export class CMe extends CUqBase {
         let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
         await cPointProduct.start();
     }
+    /**
+     * 优惠券管理
+     */
+    openCouponManage = async () => {
+        let cCouponManage = this.newC(CCouponManage);
+        await cCouponManage.start();
+    }
+    /**
+     * 收藏夹
+     */
+    openFavorites = async () => {
+        let cPointProduct = this.newC(CFavorites);
+        await cPointProduct.start();
+    }
+
+
 
     openMeInfoFirstOrder = async (options?: any) => {
         await this.openVPage(EditMeInfoFirstOrder, options);

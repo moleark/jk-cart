@@ -10,6 +10,7 @@ import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
+import { VProductCollection } from 'customer/VProductCollection';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -54,6 +55,7 @@ export class VProduct extends VPage<CProduct> {
                     </div>
                 </div>
             </div>
+            {this.renderVm(VProductCollection, product)}
         </div>
     }
 
