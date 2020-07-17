@@ -189,12 +189,12 @@ export class VMe extends VPage<CMe> {
                 '',
                 {
                     type: 'component',
-                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="优惠券" />,
+                    component: <IconText iconClass="text-info mr-2" icon="connectdevelop" text="优惠卡券" />,
                     onClick: this.openCouponManage
                 },
                 {
                     type: 'component',
-                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="收藏夹" />,
+                    component: <IconText iconClass="text-info mr-2" icon="heart" text="收藏夹" />,
                     onClick: this.openFavorites
                 },
                 '',

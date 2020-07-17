@@ -1,24 +1,44 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../CBase';
-import { QueryPager } from 'tonva';
+import { QueryPager, BoxId } from 'tonva';
+import moment from 'moment';
+import { VProductFavorateLabel } from './VProductFavorateLabel';
+import { product } from '../ui/product/tuid/index';
 
 export class CFavorites extends CUqBase {
-    productsCollect: QueryPager<any>;
-
+    productsFavorites: QueryPager<any>;
+    myFavorites: any[] = [];
     protected async internalStart() {
-        await this.searchByCollect();
+        await this.searchByFavorites();
         this.openVPage(VFavorites);
     }
-    async searchByCollect() {
-        let { currentSalesRegion, currentUser } = this.cApp;
-        console.log(this.uqs.webuser);
 
-        // let myFavorites = await this.uqs.webuser.myFavorites.query({ webUser: currentUser });
+    async searchByFavorites() {
+        let { currentUser } = this.cApp;
+        this.productsFavorites = new QueryPager<any>(this.uqs.webuser.getMyFavirates, 10, 10);
+        await this.productsFavorites.first({ webUser: currentUser });
+    }
 
-        this.productsCollect = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
-        // let { productCategoryId, name } = category;
-        // this.productsPager.first({ productCategory: 0, salesRegion: currentSalesRegion.id });
-        // await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
-        await this.productsCollect.first({ productCategory: 86, salesRegion: currentSalesRegion.id });
+    async getMyFavorites() {
+        let { currentUser } = this.cApp;
+        let myFavorites = await this.uqs.webuser.myFavorites.query({ webUser: currentUser });
+        return myFavorites.ret;
+    }
+
+    async addProductFavorites(productId: number) {
+        let { currentUser } = this.cApp;
+        let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
+        await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: productId, arr1: [{ pack: 0, date: createDate }] });
+    }
+
+    async delProductFavorites(productId: number) {
+        let { currentUser } = this.cApp;
+        await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: productId, arr1: [{ pack: 0 }] });
+    }
+
+    renderFavoritesLabel = (productid: number) => {
+        let { currentUser } = this.cApp;
+        // let myFavorite = await this.uqs.webuser.myFavorites.obj({ webUser: currentUser, product: productid });
+        return this.renderView(VProductFavorateLabel, productid)
     }
 }

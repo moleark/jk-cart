@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, LMR, FA, List, TabProp, TabCaptionComponent, Tabs } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs } from 'tonva';
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard } from './VCouponCard';
 import { observable } from 'mobx';
@@ -9,14 +9,37 @@ import { color } from 'order/VMyOrders';
 
 export class VCouponManage extends VPage<CCouponManage> {
     private couponInput: HTMLInputElement;
-    private coupons: any[];
+    @observable private coupons: any[];
     private currentStatus: string;
     private tabs: TabProp[];
+    oss: any = [
+        { caption: '可使用', state: 'validCardForWebUser', icon: 'free-code-camp', toolTip: '亲，您已没有可用的优惠券呦！' },
+        { caption: '已使用', state: 'usageRecordForWebUser', icon: 'cc-amex', toolTip: '亲，您还未使用过任何优惠券,快去使用噢！' },
+        { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
+    ];
     @observable tips: string;
     async open(param: any) {
         let { getValidMusterForWebUser } = this.controller;
         this.coupons = getValidMusterForWebUser(param);
         this.openPage(this.page);
+    }
+    private getTabs = async () => {
+        this.tabs = this.oss.map((v: any) => {
+            let { caption, state, icon, toolTip } = v;
+            let none = <div className="mt-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
+            return {
+                name: caption,
+                caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
+                content: () => {
+                    return <List items={this.coupons} item={{ render: this.renderCoupon }} none={none} />
+                },
+                isSelected: this.currentStatus === state,
+                load: async () => {
+                    this.currentStatus = state;
+                    this.coupons = await this.controller.getCoupons(this.currentStatus);
+                }
+            };
+        });
     }
 
     /**
@@ -27,8 +50,11 @@ export class VCouponManage extends VPage<CCouponManage> {
         let { cCoupon } = cApp;
         let coupon = this.couponInput.value;
         this.couponInput.value = '';
+        cCoupon.couponExchange = true;
         await this.applySelectedCoupon(coupon);
         await cCoupon.receiveCoupon(coupon);
+        this.currentStatus = this.oss[0].state;
+        this.coupons = await this.controller.getCoupons(this.currentStatus);
     }
     /**
      * 优惠卡展示
@@ -79,34 +105,13 @@ export class VCouponManage extends VPage<CCouponManage> {
         return tipsUI;
     })
 
-    private page = () => {
-        let oss = [
-            { caption: '可使用', state: 'validCardForWebUser', icon: 'free-code-camp' },
-            { caption: '使用记录', state: 'usageRecordForWebUser', icon: 'cc-amex' },
-            { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry' },
-        ];
-        this.tabs = oss.map(v => {
-            let { caption, state, icon } = v;
-            let none = <div className="mt-4 text-secondary d-flex justify-content-center">{`『 无${caption}${state === 'usageRecordForWebUser' ? '' : '的优惠卡券'} 』`}</div>
-            return {
-                name: caption,
-                caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
-                content: () => {
-                    return <List items={this.coupons} item={{ render: this.renderCoupon }} none={none} />
-                },
-                isSelected: this.currentStatus === state,
-                load: async () => {
-                    this.currentStatus = state;
-                    this.coupons = await this.controller.getCoupons(this.currentStatus);
-                }
-            };
-        });
-
+    private page = observer(() => {
+        this.getTabs();
         let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
-        return <Page header="优惠券">
+        return <Page header="优惠卡券">
             <div className="px-2 py-3">
                 <LMR right={right}>
-                    <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券编码" className="form-control"></input>
+                    <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
                 </LMR>
                 {React.createElement(this.tipsUI)}
                 <div className="mt-2">
@@ -114,5 +119,5 @@ export class VCouponManage extends VPage<CCouponManage> {
                 </div>
             </div >
         </Page>
-    }
+    })
 }

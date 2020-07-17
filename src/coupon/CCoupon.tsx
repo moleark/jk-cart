@@ -13,7 +13,7 @@ export const COUPONBASE: any = {
 }
 
 export class CCoupon extends CUqBase {
-
+    couponExchange: boolean = false;
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
     couponPager: QueryPager<any>;
@@ -25,8 +25,10 @@ export class CCoupon extends CUqBase {
             if (types === 'vipcard' || types === 'coupon') {
                 validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
             }
-            this.returnCall(validationResult);
-            this.closePage();
+            if (!this.couponExchange) {
+                this.returnCall(validationResult);
+                this.closePage();
+            }
         }
         return rtn;
     }
@@ -205,13 +207,13 @@ export class CCoupon extends CUqBase {
      */
     receiveCoupon = async (param: string) => {
         let res = await this.getCouponValidationResult(param);
-        let { result, types, } = res;
+        let { result, types } = res;
         if (result === 1) {
-            if (types === 'vipcard') this.showSharedVIPCard(result);
-            if (types === 'coupon') this.showSharedCoupon(result);
-            if (types === 'credits') this.showSharedCredits(result);
+            await this.drawCoupon(res);
+            // if (types === 'vipcard') await this.showSharedVIPCard(res);
+            // if (types === 'coupon') await this.showSharedCoupon(res);
+            // if (types === 'credits') await this.showSharedCredits(res);
         }
-        // await this.autoDrawCouponBase(credits);
     }
 
     private autoDrawCouponBase = async (couponBaseCode: string) => {

@@ -28,7 +28,7 @@ export class VCoupon extends View<CCouponManage> {
             let left = <div>
                 <span className="text-body"><small>{COUPONBASE[types]['name']}</small></span>
             </div>;
-            couponUi = <div className="py-3 pl-3 pr-2 mb-1 alert" style={{ backgroundColor: '#bbbdbe', color: "white" }}>
+            couponUi = <div className="py-3 pl-3 pr-2 mb-1 alert" style={{ backgroundColor: '#e8eaeb', color: "text-secondary" }}>
                 <LMR left={left}>
                     {content}
                 </LMR>

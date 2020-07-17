@@ -25,6 +25,8 @@ export class VChemicalInfoInCart extends View<CProduct> {
             return <>
                 {productPropItem('CAS', CAS)}
                 {productPropItem('纯度', purity)}
+                {productPropItem('分子式', molecularFomula)}
+                {productPropItem('分子量', molecularWeight)}
             </>
         }
         return <></>;

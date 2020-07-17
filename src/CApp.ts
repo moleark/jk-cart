@@ -18,6 +18,7 @@ import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
+import { CFavorites } from 'customer/CFavorites';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -40,7 +41,7 @@ export class CApp extends CUqApp {
     cMember: CMember;
     cMe: CMe;
     cPointProduct: CPointProduct;
-
+    cFavorites: CFavorites;
     cYncProjects: CYncProjects;
 
 	/*
@@ -82,7 +83,7 @@ export class CApp extends CUqApp {
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
-
+        this.cFavorites = this.newC(CFavorites);
         this.cYncProjects = this.newC(CYncProjects);
 
         await this.cHome.getSlideShow();

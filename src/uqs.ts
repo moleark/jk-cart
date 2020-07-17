@@ -45,6 +45,7 @@ export interface UqWebUser {
     WebUserContacts: Map;
     WebUserBuyerAccount: Map;
     myFavorites: Map;
+    getMyFavirates: Query;
     WebUserVIPCard: Map;
     WebUserCoupon: Map;
     WebUserCouponUsed: Map;

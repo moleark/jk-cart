@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { Query, tv, BoxId, PageItems, QueryPager } from 'tonva';
+import { BoxId, QueryPager } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
@@ -10,6 +10,7 @@ import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
 import { ProductItem } from '../tools/ProductItem';
+import { CFavorites } from '../customer/CFavorites';
 
 /*
 class PageProducts extends PageItems<any> {
@@ -95,16 +96,7 @@ export class CProduct extends CUqBase {
         }
     }
 
-    /**
-     * 收藏或取消
-     */
-    favoriteOrCancel = async (product: BoxId) => {
-        //调uq  this.uqs product的状态判断
-        let { currentUser } = this.cApp;
-        // await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: product });
-        // await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: product });
-    }
-    renderProductCarryFavorites = (product: BoxId) => {
+    renderProductCarryFavorites = (product: any) => {
         return this.renderView(VProductCarryFavorites, { product: product });
     }
 
@@ -176,6 +168,12 @@ export class CProduct extends CUqBase {
         if (this.chemicalInfoContainer[productId] === undefined) {
             this.chemicalInfoContainer[productId] = await this.uqs.product.ProductChemical.obj({ product: productId });
         }
+    }
+
+    renderFavoritesLabel = (product: number) => {
+        let { cApp } = this;
+        let { cFavorites } = cApp;
+        return cFavorites.renderFavoritesLabel(product);
     }
 
     /**

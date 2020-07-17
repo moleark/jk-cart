@@ -9,20 +9,25 @@ export class VFavorites extends VPage<CFavorites> {
     }
     private onScrollBottom = async (scroller: Scroller) => {
         scroller.scrollToBottom();
-        let { productsCollect } = this.controller;
-        productsCollect.more();
+        let { productsFavorites } = this.controller;
+        productsFavorites.more();
     }
     private onProductClick = async (product: BoxId) => {
         let { cProduct } = this.controller.cApp;
         await cProduct.showProductDetail(product.id);
     }
 
+    private renderProduct = (p: any) => {
+        // console.log(p);
+        return this.controller.cApp.cProduct.renderProduct(p.id);
+    }
+
     private page = (param: any) => {
-        let { productsCollect, cApp } = this.controller;
+        let { productsFavorites, cApp } = this.controller;
         let { cProduct } = cApp;
         let none = <div className="p-3 text-warning mt-4 d-flex justify-content-center">『 无任何收藏产品 』</div>
-        return <Page header="收藏管理" onScrollBottom={this.onScrollBottom}>
-            <List before={''} none={none} items={productsCollect} item={{ render: cProduct.renderProductCarryFavorites, onClick: this.onProductClick }} />
+        return <Page header="收藏夹" onScrollBottom={this.onScrollBottom}>
+            <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
     }
 }

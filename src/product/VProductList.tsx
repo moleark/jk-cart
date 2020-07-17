@@ -24,16 +24,21 @@ export class VProductList extends VPage<CProduct> {
         productsPager.more();
     }
 
+    private renderProduct = (p: any) => {
+        // console.log(p);
+        return this.controller.cApp.cProduct.renderProduct(p.id);
+    }
+
     private page = observer(() => {
 
         let { productsPager, cApp } = this.controller;
-        let { cHome, cCart } = cApp;
+        let { cHome, cCart, cProduct } = cApp;
         let header = cHome.renderSearchHeader();
         let cart = cCart.renderCartLabel();
         let none = <div className="p-3 text-warning">[无]</div>
         return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-            <List before={''} none={none} items={productsPager} item={{ render: renderProduct, onClick: this.onProductClick }} />
+            <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
     });
 }

@@ -10,7 +10,7 @@ import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
-import { VProductCollection } from 'customer/VProductCollection';
+import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -36,7 +36,7 @@ export class VProduct extends VPage<CProduct> {
 
     private renderProduct = (product: MainProductChemical) => {
 
-        let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
+        let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
         return <div className="mb-3 px-2">
             <div className="py-2"><strong>{description}</strong></div>
             <div>{descriptionC}</div>
@@ -55,8 +55,9 @@ export class VProduct extends VPage<CProduct> {
                     </div>
                 </div>
             </div>
-            {this.renderVm(VProductCollection, product)}
+            {this.controller.renderFavoritesLabel(id)}
         </div>
+        // { this.renderVm(VProductFavirateLabel, this.productBox) }
     }
 
     private arrTemplet = (item: ProductPackRow) => {
