@@ -23,14 +23,12 @@ export class COrder extends CUqBase {
      */
     @observable couponAppliedData: any = {};
     hasAnyCoupon: boolean;
+    /**
+     * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
+     */
     @observable buyerAccounts: any[] = [];
 
     protected async internalStart(param: any) {
-        /*
-        let cart = param;
-        await this.createOrderFromCart(cart);
-        this.openVPage(VCreateOrder);
-        */
     }
 
     createOrderFromCart = async (cartItems: CartItem2[]) => {
@@ -72,7 +70,6 @@ export class COrder extends CUqBase {
                 item.product = e.product;
                 item.packs = e.packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
                 item.packs.forEach((pk) => {
-                    // pk.retail = pk.price;
                     pk.priceInit = pk.price;
                 })
                 return item;
@@ -83,7 +80,7 @@ export class COrder extends CUqBase {
             if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
                 this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
             else
-                this.orderData.freightFeeRemitted = 0;            
+                this.orderData.freightFeeRemitted = 0;
         }
 
         /*
@@ -98,9 +95,11 @@ export class COrder extends CUqBase {
             }
         }
         */
-        if (currentUser.webUserVIPCard !== undefined) {
+        // 如果当前webuser有VIP卡，默认下单时使用其VIP卡
+        let { webUserVIPCard } = currentUser;
+        if (webUserVIPCard !== undefined) {
             let coupon = await cCoupon.getCouponValidationResult(
-                currentUser.webUserVIPCard.vipCardCode.toString()
+                webUserVIPCard.vipCardCode.toString()
             );
             let { result, types, id } = coupon;
             if (result === 1) {
@@ -168,7 +167,7 @@ export class COrder extends CUqBase {
         let { id: couponId, code, types } = this.couponAppliedData;
         if (couponId) {
             let nowDate = new Date();
-            let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDay()}`;
+            let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
             switch (types) {
                 case 'coupon':
                     webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
@@ -208,6 +207,9 @@ export class COrder extends CUqBase {
         this.orderData.invoiceContact = contactBox;
     }
 
+    /**
+     * 打开输入或选择使用卡券界面
+     */
     onCouponEdit = async () => {
         let { cCoupon } = this.cApp;
         let coupon = await cCoupon.call<any>(this.orderData.coupon);
