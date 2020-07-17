@@ -27,7 +27,7 @@ export class VCreateOrder extends VPage<COrder> {
         let { pack, quantity, retail, price, priceInit } = item;
 
         let retailUI: any;
-        if (price!==retail) {
+        if (price !== retail) {
             retailUI = <del>¥{retail}</del>;
         }
         return <div key={index} className="px-2 py-2 border-top">
@@ -63,7 +63,7 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private renderCoupon = observer((param: any) => {
-        let { couponAppliedData, hasAnyCoupon,removeCoupon } = this.controller;
+        let { couponAppliedData, hasAnyCoupon, removeCoupon } = this.controller;
         if (couponAppliedData['id'] === undefined) {
             let tip = hasAnyCoupon ? "有可用优惠卡/券，点击使用" : "输入优惠券/积分码";
             return <span className="text-primary">{tip}</span>;
