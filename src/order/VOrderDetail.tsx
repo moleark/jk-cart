@@ -104,8 +104,8 @@ export class VOrderDetail extends VPage<COrder> {
             <button className="btn btn-primary w-50" onClick={async () => { this.orderAgain(order.data) }}>再次下单</button>
         </div>
 
-        let header = <>订单详情: {no}</>
-        return <Page header={header} footer={orderAgainUI}>
+        let header = <>订单详情: {no}</>            //orderAgainUI
+        return <Page header={header} footer={<></>}>
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>

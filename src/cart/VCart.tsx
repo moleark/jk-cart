@@ -136,8 +136,8 @@ export class VCart extends VPage<CCart> {
      * 是否编辑
      */
     private whetherToEdit = () => {
-        let { cart } = this.controller.cApp;
-        cart.editButton.set(!cart.editButton.get());
+        // let { cart } = this.controller.cApp;
+        // cart.editButton.set(!cart.editButton.get());
     }
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
@@ -152,7 +152,10 @@ export class VCart extends VPage<CCart> {
             content = React.createElement(this.cartForm);
             footer = React.createElement(this.CheckOutButton);
         }
-        return <Page header="购物车" right={right} footer={footer}>
+        // return <Page header="购物车" right={right} footer={footer}>
+        //     {content}
+        // </Page>;
+        return <Page header="购物车" footer={footer}>
             {content}
         </Page>;
     })
@@ -183,7 +186,7 @@ export class VCart extends VPage<CCart> {
         let header = <header className="py-2 text-center bg-info text-white position-relative">
             <FA className="mr-3" name="shopping-cart" size="lg" />
             <span>购物车</span>
-            <small className="position-absolute" onClick={this.whetherToEdit} style={{ right: 20 }} >{cancel}</small>
+            {/* <small className="position-absolute" onClick={this.whetherToEdit} style={{ right: 20 }} >{cancel}</small> */}
         </header>;
         return header;
     }
