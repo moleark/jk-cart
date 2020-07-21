@@ -48,6 +48,34 @@ export class VCoupon extends View<CCoupon> {
         }
         return cardDescription;
     }
+    protected renderCardReveal = (param: any): JSX.Element => {
+        let { isOpenMyCouponManage } = this.controller;
+        let { result, types, code, validitydate, useddate, expireddate } = this.coupon;
+        let CardReveal: any;
+        if (!isOpenMyCouponManage) {
+            CardReveal = <div className="alert alert-primary my-1" role="alert">
+                <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                {getTips(result, types, code)}
+            </div>
+        } else {
+            let showDate = validitydate !== undefined ? validitydate : (useddate !== undefined ? useddate : expireddate);
+            let content = <div className="float-right pr-3">
+                <div className="pb-1">
+                    <FA name='th-large' className='mr-1 text-secondary' />
+                    <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: <EasyDate date={showDate} /></small>
+                </div>
+            </div>;
+            let left = <div>
+                <span className="text-body"><small>{COUPONBASE[types]['name']}</small></span>
+            </div>;
+            CardReveal = <div className="py-3 pl-3 pr-2 mb-1 alert" style={{ backgroundColor: '#e8eaeb', color: "text-secondary" }}>
+                <LMR left={left}>
+                    {content}
+                </LMR>
+            </div>
+        }
+        return CardReveal;
+    }
 
     protected getCodeShow = (code: number) => {
         let codeShow = String(code);
@@ -58,15 +86,16 @@ export class VCoupon extends View<CCoupon> {
 
     render(param: any): JSX.Element {
         this.coupon = param
-        let { result, id, code, discount, preferential, validitydate, isValid, types, vipCardType } = param;
+        let { result, code, discount, validitydate, isValid, types } = param;
 
         let couponUi;
         if (result !== 1 || !isValid) {
             // this.controller.cApp.currentCouponCode = undefined;
-            couponUi = <div className="alert alert-primary my-1" role="alert">
-                <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                {getTips(result, types, code)}
-            </div>
+            // couponUi = <div className="alert alert-primary my-1" role="alert">
+            //     <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+            //     {getTips(result, types, code)}
+            // </div>
+            couponUi = this.renderCardReveal(param);
         } else {
             // this.controller.cApp.currentCouponCode = code;
             /*
@@ -166,4 +195,27 @@ export class VCredits extends VCoupon {
         return couponUi;
     }
     */
+}
+
+export class VCouponUsed extends VCoupon {
+    protected renderCardReveal = (param: any): JSX.Element => {
+        let { validitydate, types, useddate, expireddate } = param;
+        let couponUi;
+        let showDate = validitydate !== undefined ? validitydate : (useddate !== undefined ? useddate : expireddate);
+        let content = <div className="float-right pr-3">
+            <div className="pb-1">
+                <FA name='th-large' className='mr-1 text-secondary' />
+                <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: <EasyDate date={showDate} /></small>
+            </div>
+        </div>;
+        let left = <div>
+            <span className="text-body"><small>{COUPONBASE[types]['name']}</small></span>
+        </div>;
+        couponUi = <div className="py-3 pl-3 pr-2 mb-1 alert" style={{ backgroundColor: '#e8eaeb', color: "text-secondary" }}>
+            <LMR left={left}>
+                {content}
+            </LMR>
+        </div>
+        return couponUi;
+    }
 }

@@ -6,11 +6,12 @@ import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
-import { CCouponManage } from '../customer/CCouponManage';
+// import { CCouponManage } from '../customer/CCouponManage';
 import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
+import { VCouponManage } from 'coupon/VCouponManage';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -57,8 +58,10 @@ export class CMe extends CUqBase {
      * 优惠券管理
      */
     openCouponManage = async () => {
-        let cCouponManage = this.newC(CCouponManage);
-        await cCouponManage.start();
+        let { cCoupon } = this.cApp;
+        await cCoupon.openMyCouponManage();
+        // let cCouponManage = this.newC(CCouponManage);
+        // await cCouponManage.start();
     }
     /**
      * 收藏夹

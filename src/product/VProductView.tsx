@@ -300,7 +300,7 @@ export function unsoldProductsUI(discountinued: number) {
  * 显示产品信息（不包含包装价格），特定于参数包含相关的CAS/Purity等信息），现应用于产品列表
  * @param product
  */
-export function renderProduct(product: any) {
+/* export function renderProduct(product: any) {
     let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
     return <div className="d-block mb-4 px-3 bg-white">
         <div className="py-2">
@@ -324,12 +324,53 @@ export function renderProduct(product: any) {
         </div>
         {unsoldProductsUI(discountinued)}
     </div>
+} */
+
+export class VProuductView2 extends View<CProduct> {
+
+    @observable product: any;
+    @observable discount: number;
+
+    render(product: any): JSX.Element {
+        return <this.renderProduct product={product} />;
+    }
+
+    private renderProduct = observer((param: any) => {
+        let { product } = param;
+        let { renderFavoritesLabel } = this.controller;
+        let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
+        return <div className="d-block mb-4 px-3 bg-white">
+            <div className="py-2">
+                <div className="mr-3"><strong>{description}</strong></div>
+                <div>{descriptionC}</div>
+                <div>
+                    {renderFavoritesLabel(id)}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-3">
+                    <ProductImage chemicalId={imageUrl} className="w-100" />
+                </div>
+                <div className="col-9">
+                    <div className="row">
+                        {productPropItem('产品编号', origin)}
+                        {productPropItem('CAS', CAS)}
+                        {productPropItem('纯度', purity)}
+                        {productPropItem('分子式', molecularFomula)}
+                        {productPropItem('分子量', molecularWeight)}
+                        {tv(brand, renderBrand)}
+                    </div>
+                </div>
+            </div>
+            {unsoldProductsUI(discountinued)}
+        </div>
+    })
 }
 
 /**
- * 收藏列表（有收藏与取消功能） 
+ * 收藏列表（有收藏与取消功能）
  */
-export class VProductCarryFavorites extends View<CProduct>{
+/* export class VProductCarryFavorites extends View<CProduct>{
     render(param: any): JSX.Element {
         let { product } = param;
         return <div className='position-relative'>
@@ -339,4 +380,4 @@ export class VProductCarryFavorites extends View<CProduct>{
             </div>
         </div>
     }
-}
+} */

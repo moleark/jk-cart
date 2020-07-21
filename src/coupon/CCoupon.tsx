@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
+import { VCouponManage } from './VCouponManage';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -14,6 +15,7 @@ export const COUPONBASE: any = {
 
 export class CCoupon extends CUqBase {
     couponExchange: boolean = false;
+    isOpenMyCouponManage: boolean = false;
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
     couponPager: QueryPager<any>;
@@ -37,6 +39,94 @@ export class CCoupon extends CUqBase {
         let { currentUser } = this.cApp;
         return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
     }
+    /**
+     * 优惠卡券页
+     */
+    openMyCouponManage = async () => {
+        this.isOpenMyCouponManage = true;
+        let result = await this.getValidCardForWebUser();
+        this.openVPage(VCouponManage, result);
+    }
+    /**
+     * 获取不同状态下的优惠卡券
+     */
+    getCoupons = async (state: any) => {
+        let { webuser } = this.uqs;
+        let { currentUser } = this.cApp;
+        let result;
+        switch (state) {
+            case 'validCardForWebUser':
+                result = await this.getValidCardForWebUser();
+                return this.getValidMusterForWebUser(result);
+            case 'usageRecordForWebUser':
+                result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
+                await result.first({ webUser: currentUser });
+                return result;
+            // result = await webuser.WebUserCouponUsed.query({ webuser: currentUser });
+            // return result.ret;
+            case 'expiredForWebUser':
+                result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
+                await result.first({ webUser: currentUser });
+                // result = await this.getExpiredMusterForWebUser();
+                return result;
+            default:
+                break;
+        }
+    }
+    /**
+     * 可使用的优惠卡
+     */
+    getValidMusterForWebUser = (params: any) => {
+        let { vipCardForWebUser, couponsForWebUser, creditsForWebUser } = params;
+        let shift = couponsForWebUser.map((v: any) => v.coupon).concat(creditsForWebUser.map((v: any) => v.coupon));
+        return vipCardForWebUser ? [vipCardForWebUser.coupon].concat(shift) : shift;
+    }
+    /**
+     * 获取已过期的优惠卡
+     */
+    /* getExpiredMusterForWebUser = async () => {
+        let { webuser, 积分商城 } = this.uqs;
+        let { currentUser } = this.cApp;
+        let expiredMusterForWebUser: any[] = [];
+        let couponsMusterForWebUser: any = await webuser.WebUserCoupon.table({ webUser: currentUser });
+        let creditsMusterForWebUser: any = await 积分商城.WebUserCredits.table({ webUser: currentUser });
+        let vipCardMusterForWebUser: any = await webuser.WebUserVIPCard.obj({ webUser: currentUser });
+        if (vipCardMusterForWebUser) {
+            let { expiredDate } = vipCardMusterForWebUser;
+            if (expiredDate.getTime() < Date.now()) {
+                vipCardMusterForWebUser.coupon = await this.getCouponValidationResult(vipCardMusterForWebUser.vipCardCode);
+                expiredMusterForWebUser.push(vipCardMusterForWebUser.coupon);
+            }
+        }
+
+        if (couponsMusterForWebUser) {
+            let result = couponsMusterForWebUser.filter((v: any) => v.expiredDate.getTime() < Date.now());
+            if (result.length > 0) {
+                for (let i = 0; i < result.length; i++) {
+                    let e = result[i];
+                    e.coupon = await this.getCouponValidationResult(e.couponCode);
+                }
+                expiredMusterForWebUser.push(...result.map((v: any) => v.coupon));
+            }
+        }
+
+        if (creditsMusterForWebUser) {
+            let result = creditsMusterForWebUser.filter((v: any) => v.expiredDate.getTime() < Date.now());
+
+
+            if (result.length > 0) {
+                for (let i = 0; i < result.length; i++) {
+                    let e = result[i];
+                    e.coupon = await this.getCouponValidationResult(e.creditsCode);
+                }
+                expiredMusterForWebUser.push(...result.map((v: any) => v.coupon));
+            }
+        }
+        // expiredMusterForWebUser.forEach((el: any) => el.conductReveal = true);
+        return expiredMusterForWebUser;
+    }
+ */
+
     /**
      * 获取用户有效的优惠券/vip卡
      */
@@ -71,6 +161,7 @@ export class CCoupon extends CUqBase {
             'creditsForWebUser': validCreditsForWebUser
         }
     }
+
     protected async internalStart(param: any) {
         let result = await this.getValidCardForWebUser();
 
@@ -208,7 +299,10 @@ export class CCoupon extends CUqBase {
     receiveCoupon = async (param: string) => {
         let res = await this.getCouponValidationResult(param);
         let { result, types } = res;
+        console.log(res);
         if (result === 1) {
+
+
             await this.drawCoupon(res);
             // if (types === 'vipcard') await this.showSharedVIPCard(res);
             // if (types === 'coupon') await this.showSharedCoupon(res);

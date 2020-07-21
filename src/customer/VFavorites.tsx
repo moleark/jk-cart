@@ -19,7 +19,7 @@ export class VFavorites extends VPage<CFavorites> {
 
     private renderProduct = (p: any) => {
         // console.log(p);
-        return this.controller.cApp.cProduct.renderProduct(p.id);
+        return this.controller.cApp.cProduct.renderProduct(p);
     }
 
     private page = (param: any) => {

@@ -3,7 +3,7 @@ import { VPage, Page, Scroller } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react';
-import { renderProduct } from './VProductView';
+// import { renderProduct } from './VProductView';
 
 export class VProductList extends VPage<CProduct> {
 
@@ -26,10 +26,10 @@ export class VProductList extends VPage<CProduct> {
 
     private renderProduct = (p: any) => {
         // console.log(p);
-        return this.controller.cApp.cProduct.renderProduct(p.id);
+        return this.controller.cApp.cProduct.renderProduct(p);
     }
 
-    private page = observer(() => {
+    private page = () => {
 
         let { productsPager, cApp } = this.controller;
         let { cHome, cCart, cProduct } = cApp;
@@ -40,5 +40,5 @@ export class VProductList extends VPage<CProduct> {
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
-    });
+    };
 }

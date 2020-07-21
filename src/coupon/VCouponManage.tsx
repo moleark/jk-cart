@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager } from 'tonva';
 import { observer } from 'mobx-react';
-import { VCoupon, VCredits, VVIPCard } from './VCouponCard';
+import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
 import { observable } from 'mobx';
-import { CCouponManage } from './CCouponManage';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
+import { CCoupon } from './CCoupon';
 
-export class VCouponManage extends VPage<CCouponManage> {
+export class VCouponManage extends VPage<CCoupon> {
     private couponInput: HTMLInputElement;
-    @observable private coupons: any[];
+    @observable private coupons: QueryPager<any>;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
-        { caption: '可使用', state: 'validCardForWebUser', icon: 'free-code-camp', toolTip: '亲，您已没有可用的优惠券呦！' },
+        { caption: '可使用', state: 'validCardForWebUser', icon: 'free-code-camp', toolTip: '亲，您现没有可用的优惠券呦！' },
         { caption: '已使用', state: 'usageRecordForWebUser', icon: 'cc-amex', toolTip: '亲，您还未使用过任何优惠券,快去使用噢！' },
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
@@ -23,7 +23,9 @@ export class VCouponManage extends VPage<CCouponManage> {
         this.coupons = getValidMusterForWebUser(param);
         this.openPage(this.page);
     }
+
     private getTabs = async () => {
+        let { getCoupons } = this.controller;
         this.tabs = this.oss.map((v: any) => {
             let { caption, state, icon, toolTip } = v;
             let none = <div className="mt-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
@@ -36,7 +38,7 @@ export class VCouponManage extends VPage<CCouponManage> {
                 isSelected: this.currentStatus === state,
                 load: async () => {
                     this.currentStatus = state;
-                    this.coupons = await this.controller.getCoupons(this.currentStatus);
+                    this.coupons = await getCoupons(this.currentStatus);
                 }
             };
         });
@@ -46,21 +48,20 @@ export class VCouponManage extends VPage<CCouponManage> {
      * 领取优惠卡
      */
     private receiveCoupon = async () => {
-        let { cApp } = this.controller;
-        let { cCoupon } = cApp;
+        let { receiveCoupon, getCoupons, couponExchange } = this.controller;
         let coupon = this.couponInput.value;
         this.couponInput.value = '';
-        cCoupon.couponExchange = true;
+        couponExchange = true;
         await this.applySelectedCoupon(coupon);
-        await cCoupon.receiveCoupon(coupon);
-        this.currentStatus = this.oss[0].state;
-        this.coupons = await this.controller.getCoupons(this.currentStatus);
+        await receiveCoupon(coupon);
+        // this.currentStatus = this.oss[0].state;
+        // this.coupons = await getCoupons(this.currentStatus);
     }
     /**
      * 优惠卡展示
      */
     private renderCoupon = (coupon: any) => {
-        let { types, discount } = coupon;
+        let { types, discount, conductReveal } = coupon;
         let content = null;
         if (types === "coupon")
             content = discount ? this.renderVm(VCoupon, coupon) : this.renderVm(VVIPCard, coupon);
@@ -69,7 +70,9 @@ export class VCouponManage extends VPage<CCouponManage> {
         else if (types === 'vipcard') {
             content = this.renderVm(VVIPCard, coupon);
         }
-
+        if (conductReveal) {
+            content = this.renderVm(VCouponUsed, coupon);
+        }
         return <div className="d-block">
             <div className="px-2 bg-white mt-1" onClick={() => { this.CouponViewOrUse(coupon) }}>
                 {content}
@@ -81,15 +84,15 @@ export class VCouponManage extends VPage<CCouponManage> {
      * 折扣明细或使用记录
      */
     private CouponViewOrUse = (coupon: any) => {
-        let { cCoupon } = this.controller.cApp;
+        let { showDiscountSetting } = this.controller;
         let { result } = coupon;
         if (result === 1)
-            cCoupon.showDiscountSetting(coupon);
+            showDiscountSetting(coupon);
     }
 
     private applySelectedCoupon = async (coupon: string) => {
-        let { cCoupon } = this.controller.cApp;
-        this.tips = await cCoupon.applySelectedCoupon(coupon);
+        let { applySelectedCoupon } = this.controller;
+        this.tips = await applySelectedCoupon(coupon);
         if (this.tips)
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
     }
@@ -104,11 +107,15 @@ export class VCouponManage extends VPage<CCouponManage> {
         }
         return tipsUI;
     })
+    private onScrollBottom = async (scroller: Scroller) => {
+        scroller.scrollToBottom();
+        this.coupons.more();
+    }
 
     private page = observer(() => {
         this.getTabs();
         let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
-        return <Page header="优惠卡券">
+        return <Page header="优惠卡券" onScrollBottom={this.onScrollBottom}>
             <div className="px-2 py-3">
                 <LMR right={right}>
                     <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>

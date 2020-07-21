@@ -3,7 +3,7 @@ import { CUqBase } from '../CBase';
 import { QueryPager, BoxId } from 'tonva';
 import moment from 'moment';
 import { VProductFavorateLabel } from './VProductFavorateLabel';
-import { product } from '../ui/product/tuid/index';
+// import { product } from '../ui/product/tuid/index';
 
 export class CFavorites extends CUqBase {
     productsFavorites: QueryPager<any>;
@@ -23,6 +23,12 @@ export class CFavorites extends CUqBase {
         let { currentUser } = this.cApp;
         let myFavorites = await this.uqs.webuser.myFavorites.query({ webUser: currentUser });
         return myFavorites.ret;
+    }
+
+    async getProductIsFavorites(product: number) {
+        let { currentUser } = this.cApp;
+        let myFavorites = await this.uqs.webuser.myFavorites.obj({ webUser: currentUser, product: product });
+        return myFavorites !== undefined;
     }
 
     async addProductFavorites(productId: number) {

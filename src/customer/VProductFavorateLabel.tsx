@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FA, BoxId } from 'tonva';
+import { View, FA, BoxId, nav } from 'tonva';
 import { CProduct } from '../product/CProduct';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
@@ -9,20 +9,25 @@ export class VProductFavorateLabel extends View<CProduct> {
     @observable private isProductFarirates: boolean = false;
     private favoriteOrCancel = async (product: number) => {
         let { cApp } = this.controller;
-        let { cFavorites, currentUser } = cApp;
-        if (currentUser) {
+        let { cFavorites, currentUser, cMe } = cApp;
+        const { user } = nav;
+        if (user !== undefined) {
             if (this.isProductFarirates)
                 await cFavorites.delProductFavorites(product);
             else
                 await cFavorites.addProductFavorites(product);
             await this.initInventoryAllocation(product);
+        } else {
+
+            cMe.showLogin();
         }
     }
 
     private isMyFarirates = async (id: number) => {
         let { cFavorites } = this.controller.cApp;
-        let customerFavoritesProducts = await cFavorites.getMyFavorites();
-        return customerFavoritesProducts.some((el: any) => el.product.id === id);
+        // let customerFavoritesProducts = await cFavorites.getMyFavorites();
+        // return customerFavoritesProducts.some((el: any) => el.product.id === id);
+        return await cFavorites.getProductIsFavorites(id);
     }
 
     private initInventoryAllocation = async (id: number) => {

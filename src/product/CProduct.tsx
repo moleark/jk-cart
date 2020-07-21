@@ -5,7 +5,7 @@ import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
 import { VProductDelivery } from './VProductDelivery';
-import { VCartProuductView, VProductWithPrice, VProuductView, VProductPrice, VProductCarryFavorites } from './VProductView';
+import { VCartProuductView, VProductWithPrice, VProductPrice, VProuductView2 } from './VProductView';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
@@ -96,9 +96,9 @@ export class CProduct extends CUqBase {
         }
     }
 
-    renderProductCarryFavorites = (product: any) => {
-        return this.renderView(VProductCarryFavorites, { product: product });
-    }
+    /*   renderProductCarryFavorites = (product: any) => {
+          return this.renderView(VProductCarryFavorites, { product: product });
+      } */
 
     renderProductPrice = (product: BoxId, discount: number) => {
         return this.renderView(VProductPrice, { product: product, discount: discount });
@@ -180,7 +180,7 @@ export class CProduct extends CUqBase {
      *
      */
     renderProduct = (product: any) => {
-        return this.renderView(VProuductView, product);
+        return this.renderView(VProuductView2, product);
     }
 
     getProductAndDiscount = async (productId: BoxId) => {
