@@ -299,10 +299,7 @@ export class CCoupon extends CUqBase {
     receiveCoupon = async (param: string) => {
         let res = await this.getCouponValidationResult(param);
         let { result, types } = res;
-        console.log(res);
         if (result === 1) {
-
-
             await this.drawCoupon(res);
             // if (types === 'vipcard') await this.showSharedVIPCard(res);
             // if (types === 'coupon') await this.showSharedCoupon(res);
