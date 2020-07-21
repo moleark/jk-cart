@@ -49,6 +49,8 @@ export interface UqWebUser {
     WebUserVIPCard: Map;
     WebUserCoupon: Map;
     WebUserCouponUsed: Map;
+    getMyUsedCoupon: Query,
+    getMyExpiredCoupon: Query,
 }
 
 export interface UqCustomer {
