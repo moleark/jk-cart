@@ -98,7 +98,7 @@ export class VCreateOrder extends VPage<COrder> {
             } else {
                 noOffsetUI = <div>谢谢惠顾</div>;
             }
-            return <div className="mr-2 position-relative border-primary border p-3 rounded">
+            return <div className="mr-2 position-relative border-primary border px-3 py-1 rounded">
                 <div className="text-success">{code.substr(0, 4)} {code.substr(4)}</div>
                 {offsetUI}
                 {remittedUI}
@@ -198,7 +198,7 @@ export class VCreateOrder extends VPage<COrder> {
             }
         }
 
-        let invoiceContactUI = <div className="row py-3 bg-white mb-1">
+        let invoiceContactUI = <div className="row py页-3 bg-white mb-1">
             <div className="col-4 col-sm-2 pb-2 text-muted">发票地址:</div>
             <div className="col-8 col-sm-10">
                 <div>

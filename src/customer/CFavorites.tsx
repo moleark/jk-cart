@@ -3,7 +3,6 @@ import { CUqBase } from '../CBase';
 import { QueryPager, BoxId } from 'tonva';
 import moment from 'moment';
 import { VProductFavorateLabel } from './VProductFavorateLabel';
-// import { product } from '../ui/product/tuid/index';
 
 export class CFavorites extends CUqBase {
     productsFavorites: QueryPager<any>;
