@@ -61,12 +61,13 @@ export class CMe extends CUqBase {
         // let cCouponManage = this.newC(CCouponManage);
         // await cCouponManage.start();
     }
+
     /**
      * 收藏夹
      */
     openFavorites = async () => {
-        let cPointProduct = this.newC(CFavorites);
-        await cPointProduct.start();
+        let cMyFavorites = this.newC(CFavorites);
+        await cMyFavorites.start();
     }
 
 
