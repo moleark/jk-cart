@@ -28,7 +28,7 @@ export class VCreateOrder extends VPage<COrder> {
 
         let retailUI: any;
         if (price !== retail) {
-            retailUI = <del>¥{retail}</del>;
+            retailUI = <del>¥{retail * quantity}</del>;
         }
         return <div key={index} className="px-2 py-2 border-top">
             <div className="d-flex align-items-center">

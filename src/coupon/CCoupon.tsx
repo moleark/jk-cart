@@ -79,7 +79,9 @@ export class CCoupon extends CUqBase {
     getValidMusterForWebUser = (params: any) => {
         let { vipCardForWebUser, couponsForWebUser, creditsForWebUser } = params;
         let shift = couponsForWebUser.map((v: any) => v.coupon).concat(creditsForWebUser.map((v: any) => v.coupon));
-        return vipCardForWebUser ? [vipCardForWebUser.coupon].concat(shift) : shift;
+        let validMuster = vipCardForWebUser ? [vipCardForWebUser.coupon].concat(shift) : shift;
+        let finalValidMuster = validMuster.filter((v: any) => v.result === 1);
+        return finalValidMuster;
     }
     /**
      * 获取已过期的优惠卡
