@@ -53,7 +53,7 @@ export class CMe extends CUqBase {
         await cPointProduct.start();
     }
     /**
-     * 优惠券管理
+     * 卡券管理
      */
     openCouponManage = async () => {
         let { cCoupon } = this.cApp;
@@ -63,7 +63,7 @@ export class CMe extends CUqBase {
     }
 
     /**
-     * 收藏夹
+     * 商品收藏
      */
     openFavorites = async () => {
         let cMyFavorites = this.newC(CFavorites);

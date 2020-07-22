@@ -118,7 +118,7 @@ export class VCouponManage extends VPage<CCoupon> {
     private page = observer(() => {
         this.getTabs();
         let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
-        return <Page header="优惠卡券" onScrollBottom={this.onScrollBottom}>
+        return <Page header="卡券管理" onScrollBottom={this.onScrollBottom}>
             <div className="px-2 py-3">
                 <LMR right={right}>
                     <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
