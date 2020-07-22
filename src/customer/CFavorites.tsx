@@ -13,16 +13,18 @@ export class CFavorites extends CUqBase {
     }
 
     async searchByFavorites() {
-        let { currentUser } = this.cApp;
+        let { currentUser, currentSalesRegion } = this.cApp;
         this.productsFavorites = new QueryPager<any>(this.uqs.webuser.getMyFavirates, 10, 10);
-        await this.productsFavorites.first({ webUser: currentUser });
+        await this.productsFavorites.first({ webUser: currentUser, salesRegion: currentSalesRegion });
     }
 
+    /*
     async getMyFavorites() {
-        let { currentUser } = this.cApp;
-        let myFavorites = await this.uqs.webuser.myFavorites.query({ webUser: currentUser });
+        let { currentUser, currentSalesRegion } = this.cApp;
+        let myFavorites = await this.uqs.webuser.myFavorites.query({ webUser: currentUser, salesRegion: currentSalesRegion });
         return myFavorites.ret;
     }
+    */
 
     async getProductIsFavorites(product: number) {
         let { currentUser } = this.cApp;
