@@ -8,6 +8,7 @@ import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
 
 export class VCouponManage extends VPage<CCoupon> {
+
     private couponInput: HTMLInputElement;
     @observable private coupons: QueryPager<any>;
     private currentStatus: string;
@@ -17,6 +18,7 @@ export class VCouponManage extends VPage<CCoupon> {
         { caption: '已使用', state: 'usageRecordForWebUser', icon: 'cc-amex', toolTip: '亲，您还未使用过任何优惠券,快去使用噢！' },
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
+
     @observable tips: string;
     async open(param: any) {
         let { getValidMusterForWebUser } = this.controller;
@@ -57,6 +59,7 @@ export class VCouponManage extends VPage<CCoupon> {
         // this.currentStatus = this.oss[0].state;
         // this.coupons = await getCoupons(this.currentStatus);
     }
+
     /**
      * 优惠卡展示
      */

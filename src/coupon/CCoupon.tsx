@@ -39,14 +39,16 @@ export class CCoupon extends CUqBase {
         let { currentUser } = this.cApp;
         return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
     }
+
     /**
-     * 优惠卡券页
+     * 优惠卡券管理界面
      */
     openMyCouponManage = async () => {
         this.isOpenMyCouponManage = true;
         let result = await this.getValidCardForWebUser();
         this.openVPage(VCouponManage, result);
     }
+
     /**
      * 获取不同状态下的优惠卡券
      */
@@ -73,6 +75,7 @@ export class CCoupon extends CUqBase {
                 break;
         }
     }
+
     /**
      * 可使用的优惠卡
      */
@@ -81,6 +84,7 @@ export class CCoupon extends CUqBase {
         let shift = couponsForWebUser.map((v: any) => v.coupon).concat(creditsForWebUser.map((v: any) => v.coupon));
         return vipCardForWebUser ? [vipCardForWebUser.coupon].concat(shift) : shift;
     }
+
     /**
      * 获取已过期的优惠卡
      */
