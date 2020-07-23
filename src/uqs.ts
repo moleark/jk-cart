@@ -51,6 +51,8 @@ export interface UqWebUser {
     WebUserCouponUsed: Map;
     getMyUsedCoupon: Query,
     getMyExpiredCoupon: Query,
+
+    RecordLogin: Action,
 }
 
 export interface UqCustomer {
