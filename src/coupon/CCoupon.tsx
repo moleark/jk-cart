@@ -338,17 +338,25 @@ export class CCoupon extends CUqBase {
     }
 
     loginWhenDrawCoupon = async (credits: any) => {
+        let closePageToDrawCoupon = async (resultAll: any) => {
+            this.closePage(1);
+            await this.drawCoupon(resultAll);
+        }
 
         let loginCallback = async (user: User) => {
             let { cApp } = this;
+            let { cMe, currentUser } = cApp;
             await cApp.currentUser.setUser(user);
             await cApp.loginCallBack(user);
-            this.closePage(1);
             let { code } = credits;
             this.sharedCouponValidationResult = await this.getCouponValidationResult(code);
             let { result } = this.sharedCouponValidationResult;
             if (result === 1) {
-                await this.drawCoupon(this.sharedCouponValidationResult);
+                if (!currentUser.allowOrdering) {
+                    cMe.toPersonalAccountInfo(async () => await closePageToDrawCoupon(this.sharedCouponValidationResult));
+                } else {
+                    await closePageToDrawCoupon(this.sharedCouponValidationResult);
+                }
             }
         };
         if (!this.isLogined)

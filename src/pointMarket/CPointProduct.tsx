@@ -110,7 +110,7 @@ export class CPointProduct extends CUqBase {
         let { Signin } = this.uqs.积分商城;
         customer = this.cApp.currentUser.currentCustomer;
         customer = customer ? customer : this.user.id;
-        await Signin.submit({ webbuser: this.user.id, customer: customer, amount: amount });
+        await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
         await this.getSigninHistory()
         this.isSignined()
         // await this.getPointHistory();
