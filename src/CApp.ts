@@ -129,10 +129,16 @@ export class CApp extends CUqApp {
                         await this.cCoupon.showSharedVIPCard(query);
                     break;
                 case "login":
-                    this.cMe.showLogin();
+                    if (!this.isLogined)
+                        this.cMe.showLogin(async (user: User) => {
+                            window.location.href = window.location.origin;
+                        });
                     break;
                 case "loginout":
-                    this.cMe.showLoginOut();
+                    if (this.isLogined)
+                        this.cMe.showLoginOut(async () => {
+                            window.location.href = window.location.origin;
+                        });
                     break;
                 case "cart":
                     this.cCart.start();
@@ -166,32 +172,23 @@ export class CApp extends CUqApp {
     }
 
     protected afterStart = async () => {
+
         let elements: Elements = {
-            login: this.aTest,
+            login: this.showLogin,
             productlist: this.productList,
             productdetail: this.productDetail,
             carts: this.carts,
         }
 
-        let n = 1;
-        let hello = 'hello';
-
-
-        function cTest(element: HTMLElement) {
-            element.innerText = hello + ', world!';
-        };
-
         this.hookElements(elements);
 
         window.onfocus = () => {
-            hello = hello + (++n);
             this.hookElements(elements);
         }
         return;
     }
 
-    private aTest = (element: HTMLElement) => {
-        //element.innerText = hello;
+    private showLogin = (element: HTMLElement) => {
         ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
 

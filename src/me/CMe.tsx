@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Context, nav, VPage } from 'tonva';
+import { Context, nav, VPage, User } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
@@ -94,12 +94,12 @@ export class CMe extends CUqBase {
         return this.renderView(VLoginState);
     }
 
-    showLogin = () => {
-        nav.showLogin(undefined, true);
+    showLogin = (callback?: (user: User) => Promise<void>) => {
+        nav.showLogin(callback, true);
     }
 
-    showLoginOut = () => {
-        nav.showLogout();
+    showLoginOut = (callback?: () => Promise<void>) => {
+        nav.showLogout(callback);
     }
 
     renderCarLabel = () => {
