@@ -38,9 +38,11 @@ export class CHome extends CUqBase {
     banners: any[] = [];
     async internalStart(param: any) {
 
+        /*
         let { cProductCategory } = this.cApp;
         await cProductCategory.start();
         this.openVPage(VHome);
+        */
     }
 
     renderSearchHeader = (size?: string) => {
@@ -59,5 +61,6 @@ export class CHome extends CUqBase {
         })
     }
 
-    tab = () => this.renderView(VHome);
+    // tab = () => this.renderView(VHome);
+    tab: VHome = new VHome(this);
 }

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
-import { browser } from 'tools/browser';
-import { GLOABLE } from 'cartenv';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -11,15 +9,10 @@ export class VMain extends VPage<CApp> {
         this.openPage(this.render);
     }
 
-    downloadApp = () => {
-        if (browser.versions.android)
-            window.open(GLOABLE.ANDROIDAPPADDRESS);
-    }
-
     render = (param?: any): JSX.Element => {
         let { cHome, cCart, cMe, cart } = this.controller;
         let faceTabs = [
-            { name: 'home', label: '首页', icon: 'home', content: cHome.tab, notify: undefined/*store.homeCount*/ },
+            { name: 'home', label: '首页', icon: 'home', page: cHome.tab, notify: undefined/*store.homeCount*/ },
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
             {
                 name: 'cart',
@@ -37,25 +30,15 @@ export class VMain extends VPage<CApp> {
                 page: cMe.tabPage
             }
         ].map(v => {
-            let { name, label, icon, content, page, notify } = v;
+            let { name, label, icon, page, notify } = v;
             return {
                 name: name,
                 caption: (selected: boolean) => TabCaptionComponent(label, icon, color(selected)),
-                content: content,
                 page: page,
                 notify: notify,
             }
         });
 
-        let header: any = false;
-        if (!browser.versions.html5Plus && browser.versions.android) {
-            header = <div className="w-100 mx-3 d-flex justify-content-between" onClick={this.downloadApp}>
-                <span className="pt-2 small text-danger">
-                    APP购物更方便
-                </span>
-                <button type="button" className="btn btn-primary btn-sm">立即安装</button>
-            </div>
-        }
-        return <Page header={header} headerClassName="bg-warning" tabsProps={{ tabs: faceTabs }} />
+        return <Page tabsProps={{ tabs: faceTabs }} />
     }
 }
