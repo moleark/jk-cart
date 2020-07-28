@@ -160,10 +160,7 @@ export class CApp extends CUqApp {
     }
 
     showMain(initTabName?: string) {
-        // let root = document.getElementById('root');
-        // if (root)
         this.openVPage(VMain, initTabName);
-
         let divLogin = document.getElementById('login');
         if (divLogin) {
             // this.openPage(this.cCart.renderCartLabel());
