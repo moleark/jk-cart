@@ -1,39 +1,39 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2bb582fc623d3863559af67aff80cda4",
+    "revision": "f76f06862b3d930606da2799d9e8152f",
     "url": "./index.html"
   },
   {
-    "revision": "7f7c9d7ec402c87d0338",
+    "revision": "ce539590e0b5555bb416",
     "url": "./static/css/2.01dff271.chunk.css"
   },
   {
-    "revision": "5d18bae5cdb67ed7ac35",
+    "revision": "76a22640d211cde91d83",
     "url": "./static/css/main.6f20aac4.chunk.css"
   },
   {
-    "revision": "7f7c9d7ec402c87d0338",
-    "url": "./static/js/2.0de405f5.chunk.js"
+    "revision": "ce539590e0b5555bb416",
+    "url": "./static/js/2.c789e8f0.chunk.js"
   },
   {
     "revision": "bc4b0af05fd6d030339b0e1af40048d7",
-    "url": "./static/js/2.0de405f5.chunk.js.LICENSE.txt"
+    "url": "./static/js/2.c789e8f0.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "a5dad19c863d5031cc16",
-    "url": "./static/js/3.313791bd.chunk.js"
+    "revision": "d1018c72d877f76a664f",
+    "url": "./static/js/3.509f9940.chunk.js"
   },
   {
-    "revision": "5f39776550a77518fde7",
-    "url": "./static/js/4.d137d049.chunk.js"
+    "revision": "0e3d3c89092f6453b1e4",
+    "url": "./static/js/4.8cfed85f.chunk.js"
   },
   {
-    "revision": "5d18bae5cdb67ed7ac35",
-    "url": "./static/js/main.c918c87e.chunk.js"
+    "revision": "76a22640d211cde91d83",
+    "url": "./static/js/main.c996084d.chunk.js"
   },
   {
-    "revision": "0e14f97a6980bf52e93c",
-    "url": "./static/js/runtime-main.b81791e0.js"
+    "revision": "1c62a6aab45b5c12be89",
+    "url": "./static/js/runtime-main.e748ecf1.js"
   },
   {
     "revision": "f85ff3e0a81d38e50a00c59f0687c339",
@@ -78,10 +78,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "ee7cd8ed2dcec943251eb2763684fc6f",
     "url": "./static/media/logo.ee7cd8ed.svg"
-  },
-  {
-    "revision": "78fd4b186c90ae0374307575f72d0c4d",
-    "url": "./static/media/magnifier.78fd4b18.svg"
   },
   {
     "revision": "772a31a646cb82c2cf0bdebade5fee51",
