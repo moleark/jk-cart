@@ -1,19 +1,46 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
+import { color } from 'order/VMyOrders';
 
 export class VPointProduct extends VPage<CPointProduct> {
 
     @observable private productIsNull: boolean = false;
     @observable private pointIsEnough: boolean = false;
-
+    private currentInterval: string;
+    private tabs: TabProp[];
+    rankInterval: any = [
+        { caption: '1万以下', state: 'below', icon: 'superpowers' },
+        { caption: '1万-5万', state: 'firstLevel', icon: 'superpowers ' },
+        { caption: '5万-15万', state: 'twoLevel', icon: 'superpowers' },
+        { caption: '15万以上', state: 'above', icon: 'superpowers' },
+    ];
     async open(param?: any) {
         this.openPage(this.page);
+    }
+    private getTabs = async () => {
+        let { getPointsIntervalProducts, pointProducts } = this.controller;
+        this.tabs = this.rankInterval.map((v: any) => {
+            let { caption, state, icon } = v;
+            let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>
+            return {
+                name: caption,
+                caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
+                content: () => {
+                    return <List items={pointProducts} item={{ render: this.renderPointProduct }} none={none}></List>
+                },
+                isSelected: this.currentInterval === state,
+                load: async () => {
+                    this.currentInterval = state;
+                    pointProducts = await getPointsIntervalProducts(this.currentInterval);
+                }
+            };
+        });
     }
 
     private schema = [
@@ -88,8 +115,8 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     private page = observer(() => {
-        let { pointProducts, pointToExchanging, myEffectivePoints } = this.controller;
-
+        let { pointToExchanging, myEffectivePoints } = this.controller;
+        this.getTabs();
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
             : null;
@@ -105,9 +132,10 @@ export class VPointProduct extends VPage<CPointProduct> {
             </div>
         </div>;
         return <Page header="积分商城" footer={footer}>
-            <div>
-                <List items={pointProducts} item={{ render: this.renderPointProduct }} none="暂无可兑换产品"></List>
-            </div>
+            <>
+                <Tabs tabs={this.tabs} tabPosition="top" />
+                {/* <List items={pointProducts} item={{ render: this.renderPointProduct }} none="暂无可兑换产品"></List> */}
+            </>
         </Page>;
     });
 }

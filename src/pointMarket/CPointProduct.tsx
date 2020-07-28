@@ -31,6 +31,7 @@ export class CPointProduct extends CUqBase {
     @observable pagePointHistory: QueryPager<any>;   /*积分详情 */
     @observable IsSignin: any;
     @observable signinPageHistory: QueryPager<any>;
+    pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
     protected async internalStart(param: any) {
         await this.getPointHistory();   /*获取积分记录*/
@@ -56,14 +57,14 @@ export class CPointProduct extends CUqBase {
         this.orderData.exchangeItems = undefined;
         this.pointProductsSelected.length = 0;
         this.pointToExchanging = 0;
-        this.pointProducts = await this.getPointsProducts();
+        // this.pointProducts = await this.getPointsProducts();
         this.openVPage(VPointProduct);
     }
     /* 积分兑换记录 */
     openExchangeHistory = async () => {
         let promises: PromiseLike<any>[] = [];
-        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -20));
-        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -20));
+        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10));
+        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100));
         let presult = await Promise.all(promises);
         let exchangeHistory = presult[0].concat(presult[1]);
         this.openVPage(VExchangeHistory, exchangeHistory);
@@ -141,14 +142,42 @@ export class CPointProduct extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
+    /**
+     * 获取积分区间的积分产品
+     */
+    getPointsIntervalProducts = async (state: any) => {
+        switch (state) {
+            case 'below':
+                this.pointInterval = { startPoint: 0, endPoint: 10000 };
+                break;
+            case 'firstLevel':
+                this.pointInterval = { startPoint: 10000, endPoint: 50000 };
+                break;
+            case 'twoLevel':
+                this.pointInterval = { startPoint: 50000, endPoint: 150000 };
+                break;
+            case 'above':
+                this.pointInterval = { startPoint: 150000, endPoint: Infinity };
+                break;
+            default:
+                break;
+        }
+        return await this.getPointsProducts();
+    }
+    /**
+     * 获取积分商城产品
+     */
     getPointsProducts = async () => {
-        return await this.uqs.积分商城.GetPointProduct.table({});
+        return await this.uqs.积分商城.GetPointProduct.table(this.pointInterval);
     }
 
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
+        this.pointProducts.forEach((el: any) => {
+            if (data.product.id === el.product.id) el.quantity = value;
+        });
         this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
 
         this.pointProductsSelected.forEach(element => {

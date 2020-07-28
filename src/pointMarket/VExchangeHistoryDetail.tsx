@@ -39,11 +39,11 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
     private page = (order: any) => {
         let { brief, data } = order;
         let { no, date } = brief;
-        let { exchangeitems, shippingContact, amount } = data;
+        let { exchangeItems, shippingContact, amount } = data;
 
         let header = <>订单详情: {no}</>
         return <Page header={header}>
-            <List items={exchangeitems} item={{ render: this.renderexchangeItem }} />
+            <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>
                 <div className="col-9">{tv(shippingContact)}</div>

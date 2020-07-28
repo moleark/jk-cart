@@ -4,6 +4,8 @@ import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { VPointRule } from './VPointRule';
+import moment from 'moment';
+import logo from '../images/logo.png';
 
 export class VMyPoint extends VPage<CPointProduct> {
     @observable private openMyPointList: boolean = false;
@@ -21,12 +23,13 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.controller.openExchangeHistory();
     }
 
-    /**
-     * 打开领取积分界面 
-     */
-    private openPointDrawing = async () => {
-        this.controller.openPointDrawing();
-    }
+    // /**
+    //  * 打开领取积分界面 
+    //  */
+    // private openPointDrawing = async () => {
+    //     this.controller.openPointDrawing();
+    // }
+
     /* 积分规则页面 */
     private pointRules = () => nav.push(<VPointRule />);
 
@@ -69,7 +72,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 <FA name="pencil" className="mr-2 mb-2" />已签到
             </div>;
         }
-
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 未曾拥有过 不曾失去过 』</div>
         return <Page header="积分管理" right={right} headerClassName="bg-primary">
             <div className="bg-white">
                 <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))", borderRadius: " 0 0 5px 5px" }}>
@@ -85,13 +88,13 @@ export class VMyPoint extends VPage<CPointProduct> {
                     </div>
                 </div>
 
-                <div className="d-flex justify-content-between my-2 px-3 bg-white w-100">
-                    {this.pointblock("领积分码", this.openPointDrawing, "get-pocket", "text-info", " #ccc")}
+                <div className="d-flex justify-content-around  px-2 bg-white w-100">
+                    {/* {this.pointblock("领积分码", this.openPointDrawing, "get-pocket", "text-info", " #ccc")} */}
                     {this.pointblock("积分兑换", this.openPointProduct, "exchange", "text-success", " #99CCFF")}
                     {this.pointblock("兑换记录", this.openExchangeHistory, "history", "text-info", " #EEae0e")}
                 </div>
-                <p className="text-center mt-2 pb-1 small bg-white" style={{ borderBottom: ".5px solid #ccc" }}>积分收支明细</p>
-                {pagePointHistory.items && pagePointHistory.items.length > 0 && <List items={pagePointHistory} item={{ render: this.renderItem }} />}
+                <p className="text-center mt-2 pb-1 bg-white" style={{ borderBottom: ".5px solid #ccc" }}>积分收支明细</p>
+                <List items={pagePointHistory} item={{ render: this.renderItem }} none={none} />
                 {nowPointTip}
             </div>
         </Page >;
@@ -109,13 +112,25 @@ export class VMyPoint extends VPage<CPointProduct> {
 
     private renderItem = (item: any) => {
         let { date, comments, point } = item;
-        return <div className="d-flex w-100 justify-content-between px-3 py-2">
-            <div className="text-muted"><small><b>{comments}</b></small></div>
-            <div className="text-info w-50 d-flex justify-content-between">
-                <div className="ml-3" style={{ color: "pink" }}>{point}</div>
-                <div><small><EasyTime date={date}></EasyTime></small></div>
+        let generateDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+        return <div className="d-flex w-100 justify-content-between align-content-center px-3 py-2">
+            <div>
+                <div className="text-muted"><small><b>{comments}</b></small></div>
+                <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div>
+                {/* <div style={{ fontSize: "40%" }} className="text-muted"><EasyTime date={date}></EasyTime></div> */}
+            </div>
+            <div className="d-table h-100">
+                <div className="font-weight-bolder h-100 d-table-cell align-middle" style={{ color: "#ff0000" }}>{point >= 0 ? '+' : ''}{point}</div>
             </div>
         </div>
+
+        /* return <div className="d-flex w-100 justify-content-between px-3 py-2">
+            <div className="text-muted"><small><b>{comments}</b></small></div>
+            <div className="text-info w-50 d-flex justify-content-between">
+                <div className="ml-2" style={{ color: "blue" }}>{point}</div>
+                <div><small><EasyTime date={date}></EasyTime></small></div>
+            </div>
+        </div> */
 
         /* return <div className="row px-3 py-2 d-flex">
              <div className="col-xs-6 col-md-6"><small><b>{comments}</b></small></div>
