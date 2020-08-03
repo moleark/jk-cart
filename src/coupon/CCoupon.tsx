@@ -14,7 +14,6 @@ export const COUPONBASE: any = {
 }
 
 export class CCoupon extends CUqBase {
-    couponExchange: boolean = false;
     isOpenMyCouponManage: boolean = false;
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
@@ -27,10 +26,8 @@ export class CCoupon extends CUqBase {
             if (types === 'vipcard' || types === 'coupon') {
                 validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
             }
-            if (!this.couponExchange) {
-                this.returnCall(validationResult);
-                this.closePage();
-            }
+            this.returnCall(validationResult);
+            this.closePage();
         }
         return rtn;
     }
@@ -173,30 +170,45 @@ export class CCoupon extends CUqBase {
 
         this.openVPage(VCoupleAvailable, result);
     }
+
+    detectCoupon = async (coupon: string) => {
+        let validationResult = await this.getCouponValidationResult(coupon);
+        let { result: rtn, id, types } = validationResult;
+        if (rtn === 1) {
+            if (types === 'vipcard' || types === 'coupon') {
+                validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
+            }
+        }
+        return rtn;
+    }
     applySelectedCoupon = async (coupon: string) => {
         if (!coupon)
             return "请输入您的优惠卡/券号";
         else {
             let ret = await this.applyCoupon(coupon);
-            switch (ret) {
-                case -1:
-                    return '对不起，当前服务器繁忙，请稍后再试。';
-                case 1:
-                    return '有效';
-                case 0:
-                    return "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。";
-                case 2:
-                    return '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。';
-                case 3:
-                case 5:
-                    return '优惠券无效，请重新输入或与您的专属销售人员联系。';
-                case 6:
-                    return '不允许使用本人优惠券！';
-                case 4:
-                    return '该优惠券已经被使用过了，不允许重复使用。';
-                default:
-                    break;
-            }
+            this.applyTip(ret);
+        }
+    }
+
+    applyTip = (ret: any) => {
+        switch (ret) {
+            case -1:
+                return '对不起，当前服务器繁忙，请稍后再试。';
+            case 1:
+                return '有效';
+            case 0:
+                return "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。";
+            case 2:
+                return '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。';
+            case 3:
+            case 5:
+                return '优惠券无效，请重新输入或与您的专属销售人员联系。';
+            case 6:
+                return '不允许使用本人优惠券！';
+            case 4:
+                return '该优惠券已经被使用过了，不允许重复使用。';
+            default:
+                break;
         }
     }
 
