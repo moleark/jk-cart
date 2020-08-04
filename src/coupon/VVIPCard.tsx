@@ -82,6 +82,7 @@ export class VCoupon extends View<CCoupon> {
         let p1 = codeShow.substr(0, 4);
         let p2 = codeShow.substr(4);
         codeShow = p1 + ' ' + p2;
+        return codeShow;
     }
 
     render(param: any): JSX.Element {

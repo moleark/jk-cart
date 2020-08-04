@@ -21,8 +21,6 @@ export class VCouponManage extends VPage<CCoupon> {
 
     @observable tips: string;
     async open(param: any) {
-        let { getValidMusterForWebUser } = this.controller;
-        this.coupons = getValidMusterForWebUser(param);
         this.openPage(this.page);
     }
 
@@ -50,20 +48,26 @@ export class VCouponManage extends VPage<CCoupon> {
      * 领取优惠卡
      */
     private receiveCoupon = async () => {
-        let { receiveCoupon, getCoupons, getCouponValidationResult } = this.controller;
+        let { drawCoupon, getCouponValidationResult, applyTip } = this.controller;
         let coupon = this.couponInput.value;
-        this.couponInput.value = '';
-        await this.applySelectedCoupon(coupon);
-        await receiveCoupon(coupon);
-        let validationResult = await getCouponValidationResult(coupon);
-        let { result } = validationResult;
-        if (result === 1) {
-            this.tips = '此卡券您已成功领取！'
-            if (this.tips) {
-                setTimeout(() => this.tips = undefined, 1000);
+        if (!coupon)
+            this.tips = "请输入您的优惠卡/券号";
+        else {
+            this.couponInput.value = '';
+
+            let validationResult = await getCouponValidationResult(coupon);
+            let { result } = validationResult;
+            if (result === 1) {
+                await drawCoupon(validationResult);
+                this.tips = '领取成功！';
+            } else {
+                this.tips = applyTip(result);
             }
         }
-        setTimeout(() => this.controller.closePage(), 500);
+        if (this.tips) {
+            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+        }
+        // setTimeout(() => this.controller.closePage(), 500);
         // this.currentStatus = this.oss[0].state;
         // this.coupons = await getCoupons(this.currentStatus);
     }
@@ -101,18 +105,6 @@ export class VCouponManage extends VPage<CCoupon> {
             showDiscountSetting(coupon);
     }
 
-    private applySelectedCoupon = async (coupon: string) => {
-        let { applyTip } = this.controller;
-        if (!coupon)
-            return "请输入您的优惠卡/券号";
-        else {
-            let ret = await this.controller.detectCoupon(coupon);
-            this.tips = applyTip(ret);
-        }
-        if (this.tips)
-            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
-    }
-
     private tipsUI = observer(() => {
         let tipsUI = <></>;
         if (this.tips) {
@@ -125,7 +117,8 @@ export class VCouponManage extends VPage<CCoupon> {
     })
     private onScrollBottom = async (scroller: Scroller) => {
         scroller.scrollToBottom();
-        this.coupons.more();
+        if (this.currentStatus !== "validCardForWebUser")
+            this.coupons.more();
     }
 
     private page = observer(() => {

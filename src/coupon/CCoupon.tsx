@@ -42,8 +42,7 @@ export class CCoupon extends CUqBase {
      */
     openMyCouponManage = async () => {
         this.isOpenMyCouponManage = true;
-        let result = await this.getValidCardForWebUser();
-        this.openVPage(VCouponManage, result);
+        this.openVPage(VCouponManage);
     }
 
     /**
@@ -61,12 +60,9 @@ export class CCoupon extends CUqBase {
                 result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
                 await result.first({ webUser: currentUser });
                 return result;
-            // result = await webuser.WebUserCouponUsed.query({ webuser: currentUser });
-            // return result.ret;
             case 'expiredForWebUser':
                 result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
                 await result.first({ webUser: currentUser });
-                // result = await this.getExpiredMusterForWebUser();
                 return result;
             default:
                 break;
@@ -171,16 +167,10 @@ export class CCoupon extends CUqBase {
         this.openVPage(VCoupleAvailable, result);
     }
 
-    detectCoupon = async (coupon: string) => {
-        let validationResult = await this.getCouponValidationResult(coupon);
-        let { result: rtn, id, types } = validationResult;
-        if (rtn === 1) {
-            if (types === 'vipcard' || types === 'coupon') {
-                validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
-            }
-        }
-        return rtn;
-    }
+    /**
+     * （在订单上）应用coupon
+     * @param coupon 
+     */
     applySelectedCoupon = async (coupon: string) => {
         if (!coupon)
             return "请输入您的优惠卡/券号";
@@ -311,19 +301,6 @@ export class CCoupon extends CUqBase {
         let products = this.getProducts(productids);
         this.openVPage(VSharedCoupon, { products });
     }
-    /**
-     * 领取兑换优惠券 
-     */
-    receiveCoupon = async (param: string) => {
-        let res = await this.getCouponValidationResult(param);
-        let { result, types } = res;
-        if (result === 1) {
-            await this.drawCoupon(res);
-            // if (types === 'vipcard') await this.showSharedVIPCard(res);
-            // if (types === 'coupon') await this.showSharedCoupon(res);
-            // if (types === 'credits') await this.showSharedCredits(res);
-        }
-    }
 
     private autoDrawCouponBase = async (couponBaseCode: string) => {
 
@@ -373,7 +350,7 @@ export class CCoupon extends CUqBase {
             nav.showLogin(loginCallback, true);
     }
 
-    private drawCoupon = async (credits: any) => {
+    drawCoupon = async (credits: any) => {
         let { uqs, cApp } = this;
         let { currentUser } = cApp;
         let { id: currentUserId } = currentUser;
