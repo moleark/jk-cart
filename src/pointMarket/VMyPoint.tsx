@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, tv, EasyTime, FA, IconText } from "tonva";
+import { VPage, Page, nav, List, tv, EasyTime, FA, IconText, EasyDate } from "tonva";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
 import { VPointRule } from './VPointRule';
 import moment from 'moment';
-import logo from '../images/logo.png';
 
 export class VMyPoint extends VPage<CPointProduct> {
-    @observable private openMyPointList: boolean = false;
 
     async open(param?: any) {
         this.openPage(this.page);
@@ -94,7 +91,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                     {this.pointblock("兑换记录", this.openExchangeHistory, "history", "text-info", " #EEae0e")}
                 </div>
                 <p className="text-center mt-2 pb-1 bg-white" style={{ borderBottom: ".5px solid #ccc" }}>积分收支明细</p>
-                <List items={pagePointHistory} item={{ render: this.renderItem }} none={none} />
+                <List items={pagePointHistory} item={{ render: renderPointRecord }} none={none} />
                 {nowPointTip}
             </div>
         </Page >;
@@ -109,54 +106,17 @@ export class VMyPoint extends VPage<CPointProduct> {
             </label>
         </div>
     }
+}
 
-    private renderItem = (item: any) => {
-        let { date, comments, point } = item;
-        let generateDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-        return <div className="d-flex w-100 justify-content-between align-content-center px-3 py-2">
-            <div>
-                <div className="text-muted"><small><b>{comments}</b></small></div>
-                <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div>
-                {/* <div style={{ fontSize: "40%" }} className="text-muted"><EasyTime date={date}></EasyTime></div> */}
-            </div>
-            <div className="d-table h-100">
-                <div className="font-weight-bolder h-100 d-table-cell align-middle" style={{ color: "#ff0000" }}>{point >= 0 ? '+' : ''}{point}</div>
-            </div>
+export function renderPointRecord(item: any) {
+    let { comments, point, date } = item;
+    return <div className="d-flex w-100 justify-content-between align-content-center small px-3 py-2">
+        <div>
+            <div className="text-muted">{comments}</div>
+            <div className="text-muted small"><EasyDate date={date} /></div>
         </div>
-
-        /* return <div className="d-flex w-100 justify-content-between px-3 py-2">
-            <div className="text-muted"><small><b>{comments}</b></small></div>
-            <div className="text-info w-50 d-flex justify-content-between">
-                <div className="ml-2" style={{ color: "blue" }}>{point}</div>
-                <div><small><EasyTime date={date}></EasyTime></small></div>
-            </div>
-        </div> */
-
-        /* return <div className="row px-3 py-2 d-flex">
-             <div className="col-xs-6 col-md-6"><small><b>{comments}</b></small></div>
-             <div className="col-xs-6 col-md-6 w-100 d-flex justify-content-between">
-                 <div className="" ><small>{tv(customer, v => v.name)}</small></div>
-                 <div className="" ><small><EasyDate date={date}></EasyDate></small></div>
-             </div>
-         </div>
-        */
-        /*
-            let left=<div className="w-40">订单：{comments}</div>
-            let right= <div className="float-right" ><EasyDate date={date}></EasyDate></div> 
-            let content= <div className="text-center px-1" >{tv(customer,v=> v.name)}</div>
-            return <LMR className="cursor-pointer w-100 px-3" 
-               left={ left } right={right}> {content}
-           </LMR>;
-       */
-
-        /*          
-         return <div className="w-100 d-flex justify-content-between">
-            <div className=""><b>订单:{comments}</b></div>
-            <div className="mx-3 " >{tv(customer,v=> v.name)}</div>
-            <div className="w-30 float-right" ><EasyDate date={date}></EasyDate></div>
-         </div>
-        */
-
-
-    }
+        <div className="d-table h-100">
+            <div className="font-weight-bolder h-100 d-table-cell align-middle text-danger">{point >= 0 ? '+' : ''}{point}</div>
+        </div>
+    </div>
 }
