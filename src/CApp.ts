@@ -19,6 +19,7 @@ import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
+import { Entrance } from 'ui/entrance';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -154,7 +155,8 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            this.showMain();
+            // this.showMain();
+            this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
     }

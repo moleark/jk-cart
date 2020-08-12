@@ -34,6 +34,11 @@ export class VProduct extends VPage<CProduct> {
         this.openPage(this.page, productData);
     }
 
+    render(param: any) {
+
+        return <this.page product={param} />;
+    }
+
     private renderProduct = (product: MainProductChemical) => {
 
         let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;

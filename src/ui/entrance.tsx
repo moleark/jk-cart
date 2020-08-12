@@ -1,53 +1,17 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
-import { CProduct } from './CProduct';
-import { List } from 'tonva';
+import { VPage, View, List } from 'tonva';
+import { CApp } from 'CApp';
+import { Link, Route } from 'react-router-dom';
 import logo from '../images/logo.png';
 import magnifier from '../images/magnifier.svg'
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-// import { renderProduct } from './VProductView';
 
-export class VProductList extends VPage<CProduct> {
+export class Entrance extends VPage<CApp>{
 
-    private searchKey: string;
-    async open(key: string) {
-        this.searchKey = key;
+    async open(param: any) {
         this.openPage(this.page);
     }
 
-    render(key: any) {
-        this.searchKey = key;
-        return <this.page />
-    }
-
-    private onProductClick = async (product: any) => {
-        await this.controller.showProductDetail(product.id);
-    }
-
-    private onScrollBottom = async (scroller: Scroller) => {
-        scroller.scrollToBottom();
-        let { productsPager } = this.controller;
-        //await this.controller.pageProducts.more();
-        productsPager.more();
-    }
-
-    private renderProduct = (p: any) => {
-        // console.log(p);
-        return this.controller.cApp.cProduct.renderProduct(p);
-    }
-
-    private page = () => {
-
-        let { productsPager, cApp } = this.controller;
-        let { cHome, cCart } = cApp;
-        let header = cHome.renderSearchHeader();
-        let cart = cCart.renderCartLabel();
-        let none = <div className="p-3 text-warning">[无]</div>
-        return <div>
-            <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-            <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
-        </div>
-        /*
+    private page = (param: any) => {
         return <div className="bg-light">
             <header className="d-flex align-items-center p-1">
                 <nav className="navbar navbar-expand-md">
@@ -117,19 +81,16 @@ export class VProductList extends VPage<CProduct> {
                     </div>
                 </nav>
             </header>
-            <Route path="/shop/search/:key" render={(props: any) => {
+            <Route path="/test/search/:key" render={(props: any) => {
                 let { match, location, history } = props;
                 let { params } = match;
-                this.controller.searchByKey(params.key);
-                return <main>
-                    <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-                    <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
-                </main>
+                return this.controller.cProduct.renderProductList2(params.key);
+                // return <div>{params.key}</div>;
             }} />
-            <Route path="/product/:id" render={(props: any) => (
-                <h1>gegege{props.match.params.id}</h1>
-            )} />
+            <Route path="/test/product/:id" render={async (props: any) => {
+                // <h1>gegege{props.match.params.id}</h1>
+                return await this.controller.cProduct.renderProductDetail(props.match.params.id);
+            }} />
         </div>
-        */
-    };
+    }
 }

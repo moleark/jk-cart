@@ -7,6 +7,7 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import classNames from 'classnames';
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
+import { Link } from 'react-router-dom';
 
 export class VCartProuductView extends View<CProduct> {
 
@@ -339,31 +340,33 @@ export class VProuductView2 extends View<CProduct> {
         let { product } = param;
         let { renderFavoritesLabel } = this.controller;
         let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
-        return <div className="d-block mb-4 px-3 bg-white">
-            <div className="py-2">
-                <div className="mr-3"><strong>{description}</strong></div>
-                <div>{descriptionC}</div>
-                <div>
-                    {renderFavoritesLabel(id)}
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-3">
-                    <ProductImage chemicalId={imageUrl} className="w-100" />
-                </div>
-                <div className="col-9">
-                    <div className="row">
-                        {productPropItem('产品编号', origin)}
-                        {productPropItem('CAS', CAS)}
-                        {productPropItem('纯度', purity)}
-                        {productPropItem('分子式', molecularFomula)}
-                        {productPropItem('分子量', molecularWeight)}
-                        {tv(brand, renderBrand)}
+        return <Link to={`/test/product/${id.id}`}>
+            <div className="d-block mb-4 px-3 bg-white">
+                <div className="py-2">
+                    <div className="mr-3"><strong>{description}</strong></div>
+                    <div>{descriptionC}</div>
+                    <div>
+                        {renderFavoritesLabel(id)}
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-3">
+                        <ProductImage chemicalId={imageUrl} className="w-100" />
+                    </div>
+                    <div className="col-9">
+                        <div className="row">
+                            {productPropItem('产品编号', origin)}
+                            {productPropItem('CAS', CAS)}
+                            {productPropItem('纯度', purity)}
+                            {productPropItem('分子式', molecularFomula)}
+                            {productPropItem('分子量', molecularWeight)}
+                            {tv(brand, renderBrand)}
+                        </div>
+                    </div>
+                </div>
+                {unsoldProductsUI(discountinued)}
             </div>
-            {unsoldProductsUI(discountinued)}
-        </div>
+        </Link>
     })
 }
 

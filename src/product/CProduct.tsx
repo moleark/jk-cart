@@ -49,6 +49,12 @@ export class CProduct extends CUqBase {
         this.openVPage(VProductList, param);
     }
 
+    renderProductList2(param: any) {
+        this.searchByKey(param);
+        return this.renderView(VProductList, param);
+        // this.openVPage(VProductList, param);
+    }
+
     searchByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
         //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
@@ -94,6 +100,13 @@ export class CProduct extends CUqBase {
             let productData = await loader.load(productId);
             this.openVPage(VProduct, { productData, product, discount });
         }
+    }
+
+    renderProductDetail = async (productId: number) => {
+        let discount = 0, product = productId;
+        let loader = new LoaderProductChemicalWithPrices(this.cApp);
+        let productData = await loader.load(productId);
+        return this.renderView(VProduct, { productData, product, discount });
     }
 
     /*   renderProductCarryFavorites = (product: any) => {
