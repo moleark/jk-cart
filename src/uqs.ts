@@ -89,6 +89,7 @@ export interface UqMember {
 }
 
 export interface UqPointShop {
+    Genre: Tuid;
     PointProduct: Map;
     PointHistory: History;
     PointExchangeSheet: Sheet;

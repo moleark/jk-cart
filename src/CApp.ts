@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements } from "tonva";
+import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -12,13 +12,14 @@ import { CProductCategory } from "./productCategory/CProductCategory";
 import { CMember } from "./member";
 import { CMe } from "./me/CMe";
 import { CUqApp } from "./CBase";
-import { VMain } from 'ui/main';
+import { VMain, Main } from 'ui/main';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
+import { Route, Switch } from 'react-router-dom';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -93,7 +94,12 @@ export class CApp extends CUqApp {
         await Promise.all(promises);
 
         let { location } = document;
-        let { search } = location;
+        let { search, pathname } = location;
+
+        // let query = pathname.replace(/\/[a-zA-z]+\/*/, '');
+        // // this.cProduct.start(query);
+        // this.openVPage(Main, query)
+        this.cMe.openMyPoint();
         if (search) {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {

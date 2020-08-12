@@ -13,7 +13,9 @@ export class VPointProduct extends VPage<CPointProduct> {
     @observable private productIsNull: boolean = false;
     @observable private pointIsEnough: boolean = false;
     private currentInterval: string;
+    private themeName: string = '所有产品';
     private tabs: TabProp[];
+    private none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
         { caption: '1万以下', state: 'below', icon: 'superpowers' },
         { caption: '1万-5万', state: 'firstLevel', icon: 'superpowers ' },
@@ -21,18 +23,22 @@ export class VPointProduct extends VPage<CPointProduct> {
         { caption: '15万以上', state: 'above', icon: 'superpowers' },
     ];
     async open(param?: any) {
+        if (param) {
+            this.themeName = param.name ? param.name : param;
+            await this.controller.getPointProductByDifferentPlot(param);
+        }
         this.openPage(this.page);
     }
     private getTabs = async () => {
-        let { getPointsIntervalProducts, pointProducts } = this.controller;
+        let { getPointsIntervalProducts, pointProducts, openPointProductDetail } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon } = v;
-            let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>
+
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={pointProducts} item={{ render: this.renderPointProduct }} none={none}></List>
+                    return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
                 },
                 isSelected: this.currentInterval === state,
                 load: async () => {
@@ -115,7 +121,7 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     private page = observer(() => {
-        let { pointToExchanging, myEffectivePoints } = this.controller;
+        let { pointToExchanging, myEffectivePoints, pointProducts, openPointProductDetail } = this.controller;
         this.getTabs();
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
@@ -131,11 +137,12 @@ export class VPointProduct extends VPage<CPointProduct> {
                 <button type="button" className="btn btn-danger m-1" onClick={this.openExchangeOrder}>去兑换</button>
             </div>
         </div>;
-        return <Page header="积分商城" footer={footer}>
-            <>
-                <Tabs tabs={this.tabs} tabPosition="top" />
-                {/* <List items={pointProducts} item={{ render: this.renderPointProduct }} none="暂无可兑换产品"></List> */}
-            </>
-        </Page>;
+        return <Page header={this.themeName} footer={footer}>
+            {
+                this.themeName === '所有产品'
+                    ? <Tabs tabs={this.tabs} tabPosition="top" />
+                    : <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
+            }
+        </Page >;
     });
 }

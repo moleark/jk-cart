@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, tv, EasyTime, FA, IconText } from "tonva";
+import { VPage, Page, nav, List, tv, EasyTime, FA, IconText, DropdownActions, DropdownAction } from "tonva";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { VPointRule } from './VPointRule';
 import moment from 'moment';
 import logo from '../images/logo.png';
+import classNames from 'classnames';
+import { PointProductImage } from 'tools/productImage';
 
 export class VMyPoint extends VPage<CPointProduct> {
     @observable private openMyPointList: boolean = false;
@@ -13,24 +15,10 @@ export class VMyPoint extends VPage<CPointProduct> {
     async open(param?: any) {
         this.openPage(this.page);
     }
-    /*积分兑换*/
-    private openPointProduct = async () => {
-        this.controller.openPointProduct();
-    }
 
-    /* 积分兑换记录页面 */
-    private openExchangeHistory = async () => {
-        this.controller.openExchangeHistory();
-    }
-
-    // /**
-    //  * 打开领取积分界面 
-    //  */
-    // private openPointDrawing = async () => {
-    //     this.controller.openPointDrawing();
-    // }
-
-    /* 积分规则页面 */
+    /**
+     * 积分规则页面
+     */
     private pointRules = () => nav.push(<VPointRule />);
 
     /* 积分详情页面 
@@ -38,43 +26,74 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.controller.pointDetails();
     }*/
 
-    /*签到*/
-    private openPointSign = async () => {
-        // await this.controller.isSignined();       /* 是否签到 */
-        await this.controller.openPointSign()
+    // /**
+    //  * 签到
+    //  */
+    // private openPointSign = async (name?: string) => {
+    //     // await this.controller.isSignined();       /* 是否签到 */
+    //     await this.controller.openPointSign()
+    // }
+
+    private pointblock = (name: any, action: any, icon: any, facolor: any, width?: any, size?: any) => {
+        let sizeN = size ? size : '2x';
+        return <div className={`text-center ${width ? width : 'flex-fill'}`} onClick={() => action()}>
+            <label>
+                <FA name={icon} className={`mt-2 ${facolor}`} size={sizeN} />
+                <div className={`text-dark ${size === 'lg' ? 'small' : ''}`}>{name}</div>
+            </label>
+        </div>
+    }
+
+    private recommendOrHot = (name: string, more: any, theme?: string, imgArr?: any, action?: any) => {
+        return <div className="bg-white mt-2 p-3">
+            <h6 className='d-flex justify-content-between align-content-center'>
+                <span className={classNames(theme ? theme : '')} style={{ color: theme ? theme : '' }}>{name}</span>
+                <small onClick={() => more(name)} style={{ color: '#ccc' }}>更多&raquo;</small>
+            </h6>
+            <div className="d-flex justify-content-between">
+                {
+                    imgArr.map((v: any) => (<div key={v} className="w-8c"><PointProductImage chemicalId={v} className="w-100" /></div>))
+                }
+            </div>
+        </div>
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pagePointHistory, IsSignin } = this.controller;
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre,
+            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointSign } = this.controller;
         var date = new Date();
         let dateYear = date.getFullYear();
 
         let nowPoint = myPointTobeExpired;
         let nowPointTip = nowPoint > 0 ?
-            <div className="alert alert-warning m-2" role="alert">
+            <div className="alert alert-warning py-0 w-100" role="alert">
                 <span className="text-muted">友情提示: 将有{nowPoint}积分于{dateYear}-12-31过期</span>
             </div>
             : null;
 
-        let right = <div className="align-self-center mr-1 ">
-            <div className="px-2" onClick={this.pointRules}>
-                <label> <FA name="info" className="px-2 small" /><small>积分规则</small></label>
-            </div>
-        </div>
+        let actions: DropdownAction[] = [
+            {
+                icon: 'get-pocket',
+                caption: '收支明细',
+                action: () => openRevenueExpenditure('收支明细')
+            },
+            {
+                icon: 'history',
+                caption: '兑换记录',
+                action: openExchangeHistory
+            },
+            {
+                icon: 'book',
+                caption: '积分规则',
+                action: this.pointRules
+            }
+        ];
+        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
 
-        let showsign: any;
-        if (IsSignin == 0) {
-            showsign = <div className=" mt-2 py-2 px-4 bg-white text-muted lsign" style={{ borderRadius: "25%/48%" }} onClick={this.openPointSign} >
-                <FA name="pencil" className="mr-2 mb-2" />签到
-            </div>;
-        } else {
-            showsign = <div className=" mt-2 py-2 px-4" style={{ borderRadius: "25%/48%", background: "#6495ED" }} onClick={this.openPointSign}>
-                <FA name="pencil" className="mr-2 mb-2" />已签到
-            </div>;
-        }
-        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 未曾拥有过 不曾失去过 』</div>
-        return <Page header="积分管理" right={right} headerClassName="bg-primary">
-            <div className="bg-white">
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
+        return <Page header="积分管理" right={right}>
+            <div className="position-relative">
+                <div className="position-absolute w-100">{nowPointTip}</div>
                 <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))", borderRadius: " 0 0 5px 5px" }}>
                     < div className="d-flex flex-column align-items-center mt-3 mb-4" >
                         <div className="text-black text-center pb-2">
@@ -82,81 +101,48 @@ export class VMyPoint extends VPage<CPointProduct> {
                             <br />
                             {myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}
                         </div>
-                        <div className="text-white text-center " >
-                            {showsign}
-                        </div>
                     </div>
                 </div>
-
-                <div className="d-flex justify-content-around  px-2 bg-white w-100">
-                    {/* {this.pointblock("领积分码", this.openPointDrawing, "get-pocket", "text-info", " #ccc")} */}
-                    {this.pointblock("积分兑换", this.openPointProduct, "exchange", "text-success", " #99CCFF")}
-                    {this.pointblock("兑换记录", this.openExchangeHistory, "history", "text-info", " #EEae0e")}
+                {/* 签到 & 兑换 */}
+                <div className="d-flex justify-content-around m-auto bg-white w-75 cursor-pointer position-absolute"
+                    style={{ boxShadow: "2px 2px 8px #333333", borderRadius: "5px", transform: "translateY(-2.5rem)", left: 0, right: 0 }}>
+                    {this.pointblock("签到", openPointSign, "pencil", "text-success")}
+                    {this.pointblock("兑换", openPointProduct, "exchange", "text-info")}
                 </div>
-                <p className="text-center mt-2 pb-1 bg-white" style={{ borderBottom: ".5px solid #ccc" }}>积分收支明细</p>
-                <List items={pagePointHistory} item={{ render: this.renderItem }} none={none} />
-                {nowPointTip}
+
+            </div>
+            <div style={{ background: '#eee' }} className="pt-5">
+                {/* 产品类别 可用list */}
+                <List className="d-flex flex-wrap bg-white py-2 px-3 text-center"
+                    items={pointProductGenre}
+                    item={{
+                        render: this.renderGenreItem,
+                        onClick: (v) => openPointProduct(v),
+                        className: 'w-25'
+                    }}
+                    none={none} />
+                {/* <div className="d-flex flex-wrap bg-white py-2 px-3">
+                     {
+                        pointProductGenre.map((v: any) => {
+                            return <span className="w-25" key={v.id}>{this.pointblock(v.name, this.openPointProduct, "leaf", "text-success", 'w-100', 'lg')}</span>
+                        })
+                    }
+                </div> */}
+                {/* 新品推荐 热门产品 */}
+                <>
+                    {this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', [1, 2, 3])}
+                    {this.recommendOrHot('热门产品', openPointProduct, '#436EEE', [1, 2, 3])}
+                </>
             </div>
         </Page >;
     });
 
-    private pointblock = (name: any, action: any, icon: any, facolor: any, bgcolor: any) => {
-        facolor = "fa-2x mt-2 " + facolor
-        return <div className="text-center px-4 py-2" style={{ background: bgcolor, borderRadius: "5px", transform: "translate(0,-2rem)" }} onClick={action}>
-            <label className=" text-white">
-                <FA name={icon} className={facolor} />
-                <div>{name}</div>
+    private renderGenreItem = (item: any) => {
+        return <div>
+            <label className="w-100">
+                <FA name="leaf" className='mt-2 text-success' size='lg' />
+                <div className='text-dark small'>{item.name}</div>
             </label>
         </div>
-    }
-
-    private renderItem = (item: any) => {
-        let { date, comments, point } = item;
-        let generateDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-        return <div className="d-flex w-100 justify-content-between align-content-center px-3 py-2">
-            <div>
-                <div className="text-muted"><small><b>{comments}</b></small></div>
-                <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div>
-                {/* <div style={{ fontSize: "40%" }} className="text-muted"><EasyTime date={date}></EasyTime></div> */}
-            </div>
-            <div className="d-table h-100">
-                <div className="font-weight-bolder h-100 d-table-cell align-middle" style={{ color: "#ff0000" }}>{point >= 0 ? '+' : ''}{point}</div>
-            </div>
-        </div>
-
-        /* return <div className="d-flex w-100 justify-content-between px-3 py-2">
-            <div className="text-muted"><small><b>{comments}</b></small></div>
-            <div className="text-info w-50 d-flex justify-content-between">
-                <div className="ml-2" style={{ color: "blue" }}>{point}</div>
-                <div><small><EasyTime date={date}></EasyTime></small></div>
-            </div>
-        </div> */
-
-        /* return <div className="row px-3 py-2 d-flex">
-             <div className="col-xs-6 col-md-6"><small><b>{comments}</b></small></div>
-             <div className="col-xs-6 col-md-6 w-100 d-flex justify-content-between">
-                 <div className="" ><small>{tv(customer, v => v.name)}</small></div>
-                 <div className="" ><small><EasyDate date={date}></EasyDate></small></div>
-             </div>
-         </div>
-        */
-        /*
-            let left=<div className="w-40">订单：{comments}</div>
-            let right= <div className="float-right" ><EasyDate date={date}></EasyDate></div> 
-            let content= <div className="text-center px-1" >{tv(customer,v=> v.name)}</div>
-            return <LMR className="cursor-pointer w-100 px-3" 
-               left={ left } right={right}> {content}
-           </LMR>;
-       */
-
-        /*          
-         return <div className="w-100 d-flex justify-content-between">
-            <div className=""><b>订单:{comments}</b></div>
-            <div className="mx-3 " >{tv(customer,v=> v.name)}</div>
-            <div className="w-30 float-right" ><EasyDate date={date}></EasyDate></div>
-         </div>
-        */
-
-
     }
 }

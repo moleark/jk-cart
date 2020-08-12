@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
+import { Switch, Route } from 'react-router-dom';
+import { CUqBase } from 'CBase';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -40,5 +42,28 @@ export class VMain extends VPage<CApp> {
         });
 
         return <Page tabsProps={{ tabs: faceTabs }} />
+    }
+}
+
+export class Main extends VPage<CApp> {
+    async open(param?: any) {
+        this.openPage(this.render, { param });
+    }
+
+    render = (param?: any): JSX.Element => {
+        return <Switch>
+            <Route path='/search1/:key' render={() => {
+                return <div>cProduct1.start</div>
+            }} />
+            <Route path='/search/:key' render={() => {
+                // this.controller.cProduct.start(param.param);
+                this.controller.cProduct.searchByKey(param.param);
+                return this.controller.cProduct.renderProductList2(param.param);
+            }} />
+            <Route path='/' render={() => {
+                this.openVPage(VMain);
+                return <></>
+            }} />
+        </Switch>
     }
 }

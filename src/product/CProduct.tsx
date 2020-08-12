@@ -44,9 +44,13 @@ export class CProduct extends CUqBase {
     @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     @observable chemicalInfoContainer: { [productId: number]: any } = {};
 
-    protected async internalStart(param: any) {
+    protected async internalStart(param?: any) {
         this.searchByKey(param);
         this.openVPage(VProductList, param);
+    }
+
+    renderProductList2(key: any) {
+        return this.renderView(VProductList, key);
     }
 
     searchByKey(key: string) {
