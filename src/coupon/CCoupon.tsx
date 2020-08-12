@@ -176,7 +176,7 @@ export class CCoupon extends CUqBase {
             return "请输入您的优惠卡/券号";
         else {
             let ret = await this.applyCoupon(coupon);
-            this.applyTip(ret);
+            return this.applyTip(ret);
         }
     }
 
