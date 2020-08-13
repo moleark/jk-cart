@@ -49,7 +49,7 @@ export class VPointSign extends VPage<CPointProduct> {
             <div className="text-center " style={{ position: "relative", background: "linear-gradient(rgb(253, 98, 52), rgb(250, 51, 82))", padding: '3rem' }}>
                 <div className="d-flex justify-content-center" style={{ flexDirection: 'column', margin: '0 4rem' }}>
                     <h2 style={{ color: 'rgb(255,192,120)' }} className="mb-3">
-                        <FA name='diamond' /> <span className="text-light"><small>x</small>  {this.signinval}</span>
+                        <FA name='diamond' /> <span className="text-light"><small>x</small> {this.signinval}</span>
                     </h2>
                     {getSignpoint}
                 </div>
@@ -57,16 +57,15 @@ export class VPointSign extends VPage<CPointProduct> {
                     position: "absolute", top: 0, left: 0, display: this.showTips
                 }}>本次签到获取{this.signinval}分</div>
             </div>
+            // <div className="text-center my-1 p-1  bg-white" style={{ borderBottom: ".5px solid #ccc" }}>签到积分详情</div>
+            // <List items={signinPageHistory} item={{ render: renderPointRecord }} none={none} />
         </Page >; */
     })
 
-    protected handleChange = () => {
-        //刷新积分
-        // await getPointHistory();
+
+    protected handleChange = async () => {
         this.showTips = "";
         if (!this.showTips)
             setTimeout(() => { this.showTips = "none"; this.controller.IsSignin = false }, GLOABLE.TIPDISPLAYTIME);
     }
 }
-
-

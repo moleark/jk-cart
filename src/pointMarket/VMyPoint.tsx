@@ -1,16 +1,12 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, tv, EasyTime, FA, IconText, DropdownActions, DropdownAction } from "tonva";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate } from "tonva";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
 import { VPointRule } from './VPointRule';
-import moment from 'moment';
-import logo from '../images/logo.png';
-import classNames from 'classnames';
 import { PointProductImage } from 'tools/productImage';
+import classNames from 'classnames';
 
 export class VMyPoint extends VPage<CPointProduct> {
-    @observable private openMyPointList: boolean = false;
 
     async open(param?: any) {
         this.openPage(this.page);
@@ -26,13 +22,13 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.controller.pointDetails();
     }*/
 
-    // /**
-    //  * 签到
-    //  */
-    // private openPointSign = async (name?: string) => {
-    //     // await this.controller.isSignined();       /* 是否签到 */
-    //     await this.controller.openPointSign()
-    // }
+    /**
+     * 签到
+     */
+    /* private openPointSign = async (name?: string) => {
+        // await this.controller.isSignined();   是否签到 
+        await this.controller.openPointSign()
+    } */
 
     private pointblock = (name: any, action: any, icon: any, facolor: any, width?: any, size?: any) => {
         let sizeN = size ? size : '2x';
@@ -48,18 +44,19 @@ export class VMyPoint extends VPage<CPointProduct> {
         return <div className="bg-white mt-2 p-3">
             <h6 className='d-flex justify-content-between align-content-center'>
                 <span className={classNames(theme ? theme : '')} style={{ color: theme ? theme : '' }}>{name}</span>
-                <small onClick={() => more(name)} style={{ color: '#ccc' }}>更多&raquo;</small>
+                <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
-            <div className="d-flex justify-content-between">
+            <List className="d-flex justify-content-between bg-white" items={imgArr} item={{ render: (v: any) => <div key={v} className="w-8c"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div> }} none='无' />
+            {/* <div className="d-flex justify-content-between bg-white">
                 {
-                    imgArr.map((v: any) => (<div key={v} className="w-8c"><PointProductImage chemicalId={v} className="w-100" /></div>))
+                    imgArr.map((v: any) => (<div key={v} className="w-8c"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>))
                 }
-            </div>
+            </div> */}
         </div>
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre,
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, pointProducts,
             openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointSign } = this.controller;
         var date = new Date();
         let dateYear = date.getFullYear();
@@ -91,6 +88,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
+
         return <Page header="积分管理" right={right}>
             <div className="position-relative">
                 <div className="position-absolute w-100">{nowPointTip}</div>
@@ -104,22 +102,17 @@ export class VMyPoint extends VPage<CPointProduct> {
                     </div>
                 </div>
                 {/* 签到 & 兑换 */}
-                <div className="d-flex justify-content-around m-auto bg-white w-75 cursor-pointer position-absolute"
-                    style={{ boxShadow: "2px 2px 8px #333333", borderRadius: "5px", transform: "translateY(-2.5rem)", left: 0, right: 0 }}>
-                    {this.pointblock("签到", openPointSign, "pencil", "text-success")}
-                    {this.pointblock("兑换", openPointProduct, "exchange", "text-info")}
+                <div className="d-flex justify-content-around m-auto bg-white w-75 cursor-pointer position-absolute px-3 rounded-lg"
+                    style={{ boxShadow: "2px 2px 8px #333333", transform: "translateY(-2.5rem)", left: 0, right: 0 }}>
+                    {this.pointblock("签到", openPointSign, "calendar", "text-danger")}
+                    {this.pointblock("兑换", openPointProduct, "gift", "text-danger")}
                 </div>
-
             </div>
             <div style={{ background: '#eee' }} className="pt-5">
-                {/* 产品类别 可用list */}
+                {/* 产品类别 */}
                 <List className="d-flex flex-wrap bg-white py-2 px-3 text-center"
                     items={pointProductGenre}
-                    item={{
-                        render: this.renderGenreItem,
-                        onClick: (v) => openPointProduct(v),
-                        className: 'w-25'
-                    }}
+                    item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25' }}
                     none={none} />
                 {/* <div className="d-flex flex-wrap bg-white py-2 px-3">
                      {
@@ -130,19 +123,34 @@ export class VMyPoint extends VPage<CPointProduct> {
                 </div> */}
                 {/* 新品推荐 热门产品 */}
                 <>
-                    {this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', [1, 2, 3])}
-                    {this.recommendOrHot('热门产品', openPointProduct, '#436EEE', [1, 2, 3])}
+                    {this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', pointProducts.slice(0, 3))}
+                    {this.recommendOrHot('热门产品', openPointProduct, '#436EEE', pointProducts.slice(6, 9))}
                 </>
             </div>
         </Page >;
     });
 
     private renderGenreItem = (item: any) => {
+        let { name } = item;
         return <div>
             <label className="w-100">
                 <FA name="leaf" className='mt-2 text-success' size='lg' />
-                <div className='text-dark small'>{item.name}</div>
+                <div className='text-dark small'>{name}</div>
             </label>
         </div>
     }
 }
+
+export function renderPointRecord(item: any) {
+    let { comments, point, date } = item;
+    return <div className="d-flex w-100 justify-content-between align-content-center small px-3 py-2">
+        <div>
+            <div className="text-muted">{comments}</div>
+            <div className="text-muted small"><EasyDate date={date} /></div>
+        </div>
+        <div className="d-table h-100">
+            <div className="font-weight-bolder h-100 d-table-cell align-middle text-danger">{point >= 0 ? '+' : ''}{point}</div>
+        </div>
+    </div>
+}
+

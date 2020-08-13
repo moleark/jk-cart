@@ -68,7 +68,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             </div>
         </div>;
 
-        return <Page header="确认兑换信息" footer={footer}>
+        return <Page header="兑换确认" footer={footer}>
             <div className="px-2">
                 <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
                     <div className="col-3 text-muted pr-0">收货地址:</div>

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate, EasyTime } from 'tonva';
+import { VPage, Page } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
-import moment from 'moment';
+// import moment from 'moment';
+import { renderPointRecord } from './VMyPoint';
 
 export class VRevenueExpenditure extends VPage<CPointProduct> {
     private showList: any = [];
@@ -12,20 +13,20 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
         this.openPage(this.page, { header: param });
     }
 
-    private renderItem = (item: any) => {
+    /* private renderItem = (item: any) => {
         let { date, comments, point } = item;
         let generateDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
         return <div className="d-flex w-100 justify-content-between align-content-center px-3 py-2">
             <div>
                 <div className="text-muted"><small><b>{comments}</b></small></div>
-                {/* <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div> */}
+                <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div>
                 <div style={{ fontSize: "40%" }} className="text-muted"><EasyDate date={date}></EasyDate></div>
             </div>
             <div className="d-table h-100">
                 <div className="font-weight-bolder h-100 d-table-cell align-middle" style={{ color: "#ff0000" }}>{point >= 0 ? '+' : ''}{point}</div>
             </div>
         </div>
-    }
+    } */
 
     private matchData = (header: string) => {
         let { pagePointHistory, signinPageHistory } = this.controller;
@@ -49,7 +50,7 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
 
         return <Page header={header}>
-            <List items={this.showList} item={{ render: this.renderItem }} none={none} />
+            <List items={this.showList} item={{ render: renderPointRecord }} none={none} />
         </Page>;
     });
 }

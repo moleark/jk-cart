@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, DropdownActions, DropdownAction } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
@@ -7,11 +7,12 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
+import classNames from 'classnames';
 
 export class VPointProduct extends VPage<CPointProduct> {
 
-    @observable private productIsNull: boolean = false;
-    @observable private pointIsEnough: boolean = false;
+    @observable protected productIsNull: boolean = false;
+    @observable protected pointIsEnough: boolean = false;
     private currentInterval: string;
     private themeName: string = '所有产品';
     private tabs: TabProp[];
@@ -33,12 +34,11 @@ export class VPointProduct extends VPage<CPointProduct> {
         let { getPointsIntervalProducts, pointProducts, openPointProductDetail } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon } = v;
-
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
+                    return <List items={pointProducts} item={{ render: this.renderPointProduct }} none={this.none}></List>
                 },
                 isSelected: this.currentInterval === state,
                 load: async () => {
@@ -73,7 +73,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         }
     }
 
-    private renderPointProduct = (pointProduct: any, index: number) => {
+    protected renderPointProduct = (pointProduct: any, index: number) => {
         let { product, pack, point, imageUrl } = pointProduct;
         return <>
             {tv(product, (v) => {
@@ -99,7 +99,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         </>
     }
 
-    private openExchangeOrder = async () => {
+    protected openExchangeOrder = async () => {
         // 未选择产品
         let { pointToExchanging, myEffectivePoints } = this.controller;
 
@@ -120,9 +120,8 @@ export class VPointProduct extends VPage<CPointProduct> {
         this.controller.openExchangeOrder();
     }
 
-    private page = observer(() => {
-        let { pointToExchanging, myEffectivePoints, pointProducts, openPointProductDetail } = this.controller;
-        this.getTabs();
+    protected getRelatedUI = () => {
+        let { pointToExchanging, myEffectivePoints } = this.controller;
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
             : null;
@@ -137,12 +136,38 @@ export class VPointProduct extends VPage<CPointProduct> {
                 <button type="button" className="btn btn-danger m-1" onClick={this.openExchangeOrder}>去兑换</button>
             </div>
         </div>;
-        return <Page header={this.themeName} footer={footer}>
+        return footer;
+    }
+
+    protected page = observer(() => {
+        let { pointProducts, openPointProductDetail } = this.controller;
+        this.getTabs();
+        let footer = this.getRelatedUI();
+        let right = this.controller.renderSelectedLable();
+        return <Page header={this.themeName} right={right} footer={footer}>
             {
                 this.themeName === '所有产品'
                     ? <Tabs tabs={this.tabs} tabPosition="top" />
-                    : <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
+                    : <List items={pointProducts} item={{ render: this.renderPointProduct }} none={this.none}></List>
             }
         </Page >;
     });
+}
+
+
+
+export class VSelectedPointProduct extends VPointProduct {
+    async open(param?: any) {
+        this.openPage(this.page);
+    }
+
+    page = observer(() => {
+        let { pointProductsSelected, openMyPoint } = this.controller;
+        let footer = this.getRelatedUI();
+        let right = <div className="mr-2" onClick={openMyPoint}><FA name="trash-o" className='text-light' /></div>;
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
+        return <Page header='已选择的产品' right={right} footer={footer} >
+            <List items={pointProductsSelected} item={{ render: this.renderPointProduct }} none={none}></List>
+        </Page >
+    })
 }
