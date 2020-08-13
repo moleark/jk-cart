@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, DropdownActions, DropdownAction } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
@@ -7,7 +7,6 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
-import classNames from 'classnames';
 
 export class VPointProduct extends VPage<CPointProduct> {
 
@@ -49,7 +48,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
-    private schema = [
+    protected schema = [
         { name: 'product', type: 'object' } as ObjectSchema,
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
@@ -57,7 +56,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         { name: 'imageUrl', type: 'object' } as ObjectSchema,
     ];
 
-    private uiSchema: UiSchema = {
+    protected uiSchema: UiSchema = {
         items: {
             product: { visible: false },
             pack: { visible: false },
@@ -159,6 +158,32 @@ export class VPointProduct extends VPage<CPointProduct> {
 export class VSelectedPointProduct extends VPointProduct {
     async open(param?: any) {
         this.openPage(this.page);
+    }
+
+    renderPointProduct = (pointProduct: any, index: number) => {
+        let { product, pack, point, imageUrl } = pointProduct;
+        return <>
+            {tv(product, (v) => {
+                return <div className="row m-1 w-100">
+                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
+                    {tv(pack, (c) => {
+                        return <div className="col-8 small">
+                            <div>{v.descriptionC}</div>
+                            <div className="my-2">{c.radioy}{c.unit}</div>
+                            <div className="row m-0 p-0">
+                                <div className="col-5 m-0 p-0">
+                                    <span className="text-danger h5">{point}</span>
+                                    <small>分</small>
+                                </div>
+                                <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                </div>
+                            </div>
+                        </div>
+                    })}
+                </div>
+            })}
+        </>
     }
 
     page = observer(() => {

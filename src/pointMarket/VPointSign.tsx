@@ -7,14 +7,13 @@ import { GLOABLE } from 'cartenv';
 
 export class VPointSign extends VPage<CPointProduct> {
     @observable showTips: any = "none";
-    private signinval: any = 3;
 
     async open(param?: any) {
         this.openPage(this.page);
     }
 
     private page = observer((param: any) => {
-        let { IsSignin, openRevenueExpenditure, getSigninHistory } = this.controller;
+        let { IsSignin, signinval, openRevenueExpenditure, getSigninHistory } = this.controller;
         if (IsSignin)
             this.handleChange()
 
@@ -40,7 +39,7 @@ export class VPointSign extends VPage<CPointProduct> {
                 </>
                 <div className="text-left small w-100 pt-1 pl-2 position-absolute" style={{
                     top: 0, left: 0, display: this.showTips
-                }}>本次签到获取{this.signinval}分</div>
+                }}>本次签到获取{signinval}分</div>
             </div>
             <div className="text-center border-bottom mt-2">抽奖区</div>
         </Page >;

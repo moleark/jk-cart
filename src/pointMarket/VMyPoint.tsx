@@ -41,29 +41,32 @@ export class VMyPoint extends VPage<CPointProduct> {
     }
 
     private recommendOrHot = (name: string, more: any, theme?: string, imgArr?: any, action?: any) => {
-        return <div className="bg-white mt-2 p-3">
-            <h6 className='d-flex justify-content-between align-content-center'>
-                <span className={classNames(theme ? theme : '')} style={{ color: theme ? theme : '' }}>{name}</span>
+        return <div className="bg-white mt-2 pt-1 px-3"> {/* p-3 */}
+            <h6 className='d-flex justify-content-between align-content-center px-2'>
+                <span className={classNames(theme ? theme : '', 'h6')} style={{ color: theme ? theme : '' }}>{name}</span>
                 <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
-            <List className="d-flex justify-content-between bg-white" items={imgArr} item={{ render: (v: any) => <div key={v} className="w-8c"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div> }} none='无' />
+            <List className="d-flex justify-content-between w-100 bg-white"
+                items={imgArr}
+                item={{ render: (v: any, index: number) => <PointProductImage chemicalId={v.imageUrl} className="w-100 px-2" />, className: "col-4 p-0" }}
+                none='暂无产品' />
             {/* <div className="d-flex justify-content-between bg-white">
                 {
-                    imgArr.map((v: any) => (<div key={v} className="w-8c"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>))
+                    imgArr.map((v: any) => (<div className="w-8c"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>))
                 }
             </div> */}
         </div>
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, pointProducts,
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, pointProductRecommend, pointProductHot,
             openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointSign } = this.controller;
         var date = new Date();
         let dateYear = date.getFullYear();
 
         let nowPoint = myPointTobeExpired;
         let nowPointTip = nowPoint > 0 ?
-            <div className="alert alert-warning py-0 w-100" role="alert">
+            <div className="alert alert-warning py-0 w-100 small" role="alert">
                 <span className="text-muted">友情提示: 将有{nowPoint}积分于{dateYear}-12-31过期</span>
             </div>
             : null;
@@ -92,8 +95,16 @@ export class VMyPoint extends VPage<CPointProduct> {
         return <Page header="积分管理" right={right}>
             <div className="position-relative">
                 <div className="position-absolute w-100">{nowPointTip}</div>
-                <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))", borderRadius: " 0 0 5px 5px" }}>
-                    < div className="d-flex flex-column align-items-center mt-3 mb-4" >
+                <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))" }}>
+                    {/* <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))", backgroundImage: 'url(/logo192.png)', backgroundRepeat: 'no-repeat' }}> */}
+                    <div className="ml-2 text-light">
+                        {/* <img className="mx-2 w-2c" src='/logo192.png' alt="logo"/> */}
+                        <div className="d-flex align-items-center position-relative">
+                            <img className="App-logo h-3c position-absolute" src="/static/media/logo.ee7cd8ed.svg" alt="img" style={{ top: -10, left: -10, filter: 'grayscale(80%)' }} />
+                        </div>
+                        <i className="ml-5 font-weight-bolder small">J&amp;K Chemical</i>
+                    </div>
+                    < div className="d-flex flex-column align-items-center my-4" >
                         <div className="text-black text-center pb-2">
                             <small>当前</small> <span className="h2">{myEffectivePoints}</span> <small>分可用</small>
                             <br />
@@ -102,15 +113,15 @@ export class VMyPoint extends VPage<CPointProduct> {
                     </div>
                 </div>
                 {/* 签到 & 兑换 */}
-                <div className="d-flex justify-content-around m-auto bg-white w-75 cursor-pointer position-absolute px-3 rounded-lg"
-                    style={{ boxShadow: "2px 2px 8px #333333", transform: "translateY(-2.5rem)", left: 0, right: 0 }}>
+                <div className="d-flex justify-content-around  bg-white mx-4 cursor-pointer position-absolute px-3 rounded-lg"
+                    style={{ transform: "translateY(-2.5rem)", left: 0, right: 0 }}> {/* boxShadow: "2px 2px 8px #333333",  */}
                     {this.pointblock("签到", openPointSign, "calendar", "text-danger")}
                     {this.pointblock("兑换", openPointProduct, "gift", "text-danger")}
                 </div>
             </div>
-            <div style={{ background: '#eee' }} className="pt-5">
+            <div style={{}} className="pt-5">{/* background: '#eee' */}
                 {/* 产品类别 */}
-                <List className="d-flex flex-wrap bg-white py-2 px-3 text-center"
+                <List className="d-flex flex-wrap bg-white py-2  text-center px-4"
                     items={pointProductGenre}
                     item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25' }}
                     none={none} />
@@ -123,8 +134,9 @@ export class VMyPoint extends VPage<CPointProduct> {
                 </div> */}
                 {/* 新品推荐 热门产品 */}
                 <>
-                    {this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', pointProducts.slice(0, 3))}
-                    {this.recommendOrHot('热门产品', openPointProduct, '#436EEE', pointProducts.slice(6, 9))}
+                    {this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', this.controller.pointProducts.slice(0, 3))}
+                    {pointProductRecommend.length ? this.recommendOrHot('新品推荐', openPointProduct, '#436EEE', pointProductRecommend.slice(0, 3)) : null}
+                    {pointProductHot.length ? this.recommendOrHot('热门产品', openPointProduct, '#436EEE', pointProductHot.slice(0, 3)) : null}
                 </>
             </div>
         </Page >;
@@ -153,4 +165,3 @@ export function renderPointRecord(item: any) {
         </div>
     </div>
 }
-
