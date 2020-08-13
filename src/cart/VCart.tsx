@@ -132,6 +132,7 @@ export class VCart extends VPage<CCart> {
     private empty() {
         return <div className="py-5 text-center bg-white">你的购物车空空如也</div>
     }
+
     /**
      * 是否编辑
      */
@@ -139,6 +140,7 @@ export class VCart extends VPage<CCart> {
         // let { cart } = this.controller.cApp;
         // cart.editButton.set(!cart.editButton.get());
     }
+
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
         let footer: any, content: any;

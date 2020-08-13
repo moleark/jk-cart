@@ -17,3 +17,16 @@ export let browser = {
         };
     }()
 };
+
+export let xs = (function () {
+
+    function getViewportSize(w?: any) {
+        w = w || window;
+        if (w.innerWidth != null) return { w: w.innerWidth, h: w.innerHeight };
+        var d = w.document;
+        if (document.compatMode === "CSS1Compat")
+            return { w: d.documentElement.clientWidth, h: d.documentElement.clientHeight };
+        return { w: d.body.clientWidth, h: d.body.clientHeight };
+    }
+    return getViewportSize().w < 576;
+})();

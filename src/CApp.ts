@@ -155,8 +155,8 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            // this.showMain();
-            this.openVPage(Entrance);
+            this.showMain();
+            // this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
     }

@@ -12,33 +12,10 @@ import { VProduct_Web } from './VProduct_Web';
 import { ProductItem } from '../tools/ProductItem';
 import { CFavorites } from '../customer/CFavorites';
 
-/*
-class PageProducts extends PageItems<any> {
-
-    private searchProductQuery: Query;
-
-    constructor(searchProductQuery: Query) {
-        super();
-        this.firstSize = this.pageSize = 10;
-        this.searchProductQuery = searchProductQuery;
-    }
-
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
-        if (pageStart === undefined) pageStart = 0;
-        let ret = await this.searchProductQuery.page(param, pageStart, pageSize, false);
-        return ret;
-    }
-
-    protected setPageStart(item: any): any {
-        this.pageStart = item === undefined ? 0 : item.seq;
-    }
-}
-*/
 /**
  *
  */
 export class CProduct extends CUqBase {
-    //pageProducts: PageProducts;
     productsPager: QueryPager<any>;
 
     @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
@@ -49,34 +26,22 @@ export class CProduct extends CUqBase {
         this.openVPage(VProductList, param);
     }
 
-    renderProductList2(param: any) {
-        this.searchByKey(param);
-        return this.renderView(VProductList, param);
-        // this.openVPage(VProductList, param);
-    }
-
     searchByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
-        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
     }
 
     searchWebByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 3, 3);
-        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
     }
 
     async searchByCategory(category: any) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProductByCategory);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         let { productCategoryId, name } = category;
-        //this.pageProducts.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
         await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id })
         this.openVPage(VProductList, name);
     }
@@ -88,30 +53,11 @@ export class CProduct extends CUqBase {
 
         if (productId) {
             let discount = 0, product = productId;
-            /*
-            product = await this.uqs.product.ProductX.load(productId);
-            let { currentUser } = this.cApp;
-            if (currentUser.hasCustomer) {
-                let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
-                discount = discountSetting && discountSetting.discount;
-            }
-            */
             let loader = new LoaderProductChemicalWithPrices(this.cApp);
             let productData = await loader.load(productId);
             this.openVPage(VProduct, { productData, product, discount });
         }
     }
-
-    renderProductDetail = async (productId: number) => {
-        let discount = 0, product = productId;
-        let loader = new LoaderProductChemicalWithPrices(this.cApp);
-        let productData = await loader.load(productId);
-        return this.renderView(VProduct, { productData, product, discount });
-    }
-
-    /*   renderProductCarryFavorites = (product: any) => {
-          return this.renderView(VProductCarryFavorites, { product: product });
-      } */
 
     renderProductPrice = (product: BoxId, discount: number) => {
         return this.renderView(VProductPrice, { product: product, discount: discount });

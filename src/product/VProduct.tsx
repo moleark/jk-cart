@@ -11,6 +11,8 @@ import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
+import { ShopPage } from 'tools/ShopPage';
+import { xs } from 'tools/browser';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -31,7 +33,7 @@ export class VProduct extends VPage<CProduct> {
         let { productData, product, discount } = param;
         this.productBox = product;
         this.discount = discount;
-        this.openPage(this.page, productData);
+        xs ? this.openPage(this.page, productData) : this.openPage(this.lpage, productData);
     }
 
     render(param: any) {
@@ -162,5 +164,14 @@ export class VProduct extends VPage<CProduct> {
                 </div>
             </Page>
         }
+    }
+
+    private lpage = (product: any) => {
+
+        let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
+        viewProduct.model = product;
+        return <ShopPage>
+            <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
+        </ShopPage>
     }
 }
