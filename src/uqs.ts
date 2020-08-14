@@ -96,6 +96,8 @@ export interface UqPointShop {
     PointExchangeSheet: Sheet;
     getPoints: Query;
     GetPointProduct: Query;
+    GetNewPointProducts: Query;
+    GetHotPointProducts: Query;
 
     // TODO：delete
     AddPoint: Action;

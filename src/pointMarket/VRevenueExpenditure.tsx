@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page } from 'tonva';
+import { VPage, Page, Scroller } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
@@ -44,12 +44,16 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
         }
     }
 
+    protected onScrollBottom = async (scroller: Scroller) => {
+        this.showList.more();
+    }
+
     private page = observer((param: any) => {
         let { header } = param;
         this.matchData(header);
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
 
-        return <Page header={header}>
+        return <Page header={header} onScrollBottom={this.onScrollBottom}>
             <List items={this.showList} item={{ render: renderPointRecord }} none={none} />
         </Page>;
     });

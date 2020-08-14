@@ -9,48 +9,58 @@ import { OrderSuccess } from './OrderSuccess';
 import { pointOrder, OrderItem } from './pointOrder';
 import { VExchangeHistoryDetail } from './VExchangeHistoryDetail';
 import { VExchangeHistory } from './VExchangeHistory';
-import { VPlatformOrderPoint } from './VPlatformOrderPoint';
-import { VPointDetails } from './VPointDetails';
-import { VPointSign } from './VPointSign';
+// import { VPlatformOrderPoint } from './VPlatformOrderPoint';
+import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
 
+export const topicClump = {
+    productGenre: '产品分类',
+    newRecommend: '新品推荐',
+    hotProduct: '热门产品',
+}
+const pointBase: number = 3; /* 积分基数 */
+
 export class CPointProduct extends CUqBase {
 
-    @observable myPoints: any[] = [];              /*我的积分 */
-    @observable myEffectivePoints: number = 0;            /*我的积分(计算后) */
-    @observable myTotalPoints: number = 0;            /*我的积分(计算后) */
-    @observable myPointTobeExpired: number = 0;        /*我的快过期积分 */
-    @observable signinval: number = 3;              /* 签到可领积分 */
-    @observable pointProducts: any[] = [];          /*可兑产品列表 */
-    @observable pointProductRecommend: any[] = [];          /* 新品推荐 */
-    @observable pointProductHot: any[] = [];          /* 热门产品 */
-    @observable pointProductsSelected: any[] = [];  /*已选择产品列表 */
-    @observable pointToExchanging: number = 0;              /*将要兑换的积分总计 */
-    @observable orderData: pointOrder = new pointOrder();   /*正在提交的产品列表*/
-    @observable couponId: number;                   /*积分码 */
-    @observable platformOrderId: any;               /*平台合同号 */
-    @observable platformOrder: any[] = [];          /*平台合同 */
-    @observable pagePointHistory: QueryPager<any>;   /*积分详情 */
-    @observable IsSignin: boolean = false;
-    @observable signinPageHistory: QueryPager<any>;
-    @observable pointProductGenre: any[] = [];    /* 产品类型列表 */
+    @observable myPoints: any[] = [];                  /* 我的积分 */
+    @observable myEffectivePoints: number = 0;         /* 我的积分(计算后) */
+    @observable myTotalPoints: number = 0;             /* 我的积分(计算后) */
+    @observable myPointTobeExpired: number = 0;        /* 我的快过期积分 */
+    @observable signinval: number = pointBase;         /* 签到可领积分 */
+    @observable signinConsecutiveDays: number = 0;     /* 连续签到天数 */
+
+    @observable pointProducts: any[] = [];             /* 可兑产品列表 */
+    @observable newPointProducts: any[] = [];          /* 新品推荐 */
+    @observable hotPointProducts: any[] = [];          /* 热门产品 */
+    @observable pointProductsSelected: any[] = [];     /* 已选择产品列表 */
+    @observable pointToExchanging: number = 0;              /* 将要兑换的积分总计 */
+    @observable orderData: pointOrder = new pointOrder();   /* 正在提交的产品列表*/
+    @observable couponId: number;                      /* 积分码 */
+    @observable platformOrderId: any;                  /* 平台合同号 */
+    @observable platformOrder: any[] = [];             /* 平台合同 */
+    @observable pagePointHistory: QueryPager<any>;     /* 积分详情 */
+    @observable IsSignin: boolean = false;             /* 是否签到 */
+    @observable signinPageHistory: QueryPager<any>;    /* 签到记录 */
+    @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
     protected async internalStart(param?: any) {
-        await this.getPointHistory();   /*获取积分记录*/
-        await this.refreshMypoint();
-        await this.isSignined();       /* 是否签到 */
-        await this.getSigninHistory();  /* 签到记录 */
-        await this.getPointProductGenre(); /* 获取产品类型 */
-        await this.getPointProductRecommend();  /* 获取新品推荐 */
-        await this.getPointProductHot();    /* 获取热门产品 */
+        await this.refreshMypoint();        /* 刷新积分 */
+        await this.isSignined();            /* 是否签到 */
+        await this.getPointProductGenre();  /* 获取产品类型 */
+        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+        // await this.getPointHistory();    /* 获取积分记录 */
+        // await this.getSigninHistory();   /* 签到记录 */
         this.openVPage(VMyPoint);
     }
 
-
+    /**
+     * 刷新积分
+     */
     refreshMypoint = async () => {
         let { currentUser } = this.cApp;
         this.myPoints = await currentUser.getPoints();
@@ -59,30 +69,6 @@ export class CPointProduct extends CUqBase {
         let date = new Date();
         let dateYear = date.getFullYear();
         this.myPointTobeExpired = this.myPoints.reduce((v, e) => { return v + ((dateYear - e.pointYear) > 1 ? e.effectiveLeftPoint : 0) }, 0);
-    }
-
-    /**
-     * 可兑换产品页面
-     */
-    openPointProduct = async (name?: any) => {
-        this.initPointProducts();
-        this.openVPage(VPointProduct, name);
-    }
-
-    /**
-     * 积分管理页面
-     */
-    openMyPoint = () => {
-        this.clearSelectedPointsProducts();
-    }
-
-    /**
-     * 清空选择的积分产品  
-     */
-    clearSelectedPointsProducts = () => {
-        this.orderData.exchangeItems = undefined;
-        this.pointProductsSelected.length = 0;
-        this.pointToExchanging = 0;
     }
 
     /**
@@ -99,6 +85,34 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
+     * 清空选择的积分产品  
+     */
+    clearSelectedPointsProducts = () => {
+        this.orderData.exchangeItems = undefined;
+        this.pointProductsSelected.length = 0;
+        this.pointToExchanging = 0;
+    }
+
+    /**
+     * 签到   ------------------ 需调用连续签到天数 uq:this.getSigninConsecutiveDays --------------------
+     */
+    openPointSign = async () => {
+        await this.getSigninConsecutiveDays();
+        let result = this.multiplePointsWelfare();
+        if (this.IsSignin)
+            await this.addSigninSheet(47, this.signinval);
+        this.openVPage(VPointSign, result);
+    }
+
+    /**
+     * 可兑换产品页面
+     */
+    openPointProduct = async (name?: any) => {
+        this.initPointProducts();
+        this.openVPage(VPointProduct, name);
+    }
+
+    /**
      * 可兑换产品的详情 -------------------html片段渲染 等待界面设计----------------
      */
     openPointProductDetail = async (pointProduct: any) => {
@@ -109,11 +123,13 @@ export class CPointProduct extends CUqBase {
      * 积分收支明细页面
      */
     openRevenueExpenditure = async (topic?: any) => {
+        if (topic === '收支明细') await this.getPointHistory();
+        else await this.getSigninHistory();
         this.openVPage(VRevenueExpenditure, topic)
     }
 
     /**
-     * 积分兑换记录
+     * 积分兑换记录页面
      */
     openExchangeHistory = async () => {
         let promises: PromiseLike<any>[] = [];
@@ -124,16 +140,24 @@ export class CPointProduct extends CUqBase {
         this.openVPage(VExchangeHistory, exchangeHistory);
     }
 
-    /*领取积分 */
-    openPointDrawing = async (credits?: string) => {
-        /* 
-        let lastPlatformId = await this.getLastPlatformOrder();
-        if (lastPlatformId)
-            this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
-        */
-        this.openVPage(VPlatformOrderPoint, credits);
+    /**
+     * 历史兑换单详情页面
+     */
+    openOrderDetail = async (orderId: number) => {
+        let order = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
+        this.openVPage(VExchangeHistoryDetail, order);
     }
 
+    /**
+     * 已选择的可兑换产品页面
+     */
+    openSelectedPointProduct = async () => {
+        this.openVPage(VSelectedPointProduct);
+    }
+
+    /**
+     * 确认兑换订单预览页面
+     */
     openExchangeOrder = async () => {
         if (this.orderData.shippingContact === undefined) {
             this.orderData.shippingContact = await this.getDefaultShippingContact();
@@ -141,16 +165,22 @@ export class CPointProduct extends CUqBase {
         this.openVPage(VExchangeOrder);
     }
 
-    openOrderDetail = async (orderId: number) => {
-        let order = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
-        this.openVPage(VExchangeHistoryDetail, order);
-    }
+
+    // /*领取积分 */
+    // openPointDrawing = async (credits?: string) => {
+    //     /* 
+    //     let lastPlatformId = await this.getLastPlatformOrder();
+    //     if (lastPlatformId)
+    //         this.platformOrder = await this.getPlatFormOrder(this.platformOrderId);
+    //     */
+    //     this.openVPage(VPlatformOrderPoint, credits);
+    // }
 
     /* 展示 积分详情*/
-    pointDetails = async () => {
+    /* pointDetails = async () => {
         this.getPointHistory();
         this.openVPage(VPointDetails);
-    }
+    } */
 
     /**
      * 已选择的可兑换产品图标
@@ -160,47 +190,11 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 已选择的可兑换产品页面
+     * 获取产品类型
      */
-    showSelectedPointProduct = async () => {
-        this.openVPage(VSelectedPointProduct);
-    }
-
-    /**
-     * 获取积分详情的数据
-     */
-    getPointHistory = () => {
-        this.pagePointHistory = new QueryPager(this.uqs.积分商城.GetPointHistory, 15, 30);
-        this.pagePointHistory.first({ key: "" });
-    }
-
-    /**
-     * 签到
-     */
-    openPointSign = async () => {
-        if (this.IsSignin)
-            await this.addSigninSheet(47, this.signinval);
-        this.openVPage(VPointSign)
-    }
-
-    /**
-     * 签到添加积分到
-     */
-    addSigninSheet = async (customer: any, amount: any) => {
-        let { Signin } = this.uqs.积分商城;
-        customer = this.cApp.currentUser.currentCustomer;
-        customer = customer ? customer : this.user.id;
-        await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
-        await this.getSigninHistory();
-        // await this.getPointHistory();
-
-        /**
-        let result: any = await SigninSheet.save("SigninSheet", { customer: customer, amount: amount });
-        console.log(this.cApp.currentUser);
-        let { id, flow, state } = result;
-        await SigninSheet.action(id, flow, state, "submit");
-        await Signin.submit({ webbuser: 47, customer: 47, amount: 3 });
-        **/
+    getPointProductGenre = async () => {
+        let { Genre } = this.uqs.积分商城;
+        this.pointProductGenre = await Genre.all();
     }
 
     /**
@@ -213,11 +207,23 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 获取产品类型
+     * 签到添加积分到
      */
-    getPointProductGenre = async () => {
-        let { Genre } = this.uqs.积分商城;
-        this.pointProductGenre = await Genre.all();
+    addSigninSheet = async (customer: any, amount: any) => {
+        let { Signin } = this.uqs.积分商城;
+        customer = this.cApp.currentUser.currentCustomer;
+        customer = customer ? customer : this.user.id;
+        await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
+        // await this.getSigninHistory();
+        // await this.getPointHistory();
+
+        /**
+        let result: any = await SigninSheet.save("SigninSheet", { customer: customer, amount: amount });
+        console.log(this.cApp.currentUser);
+        let { id, flow, state } = result;
+        await SigninSheet.action(id, flow, state, "submit");
+        await Signin.submit({ webbuser: 47, customer: 47, amount: 3 });
+        **/
     }
 
     /**
@@ -228,27 +234,53 @@ export class CPointProduct extends CUqBase {
         this.signinPageHistory.first({});
     }
 
-    /* renderOrderItemProduct = (product: BoxId) => {
-        let { cProduct } = this.cApp;
-        return cProduct.renderCartProduct(product);
-    } */
+    /**
+     * 连续签到天数  webUser  ----------------------------需uq --------------------------------
+     */
+    getSigninConsecutiveDays = async () => {
+        // this.signinConsecutiveDays 
+    }
+
+    /**
+     * 福利：连续签到 数倍积分
+     */
+    multiplePointsWelfare = () => {
+        let arr = daysAndMultipleByWelfare;
+        for (let i = 0; i < arr.length; i++) {
+            if (this.signinConsecutiveDays < arr[i].days) {
+                if (i === 0) this.signinval = pointBase;
+                else this.signinval = pointBase * arr[i - 1].multiple;
+                return arr[i];
+            } else if (this.signinConsecutiveDays >= arr[i].days && i === (arr.length - 1)) {
+                this.signinval = pointBase * arr[i].multiple;
+                return arr[i];
+            }
+        }
+    }
+
+    /**
+     * 获取积分详情的数据
+     */
+    getPointHistory = () => {
+        this.pagePointHistory = new QueryPager(this.uqs.积分商城.GetPointHistory, 15, 30);
+        this.pagePointHistory.first({ key: "" });
+    }
 
     /**
      * 获取可兑换产品(据 分类、新品推荐、热门产品)
      */
     getPointProductByDifferentPlot = async (plot: any) => {
-        let state = plot.name ? '分类' : plot;
-        console.log(this.uqs.积分商城);
-
+        let { productGenre, newRecommend, hotProduct } = topicClump;
+        let state = plot.name ? productGenre : plot;
         switch (state) {
-            case '分类':
+            case productGenre:
                 await this.filterByProductGenre(plot);
                 break;
-            case '新品推荐':
-                await this.getPointProductRecommend();
+            case newRecommend:
+                this.pointProducts = await this.getNewPointProducts();
                 break;
-            case '热门产品':
-                await this.getPointProductHot();
+            case hotProduct:
+                this.pointProducts = await this.getHotPointProducts();
                 break;
             default:
                 break;
@@ -282,15 +314,15 @@ export class CPointProduct extends CUqBase {
     /**
      * 获取新品推荐的产品
      */
-    getPointProductRecommend = async () => {
-        this.pointProductRecommend = [];
+    getNewPointProducts = async () => {
+        return await this.uqs.积分商城.GetNewPointProducts.table({});
     }
 
     /**
      * 获取热门产品
      */
-    getPointProductHot = async () => {
-        this.pointProductHot = [];
+    getHotPointProducts = async () => {
+        return await this.uqs.积分商城.GetHotPointProducts.table({});
     }
 
     /**

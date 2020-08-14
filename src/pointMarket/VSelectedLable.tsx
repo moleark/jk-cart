@@ -11,7 +11,7 @@ export class VSelectedLable extends View<CPointProduct> {
     };
 
     private content = observer(() => {
-        let { pointProductsSelected, showSelectedPointProduct } = this.controller;
+        let { pointProductsSelected, openSelectedPointProduct } = this.controller;
         let { length } = pointProductsSelected;
         let count = 0
         let badge, onClick, pointer;
@@ -21,7 +21,7 @@ export class VSelectedLable extends View<CPointProduct> {
             }
         }
         if (count > 0) {
-            onClick = showSelectedPointProduct;
+            onClick = openSelectedPointProduct;
             pointer = 'cursor-pointer';
             if (count < 100) badge = <u>{count}</u>;
             else badge = <u>99+</u>;

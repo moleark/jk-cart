@@ -9,7 +9,7 @@ import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 
 export class VPointProduct extends VPage<CPointProduct> {
-
+    @observable protected isShowSelectForm: boolean = false;
     @observable protected productIsNull: boolean = false;
     @observable protected pointIsEnough: boolean = false;
     private currentInterval: string;
@@ -48,7 +48,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
-    protected schema = [
+    private schema = [
         { name: 'product', type: 'object' } as ObjectSchema,
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
@@ -56,7 +56,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         { name: 'imageUrl', type: 'object' } as ObjectSchema,
     ];
 
-    protected uiSchema: UiSchema = {
+    private uiSchema: UiSchema = {
         items: {
             product: { visible: false },
             pack: { visible: false },
@@ -90,6 +90,13 @@ export class VPointProduct extends VPage<CPointProduct> {
                                 <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                     <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                 </div>
+                                {/* {
+                                    this.isShowSelectForm
+                                        ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                            <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                        </div>
+                                        : null
+                                } */}
                             </div>
                         </div>
                     })}
@@ -156,40 +163,15 @@ export class VPointProduct extends VPage<CPointProduct> {
 
 
 export class VSelectedPointProduct extends VPointProduct {
+    isShowSelectForm: boolean = true;
     async open(param?: any) {
         this.openPage(this.page);
     }
 
-    renderPointProduct = (pointProduct: any, index: number) => {
-        let { product, pack, point, imageUrl } = pointProduct;
-        return <>
-            {tv(product, (v) => {
-                return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="col-8 small">
-                            <div>{v.descriptionC}</div>
-                            <div className="my-2">{c.radioy}{c.unit}</div>
-                            <div className="row m-0 p-0">
-                                <div className="col-5 m-0 p-0">
-                                    <span className="text-danger h5">{point}</span>
-                                    <small>分</small>
-                                </div>
-                                <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                </div>
-                            </div>
-                        </div>
-                    })}
-                </div>
-            })}
-        </>
-    }
-
     page = observer(() => {
-        let { pointProductsSelected, openMyPoint } = this.controller;
+        let { pointProductsSelected, clearSelectedPointsProducts } = this.controller;
         let footer = this.getRelatedUI();
-        let right = <div className="mr-2" onClick={openMyPoint}><FA name="trash-o" className='text-light' /></div>;
+        let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
         return <Page header='已选择的产品' right={right} footer={footer} >
             <List items={pointProductsSelected} item={{ render: this.renderPointProduct }} none={none}></List>
