@@ -30,14 +30,14 @@ export class VPointProduct extends VPage<CPointProduct> {
         this.openPage(this.page);
     }
     private getTabs = async () => {
-        let { getPointsIntervalProducts, pointProducts, openPointProductDetail } = this.controller;
+        let { pointProducts, getPointsIntervalProducts, openPointProductDetail } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon } = v;
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={pointProducts} item={{ render: this.renderPointProduct }} none={this.none}></List>
+                    return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
                 },
                 isSelected: this.currentInterval === state,
                 load: async () => {
@@ -87,16 +87,16 @@ export class VPointProduct extends VPage<CPointProduct> {
                                     <span className="text-danger h5">{point}</span>
                                     <small>分</small>
                                 </div>
-                                <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                {/* <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                     <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                </div>
-                                {/* {
+                                </div> */}
+                                {
                                     this.isShowSelectForm
                                         ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                             <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                         </div>
                                         : null
-                                } */}
+                                }
                             </div>
                         </div>
                     })}
@@ -154,7 +154,7 @@ export class VPointProduct extends VPage<CPointProduct> {
             {
                 this.themeName === '所有产品'
                     ? <Tabs tabs={this.tabs} tabPosition="top" />
-                    : <List items={pointProducts} item={{ render: this.renderPointProduct }} none={this.none}></List>
+                    : <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
             }
         </Page >;
     });

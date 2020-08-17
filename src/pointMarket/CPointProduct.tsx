@@ -116,7 +116,7 @@ export class CPointProduct extends CUqBase {
      * 可兑换产品的详情 -------------------html片段渲染 等待界面设计----------------
      */
     openPointProductDetail = async (pointProduct: any) => {
-        this.openVPage(VPointProductDetail);
+        this.openVPage(VPointProductDetail, pointProduct);
     }
 
     /**
