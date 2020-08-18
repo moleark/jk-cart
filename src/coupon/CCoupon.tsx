@@ -311,9 +311,8 @@ export class CCoupon extends CUqBase {
         // 自动领取积分券
         let { currentUser } = this.cApp;
         let { id: currentUserId } = currentUser;
-        if (result === 1 && currentUserId) {
-            this.drawCoupon(this.sharedCouponValidationResult);
-        }
+        if (result === 1 && currentUserId && currentUser.allowOrdering)
+            await this.drawCoupon(this.sharedCouponValidationResult);
     }
 
     private getProducts = (productids: string) => {
@@ -327,17 +326,12 @@ export class CCoupon extends CUqBase {
     }
 
     loginWhenDrawCoupon = async (credits: any) => {
-
-        let loginCallback = async (user: User) => {
-            let { cApp } = this;
-            let { cMe, currentUser } = cApp;
-            await cApp.currentUser.setUser(user);
-            await cApp.loginCallBack(user);
-            this.closePage(1);
-
-            let { code } = credits;
-            this.sharedCouponValidationResult = await this.getCouponValidationResult(code);
-            let { result } = this.sharedCouponValidationResult;
+        let { cApp } = this;
+        let { cMe, currentUser } = cApp;
+        let { code } = credits;
+        this.sharedCouponValidationResult = await this.getCouponValidationResult(code);
+        let { result } = this.sharedCouponValidationResult;
+        let allowCurrentUser = async () => {
             if (result === 1) {
                 if (!currentUser.allowOrdering) {
                     cMe.toPersonalAccountInfo(async () => await this.drawCoupon(this.sharedCouponValidationResult));
@@ -345,9 +339,19 @@ export class CCoupon extends CUqBase {
                     await this.drawCoupon(this.sharedCouponValidationResult);
                 }
             }
+        }
+
+        let loginCallback = async (user: User) => {
+            await cApp.currentUser.setUser(user);
+            await cApp.loginCallBack(user);
+            this.closePage(1);
+            await allowCurrentUser();
         };
         if (!this.isLogined)
             nav.showLogin(loginCallback, true);
+        else {
+            await allowCurrentUser();
+        }
     }
 
     drawCoupon = async (credits: any) => {

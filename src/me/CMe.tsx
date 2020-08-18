@@ -71,8 +71,8 @@ export class CMe extends CUqBase {
         await cMyFavorites.start();
     }
 
-    toPersonalAccountInfo = (fn: Function) => {
-        this.openMeInfoFirstOrder({
+    toPersonalAccountInfo = async (fn: Function) => {
+        await this.openMeInfoFirstOrder({
             onlyRequired: false,
             caption: "请补充账户信息",
             note: <>
