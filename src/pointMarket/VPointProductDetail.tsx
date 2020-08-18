@@ -1,23 +1,15 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate, FA, tv, Form, ObjectSchema, NumSchema, UiSchema, UiCustom } from 'tonva';
+import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from 'tonva';
 import { CPointProduct } from './CPointProduct';
-import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
-import moment from 'moment';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
+import { schema } from './VPointProduct';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
     async open(param?: any) {
-        this.openPage(this.page, { pointProduct: param });
+        this.openPage(this.page);
     }
-    private schema = [
-        { name: 'product', type: 'object' } as ObjectSchema,
-        { name: 'pack', type: 'object' } as ObjectSchema,
-        { name: 'quantity', type: 'number' } as NumSchema,
-        { name: 'point', type: 'number' } as NumSchema,
-        { name: 'imageUrl', type: 'object' } as ObjectSchema,
-    ];
 
     private uiSchema: UiSchema = {
         items: {
@@ -34,7 +26,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             imageUrl: { visible: false }
         }
     }
-    
+
     protected renderPointProduct = (pointProduct: any) => {
         let { product, pack, point, imageUrl } = pointProduct;
         return <>
@@ -51,7 +43,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                                     <small>分</small>
                                 </div>
                                 <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                    <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                 </div>
                             </div>
                         </div>
@@ -62,18 +54,17 @@ export class VPointProductDetail extends VPage<CPointProduct> {
     }
 
     private page = observer((param: any) => {
-        let { pointProduct } = param;
-        let { pointToExchanging, myEffectivePoints } = this.controller;
-        let right = this.controller.renderSelectedLable();
+        let { pointToExchanging, myEffectivePoints, pointProductsDetail } = this.controller;
         let availablePoints = (myEffectivePoints - pointToExchanging) >= 0 ? (myEffectivePoints - pointToExchanging) : 0;
-        let pointsInsuffTip = availablePoints === 0 ? <span className="text-danger small"><FA name="exclamation-circle" />( 积分不足 )</span> : null;
+        let pointsInsuffTip = availablePoints === 0 ? <span className="text-danger small">( <FA name="exclamation-circle" />积分不足 )</span> : null;
+        let right = this.controller.renderSelectedLable();
         let footer = <div className="d-flex justify-content-between m-2">
             <div className="align-self-center">当前可用:<span className="text-danger h4" >{availablePoints}</span>分 {pointsInsuffTip}</div>
         </div>;
 
         return <Page header='产品详情' right={right} footer={footer}>
-            <div className="nav-tabs">{this.renderPointProduct(pointProduct)}</div>
-            <div className="text-danger m-2">贴文 待开发</div>
+            <div className="nav-tabs">{this.renderPointProduct(pointProductsDetail)}</div>
+            {/* <div className="text-danger m-2">帖文 待开发</div> */}
         </Page>;
     });
 }

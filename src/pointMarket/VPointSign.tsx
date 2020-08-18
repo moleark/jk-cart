@@ -4,6 +4,7 @@ import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
+import { logo } from 'images';
 
 export const daysAndMultipleByWelfare = [
     { days: 7, multiple: 2 },
@@ -41,10 +42,13 @@ export class VPointSign extends VPage<CPointProduct> {
                     <small style={{ color: 'rgb(255,192,120)' }} >连续签到{welfare.days}天，可获得{welfare.multiple}倍的积分奖励</small>
                     {/* <small style={{ color: 'rgb(255,192,120)' }} >连续签到30天，可获得1次抽奖机会</small> */}
                 </>
-                <div className="text-left small w-100 pt-1 pl-2 position-absolute" style={{
-                    top: 0, left: 0, display: this.showTips
-                }}>本次签到获取{signinval}分</div>
+                <div className="text-left small w-100 pt-1 pl-2 position-absolute"
+                    style={{ top: 0, left: 0, display: this.showTips }}>本次签到获取{signinval}分</div>
             </div>
+            {/* <div className="d-flex flex-column text-center" style={{ marginTop: '12rem' }}>
+                <img src={logo} alt="" className="w-4c m-auto" />
+                <p>百灵威</p>
+            </div> */}
             {/* 抽奖区 */}
             {/* <div className="text-center border-bottom mt-2">抽奖区</div> */}
         </Page >;

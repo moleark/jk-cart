@@ -8,6 +8,14 @@ import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 
+export const schema = [
+    { name: 'product', type: 'object' } as ObjectSchema,
+    { name: 'pack', type: 'object' } as ObjectSchema,
+    { name: 'quantity', type: 'number' } as NumSchema,
+    { name: 'point', type: 'number' } as NumSchema,
+    { name: 'imageUrl', type: 'object' } as ObjectSchema,
+];
+
 export class VPointProduct extends VPage<CPointProduct> {
     @observable protected isShowSelectForm: boolean = false;
     @observable protected productIsNull: boolean = false;
@@ -48,14 +56,6 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
-    private schema = [
-        { name: 'product', type: 'object' } as ObjectSchema,
-        { name: 'pack', type: 'object' } as ObjectSchema,
-        { name: 'quantity', type: 'number' } as NumSchema,
-        { name: 'point', type: 'number' } as NumSchema,
-        { name: 'imageUrl', type: 'object' } as ObjectSchema,
-    ];
-
     private uiSchema: UiSchema = {
         items: {
             product: { visible: false },
@@ -93,7 +93,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                                 {
                                     this.isShowSelectForm
                                         ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                            <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                            <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                         </div>
                                         : null
                                 }
@@ -160,8 +160,9 @@ export class VPointProduct extends VPage<CPointProduct> {
     });
 }
 
-
-
+/**
+ * 已选择的兑换产品列表
+ */
 export class VSelectedPointProduct extends VPointProduct {
     isShowSelectForm: boolean = true;
     async open(param?: any) {

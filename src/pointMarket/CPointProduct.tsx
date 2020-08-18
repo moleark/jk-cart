@@ -35,6 +35,7 @@ export class CPointProduct extends CUqBase {
     @observable newPointProducts: any[] = [];          /* 新品推荐 */
     @observable hotPointProducts: any[] = [];          /* 热门产品 */
     @observable pointProductsSelected: any[] = [];     /* 已选择产品列表 */
+    @observable pointProductsDetail: any;              /* 详情产品 */
     @observable pointToExchanging: number = 0;              /* 将要兑换的积分总计 */
     @observable orderData: pointOrder = new pointOrder();   /* 正在提交的产品列表*/
     @observable couponId: number;                      /* 积分码 */
@@ -113,10 +114,16 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 可兑换产品的详情 -------------------html片段渲染 等待界面设计----------------
+     * 可兑换产品的详情 -------------------贴文渲染 等待界面设计----------------
      */
     openPointProductDetail = async (pointProduct: any) => {
-        this.openVPage(VPointProductDetail, pointProduct);
+        this.pointProductsDetail = pointProduct;
+        if (this.pointProductsSelected.length) {
+            for (let i of this.pointProductsSelected)
+                if (pointProduct.product.id === i.product.id) this.pointProductsDetail.quantity = i.quantity;
+        } else
+            this.pointProductsDetail.quantity = 0;
+        this.openVPage(VPointProductDetail);
     }
 
     /**
@@ -214,6 +221,7 @@ export class CPointProduct extends CUqBase {
         customer = this.cApp.currentUser.currentCustomer;
         customer = customer ? customer : this.user.id;
         await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
+        await this.getSigninConsecutiveDays();
         // await this.getSigninHistory();
         // await this.getPointHistory();
 
@@ -361,14 +369,9 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
-
+        // 当前产品详情的数量
+        this.pointProductsDetail.quantity = value;
         this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
-        // if (this.pointToExchanging <= 0) this.pointToExchanging = 0;
-        this.pointProducts.forEach((el: any) => {
-            if (el.quantity === undefined) el.quantity = 0;
-            if (data.product.id === el.product.id) el.quantity += nowQuantity;
-        });
-
         this.pointProductsSelected.forEach(element => {
             if (element.pack.id === data.pack.id) {
                 element.quantity = element.quantity + nowQuantity;
