@@ -97,7 +97,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             <div className="position-relative">
                 <div className="position-absolute w-100">{nowPointTip}</div>
                 <div className="d-flex flex-column py-4 px-1"
-                    style={{ background: `url(${topicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
+                    style={{ background: `url(${topicMap}) no-repeat`, backgroundSize: '100%' }}>
                     <div className="ml-2 text-light">
                         <div className="d-flex align-items-center position-relative">
                             <img src={logo_pointShop} alt="img" className="w-2c position-absolute" style={{ top: -12, left: 10 }} />
@@ -160,7 +160,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         </div>
     }
 }
-// :0-0268.png
+
 export function renderPointRecord(item: any) {
     let { comments, point, date } = item;
     return <div className="d-flex w-100 justify-content-between align-content-center small px-3 py-2">

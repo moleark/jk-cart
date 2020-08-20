@@ -172,9 +172,9 @@ export class VSelectedPointProduct extends VPointProduct {
     page = observer(() => {
         let { pointProductsSelected, clearSelectedPointsProducts } = this.controller;
         let footer = this.getRelatedUI();
-        let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
+        // let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
-        return <Page header='已选择的产品' right={right} footer={footer} >
+        return <Page header='已选择的产品' right={<></>} footer={footer} >
             <List items={pointProductsSelected} item={{ render: this.renderPointProduct }} none={none}></List>
         </Page >
     })

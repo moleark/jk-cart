@@ -91,7 +91,7 @@ export class CApp extends CUqApp {
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
-
+        this.cMe.openMyPoint();
         let { location } = document;
         let { search, pathname } = location;
         if (search) {

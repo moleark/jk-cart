@@ -254,6 +254,7 @@ export class CPointProduct extends CUqBase {
      */
     multiplePointsWelfare = () => {
         let arr = daysAndMultipleByWelfare;
+        if (this.IsSignin) this.signinConsecutiveDays += 1;
         for (let i = 0; i < arr.length; i++) {
             if (this.signinConsecutiveDays < arr[i].days) {
                 if (i === 0) this.signinval = pointBase;

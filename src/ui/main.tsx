@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
 import { CApp } from '../CApp';
-import { Switch, Route } from 'react-router-dom';
+// import { Switch, Route } from 'react-router-dom';
 import { CUqBase } from 'CBase';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
@@ -45,7 +45,7 @@ export class VMain extends VPage<CApp> {
     }
 }
 
-export class Main extends VPage<CApp> {
+/* export class Main extends VPage<CApp> {
     async open(param?: any) {
         this.openPage(this.render, { param });
     }
@@ -66,4 +66,4 @@ export class Main extends VPage<CApp> {
             }} />
         </Switch>
     }
-}
+} */

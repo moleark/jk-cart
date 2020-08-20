@@ -19,12 +19,11 @@ export class VProductList extends VPage<CProduct> {
         await this.controller.showProductDetail(product.id);
     }
 
-    private onScrollBottom = async (e: any) => {
-        // let scroller = new Scroller(e.target);
-        // scroller.scrollToBottom();
-        // let { productsPager } = this.controller;
-        // //await this.controller.pageProducts.more();
-        // productsPager.more();
+    private onScrollBottom = async (scroller: Scroller) => {
+        scroller.scrollToBottom();
+        let { productsPager } = this.controller;
+        //await this.controller.pageProducts.more();
+        productsPager.more();
     }
 
     private renderProduct = (p: any) => {
