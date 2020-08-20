@@ -49,7 +49,10 @@ export class VSharedCoupon extends VPage<CCoupon> {
 
     private showTips = observer(() => {
         return <div className="alert alert-info w-100 text-center">
-            领取成功<br />
+            <div className="pb-3">
+                <span className="text-danger" style={{ fontSize: "1.4rem" }}>领取成功</span><br />
+                <small className="text-muted">领取的卡券可在&Prime;卡券管理&Prime;中查看</small>
+            </div>
             <small>{this.tipsAfterDawed}</small>
         </div>
     })
@@ -85,7 +88,6 @@ export class VSharedCoupon extends VPage<CCoupon> {
         let { cCart } = cApp;
         let cart = cCart.renderCartLabel();
         return <Page header="与您分享" right={cart}>
-            <div className="alert alert-warning m-0 py-2"><FA name="exclamation-circle" /> 领取的卡券可在&Prime;卡券管理&Prime;中查阅。</div>
             {this.renderCouponBase(sharedCouponValidationResult)}
             {React.createElement(this.drawCouponUI)}
             <List items={this.products} item={{ render: renderProduct, onClick: this.onProductClick, className: "mb-1" }} none={null} />

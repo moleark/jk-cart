@@ -310,8 +310,8 @@ export class CCoupon extends CUqBase {
 
         // 自动领取积分券
         let { currentUser } = this.cApp;
-        let { id: currentUserId } = currentUser;
-        if (result === 1 && currentUserId && currentUser.allowOrdering)
+        let { id: currentUserId, allowOrdering } = currentUser;
+        if (result === 1 && currentUserId && allowOrdering)
             await this.drawCoupon(this.sharedCouponValidationResult);
     }
 
