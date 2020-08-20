@@ -63,7 +63,7 @@ export class VPointSign extends VPage<CPointProduct> {
                 <p className="text-center mb-4">
                     <span style={{ borderRadius: "22px", background: "linear-gradient(to right,#ccc, #5CACEE)" }} className="text-center py-2 px-3 text-white">签到规则</span>
                 </p>
-                {
+                {/* {
                     daysAndMultipleByWelfare.map((v: any, index: number) => {
                         return this.renderRule(`连续签到${v.days}天，可获得${v.multiple}倍的积分奖励。`);
                         // return <div key={v.id}
@@ -73,7 +73,8 @@ export class VPointSign extends VPage<CPointProduct> {
                         //     <div className="initialism modal-title flex-fill p-2  align-self-center">连续签到{v.days}天，可获得{v.multiple}倍的积分奖励。</div>
                         // </div>
                     })
-                }
+                } */}
+                {this.renderRule('连续签到30天，可获得1次抽奖机会')}
                 {this.renderRule('若累计签到中断,则重新计算签到天数。')}
             </div>
 
