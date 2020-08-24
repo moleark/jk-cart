@@ -105,16 +105,20 @@ export class VCoupon extends View<CCoupon> {
                 bcenter = <div className="text-muted"><small>优惠：<span className="mx-3">￥{preferential}</span></small></div>;
             */
             let tipUI = null;
-            if (discount)
-                tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
-            else
-                tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
-
+            if (types !== 'credits') {
+                if (discount)
+                    tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
+                else
+                    tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+            }
+            let date = new Date(validitydate).toLocaleDateString().split('/');
+            let year = new Date().getFullYear().toString();
+            let newDate = `${date[0] === year ? '' : date[0] + '年'}${date[1]}月${date[2]}日`;
 
             let content = <div className="float-right pr-3">
                 <div className="pb-1">
                     <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
-                    <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
+                    <small className="ml-3">有效期：{newDate}</small>
                 </div>
                 <div className="float-right">
                     {tipUI}

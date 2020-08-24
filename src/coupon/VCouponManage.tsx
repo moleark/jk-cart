@@ -100,8 +100,8 @@ export class VCouponManage extends VPage<CCoupon> {
      */
     private CouponViewOrUse = (coupon: any) => {
         let { showDiscountSetting } = this.controller;
-        let { result } = coupon;
-        if (result === 1)
+        let { result, types } = coupon;
+        if (result === 1 && types !== 'credits')
             showDiscountSetting(coupon);
     }
 
