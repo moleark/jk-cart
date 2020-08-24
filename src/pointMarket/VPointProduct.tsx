@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, Context } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
@@ -56,6 +56,10 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
+    /* private onAllowChange = (context: Context, value: any, prev: any) => {
+        return false;
+    } */
+
     private uiSchema: UiSchema = {
         items: {
             product: { visible: false },
@@ -65,6 +69,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                 label: null,
                 className: 'text-center',
                 WidgetClass: MinusPlusWidget,
+                // onChanging: this.onAllowChange as any,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
             point: { visible: false },

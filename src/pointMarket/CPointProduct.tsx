@@ -123,6 +123,7 @@ export class CPointProduct extends CUqBase {
                 if (pointProduct.product.id === i.product.id) this.pointProductsDetail.quantity = i.quantity;
         } else
             this.pointProductsDetail.quantity = 0;
+        await this.getPointProductDetailFragment(this.pointProductsDetail);
         this.openVPage(VPointProductDetail);
     }
 
@@ -332,6 +333,13 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         return await this.uqs.积分商城.GetHotPointProducts.table({});
+    }
+
+    /**
+     * 获取积分商品详情的html片段
+     */
+    getPointProductDetailFragment = async (pointProduct: any) => {
+        this.pointProductsDetail.htmlFragment = '<div style="color:red;text-align:center;margin-top:2rem;">帖文 待开发</div>';
     }
 
     /**

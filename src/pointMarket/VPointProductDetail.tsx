@@ -64,7 +64,8 @@ export class VPointProductDetail extends VPage<CPointProduct> {
 
         return <Page header='产品详情' right={right} footer={footer}>
             <div className="nav-tabs">{this.renderPointProduct(pointProductsDetail)}</div>
-            {/* <div className="text-danger m-2">帖文 待开发</div> */}
+            {/* html片段 */}
+            <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment ? pointProductsDetail.htmlFragment : '' }}></div>
         </Page>;
     });
 }

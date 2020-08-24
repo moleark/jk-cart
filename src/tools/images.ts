@@ -5,6 +5,8 @@ import exChangeIcon from 'images/兑换.jpg';
 import topicMap from 'images/上图.jpg';
 import 三角底纹1 from 'images/三角底纹1.jpg';
 import 三角底纹2 from 'images/三角底纹2.jpg';
+import true_test from 'images/true.jpg';
+import timg1_test from 'images/timg1.jpg';
 
 export {
     logo,
@@ -14,4 +16,6 @@ export {
     topicMap,
     三角底纹1,
     三角底纹2,
+    true_test,
+    timg1_test,
 }

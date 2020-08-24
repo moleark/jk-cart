@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
 import { PointProductImage } from 'tools/productImage';
 import classNames from 'classnames';
-import { logo_pointShop, signInIcon, exChangeIcon, topicMap, 三角底纹1, 三角底纹2 } from 'images';
+import { logo_pointShop, signInIcon, exChangeIcon, topicMap, 三角底纹1, 三角底纹2 } from 'tools/images';
 
 export class VMyPoint extends VPage<CPointProduct> {
 

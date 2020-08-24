@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, DropdownAction, DropdownActions, } from 'tonva';
+import { VPage, Page, DropdownAction, DropdownActions, FA, } from 'tonva';
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
-import { logo } from 'images';
+import { logo } from 'tools/images';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -16,16 +16,15 @@ export const daysAndMultipleByWelfare = [
 
 export class VPointSign extends VPage<CPointProduct> {
     @observable showTips: any = "none";
-    @observable rulesNum: number = 0;
+    rulesNum: number = 0;
     async open(param?: any) {
         this.openPage(this.page, { welfare: param });
     }
 
-    private renderRule = (ruleContent: any) => {
-        this.rulesNum += 1;
-        return <div key={this.rulesNum} className=" mb-3 d-flex" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
+    private renderRule = (rulesNum: any, ruleContent: any) => {
+        return <div key={rulesNum} className=" mb-3 d-flex" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
             <span className="h4 m-0 p-2  align-self-center" style={{ borderRight: '1px dashed #cccccc' }}>
-                {String(this.rulesNum).padStart(2, '0')}
+                {String(rulesNum).padStart(2, '0')}
             </span>
             <div className="initialism modal-title flex-fill p-2  align-self-center">{ruleContent}</div>
         </div>
@@ -33,7 +32,8 @@ export class VPointSign extends VPage<CPointProduct> {
 
     private page = observer((param: any) => {
         let { welfare } = param;
-        let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure } = this.controller;
+        let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
+        let { cLottery } = cApp;
         if (IsSignin) this.handleChange();
         let date = new Date();
         let timer = `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, '0')}月${String(date.getDate()).padStart(2, '0')}日`;
@@ -58,6 +58,16 @@ export class VPointSign extends VPage<CPointProduct> {
                 <div className="text-left small w-100 pt-1 pl-2 position-absolute text-body"
                     style={{ top: 0, left: 0, display: this.showTips }}>本次签到获取{signinval}分</div>
             </div>
+            {/* 抽奖区 */}
+            {/* <div className="text-center border-bottom mt-2">抽奖区</div> */}
+            <div className="mx-5 mt-2 py-1 d-flex justify-content-center" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
+                <div onClick={cLottery.openLotteryProduct} className="w-25 text-center p-2" style={{ color: '#CD6600' }}>
+                    <FA name="life-ring" size="2x" />
+                    <div className="small">抽奖</div>
+                </div>
+            </div>
+
+
             {/* 签到规则 */}
             <div className="pt-4 px-4 mt-4">
                 <p className="text-center mb-4">
@@ -65,21 +75,14 @@ export class VPointSign extends VPage<CPointProduct> {
                 </p>
                 {/* {
                     daysAndMultipleByWelfare.map((v: any, index: number) => {
-                        return this.renderRule(`连续签到${v.days}天，可获得${v.multiple}倍的积分奖励。`);
-                        // return <div key={v.id}
-                        //     className=" mb-3 d-flex"
-                        //     style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px", }}>
-                        //     <span className="h4 m-0 p-2  align-self-center" style={{ borderRight: '1px dashed #cccccc' }}>{String(v.id).padStart(2, '0')}</span>
-                        //     <div className="initialism modal-title flex-fill p-2  align-self-center">连续签到{v.days}天，可获得{v.multiple}倍的积分奖励。</div>
-                        // </div>
+                        return this.renderRule(v.id, `连续签到${v.days}天，可获得${v.multiple}倍的积分奖励。`);
                     })
                 } */}
-                {this.renderRule('连续签到30天，可获得1次抽奖机会')}
-                {this.renderRule('若累计签到中断,则重新计算签到天数。')}
+                {this.renderRule(1, '连续签到30天，可获得1次抽奖机会')}
+                {this.renderRule(2, '若累计签到中断,则重新计算签到天数。')}
             </div>
 
-            {/* 抽奖区 */}
-            {/* <div className="text-center border-bottom mt-2">抽奖区</div> */}
+
         </Page >;
 
         /* return <Page header='签到领积分' right={right}>
