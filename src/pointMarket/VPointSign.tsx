@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, DropdownAction, DropdownActions, FA, } from 'tonva';
+import { VPage, Page, DropdownAction, DropdownActions, FA, List, } from 'tonva';
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
@@ -27,6 +27,13 @@ export class VPointSign extends VPage<CPointProduct> {
                 {String(rulesNum).padStart(2, '0')}
             </span>
             <div className="initialism modal-title flex-fill p-2  align-self-center">{ruleContent}</div>
+        </div>
+    }
+
+    private demandBlock = (name: string, icon: string, color: string, action: any) => {
+        return <div onClick={action} className="w-25 text-center p-2" style={{ color }}>
+            <FA name={icon} size="2x" />
+            <div className="small">{name}</div>
         </div>
     }
 
@@ -58,20 +65,16 @@ export class VPointSign extends VPage<CPointProduct> {
                 <div className="text-left small w-100 pt-1 pl-2 position-absolute text-body"
                     style={{ top: 0, left: 0, display: this.showTips }}>本次签到获取{signinval}分</div>
             </div>
-            {/* 抽奖区 */}
-            {/* <div className="text-center border-bottom mt-2">抽奖区</div> */}
-            <div className="mx-5 mt-2 py-1 d-flex justify-content-center" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
-                <div onClick={cLottery.openLotteryProduct} className="w-25 text-center p-2" style={{ color: '#CD6600' }}>
-                    <FA name="life-ring" size="2x" />
-                    <div className="small">抽奖</div>
-                </div>
-            </div>
 
+            <div className="mx-5 mt-2 py-1 d-flex justify-content-center flex-wrap" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
+                {this.demandBlock('抽奖', 'life-ring', '#CD6600', cLottery.openLotteryProduct)}
+                {/* {this.demandBlock('我的奖品', 'users', '#CD6600', cLottery.openMyLotteryPrize)} */}
+            </div>
 
             {/* 签到规则 */}
             <div className="pt-4 px-4 mt-4">
                 <p className="text-center mb-4">
-                    <span style={{ borderRadius: "22px", background: "linear-gradient(to right,#ccc, #5CACEE)" }} className="text-center py-2 px-3 text-white">签到规则</span>
+                    <span style={{ borderRadius: "22px", background: "#D56F2B" }} className="text-center py-2 px-3 text-white">签到规则</span>
                 </p>
                 {/* {
                     daysAndMultipleByWelfare.map((v: any, index: number) => {

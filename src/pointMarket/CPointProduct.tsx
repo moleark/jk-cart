@@ -2,7 +2,7 @@ import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
-import { VExchangeOrder } from './VExchangeOrder';
+import { VExchangeOrder, VMyPrizeExchangeOrder } from './VExchangeOrder';
 import { VMyPoint } from './VMyPoint';
 import { CSelectShippingContact } from 'customer/CSelectContact';
 import { OrderSuccess } from './OrderSuccess';
@@ -299,18 +299,40 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 据类型筛选商品  ----------------------------需uq -------------------------------- 
+     * 据类型筛选商品
      */
     filterByProductGenre = async (currentGenre: any) => {
-        let pointProductByCurrentGenre = await this.uqs.积分商城.PointProductGenre.table({ genre: currentGenre });
+        let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
         let filterPointProducts = [];
-        if (pointProductByCurrentGenre.length) {
-            for (let key of pointProductByCurrentGenre) {
-                let searchpointProductByKey = await this.getSpecifyPointProduct({ product: key.product, pack: key.pack });
+        if (pointProductFromGenre.length) {
+            for (let key of pointProductFromGenre) {
+                let searchpointProductByKey = await this.getPointProductLibLoad(key.product.id)
                 filterPointProducts.push(searchpointProductByKey);
             }
         }
+        // let pointProductByCurrentGenre = await this.uqs.积分商城.PointProductGenre.table({ genre: currentGenre });
+        // let filterPointProducts = [];
+        // if (pointProductByCurrentGenre.length) {
+        //     for (let key of pointProductByCurrentGenre) {
+        //         let searchpointProductByKey = await this.getSpecifyPointProduct({ product: key.product, pack: key.pack });
+        //         filterPointProducts.push(searchpointProductByKey);
+        //     }
+        // }
         this.pointProducts = filterPointProducts;
+    }
+
+    /**
+     * 据商品id 获取对应的商品所有信息
+     */
+    getPointProductLibLoad = async (id: number) => {
+        return await this.uqs.积分商城.PointProductLib.load(id);
+    }
+
+    /**
+     * 获取指定分类所属的商品
+     */
+    getProductsFromGenre = async (genre: any) => {
+        return await this.uqs.积分商城.PointProductGenre.table({ genre, pointproduct: undefined });
     }
 
     /**
@@ -318,6 +340,7 @@ export class CPointProduct extends CUqBase {
      */
     getSpecifyPointProduct = async (productInfo: any) => {
         let { product, pack } = productInfo;
+        // return await this.uqs.积分商城.PointProductLib.load(id);
         return await this.uqs.积分商城.PointProduct.obj({ product, pack });
     }
 
@@ -558,5 +581,35 @@ export class CPointProduct extends CUqBase {
         let cSelect = this.newC(CSelectShippingContact);
         let contactBox = await cSelect.call<BoxId>(true);
         this.orderData.shippingContact = contactBox;
+    }
+
+    /**
+     * 奖品领取界面
+     */
+    openMyPrizeOrder = async () => {
+        if (this.orderData.shippingContact === undefined) {
+            this.orderData.shippingContact = await this.getDefaultShippingContact();
+        }
+        this.openVPage(VMyPrizeExchangeOrder);
+    }
+
+    /**
+     * 确认领取(成功)
+     */
+    submitPrizeOrder = async () => {
+        console.log(11111111);
+
+        // this.createOrderFromCart();
+
+        // let PointExchangeSheet = this.uqs.积分商城.PointExchangeSheet;
+        // let getDataForSave = this.orderData.getDataForSave();
+        // let result: any = await PointExchangeSheet.save("PointExchangeSheet", getDataForSave);
+        // let { id, flow, state } = result;
+        // await PointExchangeSheet.action(id, flow, state, "submit");
+
+
+        // 打开下单成功显示界面
+        // nav.popTo(this.cApp.topKey);
+        // this.openVPage(OrderSuccess, result);
     }
 }

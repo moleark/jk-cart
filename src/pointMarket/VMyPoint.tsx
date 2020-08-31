@@ -51,7 +51,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             <List className="d-flex justify-content-between w-100 bg-transparent"
                 items={imgArr.slice(0, 3)}
                 item={{
-                    render: (v: any) => <PointProductImage chemicalId={v.imageUrl} className="w-100 px-1 bg-transparent" />,
+                    render: (v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" />,
                     onClick: (v) => toWhere(v),
                     className: "col-4 p-0 bg-transparent"
                 }}
@@ -140,8 +140,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                         : null
                 }
                 {/* 新品推荐 热门产品 */}
-                <div className='mx-4 bg-transparent position-relative' style={{ background: `url(${三角底纹2}) no-repeat left 55%`, backgroundSize: '50px' }}>
-                    {/* style={{ background: `url(${三角底纹2}) no-repeat left 135px`, backgroundSize: '10%' }} */}
+                <div className='px-4 bg-transparent position-relative' style={{ background: `url(${三角底纹2}) no-repeat 3% 60% `, backgroundSize: '50px' }}>
                     {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
                     {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                 </div>
@@ -150,11 +149,15 @@ export class VMyPoint extends VPage<CPointProduct> {
     });
 
     private renderGenreItem = (item: any) => {
-        let { name, imgUrl } = item;
+        let { name, imageUrl } = item;
         return <div>
             <label className="w-100 d-flex flex-column justify-content-center">
-                {/* <FA name="leaf" className='mt-2 text-success mb-2' size='lg' /> */}
-                <div className="w-25 m-auto"><PointProductImage chemicalId={imgUrl ? imgUrl : ':0-0268.png'} className="w-100" /></div>
+                {
+                    imageUrl
+                        ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
+                        // ? <div className="w-25 m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-100" /></div>
+                        : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
+                }
                 <div className='text-dark small'>{name}</div>
             </label>
         </div>

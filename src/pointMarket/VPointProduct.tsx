@@ -77,7 +77,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         }
     }
 
-    protected renderPointProduct = (pointProduct: any, index: number) => {
+    protected renderPointProduct = (pointProduct: any) => {
         let { product, pack, point, imageUrl } = pointProduct;
         return <>
             {tv(product, (v) => {
@@ -108,6 +108,34 @@ export class VPointProduct extends VPage<CPointProduct> {
                 </div>
             })}
         </>
+    }
+
+    /* ---------------------布局要更换-------------------- */
+    renderPointProduct1 = (pointProduct: any) => {
+        let { description, descriptionC, point, imageUrl } = pointProduct;
+        return <div className="row m-1 w-100">
+            <div title={description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
+            <div className="col-8 small">
+                <div>{descriptionC}</div>
+                {/* <div className="my-2">{c.radioy}{c.unit}</div> */}
+                <div className="row m-0 p-0">
+                    <div className="col-5 m-0 p-0">
+                        <span className="text-danger h5">{point}</span>
+                        <small>分</small>
+                    </div>
+                    {/* <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                </div> */}
+                    {
+                        this.isShowSelectForm
+                            ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                            </div>
+                            : null
+                    }
+                </div>
+            </div>
+        </div>
     }
 
     protected openExchangeOrder = async () => {
@@ -153,13 +181,12 @@ export class VPointProduct extends VPage<CPointProduct> {
     protected page = observer(() => {
         let { pointProducts, openPointProductDetail } = this.controller;
         this.getTabs();
-        let footer = this.getRelatedUI();
         let right = this.controller.renderSelectedLable();
-        return <Page header={this.themeName} right={right} footer={footer}>
+        return <Page header={this.themeName} right={right}>
             {
                 this.themeName === '所有产品'
                     ? <Tabs tabs={this.tabs} tabPosition="top" />
-                    : <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
+                    : <List items={pointProducts} item={{ render: (v) => { if (v.product) { return this.renderPointProduct(v) } else { return this.renderPointProduct1(v) } }, onClick: openPointProductDetail }} none={this.none}></List>
             }
         </Page >;
     });

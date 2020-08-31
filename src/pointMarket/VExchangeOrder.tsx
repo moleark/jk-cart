@@ -7,7 +7,7 @@ import { PointProductImage } from 'tools/productImage';
 import { GLOABLE } from 'cartenv';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
-    @observable private shippingAddressIsBlank: boolean = false;
+    @observable protected shippingAddressIsBlank: boolean = false;
 
     async open(param?: any) {
         this.openPage(this.page);
@@ -17,7 +17,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         return <span className="text-primary">选择收货地址</span>;
     }
 
-    private renderPointProduct = (pointProduct: any, index: number) => {
+    protected renderPointProduct = (pointProduct: any, index: number) => {
         let { product, pack, quantity, point, imageUrl } = pointProduct;
         if (quantity > 0) {
             return <>
@@ -42,7 +42,12 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         }
     }
 
-    private onSubmit = async () => {
+    protected onSubmitOwn = async () => {
+        let { submitOrder } = this.controller;
+        await submitOrder();
+    }
+
+    protected onSubmit = async () => {
         let { orderData } = this.controller;
         // 必填项验证
         let { shippingContact } = orderData;
@@ -51,16 +56,36 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
         }
-        this.controller.submitOrder();
+        await this.onSubmitOwn();
     }
 
-    private page = observer(() => {
-        let { pointProductsSelected, pointToExchanging: pointsSum, orderData, onSelectShippingContact } = this.controller;
+    protected renderTipsUI = () => {
         let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>
             : null;
+        return {
+            chevronRight,
+            shippingAddressBlankTip
+        }
+    }
 
+    protected renderContact = () => {
+        let { chevronRight, shippingAddressBlankTip } = this.renderTipsUI();
+        let { orderData, onSelectShippingContact } = this.controller;
+        return <div className="px-2">
+            <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
+                <div className="col-3 text-muted pr-0">收货地址:</div>
+                <div className="col-9 col-sm-10">
+                    <LMR className="w-100 align-items-center" right={chevronRight}>{tv(orderData.shippingContact, undefined, undefined, this.nullContact)}</LMR>
+                    {shippingAddressBlankTip}
+                </div>
+            </div>
+        </div>
+    }
+
+    protected page = observer(() => {
+        let { pointProductsSelected, pointToExchanging: pointsSum } = this.controller;
         let footer = <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
@@ -69,16 +94,37 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         </div>;
 
         return <Page header="兑换确认" footer={footer}>
-            <div className="px-2">
-                <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
-                    <div className="col-3 text-muted pr-0">收货地址:</div>
-                    <div className="col-9 col-sm-10">
-                        <LMR className="w-100 align-items-center" right={chevronRight}>{tv(orderData.shippingContact, undefined, undefined, this.nullContact)}</LMR>
-                        {shippingAddressBlankTip}
-                    </div>
-                </div>
-            </div>
+            {this.renderContact()}
             <List items={pointProductsSelected} item={{ render: this.renderPointProduct }} ></List>
+        </Page>
+    })
+}
+
+
+export class VMyPrizeExchangeOrder extends VExchangeOrder {
+    @observable shippingAddressIsBlank: boolean = false;
+
+    protected renderPointProduct = (pointProduct: any, index: number) => {
+        return <div>11111</div>
+    }
+
+    protected onSubmitOwn = async () => {
+        let { submitPrizeOrder } = this.controller;
+        await submitPrizeOrder();
+    }
+
+    protected page = observer(() => {
+        let { cApp } = this.controller;
+        let { cLottery } = cApp;
+        let footer = <div className="d-block">
+            <div className="w-100 px-3 d-flex justify-content-end">
+                <button type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认领取</button>
+            </div>
+        </div>;
+
+        return <Page header="奖品领取预览" footer={footer}>
+            {this.renderContact()}
+            <List items={cLottery.myPrizeLib} item={{ render: this.renderPointProduct }} ></List>
         </Page>
     })
 }
