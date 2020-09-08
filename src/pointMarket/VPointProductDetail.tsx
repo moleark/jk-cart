@@ -29,8 +29,6 @@ export class VPointProductDetail extends VPage<CPointProduct> {
 
     protected renderPointProduct = (pointProduct: any) => {
         let { description, descriptionC, product, pack, point, imageUrl } = pointProduct;
-        console.log(pointProduct);
-
         if (product) {
             return <>
                 {tv(product, (v) => {

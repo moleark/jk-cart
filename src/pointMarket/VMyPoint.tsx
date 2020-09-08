@@ -48,7 +48,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 <span className={classNames(theme ? theme : '', 'h6')} style={{ color: theme ? theme : '' }}>{name}</span>
                 <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
-            <List className="d-flex justify-content-between w-100 bg-transparent"
+            <List className="d-flex  w-100 bg-transparent"/* justify-content-between */
                 items={imgArr.slice(0, 3)}
                 item={{
                     render: (v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" />,

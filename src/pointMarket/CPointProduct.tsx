@@ -198,6 +198,13 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
+     * 浏览商品
+     */
+    setPointProductVisits = async (pointProduct: any) => {
+        return this.uqs.积分商城.SetPointProductVisits.submit({ pointProduct });
+    }
+
+    /**
      * 获取产品类型
      */
     getPointProductGenre = async () => {
@@ -598,6 +605,9 @@ export class CPointProduct extends CUqBase {
      */
     submitPrizeOrder = async () => {
         console.log(11111111);
+        let { cLottery } = this.cApp;
+        await cLottery.getMyPrizes();
+        // cLottery.myPrizeLib
 
         // this.createOrderFromCart();
 

@@ -127,7 +127,7 @@ export class VLottery extends VPage<CLottery> {
                         </div> */}
 
                         {/* 抽奖内容 */}
-                        {/* 轮盘--------------界面适配bug */} {/* overflow-hidden*/}
+                        {/* 轮盘--------------界面适配bug */} {/* overflow-hidden */}
                         {/* <div className="border rounded-circle m-auto w-20c h-20c position-relative overflow-hidden"
                             style={{ transform: `rotate(${this.aDeg}deg)` }}>
                             {lotteryProducts.map((v: any, index: number) => {
