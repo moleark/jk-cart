@@ -29,47 +29,47 @@ export class VPointProductDetail extends VPage<CPointProduct> {
 
     protected renderPointProduct = (pointProduct: any) => {
         let { description, descriptionC, product, pack, point, imageUrl } = pointProduct;
-        if (product) {
-            return <>
-                {tv(product, (v) => {
-                    return <div className="w-100 px-4">
-                        <div title={v.description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                        {tv(pack, (c) => {
-                            return <div className="small">
-                                <div className="mt-2">{v.descriptionC}</div>
-                                <div className="my-2">{c.radioy}{c.unit}</div>
-                                <div className="row m-0 p-0">
-                                    <div className="col-5 m-0 p-0">
-                                        <span className="text-danger h5">{point}</span>
-                                        <small>分</small>
-                                    </div>
-                                    <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                        <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                    </div>
+        // if (product) {
+        return <>
+            {tv(product, (v) => {
+                return <div className="w-100 px-4">
+                    <div title={v.description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
+                    {tv(pack, (c) => {
+                        return <div className="small">
+                            <div className="mt-2">{v.descriptionC}</div>
+                            <div className="my-2">{c.radioy}{c.unit}</div>
+                            <div className="row m-0 p-0">
+                                <div className="col-5 m-0 p-0">
+                                    <span className="text-danger h5">{point}</span>
+                                    <small>分</small>
+                                </div>
+                                <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                    <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                 </div>
                             </div>
-                        })}
-                    </div>
-                })}
-            </>
-        } else {
-            return <div className="w-100 px-4">
-                <div title={description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                <div className="small">
-                    <div className="mt-2">{descriptionC}</div>
-                    {/* <div className="my-2">{c.radioy}{c.unit}</div> */}
-                    <div className="row m-0 p-0">
-                        <div className="col-5 m-0 p-0">
-                            <span className="text-danger h5">{point}</span>
-                            <small>分</small>
                         </div>
-                        <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                            <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                        </div>
-                    </div>
+                    })}
                 </div>
-            </div>
-        }
+            })}
+        </>
+        // } else {
+        //     return <div className="w-100 px-4">
+        //         <div title={description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
+        //         <div className="small">
+        //             <div className="mt-2">{descriptionC}</div>
+        //             {/* <div className="my-2">{c.radioy}{c.unit}</div> */}
+        //             <div className="row m-0 p-0">
+        //                 <div className="col-5 m-0 p-0">
+        //                     <span className="text-danger h5">{point}</span>
+        //                     <small>分</small>
+        //                 </div>
+        //                 <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+        //                     <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        // }
 
     }
 

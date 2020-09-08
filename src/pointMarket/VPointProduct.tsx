@@ -7,6 +7,7 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
+import { randomColor } from 'tools/randomColor';
 
 export const schema = [
     { name: 'product', type: 'object' } as ObjectSchema,
@@ -23,7 +24,7 @@ export class VPointProduct extends VPage<CPointProduct> {
     private currentInterval: string;
     private themeName: string = '所有产品';
     private tabs: TabProp[];
-    private none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
+    protected none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
         { caption: '1万以下', state: 'below', icon: 'superpowers' },
         { caption: '1万-5万', state: 'firstLevel', icon: 'superpowers ' },
@@ -45,7 +46,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail }} none={this.none}></List>
+                    return <>{this.renderList()}</>
                 },
                 isSelected: this.currentInterval === state,
                 load: async () => {
@@ -54,6 +55,13 @@ export class VPointProduct extends VPage<CPointProduct> {
                 }
             };
         });
+    }
+
+    protected renderList = (isToDetail?: boolean) => {
+        let { pointProducts, openPointProductDetail } = this.controller;
+        return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail, className: 'w-50' }} none={this.none}
+            className="d-flex flex-wrap bg-transparent mt-2"
+        ></List>
     }
 
     /* private onAllowChange = (context: Context, value: any, prev: any) => {
@@ -78,64 +86,55 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product, pack, point, imageUrl } = pointProduct;
-        return <>
-            {tv(product, (v) => {
-                return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="col-8 small">
-                            <div>{v.descriptionC}</div>
-                            <div className="my-2">{c.radioy}{c.unit}</div>
-                            <div className="row m-0 p-0">
-                                <div className="col-5 m-0 p-0">
-                                    <span className="text-danger h5">{point}</span>
-                                    <small>分</small>
-                                </div>
-                                {/* <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                </div> */}
-                                {
-                                    this.isShowSelectForm
-                                        ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                            <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                        </div>
-                                        : null
-                                }
+        let { product, pack, point, imageUrl, description, descriptionC } = pointProduct;
+        if (product) {
+            return <>
+                {tv(product, (v) => {
+                    return <div className="w-100 mx-4 d-flex flex-column mb-4">
+                        <div title={v.description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
+                        {tv(pack, (c) => {
+                            return <div className="small w-100">
+                                <div className="m-ng-lookmoretop w-100 my-1">{v.descriptionC}</div>
+                                {/* <div className="my-2">{c.radioy}{c.unit}</div> */}
+                                <>
+                                    <>
+                                        <FA name='database' className="text-warning" />
+                                        <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
+                                    </>
+                                    {
+                                        this.isShowSelectForm
+                                            ? <div className="w-100 d-flex justify-content-end align-items-right mt-1">
+                                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                            </div>
+                                            : null
+                                    }
+                                </>
                             </div>
-                        </div>
-                    })}
-                </div>
-            })}
-        </>
-    }
-
-    /* ---------------------布局要更换-------------------- */
-    renderPointProduct1 = (pointProduct: any) => {
-        let { description, descriptionC, point, imageUrl } = pointProduct;
-        return <div className="row m-1 w-100">
-            <div title={description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-            <div className="col-8 small">
-                <div>{descriptionC}</div>
-                {/* <div className="my-2">{c.radioy}{c.unit}</div> */}
-                <div className="row m-0 p-0">
-                    <div className="col-5 m-0 p-0">
-                        <span className="text-danger h5">{point}</span>
-                        <small>分</small>
+                        })}
                     </div>
-                    {/* <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                </div> */}
-                    {
-                        this.isShowSelectForm
-                            ? <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                            </div>
-                            : null
-                    }
+                })}
+            </>
+        } else {
+            return <div className="w-100 mx-4 d-flex flex-column mb-4">
+                <div title={description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
+                <div className="small w-100">
+                    <div className="m-ng-lookmoretop w-100 my-1">{descriptionC}</div>
+                    <>
+                        <>
+                            <FA name='database' className="text-warning" />
+                            <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
+                        </>
+                        {
+                            this.isShowSelectForm
+                                ? <div className="w-100 d-flex justify-content-end align-items-right mt-1">
+                                    <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                </div>
+                                : null
+                        }
+                    </>
                 </div>
             </div>
-        </div>
+        }
     }
 
     protected openExchangeOrder = async () => {
@@ -186,7 +185,7 @@ export class VPointProduct extends VPage<CPointProduct> {
             {
                 this.themeName === '所有产品'
                     ? <Tabs tabs={this.tabs} tabPosition="top" />
-                    : <List items={pointProducts} item={{ render: (v) => { if (v.product) { return this.renderPointProduct(v) } else { return this.renderPointProduct1(v) } }, onClick: openPointProductDetail }} none={this.none}></List>
+                    : <>{this.renderList()}</>
             }
         </Page >;
     });
@@ -197,6 +196,7 @@ export class VPointProduct extends VPage<CPointProduct> {
  */
 export class VSelectedPointProduct extends VPointProduct {
     isShowSelectForm: boolean = true;
+    protected none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -204,10 +204,16 @@ export class VSelectedPointProduct extends VPointProduct {
     page = observer(() => {
         let { pointProductsSelected, clearSelectedPointsProducts } = this.controller;
         let footer = this.getRelatedUI();
+
         // let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
-        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
+        // let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
         return <Page header='已选择的产品' right={<></>} footer={footer} >
-            <List items={pointProductsSelected} item={{ render: this.renderPointProduct }} none={none}></List>
+            <List
+                items={pointProductsSelected}
+                item={{ render: this.renderPointProduct, className: "w-50" }}
+                none={this.none}
+                className="d-flex flex-wrap bg-transparent mt-2"
+            />
         </Page >
     })
 }

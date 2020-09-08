@@ -170,6 +170,7 @@ export class CPointProduct extends CUqBase {
         if (this.orderData.shippingContact === undefined) {
             this.orderData.shippingContact = await this.getDefaultShippingContact();
         }
+        this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
         this.openVPage(VExchangeOrder);
     }
 
