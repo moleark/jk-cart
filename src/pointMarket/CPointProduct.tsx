@@ -178,15 +178,17 @@ export class CPointProduct extends CUqBase {
         this.pointProducts.forEach((el: any) => {
             if (data.product.id === el.product.id) el.quantity = value;
         });
-        this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
+        this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
+        // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
 
         this.pointProductsSelected.forEach(element => {
-            if (element.pack.id === data.pack.id) {
+            if (element.product.id === data.product.id) {//if (element.id === data.id) {
                 element.quantity = element.quantity + nowQuantity;
                 IsContain = IsContain + 1;
             }
         });
         if (IsContain === 0) {
+            data.point = data.product.obj.point;
             this.pointProductsSelected.push(data);
         }
     }
@@ -203,7 +205,7 @@ export class CPointProduct extends CUqBase {
                 if (e.quantity > 0) {
                     var item = new OrderItem();
                     item.product = e.product;
-                    item.pack = e.pack;
+                    // item.pack = e.pack;
                     item.quantity = e.quantity;
                     item.point = e.point;
                     return item;

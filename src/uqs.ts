@@ -94,7 +94,7 @@ export interface UqPointShop {
     PointExchangeSheet: Sheet;
     getPoints: Query;
     GetPointProduct: Query;
-
+    PointProductLib: Tuid;
     // TODO：delete
     AddPoint: Action;
     IsCanUseOrder: Action;

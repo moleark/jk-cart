@@ -18,27 +18,41 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     private renderPointProduct = (pointProduct: any, index: number) => {
-        let { product, pack, quantity, point, imageUrl } = pointProduct;
+        let { product, quantity, point } = pointProduct;
         if (quantity > 0) {
+            // if (product) {
             return <>
                 {tv(product, (v) => {
                     return <div className="row m-1 w-100">
-                        <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                        {tv(pack, (c) => {
-                            return <div className="col-8 small">
-                                <div>{v.descriptionC}</div>
-                                <div className="d-flex justify-content-between my-3">
-                                    <div className="mt-1"><b>{c.radioy}{c.unit}</b></div>
-                                    <div>
-                                        <span className="text-danger h5">{(point * quantity)}</span>
-                                        <small className="text-muted">分 ({point} × {quantity})</small>
-                                    </div>
+                        <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                        <div className="col-8 small">
+                            <div>{v.descriptionC}</div>
+                            <div className="d-flex justify-content-between my-3">
+                                <div className="mt-1"><b>{v.grade}</b></div>
+                                <div>
+                                    <span className="text-danger h5">{(point * quantity)}</span>
+                                    <small className="text-muted">分 ({point} × {quantity})</small>
                                 </div>
                             </div>
-                        })}
+                        </div>
                     </div>
                 })}
             </>;
+            // } else {
+            // return <div className="row m-1 w-100">
+            //     <div title={description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
+            //     <div className="col-8 small">
+            //         <div>{descriptionC}</div>
+            //         <div className="d-flex justify-content-between my-3">
+            //             <div className="mt-1"><b>{grade}</b></div>
+            //             <div>
+            //                 <span className="text-danger h5">{(point * quantity)}</span>
+            //                 <small className="text-muted">分 ({point} × {quantity})</small>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
+            // }
         }
     }
 
