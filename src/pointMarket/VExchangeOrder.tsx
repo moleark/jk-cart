@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VPage, nav, Page, LMR, FA, tv, List } from 'tonva';
-import { CPointProduct } from './CPointProduct';
+import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
@@ -9,7 +9,7 @@ import { randomColor } from 'tools/randomColor';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
     @observable protected shippingAddressIsBlank: boolean = false;
-
+    protected pageDesc: string = OrderSource.EXCHANGEORDER;
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -46,24 +46,40 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     protected renderPointProduct = (pointProduct: any) => {
         let { product, pack, point, imageUrl, description, descriptionC, quantity } = pointProduct;
         return <>
-            {tv(product, (v) => {
-                return <div className="w-100 mx-4 d-flex flex-column mb-4">
-                    <div title={v.description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="small w-100">
-                            <div className="m-ng-lookmoretop w-100 my-1">{v.descriptionC}</div>
-                            <div className="d-flex justify-content-between">
-                                <div>
-                                    <FA name='database' className="text-warning" />
-                                    <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
-                                </div>
-                                <div>*{quantity}</div>
-                            </div>
+            <div className="w-100 d-flex flex-column mb-4">
+                <div title={description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
+                <div className="small w-100">
+                    <div className="text-truncate w-100 my-1">{descriptionC}</div>
+                    <div className="d-flex justify-content-between">
+                        <div>
+                            <FA name='database' className="text-warning" />
+                            <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
                         </div>
-                    })}
+                        <div>*{quantity}</div>
+                    </div>
                 </div>
-            })}
+            </div>
         </>
+
+        // return <>
+        //     {tv(product, (v) => {
+        //         return <div className="w-100 mx-4 d-flex flex-column mb-4">
+        //             <div title={v.description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
+        //             {tv(pack, (c) => {
+        //                 return <div className="small w-100">
+        //                     <div className="m-ng-lookmoretop w-100 my-1">{v.descriptionC}</div>
+        //                     <div className="d-flex justify-content-between">
+        //                         <div>
+        //                             <FA name='database' className="text-warning" />
+        //                             <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
+        //                         </div>
+        //                         <div>*{quantity}</div>
+        //                     </div>
+        //                 </div>
+        //             })}
+        //         </div>
+        //     })}
+        // </>
     }
 
     protected onSubmitOwn = async () => {
@@ -72,9 +88,10 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected onSubmit = async () => {
-        let { orderData } = this.controller;
+        let { orderData, cApp } = this.controller;
+        let { cLottery } = cApp;
         // 必填项验证
-        let { shippingContact } = orderData;
+        let { shippingContact } = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData : cLottery.prizeOrderData;
         if (!shippingContact) {
             this.shippingAddressIsBlank = true;
             setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
@@ -96,12 +113,13 @@ export class VExchangeOrder extends VPage<CPointProduct> {
 
     protected renderContact = () => {
         let { chevronRight, shippingAddressBlankTip } = this.renderTipsUI();
-        let { orderData, onSelectShippingContact } = this.controller;
+        let { orderData, onSelectShippingContact, cApp } = this.controller;
+        let data = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData.shippingContact : cApp.cLottery.prizeOrderData.shippingContact;
         return <div className="px-2">
-            <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
+            <div className="row py-3 bg-white mb-1" onClick={() => onSelectShippingContact(this.pageDesc)}>
                 <div className="col-3 text-muted pr-0">收货地址:</div>
                 <div className="col-9 col-sm-10">
-                    <LMR className="w-100 align-items-center" right={chevronRight}>{tv(orderData.shippingContact, undefined, undefined, this.nullContact)}</LMR>
+                    <LMR className="w-100 align-items-center" right={chevronRight}>{tv(data, undefined, undefined, this.nullContact)}</LMR>
                     {shippingAddressBlankTip}
                 </div>
             </div>
@@ -120,7 +138,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
 
         return <Page header={header} right={<></>} footer={footer}>
             {this.renderContact()}
-            <List items={pointProductsSelected} item={{ render: this.renderPointProduct, className: 'w-50' }}
+            <List items={pointProductsSelected} item={{ render: this.renderPointProduct, className: 'w-50 px-3' }}
                 className="d-flex flex-wrap bg-transparent mt-2"
             ></List>
         </Page>
@@ -128,12 +146,16 @@ export class VExchangeOrder extends VPage<CPointProduct> {
 }
 
 
+/**
+ * 领取奖品页面
+ */
 export class VMyPrizeExchangeOrder extends VExchangeOrder {
     @observable shippingAddressIsBlank: boolean = false;
+    protected pageDesc: string = OrderSource.PRIZEORDER;
 
-    // renderPointProduct = (pointProduct: any, index: number) => {
-    //     return <div>11111</div>
-    // }
+    renderPointProduct = (pointProduct: any) => {
+        return <div>11111</div>
+    }
 
     protected onSubmitOwn = async () => {
         let { submitPrizeOrder } = this.controller;

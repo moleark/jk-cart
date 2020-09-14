@@ -3,6 +3,8 @@ import { VLottery } from './VLottery';
 import { observable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';
 import { VMyPrizeExchangeOrder } from './VExchangeOrder';
+import { pointOrder } from './pointOrder';
+import { prizeOrder, prizeOrderItem } from './prizeOrder';
 
 export class CLottery extends CUqBase {
     @observable lotteryProducts: any[] = [];        /* 抽奖产品列表 */
@@ -10,9 +12,12 @@ export class CLottery extends CUqBase {
     @observable productsLib: any[] = [];            /* 抽奖产品集合（加概率） */
     @observable myPrizeLib: any[] = [];             /* 我的奖品 */
     @observable totalNumPrizes: number = 10000;      /* 奖品总量 */
+    @observable prizeOrderData: prizeOrder = new prizeOrder();
+
     async internalStart(param?: any) {
-        await this.getLotteryProducts();
-        this.openVPage(VLottery);
+        /*   await this.getLotteryProducts();
+          this.basedChanceHandlePrizes();
+          this.openVPage(VLottery); */
     }
 
     /**
@@ -21,6 +26,7 @@ export class CLottery extends CUqBase {
     openLotteryProduct = async () => {
         await this.getLotteryProducts();
         await this.getLotteryNumOfDraws();
+        this.basedChanceHandlePrizes();
         this.openVPage(VLottery);
     }
 
@@ -68,43 +74,36 @@ export class CLottery extends CUqBase {
      */
     getLotteryProducts = async () => {//PR
         // this.lotteryProducts = await this.uqs.积分商城.
-        let total = 0;
         this.lotteryProducts = [
-            { id: 1, content: '111', PR: 15 },
-            { id: 2, content: '222', PR: 20 },
-            { id: 3, content: '333', PR: 5 },
-            { id: 4, content: '444', PR: 10 },
-            { id: 5, content: '555', PR: 10 },
-            { id: 6, content: '666', PR: 20 },
-            { id: 7, content: '777', PR: 5 },
-            { id: 8, content: '888', PR: 15 },
+            { id: 1, content: '111', p: '1', PR: 15 },
+            { id: 2, content: '222', p: '4', PR: 20 },
+            { id: 3, content: '333', p: '5', PR: 5 },
+            { id: 4, content: '444', p: '1', PR: 10 },
+            { id: 5, content: '555', p: '1', PR: 10 },
+            { id: 6, content: '666', p: '8', PR: 20 },
+            { id: 7, content: '777', p: '2', PR: 5 },
+            { id: 8, content: '888', p: '7', PR: 15 },
         ];
-        for (let key of this.lotteryProducts) {
-            total += key.PR;
-            for (let i = 0; i < key.PR * this.totalNumPrizes / 100; i++) {
-                this.productsLib.push({ productId: key.id, content: key.content })
-            }
-        }
-        if (total !== 100) {
-            for (let i = 0; i < (100 - total) * this.totalNumPrizes / 100; i++)
-                this.productsLib.push({ productId: 1, content: '谢谢惠顾' });//productId 暂未定
-        }
+    }
 
-        // this.lotteryProducts = [
-        //     { id: 1, content: '111', num: 50 },
-        //     { id: 2, content: '222', num: 1 },
-        //     { id: 3, content: '333', num: 100 },
-        //     { id: 4, content: '444', num: 20 },
-        //     { id: 5, content: '555', num: 40 },
-        //     { id: 6, content: '666', num: 10 },
-        //     { id: 7, content: '777', num: 5 },
-        //     { id: 8, content: '888', num: 90 },
-        // ];
-        // for (let key of this.lotteryProducts) {
-        //     for (let i = 0; i < key.num; i++) {
-        //         this.productsLib.push({ productId: key.id, content: key.content })
-        //     }
-        // }
+    /**
+     * 据概率处理抽奖商品
+     */
+    basedChanceHandlePrizes = () => {
+        let arr = [], minPrice = this.lotteryProducts[0];
+        for (let key of this.lotteryProducts) {
+            if (minPrice.p >= key.p && minPrice.PR > key.PR) minPrice = key;
+            let base = key.PR * this.totalNumPrizes / 100;
+            arr.push(Array.from(Array(base), (v, k) => { return { productId: key.id, content: key.content } }));
+        }
+        let shift = arr.flat();
+        this.productsLib = shift;
+        let total = this.productsLib.length;
+
+        if (total !== this.totalNumPrizes) {
+            for (let i = 0; i < (this.totalNumPrizes - total); i++)  //找8个商品中价值最小的
+                this.productsLib.push({ productId: minPrice.id, content: minPrice.content });//productId 暂未定
+        }
 
         //乱序
         let { length } = this.productsLib, i;
@@ -112,7 +111,6 @@ export class CLottery extends CUqBase {
             i = (Math.random() * length--) >>> 0;
             [this.productsLib[length], this.productsLib[i]] = [this.productsLib[i], this.productsLib[length]]
         }
-        console.log(this.productsLib);
 
         this.lotteryProducts.splice(this.lotteryProducts.length / 2, 0, {}); // 九宫格 使用
     }
@@ -122,5 +120,50 @@ export class CLottery extends CUqBase {
      */
     getMyPrizes = async () => {
         this.myPrizeLib = [];
+    }
+
+    private createOrderFromCart = async () => {
+        let { currentUser, currentSalesRegion } = this.cApp;
+        this.prizeOrderData.webUser = currentUser.id;
+        this.prizeOrderData.salesRegion = currentSalesRegion.id;
+        if (currentUser.currentCustomer !== undefined) {
+            this.prizeOrderData.customer = currentUser.currentCustomer.id;
+        }
+
+        /* if (this.myPrizeLib !== undefined && this.myPrizeLib.length > 0) {
+            this.prizeOrderData.exchangeItems = this.myPrizeLib.map((e: any) => {
+                if (e.quantity > 0) {
+                    var item = new prizeOrderItem();
+                    item.product = e.id;
+                    item.pack = e.pack;
+                    item.quantity = e.quantity;
+                    item.point = e.point;
+                    return item;
+                }
+            });
+        } */
+    }
+
+    /**
+     * 确认领取(成功)
+     */
+    submitPrizeOrder = async () => {
+        this.createOrderFromCart();
+        let { cLottery } = this.cApp;
+        console.log(cLottery.prizeOrderData);
+        // cLottery.myPrizeLib
+
+        // 
+
+        // let PointExchangeSheet = this.uqs.积分商城.PointExchangeSheet;
+        // let getDataForSave = this.orderData.getDataForSave();
+        // let result: any = await PointExchangeSheet.save("PointExchangeSheet", getDataForSave);
+        // let { id, flow, state } = result;
+        // await PointExchangeSheet.action(id, flow, state, "submit");
+
+
+        // 打开下单成功显示界面
+        // nav.popTo(this.cApp.topKey);
+        // this.openVPage(OrderSuccess, result);
     }
 }

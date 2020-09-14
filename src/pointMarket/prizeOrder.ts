@@ -1,7 +1,7 @@
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
 
-export class pointOrder {
+export class prizeOrder {
 
     webUser: any;   // OK
     organization: BoxId;
@@ -9,7 +9,7 @@ export class pointOrder {
     salesRegion: BoxId;   // OK
 
     @observable shippingContact: BoxId; //OK
-    @observable exchangeItems: OrderItem[] = [];
+    @observable exchangeItems: prizeOrderItem[] = [];
 
     @computed get amount() {
         return this.exchangeItems.reduce((pv, cv) => (pv + cv.subAmount), 0);
@@ -35,7 +35,7 @@ export class pointOrder {
     }
 }
 
-export class OrderItem {
+export class prizeOrderItem {
     product: BoxId;
     @observable pack: BoxId;
     @observable quantity: any;

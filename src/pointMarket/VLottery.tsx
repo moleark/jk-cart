@@ -2,7 +2,6 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { VPage, Page, FA } from 'tonva';
 import { CLottery } from './CLottery';
-import { true_test, signInIcon, logo, timg1_test } from 'tools/images';
 import { PointProductImage } from 'tools/productImage';
 import { observable } from 'mobx';
 import classNames from 'classnames';
@@ -100,8 +99,8 @@ export class VLottery extends VPage<CLottery> {
 
         return <Page header={header} right={<></>} className="w-100">
 
-            <div className="position-relative" style={{ background: `url(${timg1_test}) no-repeat`, backgroundSize: 'cover' }}>
-                {/* <img style={{ visibility: 'hidden' }} width="100%" src={true_test} alt="" /> */}
+            <div className="position-relative" style={{ background: `url(http://bpic.588ku.com/back_pic/04/70/62/26589975a47d9d0.jpg) no-repeat`, backgroundSize: 'cover', }}>
+                {/* <img style={{ visibility: 'hidden' }} width="100%" src={timg1_test} alt="" /> */}
                 {/* <div className="position-absolute w-100" style={{ top: 0, left: 0, right: 0, bottom: 0 }}> */}
                 <div className="w-100 pb-5" >
                     {/* 抽奖机会 */}
@@ -122,9 +121,6 @@ export class VLottery extends VPage<CLottery> {
                                 <span style={{ top: 3, right: -30, transform: 'rotate(12deg)' }} className="position-absolute">送</span>
                             </div>
                         </div>
-                        {/* <div className="position-absolute d-none d-sm-block " style={{ left: 40, }}>
-                            <img src={logo} alt="" />
-                        </div> */}
 
                         {/* 抽奖内容 */}
                         {/* 轮盘--------------界面适配bug */} {/* overflow-hidden */}

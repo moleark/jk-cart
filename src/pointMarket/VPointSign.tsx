@@ -4,6 +4,7 @@ import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
+import { signViceMap, signTopicMap } from 'tools/images';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -41,8 +42,6 @@ export class VPointSign extends VPage<CPointProduct> {
         let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
         let { cLottery } = cApp;
         if (IsSignin) this.handleChange();
-        // let date = new Date();
-        // let timer = `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, '0')}月${String(date.getDate()).padStart(2, '0')}日`;
         let actions: DropdownAction[] = [
             {
                 icon: 'get-pocket',
@@ -53,45 +52,52 @@ export class VPointSign extends VPage<CPointProduct> {
         let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
 
         return <Page header='每日签到' right={right}>
-            <div className="text-center text-light px-5 py-4" style={{ background: "rgb(165,34,48)" }}>
-                <div className="mt-4 w-12c h-12c rounded-circle mx-auto" style={{ border: '15px solid', borderColor: 'linear-gradient(red,yellow)' }}>
-                    <div className="mt-4">已连续签到</div>
-                    <div className="d-flex align-items-end justify-content-center">
-                        <span className="font-weight-bolder" style={{ fontSize: '3rem' }}>{signinConsecutiveDays} </span>
-                        <span className="mb-1 pb-2 ml-1"> 天</span>
+            <div className="text-center text-light px-5 pt-5"
+                style={{ background: `url(${signTopicMap}) no-repeat`, backgroundSize: "100% 100%" }}>
+                {/* <div className="rounded-circle mx-auto"
+                    style={{ background: 'linear-gradient(#FCF4F3 15%, #EFDCD4, #CC9287, #C17162, #A93338, #A52230)', padding: '.8rem', width: '10rem', height: '10rem' }}>
+                    <div className="w-100 h-100 rounded-circle pt-3" style={{ background: "#A52230" }}>
+                        <div className="small pt-2">已连续签到</div>
+                        <div className="d-flex align-items-end justify-content-center">
+                            <span className="font-weight-bolder display-4">{signinConsecutiveDays} </span>
+                            <span className="mb-1 pb-2 ml-1"> 天</span>
+                        </div>
+                    </div>
+                </div> */}
+                <div className="rounded-circle mx-auto w-12c h-12c"
+                    style={{ background: 'linear-gradient(#FCF4F3 15%, #EFDCD4, #CC9287, #C17162, #A93338, #A52230)', padding: '.8rem' }}>
+                    <div className="w-100 h-100 rounded-circle pt-3" style={{ background: "#A52230" }}>
+                        <div className="pt-4">已连续签到</div>
+                        <div className="d-flex align-items-end justify-content-center">
+                            <span className="font-weight-bolder display-4">{signinConsecutiveDays} </span>
+                            <span className="mb-1 pb-2 ml-1"> 天</span>
+                        </div>
                     </div>
                 </div>
-                <div className="my-2"><span className="bg-white px-4 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到活动{signinval}分</span></div>
-                <small>连续签到30天，可获得1次抽奖机会</small>
+                <div className="small" style={{ transform: 'translateY(-30px)' }}>
+                    <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
+                    <div className="small mt-2">连续签到30天，可获得1次抽奖机会</div>
+                </div>
             </div>
 
-            {/* <div className="text-center position-relative text-light" style={{ background: "linear-gradient(rgb(253, 98, 52), rgb(250, 51, 82))", padding: '3rem' }}>
-                <>
-                    <div className="mb-1">{timer}</div>
-                    <div className="my-2">已签到</div>
-                    <div className="mb-1">已连续<b className="h4"> {signinConsecutiveDays} </b>天签到 </div> */}
-            {/* <small style={{ color: 'rgb(255,192,120)' }} >连续签到{welfare.days}天，可获得{welfare.multiple}倍的积分奖励</small> */}
-            {/* <small style={{ color: 'rgb(255,192,120)' }} >连续签到30天，可获得1次抽奖机会</small> */}
-            {/* </>
-                <div className="text-left small w-100 pt-1 pl-2 position-absolute text-body"
-                    style={{ top: 0, left: 0, display: this.showTips }}>本次签到获取{signinval}分</div>
-            </div> */}
-
-            <div className="mx-5 mt-2 py-1 d-flex justify-content-center flex-wrap" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
-                {this.demandBlock('抽奖', 'life-ring', '#CD6600', cLottery.openLotteryProduct)}
-                {/* {this.demandBlock('我的奖品', 'users', '#CD6600', cLottery.openMyLotteryPrize)} */}
+            {/* 抽奖 */}
+            <div style={{ background: `url(${signViceMap})`, backgroundSize: "100%" }} className="h-20c">
+                <div className="mx-5 mt-2 py-1 d-flex justify-content-center flex-wrap" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
+                    {this.demandBlock('抽奖', 'life-ring', '#CD6600', cLottery.openLotteryProduct)}
+                </div>
             </div>
 
             {/* 签到规则 */}
             {/* <div className="pt-4 px-4 mt-4">
-                <p className="text-center mb-4">
-                    <span style={{ borderRadius: "22px", background: "#D56F2B" }} className="text-center py-2 px-3 text-white">签到规则</span>
-                </p>
+                <p className="text-center mb-4"><span style={{ borderRadius: "22px", background: "#D56F2B" }} className="text-center py-2 px-3 text-white">签到规则</span></p>
                 {this.renderRule(1, '连续签到30天，可获得1次抽奖机会')}
                 {this.renderRule(2, '若累计签到中断,则重新计算签到天数。')}
             </div> */}
 
-
+            {/* <small style={{ color: 'rgb(255,192,120)' }} >连续签到{welfare.days}天，可获得{welfare.multiple}倍的积分奖励</small> */}
+            {/* 签到获取提示 */}
+            {/* <div className="text-left small w-100 pt-1 pl-2 position-absolute text-body"
+                style={{ top: 0, left: 0, display: this.showTips }}>本次签到获取{signinval}分</div> */}
         </Page >;
 
         /* return <Page header='签到领积分' right={right}>

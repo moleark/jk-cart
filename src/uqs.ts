@@ -100,6 +100,7 @@ export interface UqPointShop {
     GetHotPointProducts: Query;
     SetPointProductVisits: Action;
     PointProductLib: Tuid;
+    PointProductSource: Map;
     // TODO：delete
     AddPoint: Action;
     IsCanUseOrder: Action;
