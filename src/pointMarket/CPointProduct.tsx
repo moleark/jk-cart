@@ -125,7 +125,7 @@ export class CPointProduct extends CUqBase {
         this.pointProductsDetail = pointProduct;
         if (this.pointProductsSelected.length) {
             for (let i of this.pointProductsSelected) {
-                if (pointProduct.id === i.id)
+                if (pointProduct.product.id === i.product.id)
                     this.pointProductsDetail.quantity = i.quantity;
             }
         } else
@@ -320,21 +320,15 @@ export class CPointProduct extends CUqBase {
      */
     filterByProductGenre = async (currentGenre: any) => {
         let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
-        let filterPointProducts = [];
+        this.pointProducts = pointProductFromGenre.map((v) => { return { genre: v.genre, product: v.pointProduct } });
+        /* let filterPointProducts = [];
         if (pointProductFromGenre.length) {
             for (let key of pointProductFromGenre) {
                 let searchpointProductByKey = await this.getPointProductLibLoad(key.pointProduct.id)
                 filterPointProducts.push(searchpointProductByKey);
             }
         }
-        this.pointProducts = filterPointProducts;
-    }
-
-    /**
-     * 据商品id 获取对应的商品所有信息
-     */
-    getPointProductLibLoad = async (id: number) => {
-        return await this.uqs.积分商城.PointProductLib.load(id);
+        this.pointProducts = filterPointProducts; */
     }
 
     /**
@@ -349,7 +343,7 @@ export class CPointProduct extends CUqBase {
      */
     getNewPointProducts = async () => {
         let result = await this.uqs.积分商城.GetNewPointProducts.table({});
-        return await this.getFurtherReq(result);
+        return result.map((v) => { return { product: v.id } });
     }
 
     /**
@@ -357,7 +351,7 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
-        return await this.getFurtherReq(result);
+        return result.map((v) => { return { product: v.id } });
     }
 
     /**
@@ -393,26 +387,10 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 获取积分商城产品   --------------------------------------需更改接口
+     * 获取积分商城产品
      */
     getPointsProducts = async () => {
-        // return await this.uqs.积分商城.GetPointProduct.table(this.pointInterval);
-        let result = await this.uqs.积分商城.PointProductLib.all();
-        return await this.getFurtherReq(result);
-    }
-
-    /**
-     * 进一步获取商品所有信息
-     */
-    getFurtherReq = async (dataList: any) => {
-        let arr: any[] = [];
-        if (dataList.length) {
-            for (let key of dataList) {
-                let res = await this.getPointProductLibLoad(key.id);
-                arr.push(res);
-            }
-        }
-        return arr;
+        return await this.uqs.积分商城.GetPointProduct.table(this.pointInterval);
     }
 
     /**
@@ -426,16 +404,22 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
+
         // 当前产品详情的数量
         this.pointProductsDetail.quantity = value;
-        this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
+        // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
+        this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
+        // this.pointProducts.forEach((el: any) => {
+        //     if (data.product.id === el.product.id) el.quantity = value;
+        // })
         this.pointProductsSelected.forEach(element => {
-            if (element.id === data.id) {
+            if (element.product.id === data.product.id) {//if (element.id === data.id) {
                 element.quantity = element.quantity + nowQuantity;
                 IsContain = IsContain + 1;
             }
         });
         if (IsContain === 0) {
+            data.point = data.product.obj.point;
             this.pointProductsSelected.push(data);
         }
 
@@ -454,7 +438,7 @@ export class CPointProduct extends CUqBase {
         //     this.pointProductsSelected.push(data);
         // }
     }
-    //----------------------需要更改逻辑
+
     private createOrderFromCart = async () => {
         let { currentUser, currentSalesRegion } = this.cApp;
         this.orderData.webUser = currentUser.id;
@@ -462,46 +446,26 @@ export class CPointProduct extends CUqBase {
         if (currentUser.currentCustomer !== undefined) {
             this.orderData.customer = currentUser.currentCustomer.id;
         }
-        // description: "良品铺子 什锦果干礼包 芒果干 草莓干 蔓越莓干 果干特产小吃礼包674g"
-        // descriptionC: "良品铺子 什锦果干礼包 芒果干 草莓干 蔓越莓干 果干特产小吃礼包674g"
-        // id: 1
-        // imageUrl: ":0-0265.jpg"
-        // point: 10800
-        // quantity: 1
         if (this.pointProductsSelected !== undefined && this.pointProductsSelected.length > 0) {
             this.orderData.exchangeItems = this.pointProductsSelected.map((e: any) => {
                 if (e.quantity > 0) {
                     var item = new OrderItem();
-                    item.product = e.id;
-                    item.pack = e.pack;
+                    item.product = e.product;
+                    // item.pack = e.pack;
                     item.quantity = e.quantity;
                     item.point = e.point;
                     return item;
                 }
             });
         }
-
-        /* if (this.pointProductsSelected !== undefined && this.pointProductsSelected.length > 0) {
-            this.orderData.exchangeItems = this.pointProductsSelected.map((e: any) => {
-                if (e.quantity > 0) {
-                    var item = new OrderItem();
-                    item.product = e.product;
-                    item.pack = e.pack;
-                    item.quantity = e.quantity;
-                    item.point = e.point;
-                    return item;
-                }
-            });
-        } */
     }
-
     /**
      * 生成兑换单兑换积分
      */
     submitOrder = async () => {
         this.createOrderFromCart();
-        console.log(this.orderData);
-        /* let PointExchangeSheet = this.uqs.积分商城.PointExchangeSheet;
+
+        let PointExchangeSheet = this.uqs.积分商城.PointExchangeSheet;
         let getDataForSave = this.orderData.getDataForSave();
         let result: any = await PointExchangeSheet.save("PointExchangeSheet", getDataForSave);
         let { id, flow, state } = result;
@@ -514,17 +478,17 @@ export class CPointProduct extends CUqBase {
             this.myPointTobeExpired = 0;
         } else {
             this.myPointTobeExpired = this.myPointTobeExpired - this.pointToExchanging;
-        } */
+        }
 
         //兑换后清空选择的积分产品
-        // this.orderData.exchangeItems = undefined;
-        // this.pointProductsSelected.length = 0;
-        // this.pointToExchanging = 0;
-        /* this.clearSelectedPointsProducts();
+        /* this.orderData.exchangeItems = undefined;
+        this.pointProductsSelected.length = 0;
+        this.pointToExchanging = 0; */
+        this.clearSelectedPointsProducts();
 
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
-        this.openVPage(OrderSuccess, result); */
+        this.openVPage(OrderSuccess, result);
     }
 
     /**

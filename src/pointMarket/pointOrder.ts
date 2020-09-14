@@ -19,7 +19,7 @@ export class pointOrder {
         let exchangeItems: any[] = [];
         this.exchangeItems.forEach(oi => {
             exchangeItems.push({
-                product: oi.product, pack: oi.pack, point: oi.point, quantity: oi.quantity
+                product: oi.product, point: oi.point, quantity: oi.quantity //, pack: oi.pack,
                 , subAmount: oi.quantity * oi.point
             })
         });
@@ -40,10 +40,6 @@ export class OrderItem {
     @observable pack: BoxId;
     @observable quantity: any;
     @observable point: any;
-    @observable imageUrl: any;
-    @observable description: any;
-    @observable descriptionC: any;
-    @observable grade: any;
     @computed get subAmount() {
         return this.quantity * this.point;
     }

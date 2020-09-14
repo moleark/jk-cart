@@ -13,7 +13,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
 
     private uiSchema: UiSchema = {
         items: {
-            // product: { visible: false },
+            product: { visible: false },
             // pack: { visible: false },
             quantity: {
                 widget: 'custom',
@@ -22,58 +22,33 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
-            point: { visible: false },
-            imageUrl: { visible: false },
-            description: { visible: false },
-            descriptionC: { visible: false },
-            id: { visible: false },
-            grade: { visible: false },
+            // point: { visible: false },
+            // imageUrl: { visible: false },
         }
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { description, descriptionC, product, pack, point, imageUrl, grade } = pointProduct;
-        // if (product) {
-        //     return <>
-        //         {tv(product, (v) => {
-        //             return <div className="w-100 px-4">
-        //                 <div title={v.description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-        //                 {tv(pack, (c) => {
-        //                     return <div className="small">
-        //                         <div className="mt-2">{v.descriptionC}</div>
-        //                         <div className="my-2">{c.radioy}{c.unit}</div>
-        //                         <div className="row m-0 p-0">
-        //                             <div className="col-5 m-0 p-0">
-        //                                 <span className="text-danger h5">{point}</span>
-        //                                 <small>分</small>
-        //                             </div>
-        //                             <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-        //                                 <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 })}
-        //             </div>
-        //         })}
-        //     </>
-        // } else {
-        return <div className="w-100 px-4">
-            <div title={description}><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-            <div className="small">
-                <div className="mt-2">{descriptionC}</div>
-                <div className="my-2">{grade}</div>
-                <div className="row m-0 p-0">
-                    <div className="col-5 m-0 p-0">
-                        <span className="text-danger h5">{point}</span>
-                        <small>分</small>
-                    </div>
-                    <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                        <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+        let { product } = pointProduct;
+        return <>
+            {tv(product, (v) => {
+                return <div className="w-100 px-4">
+                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                    <div className="small">
+                        <div className="mt-2">{v.descriptionC}</div>
+                        <div className="my-2">{v.grade}</div>
+                        <div className="row m-0 p-0">
+                            <div className="col-5 m-0 p-0">
+                                <span className="text-danger h5">{v.point}</span>
+                                <small>分</small>
+                            </div>
+                            <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        // }
+            })}
+        </>
     }
 
     private page = observer((param: any) => {

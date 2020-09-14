@@ -18,68 +18,27 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         return <span className="text-primary">选择收货地址</span>;
     }
 
-    // protected renderPointProduct = (pointProduct: any, index: number) => {
-    //     let { product, pack, quantity, point, imageUrl } = pointProduct;
-    //     if (quantity > 0) {
-    //         return <>
-    //             {tv(product, (v) => {
-    //                 return <div className="row m-1 w-100">
-    //                     <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-    //                     {tv(pack, (c) => {
-    //                         return <div className="col-8 small">
-    //                             <div>{v.descriptionC}</div>
-    //                             <div className="d-flex justify-content-between my-3">
-    //                                 <div className="mt-1"><b>{c.radioy}{c.unit}</b></div>
-    //                                 <div>
-    //                                     <span className="text-danger h5">{(point * quantity)}</span>
-    //                                     <small className="text-muted">分 ({point} × {quantity})</small>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     })}
-    //                 </div>
-    //             })}
-    //         </>;
-    //     }
-    // }
-
     protected renderPointProduct = (pointProduct: any) => {
-        let { product, pack, point, imageUrl, description, descriptionC, quantity } = pointProduct;
-        return <>
-            <div className="w-100 d-flex flex-column mb-4">
-                <div title={description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
-                <div className="small w-100">
-                    <div className="text-truncate w-100 my-1">{descriptionC}</div>
-                    <div className="d-flex justify-content-between">
-                        <div>
-                            <FA name='database' className="text-warning" />
-                            <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
+        let { product, point, quantity } = pointProduct;
+        if (quantity > 0) {
+            return <>
+                {tv(product, (v) => {
+                    return <div className="w-100 d-flex flex-column mb-4">
+                        <div title={v.description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                        <div className="small w-100">
+                            <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <FA name='database' className="text-warning" />
+                                    <span className="text-danger h5"> {point}</span>
+                                </div>
+                                <div>*{quantity}</div>
+                            </div>
                         </div>
-                        <div>*{quantity}</div>
                     </div>
-                </div>
-            </div>
-        </>
-
-        // return <>
-        //     {tv(product, (v) => {
-        //         return <div className="w-100 mx-4 d-flex flex-column mb-4">
-        //             <div title={v.description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
-        //             {tv(pack, (c) => {
-        //                 return <div className="small w-100">
-        //                     <div className="m-ng-lookmoretop w-100 my-1">{v.descriptionC}</div>
-        //                     <div className="d-flex justify-content-between">
-        //                         <div>
-        //                             <FA name='database' className="text-warning" />
-        //                             <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
-        //                         </div>
-        //                         <div>*{quantity}</div>
-        //                     </div>
-        //                 </div>
-        //             })}
-        //         </div>
-        //     })}
-        // </>
+                })}
+            </>
+        }
     }
 
     protected onSubmitOwn = async () => {

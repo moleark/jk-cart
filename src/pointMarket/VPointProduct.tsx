@@ -12,17 +12,11 @@ import { randomColor } from 'tools/randomColor';
 export const renderHr = () => <div className="flex-fill px-2 text-primary"><hr style={{ backgroundColor: '#007bff', height: 1, border: 'none' }} /></div>;
 
 export const schema = [
-    // { name: 'product', type: 'object' } as ObjectSchema,
+    { name: 'product', type: 'object' } as ObjectSchema,
     // { name: 'pack', type: 'object' } as ObjectSchema,
-    { name: 'description', type: 'string' } as StringSchema,
-    { name: 'descriptionC', type: 'string' } as StringSchema,
-    // { name: 'endDate', type: 'string' } as StringSchema,
-    { name: 'grade', type: 'string' } as StringSchema,
-    { name: 'id', type: 'number' } as NumSchema,
-    { name: 'imageUrl', type: 'string' } as StringSchema,
-    { name: 'point', type: 'number' } as NumSchema,
     { name: 'quantity', type: 'number' } as NumSchema,
-    // { name: 'startDate', type: 'string' } as StringSchema,
+    // { name: 'point', type: 'number' } as NumSchema,
+    // { name: 'imageUrl', type: 'string' } as StringSchema,
 ];
 
 export class VPointProduct extends VPage<CPointProduct> {
@@ -79,15 +73,8 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     private uiSchema: UiSchema = {
         items: {
-            // product: { visible: false },
+            product: { visible: false },
             // pack: { visible: false },
-            description: { visible: false },
-            descriptionC: { visible: false },
-            // endDate: { visible: false },
-            grade: { visible: false },
-            id: { visible: false },
-            imageUrl: { visible: false },
-            point: { visible: false },
             quantity: {
                 widget: 'custom',
                 label: null,
@@ -95,60 +82,37 @@ export class VPointProduct extends VPage<CPointProduct> {
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
-            // startDate: { visible: false },
+            // point: { visible: false },
+            // imageUrl: { visible: false },
         }
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product, pack, point, imageUrl, description, descriptionC } = pointProduct;
-        // if (product) {
-        //     return <>
-        //         {tv(product, (v) => {
-        //             return <div className="w-100 mx-4 d-flex flex-column mb-4">
-        //                 <div title={v.description} className="w-100" style={{ height: '130px', border: `2px solid ${randomColor()}` }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
-        //                 {tv(pack, (c) => {
-        //                     return <div className="small w-100">
-        //                         <div className="m-ng-lookmoretop w-100 my-1">{v.descriptionC}</div>
-        //                         <>
-        //                             <>
-        //                                 <FA name='database' className="text-warning" />
-        //                                 <span className="text-danger h5"> {point}</span><small>分</small>
-        //                             </>
-        //                             {
-        //                                 this.isShowSelectForm
-        //                                     ? <div className="w-100 d-flex justify-content-end align-items-right mt-1">
-        //                                         <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-        //                                     </div>
-        //                                     : null
-        //                             }
-        //                         </>
-        //                     </div>
-        //                 })}
-        //             </div>
-        //         })}
-        //     </>
-        // } else {
-        return <div className="w-100 d-flex flex-column mb-4">
-            <div title={description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={imageUrl} className="w-100 h-100" /></div>
-            <div className="small w-100">
-                <div className="text-truncate w-100">{descriptionC}</div>
-                <>
-                    {
-                        this.isShowSelectForm
-                            ? <div className="w-100 d-flex justify-content-between align-items-right mt-1">{/* justify-content-end */}
-                                <small className="align-self-center mb-3 text-primary" ><FA name="shopping-bag" size='2x' /></small>
-                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                            </div>
-                            : null
-                    }
-                    <>
-                        <FA name='database' className="text-warning" />
-                        <span className="text-danger h5"> {point}</span>{/* <small>分</small> */}
-                    </>
-                </>
-            </div>
-        </div>
-        // }
+        let { product } = pointProduct;
+        return <>
+            {tv(product, (v) => {
+                return <div className="w-100 d-flex flex-column mb-4">
+                    <div title={v.description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                    <div className="small w-100">
+                        <div className="text-truncate w-100">{v.descriptionC}</div>
+                        <>
+                            {
+                                this.isShowSelectForm
+                                    ? <div className="w-100 d-flex justify-content-between align-items-right mt-1">{/* justify-content-end */}
+                                        <small className="align-self-center mb-3 text-primary" ><FA name="shopping-bag" size='2x' /></small>
+                                        <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                    </div>
+                                    : null
+                            }
+                            <>
+                                <FA name='database' className="text-warning" />
+                                <span className="text-danger h5"> {v.point}</span>{/* <small>分</small> */}
+                            </>
+                        </>
+                    </div>
+                </div>
+            })}
+        </>
     }
 
     protected openExchangeOrder = async () => {
