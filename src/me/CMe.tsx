@@ -50,8 +50,9 @@ export class CMe extends CUqBase {
     }
 
     openMyPoint = async () => {
-        let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
-        await cPointProduct.start();
+        /* let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
+        await cPointProduct.start(); */
+        await this.cApp.cPointProduct.openMyPoint();
     }
     /**
      * 卡券管理

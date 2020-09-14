@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { VPage, Page, DropdownAction, DropdownActions, FA } from 'tonva';
-import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { signViceMap, signTopicMap } from 'tools/images';
+import { CSignIn } from './CSignIn';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -14,7 +14,7 @@ export const daysAndMultipleByWelfare = [
     { id: 5, days: 365, multiple: 6 }
 ];
 
-export class VPointSign extends VPage<CPointProduct> {
+export class VPointSign extends VPage<CSignIn> {
     @observable showTips: any = "none";
     rulesNum: number = 0;
     async open(param?: any) {

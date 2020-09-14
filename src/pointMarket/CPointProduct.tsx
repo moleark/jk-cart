@@ -2,7 +2,7 @@ import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
-import { VExchangeOrder, VMyPrizeExchangeOrder } from './VExchangeOrder';
+import { VExchangeOrder } from './VExchangeOrder';
 import { VMyPoint } from './VMyPoint';
 import { CSelectShippingContact } from 'customer/CSelectContact';
 import { OrderSuccess } from './OrderSuccess';
@@ -10,7 +10,6 @@ import { pointOrder, OrderItem } from './pointOrder';
 import { VExchangeHistoryDetail } from './VExchangeHistoryDetail';
 import { VExchangeHistory } from './VExchangeHistory';
 // import { VPlatformOrderPoint } from './VPlatformOrderPoint';
-import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
@@ -20,7 +19,6 @@ export const topicClump = {
     newRecommend: '新品推荐',
     hotProduct: '热门产品',
 }
-const pointBase: number = 3; /* 积分基数 */
 
 export const OrderSource = {
     EXCHANGEORDER: '兑换订单',
@@ -33,8 +31,6 @@ export class CPointProduct extends CUqBase {
     @observable myEffectivePoints: number = 0;         /* 我的积分(计算后) */
     @observable myTotalPoints: number = 0;             /* 我的积分(计算后) */
     @observable myPointTobeExpired: number = 0;        /* 我的快过期积分 */
-    @observable signinval: number = pointBase;         /* 签到可领积分 */
-    @observable signinConsecutiveDays: number = 0;     /* 连续签到天数 */
 
     @observable pointProducts: any[] = [];             /* 可兑产品列表 */
     @observable newPointProducts: any[] = [];          /* 新品推荐 */
@@ -47,21 +43,16 @@ export class CPointProduct extends CUqBase {
     @observable platformOrderId: any;                  /* 平台合同号 */
     @observable platformOrder: any[] = [];             /* 平台合同 */
     @observable pagePointHistory: QueryPager<any>;     /* 积分详情 */
-    @observable IsSignin: boolean = false;             /* 是否签到 */
-    @observable signinPageHistory: QueryPager<any>;    /* 签到记录 */
     @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
     protected async internalStart(param?: any) {
-        await this.refreshMypoint();        /* 刷新积分 */
-        await this.isSignined();            /* 是否签到 */
-        await this.getPointProductGenre();  /* 获取产品类型 */
-        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
-        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
-        // await this.getPointHistory();    /* 获取积分记录 */
-        // await this.getSigninHistory();   /* 签到记录 */
-        this.openVPage(VMyPoint);
+        // await this.refreshMypoint();        /* 刷新积分 */
+        // await this.getPointProductGenre();  /* 获取产品类型 */
+        // this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        // this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+        // this.openVPage(VMyPoint);
     }
 
     /**
@@ -100,14 +91,14 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 签到   ------------------ 需调用连续签到天数 uq:this.getSigninConsecutiveDays --------------------
+     * 积分管理页面
      */
-    openPointSign = async () => {
-        await this.getSigninConsecutiveDays();
-        let result = this.multiplePointsWelfare();
-        if (this.IsSignin)
-            await this.addSigninSheet(47, this.signinval);
-        this.openVPage(VPointSign, result);
+    openMyPoint = async (param?: any) => {
+        await this.refreshMypoint();        /* 刷新积分 */
+        await this.getPointProductGenre();  /* 获取产品类型 */
+        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+        this.openVPage(VMyPoint);
     }
 
     /**
@@ -139,8 +130,7 @@ export class CPointProduct extends CUqBase {
      * 积分收支明细页面
      */
     openRevenueExpenditure = async (topic?: any) => {
-        if (topic === '收支明细') await this.getPointHistory();
-        else await this.getSigninHistory();
+        await this.getPointHistory();
         this.openVPage(VRevenueExpenditure, topic)
     }
 
@@ -182,6 +172,12 @@ export class CPointProduct extends CUqBase {
         this.openVPage(VExchangeOrder);
     }
 
+    /**
+     * 已选择的可兑换产品图标
+     */
+    renderSelectedLable() {
+        return this.renderView(VSelectedLable);
+    }
 
     // /*领取积分 */
     // openPointDrawing = async (credits?: string) => {
@@ -200,13 +196,6 @@ export class CPointProduct extends CUqBase {
     } */
 
     /**
-     * 已选择的可兑换产品图标
-     */
-    renderSelectedLable() {
-        return this.renderView(VSelectedLable);
-    }
-
-    /**
      * 浏览商品(数据埋点,生产浏览量PV)
      */
     setPointProductVisits = async (pointProduct: any) => {
@@ -219,70 +208,6 @@ export class CPointProduct extends CUqBase {
     getPointProductGenre = async () => {
         let { Genre } = this.uqs.积分商城;
         this.pointProductGenre = await Genre.all();
-    }
-
-    /**
-     * 是否签到
-     */
-    isSignined = async () => {
-        let { checkIsSignin } = this.uqs.积分商城;
-        let res = await checkIsSignin.obj({});
-        this.IsSignin = res.result === 0 ? true : false;
-    }
-
-    /**
-     * 签到添加积分到
-     */
-    addSigninSheet = async (customer: any, amount: any) => {
-        let { Signin } = this.uqs.积分商城;
-        customer = this.cApp.currentUser.currentCustomer;
-        customer = customer ? customer : this.user.id;
-        await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
-        await this.getSigninConsecutiveDays();
-        await this.refreshMypoint();
-        // await this.getSigninHistory();
-        // await this.getPointHistory();
-
-        /**
-        let result: any = await SigninSheet.save("SigninSheet", { customer: customer, amount: amount });
-        console.log(this.cApp.currentUser);
-        let { id, flow, state } = result;
-        await SigninSheet.action(id, flow, state, "submit");
-        await Signin.submit({ webbuser: 47, customer: 47, amount: 3 });
-        **/
-    }
-
-    /**
-     * 获取签到记录
-     */
-    getSigninHistory = async () => {
-        this.signinPageHistory = new QueryPager(this.uqs.积分商城.GetPointSigninHistory, 15, 30);
-        this.signinPageHistory.first({});
-    }
-
-    /**
-     * 连续签到天数  webUser  ----------------------------需uq --------------------------------
-     */
-    getSigninConsecutiveDays = async () => {
-        // this.signinConsecutiveDays 
-    }
-
-    /**
-     * 福利：连续签到 数倍积分
-     */
-    multiplePointsWelfare = () => {
-        let arr = daysAndMultipleByWelfare;
-        if (this.IsSignin) this.signinConsecutiveDays += 1;
-        for (let i = 0; i < arr.length; i++) {
-            if (this.signinConsecutiveDays < arr[i].days) {
-                if (i === 0) this.signinval = pointBase;
-                else this.signinval = pointBase * arr[i - 1].multiple;
-                return arr[i];
-            } else if (this.signinConsecutiveDays >= arr[i].days && i === (arr.length - 1)) {
-                this.signinval = pointBase * arr[i].multiple;
-                return arr[i];
-            }
-        }
     }
 
     /**
@@ -387,14 +312,22 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 获取积分商城产品
+     * 获取积分商城产品(积分划分)
      */
     getPointsProducts = async () => {
         return await this.uqs.积分商城.GetPointProduct.table(this.pointInterval);
     }
 
     /**
-     * 获取商品源
+     * 奖品确认领取(成功)
+     */
+    submitPrizeOrder = async () => {
+        let { cLottery } = this.cApp;
+        await cLottery.submitPrizeOrder();
+    }
+
+    /**
+     * 获取商品源（兑换下单可用）
      */
     getProductSources = async (pointProduct: any) => {
         return await this.uqs.积分商城.PointProductSource.obj({ pointProduct, sourceId: undefined });
@@ -409,11 +342,8 @@ export class CPointProduct extends CUqBase {
         this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
         this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
-        // this.pointProducts.forEach((el: any) => {
-        //     if (data.product.id === el.product.id) el.quantity = value;
-        // })
         this.pointProductsSelected.forEach(element => {
-            if (element.product.id === data.product.id) {//if (element.id === data.id) {
+            if (element.product.id === data.product.id) {
                 element.quantity = element.quantity + nowQuantity;
                 IsContain = IsContain + 1;
             }
@@ -422,21 +352,6 @@ export class CPointProduct extends CUqBase {
             data.point = data.product.obj.point;
             this.pointProductsSelected.push(data);
         }
-
-        // let IsContain = 0;
-        // let nowQuantity = value - (prev ? prev : 0);
-        // // 当前产品详情的数量
-        // this.pointProductsDetail.quantity = value;
-        // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
-        // this.pointProductsSelected.forEach(element => {
-        //     if (element.pack.id === data.pack.id) {
-        //         element.quantity = element.quantity + nowQuantity;
-        //         IsContain = IsContain + 1;
-        //     }
-        // });
-        // if (IsContain === 0) {
-        //     this.pointProductsSelected.push(data);
-        // }
     }
 
     private createOrderFromCart = async () => {
@@ -566,7 +481,6 @@ export class CPointProduct extends CUqBase {
         }
     };
 
-
     /**
      * TODO: delete
      */
@@ -595,7 +509,7 @@ export class CPointProduct extends CUqBase {
         }
         return this.contact0 = contactArr[0].contact;
     }
-    private async getDefaultShippingContact() {
+    async getDefaultShippingContact() {
         let defaultSetting = await this.getDefaultSetting();
         return defaultSetting.shippingContact || await this.getContact();
     }
@@ -609,24 +523,5 @@ export class CPointProduct extends CUqBase {
         } else {
             cLottery.prizeOrderData.shippingContact = contactBox;
         }
-    }
-
-    /**
-     * 奖品领取预览界面
-     */
-    openMyPrizeOrder = async () => {
-        let { cLottery } = this.cApp;
-        if (cLottery.prizeOrderData.shippingContact === undefined) {
-            cLottery.prizeOrderData.shippingContact = await this.getDefaultShippingContact();
-        }
-        this.openVPage(VMyPrizeExchangeOrder);
-    }
-
-    /**
-     * 奖品确认领取(成功)
-     */
-    submitPrizeOrder = async () => {
-        let { cLottery } = this.cApp;
-        await cLottery.submitPrizeOrder();
     }
 }

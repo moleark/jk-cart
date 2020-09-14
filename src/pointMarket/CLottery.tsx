@@ -39,11 +39,14 @@ export class CLottery extends CUqBase {
     }
 
     /**
-    * 奖品领取界面
+    * 奖品领取预览界面
     */
     openMyPrizeOrder = async () => {
         let { cPointProduct } = this.cApp;
-        await cPointProduct.openMyPrizeOrder();
+        if (this.prizeOrderData.shippingContact === undefined) {
+            this.prizeOrderData.shippingContact = await cPointProduct.getDefaultShippingContact();
+        }
+        this.openVPage(VMyPrizeExchangeOrder);
     }
 
 

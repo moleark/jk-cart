@@ -29,14 +29,14 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
     } */
 
     private matchData = (header: string) => {
-        let { pagePointHistory, signinPageHistory } = this.controller;
+        let { pagePointHistory, cApp } = this.controller;
         switch (header) {
             case '收支明细':
                 this.showList = pagePointHistory;
                 this.tipNone = '『 未曾拥有过 不曾失去过 』';
                 return;
             case '签到明细':
-                this.showList = signinPageHistory;
+                this.showList = cApp.cSignIn.signinPageHistory;
                 this.tipNone = '『 从未得到过 开启首签之旅 』';
                 return;
             default:

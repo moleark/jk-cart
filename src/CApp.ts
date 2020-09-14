@@ -20,6 +20,7 @@ import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
+import { CSignIn } from 'pointMarket/CSignIn';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -45,12 +46,13 @@ export class CApp extends CUqApp {
     cFavorites: CFavorites;
     cYncProjects: CYncProjects;
     cLottery: CLottery;
+    cSignIn: CSignIn;
 
-	/*
+    /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
-	}
-	*/
+    }
+    */
 
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
@@ -88,6 +90,7 @@ export class CApp extends CUqApp {
         this.cFavorites = this.newC(CFavorites);
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
+        this.cSignIn = this.newC(CSignIn);
 
         await this.cHome.getSlideShow();
 

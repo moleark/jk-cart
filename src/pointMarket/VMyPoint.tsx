@@ -57,7 +57,8 @@ export class VMyPoint extends VPage<CPointProduct> {
 
     private page = observer(() => {
         let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
-            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointSign, openPointProductDetail } = this.controller;
+            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp } = this.controller;
+        let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
 
