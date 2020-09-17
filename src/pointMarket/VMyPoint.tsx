@@ -1,33 +1,22 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, tv, EasyTime, FA, IconText, EasyDate } from "tonva";
-import { CPointProduct } from "./CPointProduct";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate } from "tonva";
+import { CPointProduct, topicClump } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
-import moment from 'moment';
+import { PointProductImage } from 'tools/productImage';
+import classNames from 'classnames';
+import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';
+import { RevenueExpenditure } from './basicRefer';
 
 export class VMyPoint extends VPage<CPointProduct> {
 
     async open(param?: any) {
         this.openPage(this.page);
     }
-    /*积分兑换*/
-    private openPointProduct = async () => {
-        this.controller.openPointProduct();
-    }
 
-    /* 积分兑换记录页面 */
-    private openExchangeHistory = async () => {
-        this.controller.openExchangeHistory();
-    }
-
-    // /**
-    //  * 打开领取积分界面 
-    //  */
-    // private openPointDrawing = async () => {
-    //     this.controller.openPointDrawing();
-    // }
-
-    /* 积分规则页面 */
+    /**
+     * 积分规则页面
+     */
     private pointRules = () => nav.push(<VPointRule />);
 
     /* 积分详情页面 
@@ -35,74 +24,115 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.controller.pointDetails();
     }*/
 
-    /*签到*/
-    private openPointSign = async () => {
-        // await this.controller.isSignined();       /* 是否签到 */
-        await this.controller.openPointSign()
+    private pointblock = (name: any, action: any, icon: any, width?: any) => {
+        return <div className={`text-center mx-2 mb-2 ${width}`} onClick={() => action()}>
+            <img src={icon} alt="" className="w-2c h-2c" />
+            <div className={`text-light small`}>{name}</div>
+        </div>
+    }
+
+    private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
+        return <div className="mt-2 pt-1" style={{ zIndex: 9 }}>
+            <h6 className='d-flex justify-content-between align-content-center bg-transparent'>
+                <span className={classNames(theme ? theme : '', 'h6')} style={{ color: theme ? theme : '' }}>{name}</span>
+                <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
+            </h6>
+            <List className="d-flex w-100 bg-transparent"
+                items={imgArr.slice(0, 3)}
+                item={{
+                    render: (v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" />,
+                    onClick: (v) => toWhere(v),
+                    className: "col-4 p-0 bg-transparent"
+                }}
+                none='暂无产品' />
+        </div>
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pagePointHistory, IsSignin } = this.controller;
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
+            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp } = this.controller;
+        let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
 
         let nowPoint = myPointTobeExpired;
         let nowPointTip = nowPoint > 0 ?
-            <div className="alert alert-warning m-2" role="alert">
+            <div className="alert alert-warning py-0 w-100 small rounded-0 m-0" role="alert">
                 <span className="text-muted">友情提示: 将有{nowPoint}积分于{dateYear}-12-31过期</span>
             </div>
             : null;
 
-        let right = <div className="align-self-center mr-1 ">
-            <div className="px-2" onClick={this.pointRules}>
-                <label> <FA name="info" className="px-2 small" /><small>积分规则</small></label>
-            </div>
-        </div>
+        let actions: DropdownAction[] = [
+            {
+                icon: 'get-pocket',
+                caption: RevenueExpenditure.POINTHISTORY,
+                action: () => openRevenueExpenditure(RevenueExpenditure.POINTHISTORY)
+            },
+            {
+                icon: 'history',
+                caption: '兑换记录',
+                action: openExchangeHistory
+            },
+            {
+                icon: 'book',
+                caption: '积分规则',
+                action: this.pointRules
+            }
+        ];
+        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
 
-        let showsign: any;
-        if (IsSignin == 0) {
-            showsign = <div className=" mt-2 py-2 px-4 bg-white text-muted lsign" style={{ borderRadius: "25%/48%" }} onClick={this.openPointSign} >
-                <FA name="pencil" className="mr-2 mb-2" />签到
-            </div>;
-        } else {
-            showsign = <div className=" mt-2 py-2 px-4" style={{ borderRadius: "25%/48%", background: "#6495ED" }} onClick={this.openPointSign}>
-                <FA name="pencil" className="mr-2 mb-2" />已签到
-            </div>;
-        }
-        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 未曾拥有过 不曾失去过 』</div>
-        return <Page header="积分管理" right={right} headerClassName="bg-primary">
-            <div className="bg-white">
-                <div className="d-flex flex-column py-4" style={{ background: "linear-gradient(rgba(23,184,184,.5),rgba(23,162,184,.5),rgba(23,106,184,.5))", borderRadius: " 0 0 5px 5px" }}>
-                    < div className="d-flex flex-column align-items-center mt-3 mb-4" >
-                        <div className="text-black text-center pb-2">
-                            <small>当前</small> <span className="h2">{myEffectivePoints}</span> <small>分可用</small>
-                            <br />
-                            {myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
+
+        return <Page header="积分管理" right={right} className="h-100 bg-white">
+            <div>
+                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
+                    <>{nowPointTip}</>
+                    <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
+                    < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
+                        <div>
+                            <div><small>当前</small> <span className="h3">{myEffectivePoints}</span> <small>分可用</small></div>
+                            <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
                         </div>
-                        <div className="text-white text-center " >
-                            {showsign}
+                        <div className="d-flex justify-content-end mt-3" style={{ flex: 1 }}>
+                            {this.pointblock("签到", openPointSign, signInIcon)}
+                            {this.pointblock("兑换", openPointProduct, exChangeIcon)}
                         </div>
                     </div>
                 </div>
-
-                <div className="d-flex justify-content-around  px-2 bg-white w-100">
-                    {/* {this.pointblock("领积分码", this.openPointDrawing, "get-pocket", "text-info", " #ccc")} */}
-                    {this.pointblock("积分兑换", this.openPointProduct, "exchange", "text-success", " #99CCFF")}
-                    {this.pointblock("兑换记录", this.openExchangeHistory, "history", "text-info", " #EEae0e")}
+            </div>
+            <div className="pt-3">
+                {/* 产品类别 */}
+                {
+                    pointProductGenre.length
+                        ? <div>
+                            {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
+                            <List className="d-flex flex-wrap py-2 text-center mx-4 bg-transparent"
+                                items={pointProductGenre}
+                                item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
+                            <p className="d-flex m-0 justify-content-end mr-4"><img src={triangleShadingO} alt="" className="h-1c" /></p>
+                        </div>
+                        : null
+                }
+                {/* 新品推荐 热门产品 */}
+                <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 3% 60% `, backgroundSize: '50px' }}>
+                    {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
+                    {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                 </div>
-                <p className="text-center mt-2 pb-1 bg-white" style={{ borderBottom: ".5px solid #ccc" }}>积分收支明细</p>
-                <List items={pagePointHistory} item={{ render: renderPointRecord }} none={none} />
-                {nowPointTip}
             </div>
         </Page >;
     });
 
-    private pointblock = (name: any, action: any, icon: any, facolor: any, bgcolor: any) => {
-        facolor = "fa-2x mt-2 " + facolor
-        return <div className="text-center px-4 py-2" style={{ background: bgcolor, borderRadius: "5px", transform: "translate(0,-2rem)" }} onClick={action}>
-            <label className=" text-white">
-                <FA name={icon} className={facolor} />
-                <div>{name}</div>
+    private renderGenreItem = (item: any) => {
+        let { name, imageUrl } = item;
+        return <div>
+            <label className="w-100 d-flex flex-column justify-content-center">
+                {
+                    imageUrl
+                        ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
+                        // ? <div className="w-25 m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-100" /></div>
+                        : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
+                }
+                <div className='text-dark small'>{name}</div>
             </label>
         </div>
     }

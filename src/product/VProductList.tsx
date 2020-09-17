@@ -6,9 +6,9 @@ import logo from '../images/logo.png';
 import magnifier from '../images/magnifier.svg'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 // import { renderProduct } from './VProductView';
+import { observer } from 'mobx-react-lite';
 
 export class VProductList extends VPage<CProduct> {
-
     private searchKey: string;
     async open(key: string) {
         this.searchKey = key;
@@ -31,22 +31,24 @@ export class VProductList extends VPage<CProduct> {
         return this.controller.cApp.cProduct.renderProduct(p);
     }
 
-    private page = () => {
+    private page = observer(() => {
 
         let { productsPager, cApp } = this.controller;
         let { cHome, cCart } = cApp;
         let header = cHome.renderSearchHeader();
         let cart = cCart.renderCartLabel();
         let none = <div className="p-3 text-warning">[无]</div>
+
         return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
+
         /*
-        return <div className="bg-light">
+        return <div className="bg-light tv-page" onScroll={(e: any) => this.onScrollBottom(e)}>
             <header className="d-flex align-items-center p-1">
                 <nav className="navbar navbar-expand-md">
-                    <Link to="/gege" className="navbar-brand mr-1">
+                    <Link to="/" className="navbar-brand mr-1">
                         {<img className="m-1 ml-2" src={logo} alt="logo" style={{ height: "3rem", width: "2.5rem" }} />}
                     </Link>
                     <form className="custom-search-input">
@@ -61,7 +63,7 @@ export class VProductList extends VPage<CProduct> {
                     </form>
                     <button className="narbar-toggler" type="button" data-toggle="collapse" data-target="#navBarResponsive"
                         aria-controls="navBarResponsive" aria-expanded="false">
-                        <span className="narbar-toggler-icon"></span>
+                        <span className="narbar-toggler-icon">nav</span>
                     </button>
 
                     <div className="collapse navbar-collapse" id="navBarResponsive">
@@ -112,7 +114,11 @@ export class VProductList extends VPage<CProduct> {
                     </div>
                 </nav>
             </header>
-            <Route path="/shop/search/:key" render={(props: any) => {
+            <main>
+                <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
+                <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
+            </main>
+           <Route path="/search/:key" render={(props: any) => {
                 let { match, location, history } = props;
                 let { params } = match;
                 this.controller.searchByKey(params.key);
@@ -120,11 +126,14 @@ export class VProductList extends VPage<CProduct> {
                     <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
                     <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
                 </main>
-            }} />
-            <Route path="/product/:id" render={(props: any) => (
-                <h1>gegege{props.match.params.id}</h1>
-            )} />
+            }} /> 
+
         </div>
         */
-    };
+    });
+
+    render = (key: any) => {
+        this.searchKey = key;
+        return <this.page />
+    }
 }
