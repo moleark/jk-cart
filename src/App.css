@@ -62,3 +62,14 @@
 .point-main-top {
   background: linear-gradient(#17b8b880,#17a2b880, #176ab880);
 }
+
+.m-ng-lookmoretop{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+   /*  overflow : hidden;  
+    text-overflow: ellipsis;  
+    display: -webkit-box;  
+    -webkit-line-clamp: 1;  
+    -webkit-box-orient: vertical; */
+}

@@ -50,8 +50,9 @@ export class CMe extends CUqBase {
     }
 
     openMyPoint = async () => {
-        let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
-        await cPointProduct.start();
+        /* let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
+        await cPointProduct.start(); */
+        await this.cApp.cPointProduct.openMyPoint();
     }
     /**
      * 卡券管理
@@ -71,8 +72,8 @@ export class CMe extends CUqBase {
         await cMyFavorites.start();
     }
 
-    toPersonalAccountInfo = (fn: Function) => {
-        this.openMeInfoFirstOrder({
+    toPersonalAccountInfo = async (fn: Function) => {
+        await this.openMeInfoFirstOrder({
             onlyRequired: false,
             caption: "请补充账户信息",
             note: <>

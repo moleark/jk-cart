@@ -1,7 +1,7 @@
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
 
-export class pointOrder {
+export class prizeOrder {
 
     webUser: any;   // OK
     organization: BoxId;
@@ -9,7 +9,7 @@ export class pointOrder {
     salesRegion: BoxId;   // OK
 
     @observable shippingContact: BoxId; //OK
-    @observable exchangeItems: OrderItem[] = [];
+    @observable exchangeItems: prizeOrderItem[] = [];
 
     @computed get amount() {
         return this.exchangeItems.reduce((pv, cv) => (pv + cv.subAmount), 0);
@@ -19,7 +19,7 @@ export class pointOrder {
         let exchangeItems: any[] = [];
         this.exchangeItems.forEach(oi => {
             exchangeItems.push({
-                product: oi.product, point: oi.point, quantity: oi.quantity //, pack: oi.pack,
+                product: oi.product, pack: oi.pack, point: oi.point, quantity: oi.quantity
                 , subAmount: oi.quantity * oi.point
             })
         });
@@ -35,11 +35,15 @@ export class pointOrder {
     }
 }
 
-export class OrderItem {
+export class prizeOrderItem {
     product: BoxId;
     @observable pack: BoxId;
     @observable quantity: any;
     @observable point: any;
+    @observable imageUrl: any;
+    @observable description: any;
+    @observable descriptionC: any;
+    @observable grade: any;
     @computed get subAmount() {
         return this.quantity * this.point;
     }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, StringSchema } from 'tonva';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
@@ -7,13 +7,27 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
+import { randomColor } from 'tools/randomColor';
+import { triangleShadingO, triangleShadingT } from 'tools/images';
+
+export const renderHr = () => <div className="flex-fill px-2 text-primary"><hr style={{ backgroundColor: '#007bff', height: 1, border: 'none' }} /></div>;
+
+export const schema = [
+    { name: 'product', type: 'object' } as ObjectSchema,
+    // { name: 'pack', type: 'object' } as ObjectSchema,
+    { name: 'quantity', type: 'number' } as NumSchema,
+    // { name: 'point', type: 'number' } as NumSchema,
+    // { name: 'imageUrl', type: 'string' } as StringSchema,
+];
 
 export class VPointProduct extends VPage<CPointProduct> {
-
-    @observable private productIsNull: boolean = false;
-    @observable private pointIsEnough: boolean = false;
+    @observable protected isShowSelectForm: boolean = false;
+    @observable protected productIsNull: boolean = false;
+    @observable protected pointIsEnough: boolean = false;
     private currentInterval: string;
+    private themeName: string = '积分商城';
     private tabs: TabProp[];
+    protected none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
         { caption: '1万以下', state: 'below', icon: 'superpowers' },
         { caption: '1万-5万', state: 'firstLevel', icon: 'superpowers ' },
@@ -21,18 +35,21 @@ export class VPointProduct extends VPage<CPointProduct> {
         { caption: '15万以上', state: 'above', icon: 'superpowers' },
     ];
     async open(param?: any) {
+        if (param) {
+            this.themeName = param.name ? param.name : param;
+            await this.controller.getPointProductByDifferentPlot(param);
+        }
         this.openPage(this.page);
     }
     private getTabs = async () => {
-        let { getPointsIntervalProducts, pointProducts } = this.controller;
+        let { pointProducts, getPointsIntervalProducts } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon } = v;
-            let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={pointProducts} item={{ render: this.renderPointProduct }} none={none}></List>
+                    return <>{this.renderList()}</>
                 },
                 isSelected: this.currentInterval === state,
                 load: async () => {
@@ -43,57 +60,65 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
-    private schema = [
-        { name: 'product', type: 'object' } as ObjectSchema,
-        { name: 'pack', type: 'object' } as ObjectSchema,
-        { name: 'quantity', type: 'number' } as NumSchema,
-        { name: 'point', type: 'number' } as NumSchema,
-        { name: 'imageUrl', type: 'object' } as ObjectSchema,
-    ];
+    private TabCaptionComponent = (label: string, icon: string, color: string) => <div
+        className={'py-2 d-flex justify-content-center align-items-center flex-column cursor-pointer ' + color}>
+        <small className="px-2 rounded-sm" style={{ border: '1px solid #3CC43C' }}>{label}</small>
+    </div>;
+
+    protected renderList = (isToDetail?: boolean) => {
+        let { pointProducts, openPointProductDetail } = this.controller;
+        return <div style={{ background: `url(${triangleShadingO}) no-repeat 99% 230px,url(${triangleShadingO}) no-repeat 1% 480px`, backgroundSize: '2.5%' }}>
+            <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail, className: 'w-50 px-3 bg-transparent' }} none={this.none}
+                className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
+            ></List>
+        </div>
+    }
 
     private uiSchema: UiSchema = {
         items: {
             product: { visible: false },
-            pack: { visible: false },
+            // pack: { visible: false },
             quantity: {
                 widget: 'custom',
                 label: null,
-                className: 'text-center',
+                className: 'text-center w-2c',
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
-            point: { visible: false },
-            imageUrl: { visible: false }
+            // point: { visible: false },
+            // imageUrl: { visible: false },
         }
     }
 
-    private renderPointProduct = (pointProduct: any, index: number) => {
-        let { product, pack, point, imageUrl } = pointProduct;
+    protected renderPointProduct = (pointProduct: any) => {
+        let { product } = pointProduct;
         return <>
             {tv(product, (v) => {
-                return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={imageUrl} className="w-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="col-8 small">
-                            <div>{v.descriptionC}</div>
-                            <div className="my-2">{c.radioy}{c.unit}</div>
-                            <div className="row m-0 p-0">
-                                <div className="col-5 m-0 p-0">
-                                    <span className="text-danger h5">{point}</span>
-                                    <small>分</small>
-                                </div>
-                                <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                    <Form schema={this.schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                </div>
-                            </div>
-                        </div>
-                    })}
+                return <div className="w-100 d-flex flex-column mb-4">
+                    <div title={v.description} className="w-100" style={{ height: '20vh' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                    <div className="small w-100">
+                        <div className="text-truncate w-100">{v.descriptionC}</div>
+                        <>
+                            {
+                                this.isShowSelectForm
+                                    ? <div className="w-100 d-flex justify-content-between align-items-right mt-1">{/* justify-content-end */}
+                                        <small className="align-self-center mb-3 text-primary" ><FA name="shopping-bag" size='2x' /></small>
+                                        <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                    </div>
+                                    : null
+                            }
+                            <>
+                                <FA name='database' className="text-warning" />
+                                <span className="text-danger h5"> {v.point}</span>{/* <small>分</small> */}
+                            </>
+                        </>
+                    </div>
                 </div>
             })}
         </>
     }
 
-    private openExchangeOrder = async () => {
+    protected openExchangeOrder = async () => {
         // 未选择产品
         let { pointToExchanging, myEffectivePoints } = this.controller;
 
@@ -114,9 +139,8 @@ export class VPointProduct extends VPage<CPointProduct> {
         this.controller.openExchangeOrder();
     }
 
-    private page = observer(() => {
+    protected getRelatedUI = () => {
         let { pointToExchanging, myEffectivePoints } = this.controller;
-        this.getTabs();
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
             : null;
@@ -131,11 +155,50 @@ export class VPointProduct extends VPage<CPointProduct> {
                 <button type="button" className="btn btn-danger m-1" onClick={this.openExchangeOrder}>去兑换</button>
             </div>
         </div>;
-        return <Page header="积分商城" footer={footer}>
-            <>
-                <Tabs tabs={this.tabs} tabPosition="top" />
-                {/* <List items={pointProducts} item={{ render: this.renderPointProduct }} none="暂无可兑换产品"></List> */}
-            </>
-        </Page>;
+        return footer;
+    }
+
+    protected page = observer(() => {
+        this.getTabs();
+        let right = this.controller.renderSelectedLable();
+        return <Page header={this.themeName} right={right}>
+            {
+                this.themeName === '积分商城'
+                    ? <Tabs tabs={this.tabs} tabPosition="top" />
+                    : <>
+                        {/* <div className="text-center w-100 py-2 px-2 text-primary d-flex justify-content-between align-items-center">
+                            {renderHr()}{this.themeName}{renderHr()}
+                        </div> */}
+                        {this.renderList()}
+                    </>
+            }
+        </Page >;
     });
+}
+
+/**
+ * 已选择的兑换产品列表
+ */
+export class VSelectedPointProduct extends VPointProduct {
+    isShowSelectForm: boolean = true;
+    protected none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
+    async open(param?: any) {
+        this.openPage(this.page);
+    }
+
+    page = observer(() => {
+        let { pointProductsSelected, clearSelectedPointsProducts } = this.controller;
+        let footer = this.getRelatedUI();
+
+        // let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
+        // let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
+        return <Page header='已选择兑换产品' right={<></>} footer={footer} >
+            <List
+                items={pointProductsSelected}
+                item={{ render: this.renderPointProduct, className: "w-50 px-3" }}
+                none={this.none}
+                className="d-flex flex-wrap bg-transparent mt-2"
+            />
+        </Page >
+    })
 }

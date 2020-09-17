@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements } from "tonva";
+import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -20,6 +20,8 @@ import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { Entrance } from 'ui/entrance';
+import { CLottery } from 'pointMarket/CLottery';
+import { CSignIn } from 'pointMarket/CSignIn';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -44,12 +46,14 @@ export class CApp extends CUqApp {
     cPointProduct: CPointProduct;
     cFavorites: CFavorites;
     cYncProjects: CYncProjects;
+    cLottery: CLottery;
+    cSignIn: CSignIn;
 
-	/*
+    /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
-	}
-	*/
+    }
+    */
 
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
@@ -86,15 +90,20 @@ export class CApp extends CUqApp {
         this.cPointProduct = this.newC(CPointProduct);
         this.cFavorites = this.newC(CFavorites);
         this.cYncProjects = this.newC(CYncProjects);
+        this.cLottery = this.newC(CLottery);
+        this.cSignIn = this.newC(CSignIn);
 
         await this.cHome.getSlideShow();
 
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
+        // this.cMe.openMyPoint();
+        // this.cLottery.openLotteryProduct();
+        // this.cSignIn.openPointSign();
 
         let { location } = document;
-        let { search } = location;
+        let { search, pathname } = location;
         if (search) {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {

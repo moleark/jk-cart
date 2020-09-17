@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CCoupon, COUPONBASE } from './CCoupon';
-import { VPage, Page, List } from 'tonva';
+import { VPage, Page, List, FA } from 'tonva';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
@@ -48,8 +48,11 @@ export class VSharedCoupon extends VPage<CCoupon> {
     }
 
     private showTips = observer(() => {
-        return <div className="alert alert-info w-100 small text-center">
-            已领取<br />
+        return <div className="alert alert-info w-100 text-center">
+            <div className="pb-3">
+                <span className="text-danger" style={{ fontSize: "1.4rem" }}>领取成功</span><br />
+                <small className="text-muted">领取的卡券可在&Prime;卡券管理&Prime;中查看</small>
+            </div>
             <small>{this.tipsAfterDawed}</small>
         </div>
     })

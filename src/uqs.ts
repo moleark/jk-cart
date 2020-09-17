@@ -89,12 +89,18 @@ export interface UqMember {
 }
 
 export interface UqPointShop {
+    Genre: Tuid;
+    PointProductGenre: Map;
     PointProduct: Map;
     PointHistory: History;
     PointExchangeSheet: Sheet;
     getPoints: Query;
     GetPointProduct: Query;
-
+    GetNewPointProducts: Query;
+    GetHotPointProducts: Query;
+    SetPointProductVisits: Action;
+    PointProductLib: Tuid;
+    PointProductSource: Map;
     // TODO：delete
     AddPoint: Action;
     IsCanUseOrder: Action;

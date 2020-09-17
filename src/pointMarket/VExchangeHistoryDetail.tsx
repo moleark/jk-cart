@@ -17,20 +17,17 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    {/* <div title={v.description} className="col-4 m-0 p-0"><ProductImage chemicalId={v.imageUrl} className="w-100" /></div> */}
                     <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="col-8 small">
-                            <div><label>{v.descriptionC}</label></div>
-                            <div className="d-flex justify-content-between my-3">
-                                <div className="mt-1"><b>{c.radioy}{c.unit}</b></div>
-                                <div>
-                                    <span className="text-danger h6">{(point * quantity)}</span>
-                                    <small className="text-muted">分 ({point} × {quantity})</small>
-                                </div>
+                    <div className="col-8 small">
+                        <div><label>{v.descriptionC}</label></div>
+                        <div className="d-flex justify-content-between my-3">
+                            <div className="mt-1"><b>{pack ? <>{tv(pack, (c) => <>{c.radioy}{c.unit}</>)}</> : v.grade}</b></div>
+                            <div>
+                                <span className="text-danger h6">{(point * quantity)}</span>
+                                <small className="text-muted">分 ({point} × {quantity})</small>
                             </div>
                         </div>
-                    })}
+                    </div>
                 </div>
             })}
         </>;

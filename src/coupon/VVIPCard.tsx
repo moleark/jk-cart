@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { CCoupon, COUPONBASE } from './CCoupon';
 import { View, FA, EasyDate, LMR, tv } from 'tonva';
-import { VIPCard } from './Coupon';
+import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
+import moment from 'moment';
 
 function getTips(result: number, types: string, code: string) {
     let invalidTip = `${COUPONBASE[types]['name']}【${code}】无效，请与您的专属销售人员联系。`;
@@ -48,6 +49,11 @@ export class VCoupon extends View<CCoupon> {
         }
         return cardDescription;
     }
+
+    protected renderActivityDescription = (): JSX.Element => {
+        return null;
+    }
+
     protected renderCardReveal = (param: any): JSX.Element => {
         let { isOpenMyCouponManage } = this.controller;
         let { result, types, code, validitydate, useddate, expireddate } = this.coupon;
@@ -59,10 +65,12 @@ export class VCoupon extends View<CCoupon> {
             </div>
         } else {
             let showDate = validitydate !== undefined ? validitydate : (useddate !== undefined ? useddate : expireddate);
-            let content = <div className="float-right pr-3">
+            let newDate = getEasyDate(showDate);
+            let content = <div className="float-right pr-2">
                 <div className="pb-1">
                     <FA name='th-large' className='mr-1 text-secondary' />
-                    <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: <EasyDate date={showDate} /></small>
+                    <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: {newDate}</small>
+                    {/* <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: <EasyDate date={showDate} /></small> */}
                 </div>
             </div>;
             let left = <div>
@@ -105,16 +113,18 @@ export class VCoupon extends View<CCoupon> {
                 bcenter = <div className="text-muted"><small>优惠：<span className="mx-3">￥{preferential}</span></small></div>;
             */
             let tipUI = null;
-            if (discount)
-                tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
-            else
-                tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+            if (types !== 'credits') {
+                if (discount)
+                    tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
+                else
+                    tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+            }
+            let newDate = getEasyDate(validitydate);
 
-
-            let content = <div className="float-right pr-3">
+            let content = <div className="float-right pr-2">
                 <div className="pb-1">
                     <FA name='th-large' className='mr-1 text-warning' />{this.getCodeShow(code)}
-                    <small className="ml-3">有效期：<EasyDate date={validitydate} /></small>
+                    <small className="ml-3">有效期：{newDate}</small>
                 </div>
                 <div className="float-right">
                     {tipUI}
@@ -126,10 +136,11 @@ export class VCoupon extends View<CCoupon> {
                 {this.renderCardDescription()}
             </div>;
 
-            couponUi = <div className="bg-white py-3 pl-3 pr-2 mb-1">
+            couponUi = <div className="bg-white py-3 px-2 mb-1">
                 <LMR left={left} right={this.renderRight()}>
                     {content}
                 </LMR>
+                {this.renderActivityDescription()}
             </div>
         }
         return couponUi;
@@ -156,7 +167,18 @@ export class VCredits extends VCoupon {
 
 
     protected renderCardDescription = (): JSX.Element => {
-        return <div className="mr-3 font-weight-bold text-danger"><big>双倍积分</big></div>
+        return <div className="font-weight-bold text-danger">
+            <big>{
+                IsInActivePeriod() ? '限时四倍积分' : '双倍积分'
+            }</big>
+        </div>
+    }
+
+    protected renderActivityDescription = (): JSX.Element => {
+        let { startDate, endDate } = activityTime;
+        return IsInActivePeriod() ? <div className="text-danger mt-1">
+            <small className="text-muted">{startDate.replace(/\-/g, '.')} 至 {endDate.replace(/\-/g, '.')} 内下单可获四倍积分 </small>
+        </div> : null;
     }
 
     /*
@@ -203,10 +225,11 @@ export class VCouponUsed extends VCoupon {
         let { validitydate, types, useddate, expireddate } = param;
         let couponUi;
         let showDate = validitydate !== undefined ? validitydate : (useddate !== undefined ? useddate : expireddate);
-        let content = <div className="float-right pr-3">
+        let newDate = getEasyDate(showDate);
+        let content = <div className="float-right pr-2">
             <div className="pb-1">
                 <FA name='th-large' className='mr-1 text-secondary' />
-                <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: <EasyDate date={showDate} /></small>
+                <small className="ml-3">{useddate !== undefined ? '使用日期' : '有效期'}: {newDate}</small>
             </div>
         </div>;
         let left = <div>
@@ -219,4 +242,11 @@ export class VCouponUsed extends VCoupon {
         </div>
         return couponUi;
     }
+}
+
+export function getEasyDate(validitydate: any) {
+    let date = moment(validitydate).format('YYYY-MM-DD').split('-');
+    // let date = new Date(validitydate).toLocaleDateString().split('/');
+    let year = new Date().getFullYear().toString();
+    return `${date[0] === year ? '' : (date[0] + '年')}${date[1]}月${date[2]}日`;
 }
