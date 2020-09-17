@@ -86,7 +86,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             <div className="px-2">
                 <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
                     <div className="col-3 text-muted pr-0">收货地址:</div>
-                    <div className="col-9 col-sm-10">
+                    <div className="col-9">
                         <LMR className="w-100 align-items-center" right={chevronRight}>{tv(orderData.shippingContact, undefined, undefined, this.nullContact)}</LMR>
                         {shippingAddressBlankTip}
                     </div>
