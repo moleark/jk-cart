@@ -99,7 +99,7 @@ export class CApp extends CUqApp {
         await Promise.all(promises);
         this.cMe.openMyPoint();
         // this.cLottery.openLotteryProduct();
-        // this.cPointProduct.openPointSign();
+        // this.cSignIn.openPointSign();
 
         let { location } = document;
         let { search, pathname } = location;

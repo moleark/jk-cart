@@ -3,7 +3,6 @@ import { VLottery } from './VLottery';
 import { observable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';
 import { VMyPrizeExchangeOrder } from './VExchangeOrder';
-import { pointOrder } from './pointOrder';
 import { prizeOrder, prizeOrderItem } from './prizeOrder';
 
 export class CLottery extends CUqBase {
@@ -14,11 +13,7 @@ export class CLottery extends CUqBase {
     @observable totalNumPrizes: number = 10000;      /* 奖品总量 */
     @observable prizeOrderData: prizeOrder = new prizeOrder();
 
-    async internalStart(param?: any) {
-        /*   await this.getLotteryProducts();
-          this.basedChanceHandlePrizes();
-          this.openVPage(VLottery); */
-    }
+    async internalStart(param?: any) { }
 
     /**
      * 抽奖界面
@@ -49,12 +44,12 @@ export class CLottery extends CUqBase {
         this.openVPage(VMyPrizeExchangeOrder);
     }
 
-
     /**
      * 中奖获得的产品
      */
     winningProduct = async (winning: any) => {
         console.log('winning', winning);
+        await this.addMyPrize(winning);
     }
 
     /**
@@ -119,10 +114,18 @@ export class CLottery extends CUqBase {
     }
 
     /**
+     * 抽中的产品添加至我的奖品列表   ------------------ 需uq 
+     */
+    addMyPrize = async (prize: any) => {
+        // await this.uqs.积分商城
+    }
+
+    /**
      * 获取我的奖品
      */
     getMyPrizes = async () => {
         this.myPrizeLib = [];
+        // await this.uqs.积分商城
     }
 
     private createOrderFromCart = async () => {
@@ -148,15 +151,11 @@ export class CLottery extends CUqBase {
     }
 
     /**
-     * 确认领取(成功)
+     * 确认领取(成功 VMyPrizeExchangeOrder 确认使用此函数)
      */
-    submitPrizeOrder = async () => {
+    submitOrder = async () => {
         this.createOrderFromCart();
-        let { cLottery } = this.cApp;
-        console.log(cLottery.prizeOrderData);
-        // cLottery.myPrizeLib
-
-        // 
+        console.log(this.prizeOrderData);
 
         // let PointExchangeSheet = this.uqs.积分商城.PointExchangeSheet;
         // let getDataForSave = this.orderData.getDataForSave();
@@ -168,5 +167,10 @@ export class CLottery extends CUqBase {
         // 打开下单成功显示界面
         // nav.popTo(this.cApp.topKey);
         // this.openVPage(OrderSuccess, result);
+    }
+
+    onSelectShippingContact = async () => {
+        let { cPointProduct } = this.cApp;
+        this.prizeOrderData.shippingContact = await cPointProduct.selectContact()
     }
 }

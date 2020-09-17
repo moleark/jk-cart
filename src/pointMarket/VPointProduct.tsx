@@ -8,6 +8,7 @@ import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 import { randomColor } from 'tools/randomColor';
+import { triangleShadingO, triangleShadingT } from 'tools/images';
 
 export const renderHr = () => <div className="flex-fill px-2 text-primary"><hr style={{ backgroundColor: '#007bff', height: 1, border: 'none' }} /></div>;
 
@@ -41,7 +42,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         this.openPage(this.page);
     }
     private getTabs = async () => {
-        let { pointProducts, getPointsIntervalProducts, openPointProductDetail } = this.controller;
+        let { pointProducts, getPointsIntervalProducts } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon } = v;
             return {
@@ -66,9 +67,11 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     protected renderList = (isToDetail?: boolean) => {
         let { pointProducts, openPointProductDetail } = this.controller;
-        return <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail, className: 'w-50 px-3' }} none={this.none}
-            className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
-        ></List>
+        return <div style={{ background: `url(${triangleShadingO}) no-repeat 99% 230px,url(${triangleShadingO}) no-repeat 1% 480px`, backgroundSize: '2.5%' }}>
+            <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail, className: 'w-50 px-3 bg-transparent' }} none={this.none}
+                className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
+            ></List>
+        </div>
     }
 
     private uiSchema: UiSchema = {
@@ -78,7 +81,7 @@ export class VPointProduct extends VPage<CPointProduct> {
             quantity: {
                 widget: 'custom',
                 label: null,
-                className: 'text-center',
+                className: 'text-center w-2c',
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
@@ -92,7 +95,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="w-100 d-flex flex-column mb-4">
-                    <div title={v.description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                    <div title={v.description} className="w-100" style={{ height: '20vh' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>
                         <>
@@ -156,7 +159,6 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     protected page = observer(() => {
-        let { pointProducts, openPointProductDetail } = this.controller;
         this.getTabs();
         let right = this.controller.renderSelectedLable();
         return <Page header={this.themeName} right={right}>
@@ -190,7 +192,7 @@ export class VSelectedPointProduct extends VPointProduct {
 
         // let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;
         // let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 已清空您所选择的产品 』</div>;
-        return <Page header='已选择的产品' right={<></>} footer={footer} >
+        return <Page header='已选择兑换产品' right={<></>} footer={footer} >
             <List
                 items={pointProductsSelected}
                 item={{ render: this.renderPointProduct, className: "w-50 px-3" }}

@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { VPage, Page, DropdownAction, DropdownActions, FA } from 'tonva';
+import { VPage, Page, DropdownAction, DropdownActions, FA, nav } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
-import { signViceMap, signTopicMap } from 'tools/images';
+import { signViceMap, signTopicMap, Homemadelogo, logo } from 'tools/images';
 import { CSignIn } from './CSignIn';
+import { RevenueExpenditure } from './basicRefer';
+import classNames from 'classnames';
+import moment from 'moment';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -18,7 +21,7 @@ export class VPointSign extends VPage<CSignIn> {
     @observable showTips: any = "none";
     rulesNum: number = 0;
     async open(param?: any) {
-        this.openPage(this.page, { welfare: param });
+        this.openPage(this.page);
     }
 
     private renderRule = (rulesNum: any, ruleContent: any) => {
@@ -38,20 +41,22 @@ export class VPointSign extends VPage<CSignIn> {
     }
 
     private page = observer((param: any) => {
-        let { welfare } = param;
         let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
         let { cLottery } = cApp;
-        if (IsSignin) this.handleChange();
+        let date = moment().format('YYYY-MM-DD').split('-');
+        let timer = `${date[0]} 年 ${date[1]} 月 ${date[2]} 日 `;
+
+        // if (IsSignin) this.handleChange();
         let actions: DropdownAction[] = [
             {
                 icon: 'get-pocket',
-                caption: '签到明细',
-                action: () => openRevenueExpenditure('签到明细')
+                caption: RevenueExpenditure.SIGNINHISTORY,
+                action: () => openRevenueExpenditure(RevenueExpenditure.SIGNINHISTORY)
             }
         ];
         let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
 
-        return <Page header='每日签到' right={right}>
+        return <Page header='签到' right={right}>
             <div className="text-center text-light px-5 pt-5"
                 style={{ background: `url(${signTopicMap}) no-repeat`, backgroundSize: "100% 100%" }}>
                 {/* <div className="rounded-circle mx-auto"
@@ -64,7 +69,14 @@ export class VPointSign extends VPage<CSignIn> {
                         </div>
                     </div>
                 </div> */}
-                <div className="rounded-circle mx-auto w-12c h-12c"
+                <div className="pb-5">
+                    <div className="h4">{timer}</div>
+                    <div className="my-4 h5">今日已签到</div>
+                    <div className="pt-3">
+                        <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
+                    </div>
+                </div>
+                {/* <div className="rounded-circle mx-auto w-12c h-12c"
                     style={{ background: 'linear-gradient(#FCF4F3 15%, #EFDCD4, #CC9287, #C17162, #A93338, #A52230)', padding: '.8rem' }}>
                     <div className="w-100 h-100 rounded-circle pt-3" style={{ background: "#A52230" }}>
                         <div className="pt-4">已连续签到</div>
@@ -77,15 +89,18 @@ export class VPointSign extends VPage<CSignIn> {
                 <div className="small" style={{ transform: 'translateY(-30px)' }}>
                     <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
                     <div className="small mt-2">连续签到30天，可获得1次抽奖机会</div>
-                </div>
+                </div> */}
+            </div>
+            <div className="w-100 p-5 mt-4 d-flex justify-content-center flex-column" >
+                <img src={Homemadelogo} alt="" className="w-100 mx-auto" style={{ opacity: .1, transform: 'skew(-10deg, 0deg)' }} />
             </div>
 
             {/* 抽奖 */}
-            <div style={{ background: `url(${signViceMap})`, backgroundSize: "100%" }} className="h-20c">
+            {/* <div style={{ background: `url(${signViceMap})`, backgroundSize: "100%" }} className="h-20c">
                 <div className="mx-5 mt-2 py-1 d-flex justify-content-center flex-wrap" style={{ boxShadow: "0px 1px 3px #333333", borderRadius: "8px" }}>
                     {this.demandBlock('抽奖', 'life-ring', '#CD6600', cLottery.openLotteryProduct)}
                 </div>
-            </div>
+            </div> */}
 
             {/* 签到规则 */}
             {/* <div className="pt-4 px-4 mt-4">

@@ -5,6 +5,7 @@ import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
 // import moment from 'moment';
 import { renderPointRecord } from './VMyPoint';
+import { RevenueExpenditure } from './basicRefer';
 
 export class VRevenueExpenditure extends VPage<CPointProduct> {
     private showList: any = [];
@@ -30,12 +31,13 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
 
     private matchData = (header: string) => {
         let { pagePointHistory, cApp } = this.controller;
+        let { POINTHISTORY, SIGNINHISTORY } = RevenueExpenditure;
         switch (header) {
-            case '收支明细':
+            case POINTHISTORY:
                 this.showList = pagePointHistory;
                 this.tipNone = '『 未曾拥有过 不曾失去过 』';
                 return;
-            case '签到明细':
+            case SIGNINHISTORY:
                 this.showList = cApp.cSignIn.signinPageHistory;
                 this.tipNone = '『 从未得到过 开启首签之旅 』';
                 return;

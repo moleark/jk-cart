@@ -101,7 +101,6 @@ export class VLottery extends VPage<CLottery> {
 
             <div className="position-relative" style={{ background: `url(http://bpic.588ku.com/back_pic/04/70/62/26589975a47d9d0.jpg) no-repeat`, backgroundSize: 'cover', }}>
                 {/* <img style={{ visibility: 'hidden' }} width="100%" src={timg1_test} alt="" /> */}
-                {/* <div className="position-absolute w-100" style={{ top: 0, left: 0, right: 0, bottom: 0 }}> */}
                 <div className="w-100 pb-5" >
                     {/* 抽奖机会 */}
                     <div className="d-flex justify-content-center text-light pt-5 mb-3" >

@@ -47,13 +47,7 @@ export class CPointProduct extends CUqBase {
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
-    protected async internalStart(param?: any) {
-        // await this.refreshMypoint();        /* 刷新积分 */
-        // await this.getPointProductGenre();  /* 获取产品类型 */
-        // this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
-        // this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
-        // this.openVPage(VMyPoint);
-    }
+    protected async internalStart(param?: any) { }
 
     /**
      * 刷新积分
@@ -223,10 +217,10 @@ export class CPointProduct extends CUqBase {
      */
     getPointProductByDifferentPlot = async (plot: any) => {
         let { productGenre, newRecommend, hotProduct } = topicClump;
-        let state = plot.name ? productGenre : plot;
+        let state = typeof plot === 'object' && this.pointProductGenre.some((v) => v.name === plot.name) ? productGenre : plot;
         switch (state) {
             case productGenre:
-                await this.filterByProductGenre(plot);
+                this.pointProducts = await this.filterByProductGenre(plot);
                 break;
             case newRecommend:
                 this.pointProducts = await this.getNewPointProducts();
@@ -245,15 +239,7 @@ export class CPointProduct extends CUqBase {
      */
     filterByProductGenre = async (currentGenre: any) => {
         let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
-        this.pointProducts = pointProductFromGenre.map((v) => { return { genre: v.genre, product: v.pointProduct } });
-        /* let filterPointProducts = [];
-        if (pointProductFromGenre.length) {
-            for (let key of pointProductFromGenre) {
-                let searchpointProductByKey = await this.getPointProductLibLoad(key.pointProduct.id)
-                filterPointProducts.push(searchpointProductByKey);
-            }
-        }
-        this.pointProducts = filterPointProducts; */
+        return pointProductFromGenre.map((v) => { return { genre: v.genre, product: v.pointProduct } });
     }
 
     /**
@@ -283,7 +269,9 @@ export class CPointProduct extends CUqBase {
      * 获取积分商品详情的html片段 -----------------------需接口
      */
     getPointProductDetailFragment = async (pointProduct: any) => {
-        this.pointProductsDetail.htmlFragment = '<div style="color:red;text-align:center;margin-top:2rem;">帖文 待开发</div>';
+        // await this.uqs.积分商城.
+        // this.pointProductsDetail.htmlFragment = '<div style="color:red;text-align:center;margin-top:2rem;">帖文 待开发</div>';
+        this.pointProductsDetail.htmlFragment = '';
     }
 
     /**
@@ -316,14 +304,6 @@ export class CPointProduct extends CUqBase {
      */
     getPointsProducts = async () => {
         return await this.uqs.积分商城.GetPointProduct.table(this.pointInterval);
-    }
-
-    /**
-     * 奖品确认领取(成功)
-     */
-    submitPrizeOrder = async () => {
-        let { cLottery } = this.cApp;
-        await cLottery.submitPrizeOrder();
     }
 
     /**
@@ -514,14 +494,13 @@ export class CPointProduct extends CUqBase {
         return defaultSetting.shippingContact || await this.getContact();
     }
 
-    onSelectShippingContact = async (pageDesc?: string) => {
-        let { cLottery } = this.cApp;
+    selectContact = async () => {
         let cSelect = this.newC(CSelectShippingContact);
         let contactBox = await cSelect.call<BoxId>(true);
-        if (pageDesc === OrderSource.EXCHANGEORDER) {
-            this.orderData.shippingContact = contactBox;
-        } else {
-            cLottery.prizeOrderData.shippingContact = contactBox;
-        }
+        return contactBox;
+    }
+
+    onSelectShippingContact = async () => {
+        this.orderData.shippingContact = await this.selectContact()
     }
 }

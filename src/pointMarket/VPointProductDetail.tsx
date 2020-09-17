@@ -32,7 +32,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="w-100 px-4">
-                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" /></div>
                     <div className="small">
                         <div className="mt-2">{v.descriptionC}</div>
                         <div className="my-2">{v.grade}</div>

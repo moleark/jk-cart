@@ -19,14 +19,14 @@ export class CSignIn extends CUqBase {
      */
     openPointSign = async () => {
         await this.isSignined();
-        await this.getSigninConsecutiveDays();
         if (this.IsSignin)
             await this.addSigninSheet(47, this.signinval);
+        await this.getSigninConsecutiveDays();
         this.openVPage(VPointSign);
     }
 
     /**
-    * 积分收支明细页面
+    * 签到明细页面
     */
     openRevenueExpenditure = async (topic?: any) => {
         await this.getSigninHistory();
@@ -52,7 +52,7 @@ export class CSignIn extends CUqBase {
         customer = customer ? customer : this.user.id;
         await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
         await cPointProduct.refreshMypoint();
-        await this.getSigninConsecutiveDays();
+        // await this.getSigninConsecutiveDays();
         // await this.getSigninHistory();
         // await this.getPointHistory();
 
@@ -79,10 +79,12 @@ export class CSignIn extends CUqBase {
      */
     getSigninConsecutiveDays = async () => {
         // this.signinConsecutiveDays 
+        await this.getSigninHistory();
+
     }
 
     /**
-     * 福利：连续签到 数倍积分
+     * 福利：连续签到 数倍积分（弃用）
      */
     /* multiplePointsWelfare = () => {
         let arr = daysAndMultipleByWelfare;

@@ -6,6 +6,7 @@ import { VPointRule } from './VPointRule';
 import { PointProductImage } from 'tools/productImage';
 import classNames from 'classnames';
 import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';
+import { RevenueExpenditure } from './basicRefer';
 
 export class VMyPoint extends VPage<CPointProduct> {
 
@@ -22,14 +23,6 @@ export class VMyPoint extends VPage<CPointProduct> {
     private getPointHistory = async () => {
         this.controller.pointDetails();
     }*/
-
-    /**
-     * 签到
-     */
-    /* private openPointSign = async (name?: string) => {
-        // await this.controller.isSignined();   是否签到 
-        await this.controller.openPointSign()
-    } */
 
     private pointblock = (name: any, action: any, icon: any, width?: any) => {
         return <div className={`text-center mx-2 mb-2 ${width}`} onClick={() => action()}>
@@ -72,8 +65,8 @@ export class VMyPoint extends VPage<CPointProduct> {
         let actions: DropdownAction[] = [
             {
                 icon: 'get-pocket',
-                caption: '收支明细',
-                action: () => openRevenueExpenditure('收支明细')
+                caption: RevenueExpenditure.POINTHISTORY,
+                action: () => openRevenueExpenditure(RevenueExpenditure.POINTHISTORY)
             },
             {
                 icon: 'history',

@@ -24,7 +24,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             return <>
                 {tv(product, (v) => {
                     return <div className="w-100 d-flex flex-column mb-4">
-                        <div title={v.description} className="w-100" style={{ height: '130px' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                        <div title={v.description} className="w-100" style={{ height: '20vh' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
                         <div className="small w-100">
                             <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
                             <div className="d-flex justify-content-between">
@@ -75,9 +75,9 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let { orderData, onSelectShippingContact, cApp } = this.controller;
         let data = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData.shippingContact : cApp.cLottery.prizeOrderData.shippingContact;
         return <div className="px-2">
-            <div className="row py-3 bg-white mb-1" onClick={() => onSelectShippingContact(this.pageDesc)}>
+            <div className="row py-3 bg-white mb-1" onClick={() => onSelectShippingContact()}>
                 <div className="col-3 text-muted pr-0">收货地址:</div>
-                <div className="col-9 col-sm-10">
+                <div className="col-9">
                     <LMR className="w-100 align-items-center" right={chevronRight}>{tv(data, undefined, undefined, this.nullContact)}</LMR>
                     {shippingAddressBlankTip}
                 </div>
@@ -116,10 +116,10 @@ export class VMyPrizeExchangeOrder extends VExchangeOrder {
         return <div>11111</div>
     }
 
-    protected onSubmitOwn = async () => {
-        let { submitPrizeOrder } = this.controller;
-        await submitPrizeOrder();
-    }
+    /*  protected onSubmitOwn = async () => {
+         let { cLottery } = this.controller.cApp;
+         await cLottery.submitOrder();
+     } */
 
     protected page = observer(() => {
         let { cApp } = this.controller;
