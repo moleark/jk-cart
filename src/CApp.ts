@@ -97,7 +97,7 @@ export class CApp extends CUqApp {
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
-        this.cMe.openMyPoint();
+        // this.cMe.openMyPoint();
         // this.cLottery.openLotteryProduct();
         // this.cSignIn.openPointSign();
 
