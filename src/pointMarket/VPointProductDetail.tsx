@@ -4,7 +4,7 @@ import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
-import { schema } from './VPointProduct';
+import { renderHr, schema } from './VPointProduct';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
     async open(param?: any) {
@@ -63,7 +63,16 @@ export class VPointProductDetail extends VPage<CPointProduct> {
         return <Page header='产品详情' right={right} footer={footer}>
             <div className="nav-tabs">{this.renderPointProduct(pointProductsDetail)}</div>
             {/* html片段 */}
-            <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment ? pointProductsDetail.htmlFragment : '' }} className="w-100"></div>
+            <div className="mx-2 mt-1">
+                {
+                    pointProductsDetail.htmlFragment
+                        ? <div className="text-center w-100 py-2 px-2 text-primary d-flex justify-content-between align-items-center">
+                            {renderHr()}产品介绍{renderHr()}
+                        </div>
+                        : null
+                }
+                <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment ? pointProductsDetail.htmlFragment : '' }} className="w-100"></div>
+            </div>
         </Page>;
     });
 }
