@@ -14,6 +14,7 @@ import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
 import { GLOABLE } from 'cartenv';
+import { VDefaultPost } from './VDefaultPost';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -186,6 +187,13 @@ export class CPointProduct extends CUqBase {
      */
     renderSelectedLable() {
         return this.renderView(VSelectedLable);
+    }
+
+    /**
+     * 默认帖文
+     */
+    renderVDefaultPost() {
+        return this.renderView(VDefaultPost);
     }
 
     // /*领取积分 */

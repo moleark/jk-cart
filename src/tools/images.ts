@@ -8,6 +8,7 @@ import triangleShadingT from 'images/TriangleShadingT.png';
 import signTopicMap from 'images/signTopicMap.png';
 import signViceMap from 'images/signViceMap.png';
 import Homemadelogo from 'images/Homemadelogo.png';
+import pointIcon from 'images/point.png';
 
 export {
     logo,
@@ -20,4 +21,5 @@ export {
     signViceMap,
     signTopicMap,
     Homemadelogo,
+    pointIcon,
 }
