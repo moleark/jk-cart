@@ -1,39 +1,39 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "51683897dd2aae6c1b33ef18a123ac3f",
+    "revision": "575505ec889237d3403702a11462e72a",
     "url": "./index.html"
   },
   {
-    "revision": "7805a497ed169386b7ff",
+    "revision": "1884d0eeaa7a3894a281",
     "url": "./static/css/2.171ba329.chunk.css"
   },
   {
-    "revision": "33cff69bcd75a0036922",
+    "revision": "7fb0ea06600030131667",
     "url": "./static/css/main.b4ffa3e1.chunk.css"
   },
   {
-    "revision": "7805a497ed169386b7ff",
-    "url": "./static/js/2.11946117.chunk.js"
+    "revision": "1884d0eeaa7a3894a281",
+    "url": "./static/js/2.ba63c90e.chunk.js"
   },
   {
     "revision": "2d7aee33d2549841bbee8e3df05eef18",
-    "url": "./static/js/2.11946117.chunk.js.LICENSE.txt"
+    "url": "./static/js/2.ba63c90e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d419065971f5345f011e",
-    "url": "./static/js/3.a9d783f3.chunk.js"
+    "revision": "f3d9b4b048917c4008fd",
+    "url": "./static/js/3.82fbd8e7.chunk.js"
   },
   {
-    "revision": "21434cf101c01f071fe4",
-    "url": "./static/js/4.f2db8502.chunk.js"
+    "revision": "da9c77cbe181cd352de4",
+    "url": "./static/js/4.a7ccd5d5.chunk.js"
   },
   {
-    "revision": "33cff69bcd75a0036922",
-    "url": "./static/js/main.cbc17451.chunk.js"
+    "revision": "7fb0ea06600030131667",
+    "url": "./static/js/main.c31fc1a0.chunk.js"
   },
   {
-    "revision": "3e97fb2e5507aa5cd100",
-    "url": "./static/js/runtime-main.2873a8f8.js"
+    "revision": "d47a69ac6d73a82f0931",
+    "url": "./static/js/runtime-main.11baed53.js"
   },
   {
     "revision": "f85ff3e0a81d38e50a00c59f0687c339",
@@ -60,12 +60,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/OrganicChemistry.6d56971c.png"
   },
   {
-    "revision": "f5bdfc961936c18682ad3b244d63f879",
-    "url": "./static/media/TriangleShadingO.f5bdfc96.png"
+    "revision": "abe107d7081b4199afcab43a00f67a4d",
+    "url": "./static/media/TriangleShadingO.abe107d7.png"
   },
   {
-    "revision": "de26ee0f75d4494b79cca0a575507922",
-    "url": "./static/media/TriangleShadingT.de26ee0f.png"
+    "revision": "7a55757eea6c2a794ae9e83f9aaca29d",
+    "url": "./static/media/TriangleShadingT.7a55757e.png"
   },
   {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
@@ -92,12 +92,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/homeTopicMap.89cdf192.jpg"
   },
   {
+    "revision": "ce9e0db2426657f1e934e85f59aec03f",
+    "url": "./static/media/infb.ce9e0db2.jpg"
+  },
+  {
     "revision": "ee7cd8ed2dcec943251eb2763684fc6f",
     "url": "./static/media/logo.ee7cd8ed.svg"
   },
   {
-    "revision": "e953d10d3c5431c461ed6d0c6a194c08",
-    "url": "./static/media/logo_pointShop.e953d10d.png"
+    "revision": "644af5a600da30d4813730f9f3249e86",
+    "url": "./static/media/logo_pointShop.644af5a6.png"
   },
   {
     "revision": "772a31a646cb82c2cf0bdebade5fee51",
