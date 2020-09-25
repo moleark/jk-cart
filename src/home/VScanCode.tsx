@@ -40,7 +40,7 @@ export class VScanCode extends VPage<CHome> {
             <div className="position-absolute w-100" style={{ zIndex: 9 }}>
                 {CustomHeaderTemplate('扫码', '', 'bg-transparent', 'text-primary')}
             </div>
-            <video src="" id='bcid' className="w-100 h-100"></video>
+            <div id='bcid' className="w-100 h-100"></div>
         </div>;
     };
 }
