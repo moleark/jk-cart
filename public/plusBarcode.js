@@ -1,22 +1,13 @@
 /* eslint-disable default-case */
 /* eslint-disable no-undef */
 (function () {
-    var ws = null, wo = null;
+    // var wo = null;
     var scan = null;
     // H5 plus事件处理
     function plusReady() {
-        // 获取窗口对象
-        ws = plus.webview.currentWebview();
-        wo = ws.opener();
-        // 开始扫描
-        ws.addEventListener('show', function () {
-            scan = new plus.barcode.Barcode('bcid');
-            scan.onmarked = onmarked;
-            scan.start({ conserve: true, filename: '_doc/barcode/' });
-            createSubview();
-        }, false);
-        // 显示页面并关闭等待框
-        ws.show('pop-in');
+        scan = new plus.barcode.Barcode('bcid');
+        scan.onmarked = onmarked;
+        scan.start({ conserve: true, filename: '_doc/barcode/' });
     }
     document.addEventListener('plusready', plusReady, false);
 
@@ -37,13 +28,11 @@
                 break;
         }
         result = result.replace(/\r\n/g, '');
-        wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
+        console.log('result---------------------------------------------------------', result);
+        // wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
         back();
     }
-    // 创建子窗口
-    function createSubview() {
-        //
-    }
+
     // 从相册中选择二维码图片 
     function scanPicture() {
         plus.gallery.pick(function (path) {
