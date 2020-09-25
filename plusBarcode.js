@@ -2,13 +2,14 @@
 /* eslint-disable no-undef */
 (function () {
 
-    /* var plusReady = function (callback) {
+    var plusReady = function (callback) {
         if (window.plus) {
             callback();
         } else {
             document.addEventListener('plusready', callback);
         }
-    } */
+    }
+
     /* --------- */
     // 扩展API加载完毕后调用onPlusReady回调函数 
     // document.addEventListener("plusready", onPlusReady, false);
@@ -34,7 +35,29 @@
                 text = 'EAN8: ';
                 break;
         }
-        alert(text + result);
+        result = result.replace(/\n/g, '');
+        console.log('result---', result);
+        if (result.indexOf('http://') == 0 || result.indexOf('https://') == 0) {
+            plus.nativeUI.confirm(result, function (i) {
+                if (i.index == 0) {
+                    // self.back() // 返回上个页面
+
+                    plus.runtime.openURL(result)
+                    console.log(result) // 扫出来的值
+                    t.scan.close() //扫码成功后关闭扫码
+                    t.$router.push({ path: 'Info', query: { id: result } })   // 跳转到对应的页面 
+                } else {
+                    // self.back() // 返回上个页面
+                    console.log(result)
+                    t.scan.close()
+                    window.localStorage.scan = result
+                    t.$router.push({ path: 'Info', query: { id: result } })
+                }
+            }, '', ['打开', '取消'])
+        } else {
+            // self.back() // 返回上个页面
+            console.log(result)
+        }
     }
     function startRecognize() {
         scan = new plus.barcode.Barcode('bcid');
@@ -43,6 +66,7 @@
     }
     function startScan() {
         scan.start();
+        console.log('start');
     }
 
     window.plusBarcode = startRecognize// open;
