@@ -37,5 +37,11 @@
     function startScan() {
         scan.start();
     }
+
+    function closeScan() {
+        scan.cancel();
+    }
+
     window.plusBarcode = startRecognize
+    window.plusBccancel = closeScan
 })();
