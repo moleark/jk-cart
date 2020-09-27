@@ -32,6 +32,7 @@
     }
     function startRecognize() {
         scan = new plus.barcode.Barcode('bcid');
+        window.scan = scan;
         scan.onmarked = onmarked;
         startScan()
     }
@@ -40,11 +41,14 @@
     }
 
     function closeScan() {
-        // scan.close();
+        scan.close();
+        /*
         startRecognize();
         scan.cancel();
+        */
     }
 
     window.plusBarcode = startRecognize
     window.plusBccancel = closeScan
+
 })();
