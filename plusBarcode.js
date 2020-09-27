@@ -14,7 +14,6 @@
         var e = document.getElementById("scan");
         e.removeAttribute("disabled");
     }
-    var ws = null, wo = null;
     var scan = null;
     function onmarked(type, result) {
         var text = '未知: ';
@@ -32,19 +31,8 @@
         alert(text + result);
     }
     function startRecognize() {
-        ws = plus.webview.currentWebview();
-        wo = ws.opener();
-        // 开始扫描
-        ws.addEventListener('show', function () {
-            scan = new plus.barcode.Barcode('bcid');
-            scan.onmarked = onmarked;
-            scan.start();
-        }, false);
-        // 显示页面并关闭等待框
-        ws.show();
-        // scan.close();
-        // scan = new plus.barcode.Barcode('bcid');
-        // scan.onmarked = onmarked;
+        scan = new plus.barcode.Barcode('bcid');
+        scan.onmarked = onmarked;
     }
     function startScan() {
         scan.start();
