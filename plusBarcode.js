@@ -33,6 +33,7 @@
     function startRecognize() {
         scan = new plus.barcode.Barcode('bcid');
         scan.onmarked = onmarked;
+        startScan()
     }
     function startScan() {
         scan.start();
@@ -40,7 +41,8 @@
 
     function closeScan() {
         // scan.close();
-        // scan.cancel();
+        startRecognize();
+        scan.cancel();
     }
 
     window.plusBarcode = startRecognize
