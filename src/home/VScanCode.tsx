@@ -10,8 +10,10 @@ export class VScanCode extends VPage<CHome> {
     }
 
     media = () => {
+        console.log(navigator.userAgent);
+
         if (navigator.userAgent.indexOf("Html5Plus") > -1) {
-            // @ts-ignore  屏蔽错误 
+            // @ts-ignore 
             window.plusBarcode();
         }
         /* console.log(navigator);//mediaDevices
@@ -40,7 +42,9 @@ export class VScanCode extends VPage<CHome> {
             <div className="position-absolute w-100" style={{ zIndex: 9 }}>
                 {CustomHeaderTemplate('扫码', '', 'bg-transparent', 'text-primary')}
             </div>
-            <div id='bcid' className="w-100 h-100"></div>
+            <div id='bcid' className="w-100 h-100 bg-dark">
+                <div className="w-50"></div>
+            </div>
         </div>;
     };
 }

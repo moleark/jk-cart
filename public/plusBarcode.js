@@ -7,9 +7,10 @@
     function plusReady() {
         scan = new plus.barcode.Barcode('bcid');
         scan.onmarked = onmarked;
-        scan.start({ conserve: true, filename: '_doc/barcode/' });
+        console.log('bcid-start');
+        scan.start();
     }
-    document.addEventListener('plusready', plusReady, false);
+    // document.addEventListener('plusready', plusReady, false);
 
     // 二维码扫描成功
     function onmarked(type, result, file) {
@@ -30,18 +31,7 @@
         result = result.replace(/\r\n/g, '');
         console.log('result---------------------------------------------------------', result);
         // wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
-        back();
-    }
-
-    // 从相册中选择二维码图片 
-    function scanPicture() {
-        plus.gallery.pick(function (path) {
-            plus.barcode.scan(path, onmarked, function (error) {
-                plus.nativeUI.alert('无法识别此图片');
-            });
-        }, function (err) {
-            console.log('Failed: ' + err.message);
-        });
+        // back();
     }
 
     window.plusBarcode = plusReady
