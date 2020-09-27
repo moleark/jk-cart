@@ -8,14 +8,14 @@
         // 扩展API加载完毕后调用onPlusReady回调函数 
         document.addEventListener("plusready", onPlusReady, false);
     } */
-    document.addEventListener("plusready", onPlusReady, false);
+    // document.addEventListener("plusready", onPlusReady, false);
     // 扩展API加载完毕，现在可以正常调用扩展API
     /* function onPlusReady() {
         // var e = document.getElementById("scan");
         // e.removeAttribute("disabled");
     } */
     // var scan = null;
-    function onmarked(type, result) {
+    /* function onmarked(type, result) {
         var text = '未知: ';
         switch (type) {
             case plus.barcode.QR:
@@ -29,7 +29,7 @@
                 break;
         }
         alert(text + result);
-    }
+    } */
     /* function startRecognize() {
         scan = new plus.barcode.Barcode('bcid');
         window.scan = scan;
@@ -46,7 +46,4 @@
 
     /* window.plusBarcode = startRecognize
     window.plusBccancel = closeScan */
-
-    window.onmarked = onmarked
-    window.plus = plus;
 })();
