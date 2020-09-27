@@ -37,13 +37,13 @@ export class VScanCode extends VPage<CHome> {
     }
 
     private page = () => {
-        this.media();
+        // this.media();
         return <div className="w-100 h-100 position-relative">
-            <div className="position-absolute w-100" style={{ zIndex: 9 }}>
+            {/*  <div className="position-absolute w-100" style={{ zIndex: 9 }}>
                 {CustomHeaderTemplate('扫码', '', 'bg-transparent', 'text-primary')}
-            </div>
+            </div> */}
+            <button style={{ zIndex: 99 }} onClick={this.media} >创建</button>
             <div id='bcid' className="w-100 h-100 bg-dark">
-                <div className="w-50"></div>
             </div>
         </div>;
     };
