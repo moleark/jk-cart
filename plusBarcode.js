@@ -39,7 +39,7 @@
     }
 
     function closeScan() {
-        scan.close();
+        // scan.close();
         // scan.cancel();
     }
 
