@@ -39,7 +39,8 @@
     }
 
     function closeScan() {
-        scan.cancel();
+        scan.close();
+        // scan.cancel();
     }
 
     window.plusBarcode = startRecognize
