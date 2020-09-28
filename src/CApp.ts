@@ -164,7 +164,7 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            this.showMain();
+            // this.showMain();
             // this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
@@ -179,8 +179,24 @@ export class CApp extends CUqApp {
         }
     }
 
-    protected afterStart = async () => {
+    // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
+    // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
+    protected onRoute() {
+        this.on(() => {
+            this.showMain();
+        });
+        this.on({
+            '/search/:key': (params: any, queryStr: any) => {
+                this.cProduct.start(params.key);
+            },
+            '/pointshop': () => {
+                this.cPointProduct.openMyPoint();
+            }
+        });
+    }
 
+    protected afterStart = async () => {
+        await super.afterStart();
         let elements: Elements = {
             login: this.showLogin,
             productlist: this.productList,
