@@ -6,6 +6,7 @@ import { observable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
 import { GLOABLE } from 'cartenv';
 import { randomColor } from 'tools/randomColor';
+import { pointIcon } from 'tools/images';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
     @observable protected shippingAddressIsBlank: boolean = false;
@@ -23,14 +24,18 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         if (quantity > 0) {
             return <>
                 {tv(product, (v) => {
-                    return <div className="w-100 d-flex flex-column mb-4">
-                        <div title={v.description} className="w-100" style={{ height: '20vh' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                    return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
+                        <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
                         <div className="small w-100">
                             <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
                             <div className="d-flex justify-content-between">
-                                <div>
+                                {/*  <div>
                                     <FA name='database' className="text-warning" />
                                     <span className="text-danger h5"> {point}</span>
+                                </div> */}
+                                <div className='d-flex'>
+                                    <img src={pointIcon} alt="" style={{ height: 24 }} />
+                                    <span className="text-danger h5 m-0 ml-1 align-self-end"> {v.point}</span>
                                 </div>
                                 <div>*{quantity}</div>
                             </div>

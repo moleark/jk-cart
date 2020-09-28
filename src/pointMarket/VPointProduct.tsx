@@ -8,9 +8,19 @@ import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 import { randomColor } from 'tools/randomColor';
-import { triangleShadingO, triangleShadingT } from 'tools/images';
+import { pointIcon, triangleShadingO } from 'tools/images';
 
-export const renderHr = () => <div className="flex-fill px-2 text-primary"><hr style={{ backgroundColor: '#007bff', height: 1, border: 'none' }} /></div>;
+export const renderHr = (HRCL?: any, HRST?: any) => {
+    let styleObj = HRST ? HRST : { backgroundColor: '#007bff' };
+    return <div className={`flex-fill ${HRCL ? HRCL : 'px-2 text-primary'}`}><hr style={{ height: 1, border: 'none', ...styleObj }} /></div>
+};
+
+export const TopicDivision = (topic: any, CL?: any, ST?: any, HRCL?: any, HRST?: any) => {
+    return <div className={`text-center w-100 py-2 ${CL ? CL : 'px-2 text-primary'} d-flex justify-content-between align-items-center`} style={ST}>
+        {renderHr(HRCL, HRST)}{topic}{renderHr(HRCL, HRST)}
+    </div>
+}
+
 
 export const schema = [
     { name: 'product', type: 'object' } as ObjectSchema,
@@ -27,12 +37,12 @@ export class VPointProduct extends VPage<CPointProduct> {
     private currentInterval: string;
     private themeName: string = '积分商城';
     private tabs: TabProp[];
-    protected none: JSX.Element = <div className="mt-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
+    protected none: JSX.Element = <div className="my-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
-        { caption: '1万以下', state: 'below', icon: 'superpowers' },
-        { caption: '1万-5万', state: 'firstLevel', icon: 'superpowers ' },
-        { caption: '5万-15万', state: 'twoLevel', icon: 'superpowers' },
-        { caption: '15万以上', state: 'above', icon: 'superpowers' },
+        { caption: '1万以下', state: 'below', icon: 'superpowers', borderC: '#2c93ad' },
+        { caption: '1-5万', state: 'firstLevel', icon: 'superpowers', borderC: '#3CC43C' },
+        { caption: '5-15万', state: 'twoLevel', icon: 'superpowers', borderC: '#7c1e5e' },
+        { caption: '15万以上', state: 'above', icon: 'superpowers', borderC: '#0e2c8c' },
     ];
     async open(param?: any) {
         if (param) {
@@ -44,10 +54,11 @@ export class VPointProduct extends VPage<CPointProduct> {
     private getTabs = async () => {
         let { pointProducts, getPointsIntervalProducts } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
-            let { caption, state, icon } = v;
+            let { caption, state, icon, borderC } = v;
             return {
                 name: caption,
-                caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
+                // caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
+                caption: (selected: boolean) => this.TabCaptionComponent(caption, icon, borderC, (selected ? '#ffffff' : 'transparent')),
                 content: () => {
                     return <>{this.renderList()}</>
                 },
@@ -60,9 +71,9 @@ export class VPointProduct extends VPage<CPointProduct> {
         });
     }
 
-    private TabCaptionComponent = (label: string, icon: string, color: string) => <div
-        className={'py-2 d-flex justify-content-center align-items-center flex-column cursor-pointer ' + color}>
-        <small className="px-2 rounded-sm" style={{ border: '1px solid #3CC43C' }}>{label}</small>
+    private TabCaptionComponent = (label: string, icon: string, borderC: string, color: string) => <div
+        className={'py-2 d-flex justify-content-center align-items-center flex-column cursor-pointer '}>
+        <small className="w-4c text-center rounded-sm font-weight-bold" style={{ color: borderC, border: `1px solid ${borderC}`, background: color }}>{label}</small>
     </div>;
 
     protected renderList = (isToDetail?: boolean) => {
@@ -94,8 +105,8 @@ export class VPointProduct extends VPage<CPointProduct> {
         let { product } = pointProduct;
         return <>
             {tv(product, (v) => {
-                return <div className="w-100 d-flex flex-column mb-4">
-                    <div title={v.description} className="w-100" style={{ height: '20vh' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                return <div className="w-100 d-flex flex-column mb-4">{/* height: 20vh  */}
+                    <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>
                         <>
@@ -107,10 +118,11 @@ export class VPointProduct extends VPage<CPointProduct> {
                                     </div>
                                     : null
                             }
-                            <>
-                                <FA name='database' className="text-warning" />
-                                <span className="text-danger h5"> {v.point}</span>{/* <small>分</small> */}
-                            </>
+                            <div className='d-flex'>
+                                {/* <FA name='database' className="text-warning" /> */}
+                                <img src={pointIcon} alt="" style={{ height: 24 }} />
+                                <span className="text-danger h5 m-0 ml-1 align-self-end"> {v.point}</span>{/* <small>分</small> */}
+                            </div>
                         </>
                     </div>
                 </div>
@@ -164,11 +176,9 @@ export class VPointProduct extends VPage<CPointProduct> {
         return <Page header={this.themeName} right={right}>
             {
                 this.themeName === '积分商城'
-                    ? <Tabs tabs={this.tabs} tabPosition="top" />
+                    ? <Tabs tabs={this.tabs} tabPosition="top" size="lg" />
                     : <>
-                        {/* <div className="text-center w-100 py-2 px-2 text-primary d-flex justify-content-between align-items-center">
-                            {renderHr()}{this.themeName}{renderHr()}
-                        </div> */}
+                        {/* {TopicDivision(this.themeName)} */}
                         {this.renderList()}
                     </>
             }

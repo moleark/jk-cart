@@ -3,6 +3,7 @@ import { PageItems } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
+import { VScanCode } from './VScanCode';
 
 class HomeSections extends PageItems<any> {
 
@@ -43,6 +44,10 @@ export class CHome extends CUqBase {
         await cProductCategory.start();
         this.openVPage(VHome);
         */
+    }
+
+    openScanCode = () => {
+        this.openVPage(VScanCode)
     }
 
     renderSearchHeader = (size?: string) => {

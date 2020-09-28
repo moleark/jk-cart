@@ -12,6 +12,8 @@ import { VExchangeHistory } from './VExchangeHistory';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
+import { GLOABLE } from 'cartenv';
+import { VDefaultPost } from './VDefaultPost';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -103,7 +105,7 @@ export class CPointProduct extends CUqBase {
     }
 
     /**
-     * 可兑换产品的详情   -----------------------生成浏览量 需解注
+     * 可兑换产品的详情(可生成浏览量)
      */
     openPointProductDetail = async (pointProduct: any) => {
         this.pointProductsDetail = pointProduct;
@@ -114,9 +116,23 @@ export class CPointProduct extends CUqBase {
             }
         } else
             this.pointProductsDetail.quantity = 0;
-        await this.getPointProductDetailFragment(this.pointProductsDetail);
-        // await this.setPointProductVisits(pointProduct); -----------------------生成浏览量 需解注
+        this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
+        await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
         this.openVPage(VPointProductDetail);
+    }
+
+    /**
+     * 获取积分商品详情的html片段(编译后)
+     */
+    getPointProductDetailFragment = async (pointProduct: any) => {
+        // this.pointProductsDetail.htmlFragment = '<div style="color:red;text-align:center;margin-top:2rem;">帖文 待开发</div>';
+        let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/pointproductdetail/' + pointProduct.product.id);
+        if (result.ok) {
+            let content = await result.text();
+            return content;
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -170,6 +186,13 @@ export class CPointProduct extends CUqBase {
      */
     renderSelectedLable() {
         return this.renderView(VSelectedLable);
+    }
+
+    /**
+     * 默认帖文
+     */
+    renderVDefaultPost() {
+        return this.renderView(VDefaultPost);
     }
 
     // /*领取积分 */
@@ -262,15 +285,6 @@ export class CPointProduct extends CUqBase {
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
         return result.map((v) => { return { product: v.id } });
-    }
-
-    /**
-     * 获取积分商品详情的html片段 -----------------------需接口
-     */
-    getPointProductDetailFragment = async (pointProduct: any) => {
-        // await this.uqs.积分商城.
-        // this.pointProductsDetail.htmlFragment = '<div style="color:red;text-align:center;margin-top:2rem;">帖文 待开发</div>';
-        this.pointProductsDetail.htmlFragment = '';
     }
 
     /**
