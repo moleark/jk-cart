@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "./static/css/main.b4ffa3e1.chunk.css",
-    "main.js": "./static/js/main.62839661.chunk.js",
-    "main.js.map": "./static/js/main.62839661.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.16c90f66.js",
-    "runtime-main.js.map": "./static/js/runtime-main.16c90f66.js.map",
-    "static/css/2.171ba329.chunk.css": "./static/css/2.171ba329.chunk.css",
-    "static/js/2.a5943862.chunk.js": "./static/js/2.a5943862.chunk.js",
-    "static/js/2.a5943862.chunk.js.map": "./static/js/2.a5943862.chunk.js.map",
-    "static/js/3.2bfb85bd.chunk.js": "./static/js/3.2bfb85bd.chunk.js",
-    "static/js/3.2bfb85bd.chunk.js.map": "./static/js/3.2bfb85bd.chunk.js.map",
-    "static/js/4.7cba9d21.chunk.js": "./static/js/4.7cba9d21.chunk.js",
-    "static/js/4.7cba9d21.chunk.js.map": "./static/js/4.7cba9d21.chunk.js.map",
+    "main.js": "./static/js/main.0fdf47e5.chunk.js",
+    "main.js.map": "./static/js/main.0fdf47e5.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.55631411.js",
+    "runtime-main.js.map": "./static/js/runtime-main.55631411.js.map",
+    "static/css/2.05fdf9c5.chunk.css": "./static/css/2.05fdf9c5.chunk.css",
+    "static/js/2.814a22d6.chunk.js": "./static/js/2.814a22d6.chunk.js",
+    "static/js/2.814a22d6.chunk.js.map": "./static/js/2.814a22d6.chunk.js.map",
+    "static/js/3.da890830.chunk.js": "./static/js/3.da890830.chunk.js",
+    "static/js/3.da890830.chunk.js.map": "./static/js/3.da890830.chunk.js.map",
+    "static/js/4.334908be.chunk.js": "./static/js/4.334908be.chunk.js",
+    "static/js/4.334908be.chunk.js.map": "./static/js/4.334908be.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.f5636a13fcb413771a47a2b2030da660.js": "./precache-manifest.f5636a13fcb413771a47a2b2030da660.js",
+    "precache-manifest.34bb002e0da2b4a00674040218ca9563.js": "./precache-manifest.34bb002e0da2b4a00674040218ca9563.js",
     "service-worker.js": "./service-worker.js",
-    "static/css/2.171ba329.chunk.css.map": "./static/css/2.171ba329.chunk.css.map",
+    "static/css/2.05fdf9c5.chunk.css.map": "./static/css/2.05fdf9c5.chunk.css.map",
     "static/css/main.b4ffa3e1.chunk.css.map": "./static/css/main.b4ffa3e1.chunk.css.map",
-    "static/js/2.a5943862.chunk.js.LICENSE.txt": "./static/js/2.a5943862.chunk.js.LICENSE.txt",
+    "static/js/2.814a22d6.chunk.js.LICENSE.txt": "./static/js/2.814a22d6.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/Homemadelogo.png": "./static/media/Homemadelogo.06f15feb.png",
     "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
@@ -37,10 +37,10 @@
     "static/media/slick-theme.css": "./static/media/slick.f97e3bbf.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.16c90f66.js",
-    "static/css/2.171ba329.chunk.css",
-    "static/js/2.a5943862.chunk.js",
+    "static/js/runtime-main.55631411.js",
+    "static/css/2.05fdf9c5.chunk.css",
+    "static/js/2.814a22d6.chunk.js",
     "static/css/main.b4ffa3e1.chunk.css",
-    "static/js/main.62839661.chunk.js"
+    "static/js/main.0fdf47e5.chunk.js"
   ]
 }
