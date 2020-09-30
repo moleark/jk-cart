@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "./static/css/main.b4ffa3e1.chunk.css",
-    "main.js": "./static/js/main.e31f063b.chunk.js",
-    "main.js.map": "./static/js/main.e31f063b.chunk.js.map",
+    "main.js": "./static/js/main.2cc2adb7.chunk.js",
+    "main.js.map": "./static/js/main.2cc2adb7.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.513d4873.js",
     "runtime-main.js.map": "./static/js/runtime-main.513d4873.js.map",
     "static/css/2.171ba329.chunk.css": "./static/css/2.171ba329.chunk.css",
-    "static/js/2.1827d205.chunk.js": "./static/js/2.1827d205.chunk.js",
-    "static/js/2.1827d205.chunk.js.map": "./static/js/2.1827d205.chunk.js.map",
+    "static/js/2.b7cc5cb9.chunk.js": "./static/js/2.b7cc5cb9.chunk.js",
+    "static/js/2.b7cc5cb9.chunk.js.map": "./static/js/2.b7cc5cb9.chunk.js.map",
     "static/js/3.bdab9c56.chunk.js": "./static/js/3.bdab9c56.chunk.js",
     "static/js/3.bdab9c56.chunk.js.map": "./static/js/3.bdab9c56.chunk.js.map",
     "static/js/4.7117ae66.chunk.js": "./static/js/4.7117ae66.chunk.js",
     "static/js/4.7117ae66.chunk.js.map": "./static/js/4.7117ae66.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.bd89ec55a1e6dcc8962971eda5e0bd60.js": "./precache-manifest.bd89ec55a1e6dcc8962971eda5e0bd60.js",
+    "precache-manifest.85ad372ff4050db1b9472eaa21125de2.js": "./precache-manifest.85ad372ff4050db1b9472eaa21125de2.js",
     "service-worker.js": "./service-worker.js",
     "static/css/2.171ba329.chunk.css.map": "./static/css/2.171ba329.chunk.css.map",
     "static/css/main.b4ffa3e1.chunk.css.map": "./static/css/main.b4ffa3e1.chunk.css.map",
-    "static/js/2.1827d205.chunk.js.LICENSE.txt": "./static/js/2.1827d205.chunk.js.LICENSE.txt",
+    "static/js/2.b7cc5cb9.chunk.js.LICENSE.txt": "./static/js/2.b7cc5cb9.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/Homemadelogo.png": "./static/media/Homemadelogo.06f15feb.png",
     "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
@@ -39,8 +39,8 @@
   "entrypoints": [
     "static/js/runtime-main.513d4873.js",
     "static/css/2.171ba329.chunk.css",
-    "static/js/2.1827d205.chunk.js",
+    "static/js/2.b7cc5cb9.chunk.js",
     "static/css/main.b4ffa3e1.chunk.css",
-    "static/js/main.e31f063b.chunk.js"
+    "static/js/main.2cc2adb7.chunk.js"
   ]
 }
