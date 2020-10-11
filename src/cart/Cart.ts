@@ -1,9 +1,9 @@
 import { observable, autorun, IReactionDisposer } from 'mobx';
-import { Action, Query, TuidDiv, BoxId, Tuid } from 'tonva';
+import { TuidDiv, BoxId, Tuid } from 'tonva';
 //import { CCartApp } from '../CCartApp';
 import { PackRow } from 'product/Product';
 import { groupByProduct } from 'tools/groupByProduct';
-import { CApp } from '../CApp';
+import { CUqApp } from 'CBase';
 
 export interface CartItem2 {
     product: BoxId;
@@ -31,7 +31,7 @@ export interface CartPackRow extends PackRow {
 }
 
 export class Cart {
-    cApp: CApp;
+    cApp: CUqApp;
 
     private cartStore: CartStore;
     private disposer: IReactionDisposer;
@@ -43,7 +43,7 @@ export class Cart {
     count = observable.box<number>(0);
     amount = observable.box<number>(0);
     editButton = observable.box<boolean>(false);
-    constructor(cApp: CApp) {
+    constructor(cApp: CUqApp) {
         this.cApp = cApp;
         this.cartItems = this.data.list;
         this.disposer = autorun(this.calcSum);
@@ -278,8 +278,8 @@ export class Cart {
 
 abstract class CartStore {
 
-    protected cApp: CApp;
-    constructor(cApp: CApp) {
+    protected cApp: CUqApp;
+    constructor(cApp: CUqApp) {
         this.cApp = cApp;
     }
     abstract get isLocal(): boolean;
@@ -341,7 +341,7 @@ class CartLocal extends CartStore {
     private cartData: any[] = [];
     private productTuid: Tuid;
     private packTuid: TuidDiv;
-    constructor(cApp: CApp) {
+    constructor(cApp: CUqApp) {
         super(cApp);
 
         this.productTuid = this.cApp.uqs.product.ProductX;

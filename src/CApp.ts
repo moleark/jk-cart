@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
+import { CAppBase, IConstructor, User, nav, Elements, Query, startRoute } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -26,17 +26,14 @@ import { CSignIn } from 'pointMarket/CSignIn';
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
 
-    cart: Cart;
     topKey: any;
 
-    currentSalesRegion: any;
-    currentLanguage: any;
-    currentUser: WebUser;
     // currentCouponCode: string;
     // currentCreditCode: string;
 
     cHome: CHome;
     cCart: CCart;
+
     cProduct: CProduct;
     cOrder: COrder;
     cCoupon: CCoupon;
@@ -55,35 +52,17 @@ export class CApp extends CUqApp {
     }
     */
 
-    private setUser() {
-        this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
-        if (this.isLogined) {
-            this.currentUser.setUser(this.user);
-        }
-    }
-
     protected async internalStart() {
-        let { uqs } = this;
-        let { common } = uqs;
-        let { SalesRegion, Language } = common;
-        let [currentSalesRegion, currentLanguage] = await Promise.all([
-            SalesRegion.load(GLOABLE.SALESREGION_CN),
-            Language.load(GLOABLE.CHINESE),
-        ]);
-        this.setUser();
-        //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
-        //this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
-        this.currentSalesRegion = currentSalesRegion;
-        this.currentLanguage = currentLanguage;
+        await super.init();
 
         this.cart = new Cart(this);
         await this.cart.init();
 
-        this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
-        this.cCart = this.newC(CCart);
         this.cHome = this.newC(CHome);
+        this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
         this.cProduct = this.newC(CProduct);
         this.cOrder = this.newC(COrder);
+        this.cCart = this.newC(CCart);
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -164,7 +143,7 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            // this.showMain();
+            this.showMain();
             // this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
@@ -189,6 +168,11 @@ export class CApp extends CUqApp {
             '/search/:key': (params: any, queryStr: any) => {
                 this.cProduct.start(params.key);
             },
+            '/product/:id': (params: any, queryStr: any) => {
+                this.cProduct.showProductDetail(params.id);
+            },
+            '/cart': (params: any, queryStr: any) => {
+            },
             '/pointshop': () => {
                 this.cPointProduct.openMyPoint();
             }
@@ -202,7 +186,7 @@ export class CApp extends CUqApp {
             productlist: this.productList,
             productdetail: this.productDetail,
             carts: this.carts,
-        }
+        };
 
         this.hookElements(elements);
 

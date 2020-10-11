@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
+// import './css/style.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
@@ -9,7 +10,9 @@ import { NavView, start, nav, CAppBase, startRoute } from 'tonva';
 import './App.css';
 import { CApp } from 'CApp';
 import { appConfig } from 'configuration';
+import { CAppProduct, CAppProductDetail } from 'product/CAppProduct';
 
+/*
 let elRoot = document.getElementById('root');
 if (!elRoot) {
 	elRoot = document.createElement('div');
@@ -22,8 +25,8 @@ ReactDOM.render(<App />, elRoot);
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+*/
 
-/*
 let { location } = document;
 if (location.host) {
 	(async function () {
@@ -36,17 +39,23 @@ if (location.host) {
 			);
 		}
 
-		function renderCApp(cApp: CAppBase) {
+		function renderCApp(cApp: CAppBase, param?: any, ...params: any[]) {
 			const App: React.FC = () => {
 				const onLogined = async () => {
-					await cApp.start();
+					await cApp.start(param, params);
 				}
-				return <NavView onLogined={onLogined} />;
+				return <NavView onLogined={onLogined} notLogined={onLogined} />;
 			}
 			renderDom(<App />);
 		}
 
 		nav.on({
+			'/search/:key': (params: any, queryStr: any) => {
+				renderCApp(new CAppProduct(), params.key);
+			},
+			'/product/:id': (params: any, queryStr: any) => {
+				renderCApp(new CAppProductDetail(), params.id);
+			},
 			'/a/b': () => {
 				renderDom(<div>/a/b <button onClick={() => nav.navigate('/c/d')}>test</button></div>)
 			},
@@ -64,7 +73,6 @@ if (location.host) {
 				renderDom(<div>/e query:{span}  params:{JSON.stringify(params)}</div>)
 			},
 			'/bbbb/cccc': () => {
-				renderCApp(new CAppBBBBCCCC());
 			},
 		});
 		nav.on(() => {
@@ -101,4 +109,3 @@ else {
 		serviceWorker.unregister();
 	})();
 }
-*/
