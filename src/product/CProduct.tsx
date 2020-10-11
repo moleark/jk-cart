@@ -10,7 +10,6 @@ import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
 import { ProductItem } from '../tools/ProductItem';
-import { CFavorites } from '../customer/CFavorites';
 
 /**
  *

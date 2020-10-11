@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
 import {
-    VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
+    VPage, Page, Form, ItemSchema, NumSchema, UiSchema,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId
 } from 'tonva';
 import { tv } from 'tonva';
@@ -10,8 +10,7 @@ import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
-import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
-import { ShopPage } from 'tools/ShopPage';
+import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
 
 const schema: ItemSchema[] = [
@@ -170,8 +169,8 @@ export class VProduct extends VPage<CProduct> {
 
         let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
         viewProduct.model = product;
-        return <ShopPage>
+        return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }}>
             <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
-        </ShopPage>
+        </Page>
     }
 }
