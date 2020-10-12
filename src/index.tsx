@@ -28,7 +28,7 @@ serviceWorker.unregister();
 */
 
 let { location } = document;
-if (location.host) {
+if (location.host && false) {
 	(async function () {
 		function renderDom(div: any) {
 			ReactDOM.render(
@@ -93,8 +93,9 @@ else {
 			const onLogined = async () => {
 				await start(CApp, appConfig);
 			}
-			return <NavView onLogined={onLogined} />;
+			return <NavView onLogined={onLogined} notLogined={onLogined} />;
 		}
+		await startRoute(appConfig);
 
 		ReactDOM.render(
 			<React.StrictMode>

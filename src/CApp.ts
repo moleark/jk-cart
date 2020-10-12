@@ -143,7 +143,7 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            this.showMain();
+            // this.showMain();
             // this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
@@ -162,6 +162,7 @@ export class CApp extends CUqApp {
     // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
     protected onRoute() {
         this.on(() => {
+            console.log('on');
             this.showMain();
         });
         this.on({
