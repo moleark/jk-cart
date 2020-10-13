@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements, Query, startRoute } from 'tonva';
+import { CAppBase, IConstructor, User, nav, Elements, Query, startRoute, WebNav, View } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -22,6 +22,7 @@ import { CFavorites } from 'customer/CFavorites';
 import { Entrance } from 'ui/entrance';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
+import { NavHeaderView, NavFooterView } from 'ui/header';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -129,9 +130,6 @@ export class CApp extends CUqApp {
                             window.location.href = window.location.origin;
                         });
                     break;
-                case "cart":
-                    this.cCart.start();
-                    break;
                 case "productlist":
                     this.cProduct.start(query.key);
                     break;
@@ -162,7 +160,6 @@ export class CApp extends CUqApp {
     // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
     protected onRoute() {
         this.on(() => {
-            console.log('on');
             this.showMain();
         });
         this.on({
@@ -172,9 +169,14 @@ export class CApp extends CUqApp {
             '/product/:id': (params: any, queryStr: any) => {
                 this.cProduct.showProductDetail(params.id);
             },
-            '/cart': (params: any, queryStr: any) => {
+            '/cart': () => {
+                this.cCart.start();
+            },
+            '/login': () => {
+                nav.showLogin();
             },
             '/pointshop': () => {
+                // 积分商城是否需要登录后才能查看？ 
                 this.cPointProduct.openMyPoint();
             }
         });
@@ -252,6 +254,14 @@ export class CApp extends CUqApp {
             // this.cartViewModel = await this.cartService.merge(cartLocal);
         }
         */
+    }
+
+    renderHeader = () => {
+        return this.renderView(NavHeaderView);
+    }
+
+    renderFooter = () => {
+        return this.renderView(NavFooterView);
     }
 
     protected onDispose() {

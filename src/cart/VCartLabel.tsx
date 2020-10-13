@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { View } from 'tonva';
+import { View, nav } from 'tonva';
 import { CCart } from './CCart';
 import { observer } from 'mobx-react';
 
@@ -9,7 +9,8 @@ export class VCartLabel extends View<CCart> {
     private showCart = async () => {
         let { cart } = this.controller.cApp;
         cart.editButton.set(false);
-        this.controller.start();
+        // this.controller.start();
+        nav.navigate("/cart");
     }
 
     render(param: any): JSX.Element {
@@ -27,6 +28,13 @@ export class VCartLabel extends View<CCart> {
             else badge = <u>99+</u>;
         }
         return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
+            <li className="nav-item d-none d-lg-block">
+                <a className="nav-link shopping-cart" href="#">购物车</a>
+                {badge}
+            </li>
+        </div>
+        /*
+        return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
             <div>
                 <span className="fa-stack">
                     <i className="fa fa-square fa-stack-2x text-white"></i>
@@ -35,5 +43,6 @@ export class VCartLabel extends View<CCart> {
                 {badge}
             </div>
         </div>
+        */
     });
 }
