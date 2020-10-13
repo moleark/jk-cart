@@ -27,22 +27,24 @@ export class VCartLabel extends View<CCart> {
             if (count < 100) badge = <u>{count}</u>;
             else badge = <u>99+</u>;
         }
+        /*
         return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
             <li className="nav-item d-none d-lg-block">
                 <a className="nav-link shopping-cart" href="#">购物车</a>
                 {badge}
             </li>
         </div>
-        /*
-        return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
+        */
+        
+        return <div className={classNames('jk-cart ', pointer)} onClick={onClick}>
             <div>
                 <span className="fa-stack">
-                    <i className="fa fa-square fa-stack-2x text-white"></i>
-                    <i className="fa fa-shopping-cart fa-stack-1x text-info"></i>
+                    <i className="fa fa-square fa-stack-2x text-white d-none"></i>
+                    <a className="shopping-cart" href="#"></a>
                 </span>
                 {badge}
             </div>
         </div>
-        */
+        
     });
 }
