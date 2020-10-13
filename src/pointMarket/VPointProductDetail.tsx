@@ -4,7 +4,7 @@ import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
-import { schema } from './VPointProduct';
+import { schema, TopicDivision } from './VPointProduct';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
     async open(param?: any) {
@@ -25,6 +25,10 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             // point: { visible: false },
             // imageUrl: { visible: false },
         }
+    }
+
+    private renderVDefaultPost = () => {
+        return this.controller.renderVDefaultPost();
     }
 
     protected renderPointProduct = (pointProduct: any) => {
@@ -60,10 +64,15 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             <div className="align-self-center">当前可用:<span className="text-danger h4" >{availablePoints}</span>分 {pointsInsuffTip}</div>
         </div>;
 
-        return <Page header='产品详情' right={right} footer={footer}>
+        return <Page header='产品详情' right={right} footer={footer} className="bg-white">
             <div className="nav-tabs">{this.renderPointProduct(pointProductsDetail)}</div>
-            {/* html片段 */}
-            <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment ? pointProductsDetail.htmlFragment : '' }} className="w-100"></div>
+            {pointProductsDetail.htmlFragment
+                ? <div className="mx-2 mt-1">
+                    {TopicDivision('产品介绍')}
+                    <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment }} className="w-100"></div>
+                </div>
+                : <>{this.renderVDefaultPost()}</>
+            }
         </Page>;
     });
 }

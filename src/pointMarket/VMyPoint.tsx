@@ -32,9 +32,9 @@ export class VMyPoint extends VPage<CPointProduct> {
     }
 
     private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
-        return <div className="mt-2 pt-1" style={{ zIndex: 9 }}>
-            <h6 className='d-flex justify-content-between align-content-center bg-transparent'>
-                <span className={classNames(theme ? theme : '', 'h6')} style={{ color: theme ? theme : '' }}>{name}</span>
+        return <div className="mb-4" style={{ zIndex: 9 }}>
+            <h6 className='d-flex justify-content-between align-content-end bg-transparent '>
+                <small className={classNames(theme ? theme : '', 'align-self-end')} style={{ color: theme ? theme : '' }}>{name}</small>
                 <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
             <List className="d-flex w-100 bg-transparent"
@@ -90,10 +90,10 @@ export class VMyPoint extends VPage<CPointProduct> {
                     <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
                     < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
                         <div>
-                            <div><small>当前</small> <span className="h3">{myEffectivePoints}</span> <small>分可用</small></div>
+                            <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
                             <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
                         </div>
-                        <div className="d-flex justify-content-end mt-3" style={{ flex: 1 }}>
+                        <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
                             {this.pointblock("签到", openPointSign, signInIcon)}
                             {this.pointblock("兑换", openPointProduct, exChangeIcon)}
                         </div>
@@ -106,15 +106,15 @@ export class VMyPoint extends VPage<CPointProduct> {
                     pointProductGenre.length
                         ? <div>
                             {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
-                            <List className="d-flex flex-wrap py-2 text-center mx-4 bg-transparent"
+                            <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
                                 items={pointProductGenre}
                                 item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
-                            <p className="d-flex m-0 justify-content-end mr-4"><img src={triangleShadingO} alt="" className="h-1c" /></p>
+                            <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
                         </div>
                         : null
                 }
                 {/* 新品推荐 热门产品 */}
-                <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 3% 60% `, backgroundSize: '50px' }}>
+                <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
                     {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
                     {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                 </div>
