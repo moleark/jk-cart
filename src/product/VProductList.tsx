@@ -46,7 +46,7 @@ export class VProductList extends VPage<CProduct> {
         let none = <div className="p-3 text-warning">[无]</div>
 
         return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
-            <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
+            <div className="bg-white py-2 px-3 mb-1 text1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
     });

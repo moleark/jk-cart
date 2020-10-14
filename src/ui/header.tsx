@@ -54,9 +54,7 @@ export class NavHeaderView extends View<CApp> {
                         </div>
                     </div>
                     <a href="#" className="display-mobile-block-login display-mobile">登入</a>
-                    <a href="#" className="display-mobile-block-shoppingcart shopping-cart">
-                        <img src="img/commerce-and-shopping.svg" width="40px" />
-                    </a>
+                   
                     <button className="navbar-toggle navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse"
                         data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -80,7 +78,7 @@ export class NavHeaderView extends View<CApp> {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    服务<b className="caret"></b>
+                                    服务
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item" href="#">1 Column </a>
@@ -90,7 +88,7 @@ export class NavHeaderView extends View<CApp> {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                    会员<b className="caret"></b>
+                                    会员
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item" href="#">1 Column Portfolio</a>
