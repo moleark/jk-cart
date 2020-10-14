@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { schema, TopicDivision } from './VPointProduct';
+import giftPlate from 'images/giftPlate.png';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
     async open(param?: any) {
@@ -65,14 +66,15 @@ export class VPointProductDetail extends VPage<CPointProduct> {
         </div>;
 
         return <Page header='产品详情' right={right} footer={footer} className="bg-white">
-            <div className="nav-tabs">{this.renderPointProduct(pointProductsDetail)}</div>
-            {pointProductsDetail.htmlFragment
+            <div className="">{this.renderPointProduct(pointProductsDetail)}</div>{/* nav-tabs */}
+            <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
+            {/* {pointProductsDetail.htmlFragment
                 ? <div className="mx-2 mt-1">
                     {TopicDivision('产品介绍')}
                     <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment }} className="w-100"></div>
                 </div>
                 : <>{this.renderVDefaultPost()}</>
-            }
+            } */}
         </Page>;
     });
 }

@@ -18,6 +18,8 @@ export interface UqProduct {
     PriceX: Map;
     AgentPrice: Map;
     ProductChemical: Map;
+    ProductMSDSFile: Map;
+    ProductSpecFile: Map;
     Brand: Tuid;
     GetRootCategory: Query;
     GetRootCategories: Query;
@@ -25,6 +27,7 @@ export interface UqProduct {
     SearchProduct: Query;
     SearchProductByCategory: Query;
     GetFutureDeliveryTime: Query;
+    GetProductByOrigin: Query;
 }
 
 export interface UqCommon {

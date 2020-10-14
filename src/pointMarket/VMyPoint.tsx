@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate } from "tonva";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from "tonva";
 import { CPointProduct, topicClump } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
@@ -7,6 +7,7 @@ import { PointProductImage } from 'tools/productImage';
 import classNames from 'classnames';
 import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';
 import { RevenueExpenditure } from './basicRefer';
+import { randomColor } from 'tools/randomColor';
 
 export class VMyPoint extends VPage<CPointProduct> {
 
@@ -32,15 +33,23 @@ export class VMyPoint extends VPage<CPointProduct> {
     }
 
     private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
+        let pointProductImage = (pointProduct: any, index: any) => {            
+            let { product } = pointProduct;
+            let clm = index !== 0 ? (index === 1 ? 'd-flex justify-content-center' : 'd-flex justify-content-end') : '';
+            return <div className={`${clm}`}>{tv(product, (v) => {
+                    return <PointProductImage chemicalId={v.imageUrl} className="col-11 bg-transparent p-0" style={{border:`2px solid ${randomColor()}`}} />
+                 })
+            }</div>
+        }
         return <div className="mb-4" style={{ zIndex: 9 }}>
             <h6 className='d-flex justify-content-between align-content-end bg-transparent '>
                 <small className={classNames(theme ? theme : '', 'align-self-end')} style={{ color: theme ? theme : '' }}>{name}</small>
                 <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
-            <List className="d-flex w-100 bg-transparent"
+            <List className="d-flex w-100 bg-transparent justify-content-between"
                 items={imgArr.slice(0, 3)}
                 item={{
-                    render: (v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" />,
+                    render:pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
                     onClick: (v) => toWhere(v),
                     className: "col-4 p-0 bg-transparent"
                 }}

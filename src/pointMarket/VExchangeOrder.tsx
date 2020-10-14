@@ -25,7 +25,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             return <>
                 {tv(product, (v) => {
                     return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
-                        <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                        <div title={v.description} className="w-100" style={{ height: '35vw',border:`2px solid ${randomColor()}` }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
                         <div className="small w-100">
                             <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
                             <div className="d-flex justify-content-between">

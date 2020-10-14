@@ -1,4 +1,4 @@
-import { Tuid } from 'tonva';
+import { QueryPager, Tuid } from 'tonva';
 import { PageItems } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
@@ -64,6 +64,12 @@ export class CHome extends CUqBase {
         list.forEach(v => {
             this.banners.push({ path: v.path, src: v.src });
         })
+    }
+
+    scanCodetoProductDetail = async (origin: any) => {
+        let { cProduct, currentSalesRegion } = this.cApp;
+        let productByOrigin = await this.uqs.product.GetProductByOrigin.obj({ origin, salesRegion: currentSalesRegion.id });
+        await cProduct.showProductDetail(productByOrigin.id, 'ScanCode');
     }
 
     // tab = () => this.renderView(VHome);

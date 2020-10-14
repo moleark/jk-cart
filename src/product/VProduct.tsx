@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
 import {
-    VPage, Page, Form, ItemSchema, NumSchema, UiSchema,
-    ObjectSchema, RowContext, UiCustom, FormField, BoxId
+    VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
+    ObjectSchema, RowContext, UiCustom, FormField, BoxId, FA, List
 } from 'tonva';
 import { tv } from 'tonva';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
@@ -12,6 +12,10 @@ import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
 import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
+import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
+import { pdfIcon } from 'tools/images';
+import { TopicDivision } from 'pointMarket/VPointProduct';
+import { browser } from 'tools/browser';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -30,6 +34,7 @@ export class VProduct extends VPage<CProduct> {
 
     async open(param: any) {
         let { productData, product, discount } = param;
+        let { getProductSpecFile, getProductMSDSFile } = this.controller;
         this.productBox = product;
         this.discount = discount;
         xs ? this.openPage(this.page, productData) : this.openPage(this.lpage, productData);
@@ -138,9 +143,58 @@ export class VProduct extends VPage<CProduct> {
         </>;
     }
 
+    private dealWithPDF = (fileName: string) => {
+        let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
+        switch (shiftArr[1]) {
+            case 'DE':
+                return '德文';
+            case 'EN':
+                return '英文';
+            case 'EN-US':
+                return '英美';
+            case 'CN':
+                return '中文';
+            default:
+                return '中文';
+        }
+    }
+
+    private renderPDF = (content: any) => {
+        let { fileName } = content;
+        let language = this.dealWithPDF(fileName);
+        let { ToVerifyPdf } = this.controller;
+        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product: this.productBox }) }}>
+            <img src={pdfIcon} alt="" style={{ width: 24 }} />
+            <div className="small">{language}</div>
+        </div>
+    }
+
+    renderListItemPDF = (Material: any) => {
+        let { type, content } = Material;
+        if (content.length) {
+            return <div className="d-flex pt-2 border-bottom">
+                <div className="w-3c align-self-center mr-2 mb-2" >{type}</div>
+                <List items={content} item={{ render: this.renderPDF, className: 'px-2 border-left' }} className="d-flex bg-light mb-1" />
+            </div>
+        } else {
+            return null;
+        }
+    }
+
+    renderProductMaterial = () => {
+        let { productMSDSFiles, productSpecFiles } = this.controller;
+        let MaterialArr = [{ type: 'MSDS', content: productMSDSFiles }, { type: 'SPEC', content: productSpecFiles }];//COA EUM
+        return <>
+            <List items={MaterialArr} item={{ render: this.renderListItemPDF }} />
+        </>
+    }
+
     private page = (product: any) => {
 
-        let { cApp } = this.controller;
+        let { cApp, productMSDSFiles, productSpecFiles } = this.controller;
+        /* let CurrentUA = browser.versions.mobile;
+        let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
+
         let header = cApp.cHome.renderSearchHeader();
         let cartLabel = cApp.cCart.renderCartLabel();
         if (true) {
@@ -149,6 +203,14 @@ export class VProduct extends VPage<CProduct> {
 
             return <Page header={header} right={cartLabel}>
                 <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
+                {/* {
+                    productPdfM
+                        ? <div className="py-2 px-3 bg-light">
+                            {TopicDivision('产品资料')}
+                            <div>{this.renderProductMaterial()}</div>
+                        </div>
+                        : null
+                } */}
             </Page>
         } else {
             /*

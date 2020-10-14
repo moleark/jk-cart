@@ -116,7 +116,7 @@ export class CPointProduct extends CUqBase {
             }
         } else
             this.pointProductsDetail.quantity = 0;
-        this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
+        // this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
         this.openVPage(VPointProductDetail);
     }

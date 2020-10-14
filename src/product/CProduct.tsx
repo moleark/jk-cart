@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId, QueryPager } from 'tonva';
+import { BoxId, nav, QueryPager, User } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
@@ -10,16 +10,23 @@ import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
 import { ProductItem } from '../tools/ProductItem';
+import { VPDFView } from './VPDFView';
+import { VVerifyCode } from './VVerifyCode';
+import { GLOABLE } from 'cartenv';
 
 /**
  *
  */
 export class CProduct extends CUqBase {
     productsPager: QueryPager<any>;
-
+    @observable productSpecFiles: any[] = [];
+    @observable productMSDSFiles: any[] = [];
     @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     @observable chemicalInfoContainer: { [productId: number]: any } = {};
-
+    @observable verifyCode: any;
+    @observable currentFileName: any;
+    @observable currentLanguage: any;
+    @observable currentProduct: any;
     protected async internalStart(param?: any) {
         this.searchByKey(param);
         this.openVPage(VProductList, param);
@@ -33,6 +40,7 @@ export class CProduct extends CUqBase {
         let { currentSalesRegion } = this.cApp;
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
+        console.log(this.productsPager);
     }
 
     searchWebByKey(key: string) {
@@ -52,7 +60,7 @@ export class CProduct extends CUqBase {
     /**
      *
      */
-    showProductDetail = async (productId: BoxId | any) => {
+    showProductDetail = async (productId: BoxId | any, JumpSource?: any) => {
 
         if (productId) {
             if (typeof productId !== 'object')
@@ -60,6 +68,7 @@ export class CProduct extends CUqBase {
             let discount = 0, product = productId;
             let loader = new LoaderProductChemicalWithPrices(this.cApp);
             let productData = await loader.load(productId);
+            if (JumpSource) this.closePage();
             this.openVPage(VProduct, { productData, product, discount });
         }
     }
@@ -180,5 +189,83 @@ export class CProduct extends CUqBase {
             }
             return this.renderView(VProduct_Web, param);
         }
+    }
+
+    /**
+     * 在线预览PDF,开启验证
+     */
+    ToVerifyPdf = async (fileInfo: any) => {
+        let { currentUser } = this.cApp;
+        let { content, product } = fileInfo;
+        let reg = /\w*\//ig
+        this.currentFileName = content.fileName ? content.fileName.replace(reg, '').toLocaleUpperCase() : undefined;
+        this.currentLanguage = content.language;
+        this.currentProduct = product;
+        let loginCallback = async (user: User) => {
+            await currentUser.setUser(user);
+            this.closePage(1);
+            await this.openVerifyCode();
+        };
+        if (!this.isLogined)
+            nav.showLogin(loginCallback, true);
+        else
+            await this.openVerifyCode();
+    }
+
+    /**
+     * 验证码页面
+     */
+    openVerifyCode = async () => {
+        this.getVerifyCode();
+        this.openVPage(VVerifyCode);
+    }
+
+    /**
+     * PDF文件预览页面
+     */
+    openPDFView = async (fileUrl: any) => {
+        this.openVPage(VPDFView, fileUrl);
+    }
+
+    /**
+     * 获取PDF文件流
+     */
+    getPDFFileUrl = async (captcha: string) => {
+        let lang = this.currentLanguage ? this.currentLanguage.id : undefined;
+        let productId = this.currentProduct ? this.currentProduct.id : undefined;
+        // let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${32}/${7084}`);
+        let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${lang}/${productId}`);
+        if (res.status === 200) {
+            let content = await res.arrayBuffer();
+            return content;
+        } else {
+            return {
+                status: res.status,
+                msg: res.status !== 412 ? res.statusText : '验证码错误!'
+            }
+        }
+    }
+
+    /**
+     * 获取验证码
+     */
+    getVerifyCode = async () => {
+        let timer = (new Date()).getTime()
+        this.verifyCode = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
+    }
+
+    /**
+     * 获取产品MSDS文件
+     */
+    getProductMSDSFile = async (product: any) => {
+        this.productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product });
+        this.productMSDSFiles = this.productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
+    }
+
+    /**
+     * 获取产品Spec文件
+     */
+    getProductSpecFile = async (product: any) => {
+        this.productSpecFiles = await this.uqs.product.ProductSpecFile.table({ product });
     }
 }
