@@ -308,7 +308,7 @@ class CartRemote extends CartStore {
 
     async load(): Promise<CartItem2[]> {
         let ret = await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
-        return ret && ret.$page as any;
+        return ret && ret.$page && ret.$page.filter(v => v.product && v.pack) as any;
     }
 
     /**
@@ -358,15 +358,17 @@ class CartLocal extends CartStore {
             let cartDataBoxed = [];
             for (let i = 0; i < this.cartData.length; i++) {
                 let { product, pack, quantity, price, currency } = this.cartData[i];
-                let productbox = this.productTuid.boxId(product);
-                let packbox = this.packTuid.boxId(pack);
-                cartDataBoxed.push({
-                    product: productbox,
-                    pack: packbox,
-                    quantity: quantity,
-                    price: price,
-                    currency: currency
-                } as any)
+                if (product && pack) {
+                    let productbox = this.productTuid.boxId(product);
+                    let packbox = this.packTuid.boxId(pack);
+                    cartDataBoxed.push({
+                        product: productbox,
+                        pack: packbox,
+                        quantity: quantity,
+                        price: price,
+                        currency: currency
+                    } as any)
+                }
             }
             return cartDataBoxed;
         }
