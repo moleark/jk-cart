@@ -9,6 +9,7 @@ import signTopicMap from 'images/signTopicMap.png';
 import signViceMap from 'images/signViceMap.png';
 import Homemadelogo from 'images/Homemadelogo.png';
 import pointIcon from 'images/point.png';
+import pdfIcon from 'images/pdf.png';
 
 export {
     logo,
@@ -22,4 +23,5 @@ export {
     signTopicMap,
     Homemadelogo,
     pointIcon,
+    pdfIcon,
 }

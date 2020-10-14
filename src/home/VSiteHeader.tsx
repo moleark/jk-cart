@@ -9,7 +9,10 @@ export class VSiteHeader extends View<CHome> {
         let left = <img className="m-1 ml-2" src={logo} alt="logo" style={{ height: "3rem", width: "2.5rem" }} />;
         //let cart = this.controller.cApp.cCart.renderCartLabel();
         // let right = undefined; // 
-        let right = <img src={扫一扫} alt="" className="mr-2 d-block d-md-none" style={{ width: 24 }} onClick={this.controller.openScanCode} />;
+        let right = undefined;
+        /* if (navigator.userAgent.indexOf("Html5Plus") > -1) {
+            right = <img src={扫一扫} alt="" className="mr-2" style={{ width: 24 }} onClick={this.controller.openScanCode} />;
+        } */
         /*
         <div className="d-flex flex-row mr-1 align-items-center">
             {currentSalesRegion} &nbsp;
