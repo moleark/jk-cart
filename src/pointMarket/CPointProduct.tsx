@@ -277,7 +277,7 @@ export class CPointProduct extends CUqBase {
      */
     getNewPointProducts = async () => {
         let result = await this.uqs.积分商城.GetNewPointProducts.table({});
-        return result.map((v) => { return { product: v.id } });
+        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
     }
 
     /**
@@ -285,7 +285,7 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
-        return result.map((v) => { return { product: v.id } });
+        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
     }
 
     /**
