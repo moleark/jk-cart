@@ -172,6 +172,9 @@ export class CApp extends CUqApp {
             '/cart': () => {
                 this.cCart.start();
             },
+            '/productCategory/:id': (params: any, queryStr: any) => {
+                this.cProduct.showProductDetail(params.id);
+            },
             '/login': () => {
                 nav.showLogin();
             },

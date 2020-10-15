@@ -28,10 +28,21 @@ export const subStyle: React.CSSProperties = {
 
 export class VRootCategory extends View<CProductCategory> {
 
+    /**
+     * 
+     * @param categoryWapper 装配了子节点和孙节点的productCategory
+     * @param parent 
+     * @param labelColor 
+     */
     private categoryClick = async (categoryWapper: any, parent: any, labelColor: string) => {
         await this.controller.openMainPage(categoryWapper, parent, labelColor);
     }
 
+    /**
+     * 
+     * @param item 装配了子节点和孙节点的productCategory
+     * @param parent 
+     */
     private renderRootCategory = (item: any, parent: any) => {
         let { name, children, productCategory } = item;
         let { id: productCategoryID } = productCategory;
@@ -50,7 +61,7 @@ export class VRootCategory extends View<CProductCategory> {
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, subsub, total } = item;
+        let { name, children, total } = item;
         return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
@@ -61,7 +72,7 @@ export class VRootCategory extends View<CProductCategory> {
                         &nbsp; {name}
                     </span>
                 </div>
-                {renderThirdCategory(subsub, total)}
+                {renderThirdCategory(children, total)}
             </div>
         </div>;
     }
@@ -85,18 +96,13 @@ export class VRootCategory extends View<CProductCategory> {
 }
 
 
-export function renderThirdCategory(subsub: string, total: number) {
-    /*
-    return <div className="py-1 px-1 text-muted small cat-sub-style">
-        {items.length === 0 ? <>产品数量: {total > 1000 ? '>1000' : total}</> : items.map((v: any) => v.name).join(' / ')}
-    </div>
-    */
+export function renderThirdCategory(children: any[], total: number) {
     return <div className="py-1 px-1 text-muted small text-truncate">
         {
-            subsub === undefined ?
+            children.length === 0 ?
                 <>{total > 1000 ? '>1000' : total} 个产品</>
                 :
-                subsub
+                children.map(v => v.name).join(' / ')
         }
     </div>
 }

@@ -2,9 +2,11 @@
 import _ from 'lodash';
 import { CUqBase } from '../CBase';
 import { VRootCategory } from './VRootCategory';
+import { VRootCategorySideBar } from './VRootCategorySideBar';
 import { VCategory } from './VCategory';
 import { GLOABLE } from "cartenv";
 import './cat.css';
+import { Tuid } from 'tonva';
 
 export class CProductCategory extends CUqBase {
     rootCategories: any[] = [];
@@ -38,6 +40,10 @@ export class CProductCategory extends CUqBase {
         return this.renderView(VRootCategory);
     };
 
+    renderRootSideBar = () => {
+        return this.renderView(VRootCategorySideBar, this.rootCategories);
+    }
+
     getCategoryInstruction = async (categoryId: number) => {
         let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
         if (res.ok) {
@@ -46,33 +52,40 @@ export class CProductCategory extends CUqBase {
         }
     };
 
-    private async getCategoryChildren(parentCategoryId: number) {
+    /**
+     * 根据目录节点的id获取该节点的子节点列表
+     * @param categoryId 目录节点的id
+     */
+    private async getCategoryChildren(categoryId: number) {
         let { currentSalesRegion, currentLanguage } = this.cApp;
         return await this.uqs.product.GetChildrenCategory.query({
-            parent: parentCategoryId,
+            parent: categoryId,
             salesRegion: currentSalesRegion.id,
             language: currentLanguage.id
         });
     }
 
-    private buildCategories(categoryWapper: any, firstCategory: any[], secendCategory: any[]): any {
+    /**
+     * 为productCategory装配子节点和孙节点 
+     * @param categoryWapper 是个ProductCategory的object，但是其中又包含了一个名为ProductCategory属性，这个属性值是BoxId
+     * @param subCategories 是第一个参数的子节点
+     * @param secendSubCategory 是第一个参数的孙节点
+     * @returns 装配了子节点和孙节点的ProductCategory object
+     */
+    private buildCategories(categoryWapper: any, subCategories: any[], secendSubCategory: any[]): any {
         let { productCategory } = categoryWapper;
-        let catId: number = productCategory.id, children: any[] = [];
-        for (let f of firstCategory) {
-            if (f.parent !== catId) continue;
-            let pcid = f.productCategory.id;
-            let len = secendCategory.length;
-            let subsub = '';
+        let children: any[] = [];
+        for (let f of subCategories) {
+            if (!Tuid.equ(productCategory, f.parent)) continue;
+            let len = secendSubCategory.length;
+            let secendSub: any[] = [];
             for (let j = 0; j < len; j++) {
-                //element.children = secendCategory.filter((v: any) => v.parent === pcid);
-                let { name, parent } = secendCategory[j];
-                if (parent !== pcid) continue;
-                if (subsub.length > 0) subsub += ' / ';
-                subsub += name;
-                let sLen = subsub.length;
-                if (sLen > 40) break;
+                let { name, parent } = secendSubCategory[j];
+                if (!Tuid.equ(parent, f.productCategory)) continue;
+
+                secendSub.push(secendSubCategory[j]);
             }
-            if (subsub.length > 0) f.subsub = subsub;
+            f.children = secendSub;
             children.push(f);
         }
         //categoryWapper.children = firstCategory.filter((v: any) => v.parent === pcid);
@@ -81,6 +94,12 @@ export class CProductCategory extends CUqBase {
         return ret;
     }
 
+    /**
+     * 
+     * @param categoryWaper 装配了子节点和孙节点的productCategory
+     * @param parent 
+     * @param labelColor 
+     */
     async openMainPage(categoryWaper: any, parent: any, labelColor: string) {
 
         let { productCategory, name } = categoryWaper;
