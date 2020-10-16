@@ -9,7 +9,6 @@ import { OrderSuccess } from './OrderSuccess';
 import { pointOrder, OrderItem } from './pointOrder';
 import { VExchangeHistoryDetail } from './VExchangeHistoryDetail';
 import { VExchangeHistory } from './VExchangeHistory';
-// import { VPlatformOrderPoint } from './VPlatformOrderPoint';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
@@ -402,7 +401,6 @@ export class CPointProduct extends CUqBase {
 
     /**
      * 获取当前webuser对应customer的最近一个订单 TODO:delete
-     */
     getLastPlatformOrder = async () => {
 
         let { currentCustomer } = this.cApp.currentUser;
@@ -411,10 +409,13 @@ export class CPointProduct extends CUqBase {
         this.platformOrderId = validationResult.platformOrderId;
         return platformOrderId;
     }
+    */
 
+    /*
     getPlatFormOrder = async (platformOrderId: string) => {
         return await this.uqs.积分商城.GetPlatFormOrder.table({ platformOrderId: platformOrderId });
     }
+    */
 
     IsCouponCanUse = async (couponCode: string) => {
         this.couponId = 0;
@@ -433,7 +434,6 @@ export class CPointProduct extends CUqBase {
 
     /**
      * 领取积分码 TODO:delete
-     */
     receivePoint = async (orderId: string) => {
         let { currentCustomer } = this.cApp.currentUser;
         let { AddPlatformOrderPoint } = this.uqs.积分商城;
@@ -442,6 +442,7 @@ export class CPointProduct extends CUqBase {
 
         return rtn;
     }
+    */
 
     private openMeInfoOptions: any;
     /**

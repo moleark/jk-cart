@@ -105,13 +105,13 @@ export interface UqPointShop {
     PointProductLib: Tuid;
     PointProductSource: Map;
     // TODO：delete
-    AddPoint: Action;
-    IsCanUseOrder: Action;
+    // AddPoint: Action;
+    // IsCanUseOrder: Action;
 
     // TODO：delete
-    GetPlatFormOrder: Query;
-    GetLastPlatFormOrder: Action;
-    AddPlatformOrderPoint: Action;
+    // GetPlatFormOrder: Query;
+    // GetLastPlatFormOrder: Action;
+    // AddPlatformOrderPoint: Action;
     AddUsedCoupon: Action;
 
     GetPointHistory: Query;

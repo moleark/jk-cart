@@ -1,12 +1,13 @@
 import { Entity } from 'tonva';
 import { CApp } from '../CApp';
+import { CUqApp } from 'CBase';
 //import { CCartApp } from 'CCartApp';
 
 export abstract class Loader<T> {
-    protected cApp: CApp;
+    protected cApp: CUqApp;
     private entities: Entity[] = [];
     private schemaLoaded: boolean = false;
-    constructor(cApp: CApp) {
+    constructor(cApp: CUqApp) {
         this.cApp = cApp;
         //this.initEntities();
     }
