@@ -1,4 +1,3 @@
-//import { observable } from 'mobx';
 import _ from 'lodash';
 import { CUqBase } from '../CBase';
 import { VRootCategory } from './VRootCategory';
@@ -21,11 +20,6 @@ export class CProductCategory extends CUqBase {
             language: currentLanguage.id
         });
         let { first, secend, third } = results;
-        /*
-        (first as any[]).forEach(element => {
-            this.buildCategories(element, secend, third);
-        });
-        */
         this.rootCategories = (first as any[]).map(v => {
             return this.buildCategories(v, secend, third);
         });
@@ -40,10 +34,17 @@ export class CProductCategory extends CUqBase {
         return this.renderView(VRootCategory);
     };
 
+    /**
+     * 渲染PC版SideBar中的目录树
+     */
     renderRootSideBar = () => {
         return this.renderView(VRootCategorySideBar, this.rootCategories);
     }
 
+    /**
+     * 获取目录节点相关的介绍贴文
+     * @param categoryId 目录节点id
+     */
     getCategoryInstruction = async (categoryId: number) => {
         let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
         if (res.ok) {
@@ -113,5 +114,13 @@ export class CProductCategory extends CUqBase {
             let { cProduct } = this.cApp;
             await cProduct.searchByCategory({ productCategoryId, name });
         }
+    }
+
+    /**
+     * 
+     * @param categoryId 
+     */
+    async showCategoryPage(categoryId: number) {
+
     }
 }
