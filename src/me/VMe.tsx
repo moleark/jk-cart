@@ -45,6 +45,14 @@ export class VMe extends VPage<CMe> {
         this.controller.openMyPoint();
     }
 
+    private openCouponManage = async () => {
+        this.controller.openCouponManage();
+    }
+
+    private openFavorites = async () => {
+        this.controller.openFavorites();
+    }
+
     private meInfo = observer(() => {
         let { user } = nav;
         if (user === undefined) return null;
@@ -177,6 +185,17 @@ export class VMe extends VPage<CMe> {
                     type: 'component',
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
                     onClick: this.openMyPoint
+                },
+                '',
+                {
+                    type: 'component',
+                    component: <IconText iconClass="text-info mr-2" icon="connectdevelop" text="卡券管理" />,
+                    onClick: this.openCouponManage
+                },
+                {
+                    type: 'component',
+                    component: <IconText iconClass="text-info mr-2" icon="heart" text="商品收藏" />,
+                    onClick: this.openFavorites
                 },
                 '',
                 {

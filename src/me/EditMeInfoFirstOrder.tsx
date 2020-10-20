@@ -58,7 +58,6 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
 
     private onFormButtonClick = async (name: string, context: Context) => {
         let { data } = context.form;
-        console.log(data);
         _.merge(this.webUserData, data);
         _.merge(this.webUserContactData, data);
         await this.controller.changeWebUser(this.webUserData);

@@ -30,37 +30,7 @@ export class VCoupleAvailable extends VPage<CCoupon> {
      * 应用选择的vipcard等 
      */
     private applySelectedCoupon = async (coupon: string) => {
-        if (!coupon)
-            this.tips = "请输入您的优惠卡/券号";
-        else {
-            let ret = await this.controller.applyCoupon(coupon);
-            switch (ret) {
-                case -1:
-                    this.tips = '对不起，当前服务器繁忙，请稍后再试。';
-                    break;
-                case 1:
-                    this.tips = '有效';
-                    break;
-                case 0:
-                    this.tips = "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。";
-                    break;
-                case 2:
-                    this.tips = '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。';
-                    break;
-                case 3:
-                case 5:
-                    this.tips = '优惠券无效，请重新输入或与您的专属销售人员联系。';
-                    break;
-                case 6:
-                    this.tips = '不允许使用本人优惠券！';
-                    break;
-                case 4:
-                    this.tips = '该优惠券已经被使用过了，不允许重复使用。';
-                    break;
-                default:
-                    break;
-            }
-        }
+        this.tips = await this.controller.applySelectedCoupon(coupon);
         if (this.tips)
             setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
     }

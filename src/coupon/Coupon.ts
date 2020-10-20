@@ -1,6 +1,12 @@
 import { UQs } from '../uqs';
 import { Tuid, BoxId } from 'tonva';
 import { Order } from 'order/Order';
+import moment from 'moment';
+
+export const activityTime = {
+    startDate: '2020-09-01',
+    endDate: '2020-09-30'
+}
 
 export class CouponBase {
 
@@ -217,6 +223,17 @@ export class Credits extends CouponBase implements OrderPriceStrategy {
                 orderData.couponOffsetAmount = Math.round(couponOffsetAmount);
             }
         }
-        orderData.point = Math.round(orderData.productAmount * 2);
+        let multiple = 2;
+        if (IsInActivePeriod()) multiple = 4;
+        orderData.point = Math.round(orderData.productAmount * multiple);
     }
+}
+
+/**
+ * 是否在活动期
+ */
+export function IsInActivePeriod() {
+    let { startDate, endDate } = activityTime;
+    let newDate = moment().format('YYYY-MM-DD');
+    return newDate >= startDate && newDate <= endDate;
 }

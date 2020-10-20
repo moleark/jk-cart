@@ -1,8 +1,9 @@
-import { Tuid } from 'tonva';
+import { QueryPager, Tuid } from 'tonva';
 import { PageItems } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
+import { VScanCode } from './VScanCode';
 
 class HomeSections extends PageItems<any> {
 
@@ -38,9 +39,15 @@ export class CHome extends CUqBase {
     banners: any[] = [];
     async internalStart(param: any) {
 
+        /*
         let { cProductCategory } = this.cApp;
         await cProductCategory.start();
         this.openVPage(VHome);
+        */
+    }
+
+    openScanCode = () => {
+        this.openVPage(VScanCode)
     }
 
     renderSearchHeader = (size?: string) => {
@@ -59,5 +66,12 @@ export class CHome extends CUqBase {
         })
     }
 
-    tab = () => this.renderView(VHome);
+    scanCodetoProductDetail = async (origin: any) => {
+        let { cProduct, currentSalesRegion } = this.cApp;
+        let productByOrigin = await this.uqs.product.GetProductByOrigin.obj({ origin, salesRegion: currentSalesRegion.id });
+        await cProduct.showProductDetail(productByOrigin.id, 'ScanCode');
+    }
+
+    // tab = () => this.renderView(VHome);
+    tab: VHome = new VHome(this);
 }

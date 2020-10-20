@@ -18,9 +18,19 @@ export function ProductImage(props: ProductImageProps) {
         style={style} className={className} altImage={altimagePath} />;
 }
 
+// export function PointProductImage(props: ProductImageProps) {
+
+//     let { style, className, chemicalId } = props;
+//     return <Image src={chemicalId && (pointProductImagePath + '/' + chemicalId + '.png')}
+//         style={style} className={className} altImage={altimagePath} />;
+// }
+
 export function PointProductImage(props: ProductImageProps) {
 
     let { style, className, chemicalId } = props;
-    return <Image src={chemicalId && (pointProductImagePath + '/' + chemicalId + '.png')}
+    if (chemicalId && /[0-9]$/.test(chemicalId))
+        chemicalId = pointProductImagePath + '/' + chemicalId + '.png';
+
+    return <Image src={chemicalId && chemicalId}
         style={style} className={className} altImage={altimagePath} />;
 }

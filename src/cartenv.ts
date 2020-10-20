@@ -37,6 +37,8 @@ const GLOABLE_PRODUCTION = {
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
     CONTENTSITE: "https://web.jkchemical.com",
+    // CONTENTSITE: "http://localhost:6061",
+
 }
 
 // 测试环境配置
@@ -70,6 +72,7 @@ const GLOABLE_TEST = {
     ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
     CONTENTSITE: "https://c.jkchemical.com/jk-web",
+    // CONTENTSITE: "http://localhost:6061",
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

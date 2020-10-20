@@ -27,8 +27,8 @@ export class VCreateOrder extends VPage<COrder> {
         let { pack, quantity, retail, price, priceInit } = item;
 
         let retailUI: any;
-        if (price!==retail) {
-            retailUI = <del>¥{retail}</del>;
+        if (price !== retail) {
+            retailUI = <del>¥{retail * quantity}</del>;
         }
         return <div key={index} className="px-2 py-2 border-top">
             <div className="d-flex align-items-center">
@@ -63,7 +63,7 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private renderCoupon = observer((param: any) => {
-        let { couponAppliedData, hasAnyCoupon,removeCoupon } = this.controller;
+        let { couponAppliedData, hasAnyCoupon, removeCoupon } = this.controller;
         if (couponAppliedData['id'] === undefined) {
             let tip = hasAnyCoupon ? "有可用优惠卡/券，点击使用" : "输入优惠券/积分码";
             return <span className="text-primary">{tip}</span>;
@@ -98,7 +98,7 @@ export class VCreateOrder extends VPage<COrder> {
             } else {
                 noOffsetUI = <div>谢谢惠顾</div>;
             }
-            return <div className="mr-2 position-relative border-primary border p-3 rounded">
+            return <div className="mr-2 position-relative border-primary border px-3 py-1 rounded">
                 <div className="text-success">{code.substr(0, 4)} {code.substr(4)}</div>
                 {offsetUI}
                 {remittedUI}
@@ -198,7 +198,7 @@ export class VCreateOrder extends VPage<COrder> {
             }
         }
 
-        let invoiceContactUI = <div className="row py-3 bg-white mb-1">
+        let invoiceContactUI = <div className="row py页-3 bg-white mb-1">
             <div className="col-4 col-sm-2 pb-2 text-muted">发票地址:</div>
             <div className="col-8 col-sm-10">
                 <div>

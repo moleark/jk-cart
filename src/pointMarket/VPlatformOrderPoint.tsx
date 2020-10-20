@@ -17,9 +17,9 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
         this.openPage(this.page);
     }
 
-    private openPlatformOrderPoint = async () => {
+    /* private openPlatformOrderPoint = async () => {
         this.controller.openPointDrawing();
-    }
+    } */
 
     private tryApplyCoupon = async () => {
 

@@ -17,20 +17,17 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    {/* <div title={v.description} className="col-4 m-0 p-0"><ProductImage chemicalId={v.imageUrl} className="w-100" /></div> */}
                     <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
-                    {tv(pack, (c) => {
-                        return <div className="col-8 small">
-                            <div><label>{v.descriptionC}</label></div>
-                            <div className="d-flex justify-content-between my-3">
-                                <div className="mt-1"><b>{c.radioy}{c.unit}</b></div>
-                                <div>
-                                    <span className="text-danger h6">{(point * quantity)}</span>
-                                    <small className="text-muted">分 ({point} × {quantity})</small>
-                                </div>
+                    <div className="col-8 small">
+                        <div><label>{v.descriptionC}</label></div>
+                        <div className="d-flex justify-content-between my-3">
+                            <div className="mt-1"><b>{pack ? <>{tv(pack, (c) => <>{c.radioy}{c.unit}</>)}</> : v.grade}</b></div>
+                            <div>
+                                <span className="text-danger h6">{(point * quantity)}</span>
+                                <small className="text-muted">分 ({point} × {quantity})</small>
                             </div>
                         </div>
-                    })}
+                    </div>
                 </div>
             })}
         </>;
@@ -39,11 +36,11 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
     private page = (order: any) => {
         let { brief, data } = order;
         let { no, date } = brief;
-        let { exchangeitems, shippingContact, amount } = data;
+        let { exchangeItems, shippingContact, amount } = data;
 
         let header = <>订单详情: {no}</>
         return <Page header={header}>
-            <List items={exchangeitems} item={{ render: this.renderexchangeItem }} />
+            <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>
                 <div className="col-9">{tv(shippingContact)}</div>

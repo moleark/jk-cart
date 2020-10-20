@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements } from "tonva";
+import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -18,6 +18,9 @@ import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
+import { CFavorites } from 'customer/CFavorites';
+import { CLottery } from 'pointMarket/CLottery';
+import { CSignIn } from 'pointMarket/CSignIn';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -40,14 +43,16 @@ export class CApp extends CUqApp {
     cMember: CMember;
     cMe: CMe;
     cPointProduct: CPointProduct;
-
+    cFavorites: CFavorites;
     cYncProjects: CYncProjects;
+    cLottery: CLottery;
+    cSignIn: CSignIn;
 
-	/*
+    /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
-	}
-	*/
+    }
+    */
 
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
@@ -82,17 +87,22 @@ export class CApp extends CUqApp {
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
         this.cPointProduct = this.newC(CPointProduct);
-
+        this.cFavorites = this.newC(CFavorites);
         this.cYncProjects = this.newC(CYncProjects);
+        this.cLottery = this.newC(CLottery);
+        this.cSignIn = this.newC(CSignIn);
 
         await this.cHome.getSlideShow();
 
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
+        // this.cMe.openMyPoint();
+        // this.cLottery.openLotteryProduct();
+        // this.cSignIn.openPointSign();
 
         let { location } = document;
-        let { search } = location;
+        let { search, pathname } = location;
         if (search) {
             let query: any = qs.parse(search.toLowerCase());
             switch (query.type) {
@@ -128,10 +138,16 @@ export class CApp extends CUqApp {
                         await this.cCoupon.showSharedVIPCard(query);
                     break;
                 case "login":
-                    this.cMe.showLogin();
+                    if (!this.isLogined)
+                        this.cMe.showLogin(async (user: User) => {
+                            window.location.href = window.location.origin;
+                        });
                     break;
                 case "loginout":
-                    this.cMe.showLoginOut();
+                    if (this.isLogined)
+                        this.cMe.showLoginOut(async () => {
+                            window.location.href = window.location.origin;
+                        });
                     break;
                 case "cart":
                     this.cCart.start();
@@ -153,10 +169,7 @@ export class CApp extends CUqApp {
     }
 
     showMain(initTabName?: string) {
-        // let root = document.getElementById('root');
-        // if (root)
         this.openVPage(VMain, initTabName);
-
         let divLogin = document.getElementById('login');
         if (divLogin) {
             // this.openPage(this.cCart.renderCartLabel());
@@ -165,32 +178,25 @@ export class CApp extends CUqApp {
     }
 
     protected afterStart = async () => {
+
+        // elements定义div元素id与一个函数的对应关系，定义之后，
+        // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
         let elements: Elements = {
-            login: this.aTest,
+            login: this.showLogin,
             productlist: this.productList,
             productdetail: this.productDetail,
             carts: this.carts,
         }
 
-        let n = 1;
-        let hello = 'hello';
-
-
-        function cTest(element: HTMLElement) {
-            element.innerText = hello + ', world!';
-        };
-
         this.hookElements(elements);
 
         window.onfocus = () => {
-            hello = hello + (++n);
             this.hookElements(elements);
         }
         return;
     }
 
-    private aTest = (element: HTMLElement) => {
-        //element.innerText = hello;
+    private showLogin = (element: HTMLElement) => {
         ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
 

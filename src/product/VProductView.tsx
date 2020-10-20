@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema } from 'tonva';
+import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema, ArrSchema, UiArr } from 'tonva';
 import { CProduct } from './CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import classNames from 'classnames';
+import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
 
 export class VCartProuductView extends View<CProduct> {
 
@@ -67,12 +68,17 @@ export class VProuductView extends View<CProduct> {
         this.getProudct(productBox);
         if (!this.product)
             return null;
-        let { renderChemicalInfoInCart } = this.controller;
-        let { id, brand, description, descriptionC, origin, imageUrl } = this.product;
+        let { renderChemicalInfoInCart, renderFavoritesLabel } = this.controller;
+        let { id, brand, description, descriptionC, origin, imageUrl, isValid } = this.product;
         return <div className="d-block mb-4 px-3">
-            <div className="py-2">
-                <div><strong>{description}</strong></div>
-                <div>{descriptionC}</div>
+            <div className="d-flex py-2">
+                <div>
+                    <div><strong>{description}</strong></div>
+                    <div>{descriptionC}</div>
+                </div>
+                <div>
+                    {renderFavoritesLabel(id)}
+                </div>
             </div>
             <div className="row">
                 <div className="col-3">
@@ -281,16 +287,24 @@ export function productPropItem(caption: string, value: any, captionClass?: stri
         <div className={classNames("col-6 col-sm-4", valClass)}>{value}</div>
     </>;
 }
-
+/**
+ * 产品未售提示UI
+ */
+export function unsoldProductsUI(discountinued: number) {
+    if (discountinued && discountinued === 1)
+        return <div onClick={(e: any) => e.stopPropagation()} className='w-100 carousel-control-prev'><b className="alert-primary alert">该产品已下架！</b></div>
+    else
+        return <></>
+}
 /**
  * 显示产品信息（不包含包装价格），特定于参数包含相关的CAS/Purity等信息），现应用于产品列表
  * @param product
  */
-export function renderProduct(product: any) {
-    let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
-    return <div className="d-block mb-4 px-3">
+/* export function renderProduct(product: any) {
+    let { brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
+    return <div className="d-block mb-4 px-3 bg-white">
         <div className="py-2">
-            <div><strong>{description}</strong></div>
+            <div className="mr-3"><strong>{description}</strong></div>
             <div>{descriptionC}</div>
         </div>
         <div className="row">
@@ -308,5 +322,62 @@ export function renderProduct(product: any) {
                 </div>
             </div>
         </div>
+        {unsoldProductsUI(discountinued)}
     </div>
+} */
+
+export class VProuductView2 extends View<CProduct> {
+
+    @observable product: any;
+    @observable discount: number;
+
+    render(product: any): JSX.Element {
+        return <this.renderProduct product={product} />;
+    }
+
+    private renderProduct = observer((param: any) => {
+        let { product } = param;
+        let { renderFavoritesLabel } = this.controller;
+        let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
+        return <div className="d-block mb-4 px-3 bg-white">
+            <div className="py-2">
+                <div className="mr-3"><strong>{description}</strong></div>
+                <div>{descriptionC}</div>
+                <div>
+                    {renderFavoritesLabel(id)}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-3">
+                    <ProductImage chemicalId={imageUrl} className="w-100" />
+                </div>
+                <div className="col-9">
+                    <div className="row">
+                        {productPropItem('产品编号', origin)}
+                        {productPropItem('CAS', CAS)}
+                        {productPropItem('纯度', purity)}
+                        {productPropItem('分子式', molecularFomula)}
+                        {productPropItem('分子量', molecularWeight)}
+                        {tv(brand, renderBrand)}
+                    </div>
+                </div>
+            </div>
+            {unsoldProductsUI(discountinued)}
+        </div>
+    })
 }
+
+/**
+ * 收藏列表（有收藏与取消功能）
+ */
+/* export class VProductCarryFavorites extends View<CProduct>{
+    render(param: any): JSX.Element {
+        let { product } = param;
+        return <div className='position-relative'>
+            {renderProduct(product)}
+            <div className='position-absolute' style={{ top: 20, right: -10 }}>
+                {this.renderVm(VProductFavorateLabel, product.id)}
+            </div>
+        </div>
+    }
+} */

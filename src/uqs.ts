@@ -18,6 +18,8 @@ export interface UqProduct {
     PriceX: Map;
     AgentPrice: Map;
     ProductChemical: Map;
+    ProductMSDSFile: Map;
+    ProductSpecFile: Map;
     Brand: Tuid;
     GetRootCategory: Query;
     GetRootCategories: Query;
@@ -25,6 +27,7 @@ export interface UqProduct {
     SearchProduct: Query;
     SearchProductByCategory: Query;
     GetFutureDeliveryTime: Query;
+    GetProductByOrigin: Query;
 }
 
 export interface UqCommon {
@@ -44,10 +47,15 @@ export interface UqWebUser {
     WebUserCustomer: Map;
     WebUserContacts: Map;
     WebUserBuyerAccount: Map;
-
+    myFavorites: Map;
+    getMyFavirates: Query;
     WebUserVIPCard: Map;
     WebUserCoupon: Map;
     WebUserCouponUsed: Map;
+    getMyUsedCoupon: Query,
+    getMyExpiredCoupon: Query,
+
+    RecordLogin: Action,
 }
 
 export interface UqCustomer {
@@ -84,12 +92,18 @@ export interface UqMember {
 }
 
 export interface UqPointShop {
+    Genre: Tuid;
+    PointProductGenre: Map;
     PointProduct: Map;
     PointHistory: History;
     PointExchangeSheet: Sheet;
     getPoints: Query;
     GetPointProduct: Query;
-
+    GetNewPointProducts: Query;
+    GetHotPointProducts: Query;
+    SetPointProductVisits: Action;
+    PointProductLib: Tuid;
+    PointProductSource: Map;
     // TODO：delete
     AddPoint: Action;
     IsCanUseOrder: Action;

@@ -1,11 +1,13 @@
+import * as React from 'react';
 import _ from 'lodash';
-import { Context, nav, VPage } from 'tonva';
+import { Context, nav, VPage, User } from 'tonva';
 import { CUqBase } from '../CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { CAddress } from '../customer/CAddress';
+import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
@@ -48,8 +50,41 @@ export class CMe extends CUqBase {
     }
 
     openMyPoint = async () => {
-        let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
-        await cPointProduct.start();
+        /* let cPointProduct = this.newC(CPointProduct);// new CSelectShippingContact(this.cApp, undefined, false);
+        await cPointProduct.start(); */
+        await this.cApp.cPointProduct.openMyPoint();
+    }
+    /**
+     * 卡券管理
+     */
+    openCouponManage = async () => {
+        let { cCoupon } = this.cApp;
+        await cCoupon.openMyCouponManage();
+        // let cCouponManage = this.newC(CCouponManage);
+        // await cCouponManage.start();
+    }
+
+    /**
+     * 商品收藏
+     */
+    openFavorites = async () => {
+        let cMyFavorites = this.newC(CFavorites);
+        await cMyFavorites.start();
+    }
+
+    toPersonalAccountInfo = async (fn: Function) => {
+        await this.openMeInfoFirstOrder({
+            onlyRequired: false,
+            caption: "请补充账户信息",
+            note: <>
+                化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
+                为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
+            </>,
+            actionButton: {
+                value: "下一步",
+                action: fn
+            }
+        });
     }
 
     openMeInfoFirstOrder = async (options?: any) => {
@@ -74,12 +109,12 @@ export class CMe extends CUqBase {
         return this.renderView(VLoginState);
     }
 
-    showLogin = () => {
-        nav.showLogin(undefined, true);
+    showLogin = (callback?: (user: User) => Promise<void>) => {
+        nav.showLogin(callback, true);
     }
 
-    showLoginOut = () => {
-        nav.showLogout();
+    showLoginOut = (callback?: () => Promise<void>) => {
+        nav.showLogout(callback);
     }
 
     renderCarLabel = () => {

@@ -20,7 +20,10 @@ export class LoaderProductWithChemical extends Loader<MainProductChemical> {
 
     protected async loadToData(productId: number, data: MainProductChemical): Promise<void> {
 
-        let product = await this.cApp.uqs.product.ProductX.load(productId);
+        let { cApp } = this;
+        let { currentUser, uqs } = cApp;
+        let { product: productUq, webuser } = uqs;
+        let product = await productUq.ProductX.load(productId);
         if (product === undefined)
             return;
         _.merge(data, product);
@@ -71,16 +74,14 @@ export class LoaderProductChemicalWithPrices extends Loader<MainSubs<MainProduct
         }
 
         // 协议客户与vip客户不同存
-        // let webUserVIPCard = await webuser.WebUserVIPCard.obj({ webUser: currentUser });
         if (currentUser.webUserVIPCard !== undefined) {
             let brandDiscounts = currentUser.VIPDiscount;
-            // await salesTask.VIPCardDiscount.query({ coupon: webUserVIPCard.coupon });  调试修改为 await salesTask.VIPCardDiscount.query({ coupon: webUserVIPCard.vipCard});
             let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === data.main.brand.id);
             // 协议与vip折扣比较 取其大值  (两者不可同存)
-            // if (brandDiscount && brandDiscount > discount)
-            discount = brandDiscount && brandDiscount.discount;         
+            if (brandDiscount && brandDiscount.discount > discount)
+                discount = brandDiscount && brandDiscount.discount;
         }
-        
+
         let { id: currentSalesRegionId } = currentSalesRegion;
         let prices = await product.PriceX.table({ product: productId, salesRegion: currentSalesRegionId });
         data.subs = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {

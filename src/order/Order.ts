@@ -58,7 +58,7 @@ export class Order {
                 this.currency = pk.currency;
                 orderItems.push({
                     product: oi.product, pack: pk.pack, price: pk.price, quantity: pk.quantity
-                    , subAmount: pk.quantity * pk.price
+                    , subAmount: pk.quantity * pk.price, retail: pk.retail
                 })
             })
         });

@@ -55,6 +55,26 @@ export class CCart extends CUqBase {
             cProduct.showProductDetail(product);
         }
     }
+    /**
+     * 商品从购物车永久性删除
+     */
+    strikeOut = async () => {
+        let { cart } = this.cApp;
+        this.selectedCartItems = cart.getSelectedItems();
+        await cart.removeStrike(this.selectedCartItems)
+
+
+        // let combinedData = this.selectedCartItems.map((el: CartItem2) => {
+        //     return el.packs.map((v: any) => {
+        //         return {
+        //             productId: el.product, packId: v.pack
+        //         }
+        //     })
+        // }).flat();
+        // combinedData.forEach(async (el: any) => {
+        //     await cart.removeFromCart(el);
+        // })
+    }
 
     checkOut = async () => {
         let { cart } = this.cApp;
@@ -70,18 +90,19 @@ export class CCart extends CUqBase {
     private doFirstOrderChecking = async () => {
         let { cMe, currentUser } = this.cApp;
         if (!currentUser.allowOrdering) {
-            cMe.openMeInfoFirstOrder({
-                onlyRequired: false,
-                caption: "请补充账户信息",
-                note: <>
-                    化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
-                为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
-                </>,
-                actionButton: {
-                    value: "下一步",
-                    action: this.doCheckOut
-                }
-            });
+            cMe.toPersonalAccountInfo(this.doCheckOut);
+            // cMe.openMeInfoFirstOrder({
+            //     onlyRequired: false,
+            //     caption: "请补充账户信息",
+            //     note: <>
+            //         化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
+            //     为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
+            //     </>,
+            //     actionButton: {
+            //         value: "下一步",
+            //         action: this.doCheckOut
+            //     }
+            // });
         } else {
             await this.doCheckOut();
         }
@@ -111,5 +132,5 @@ export class CCart extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
-	tabPage: VCart = new VCart(this);
+    tabPage: VCart = new VCart(this);
 }

@@ -4,7 +4,7 @@ import { COrder } from './COrder';
 import { List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
 
-const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
+export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
 export class VMyOrders extends VPage<COrder> {
 

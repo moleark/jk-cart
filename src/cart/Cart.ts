@@ -42,7 +42,7 @@ export class Cart {
     cartItems: CartItem2[];
     count = observable.box<number>(0);
     amount = observable.box<number>(0);
-
+    editButton = observable.box<boolean>(false);
     constructor(cApp: CApp) {
         this.cApp = cApp;
         this.cartItems = this.data.list;
@@ -198,6 +198,14 @@ export class Cart {
 
         await this.cartStore.storeCart(product, pack, quantity, price, currency);
     }
+    removeStrike = async (data: any) => {
+        console.log(data);
+        // data.forEach((el: CartItem2) => {
+        //     el.packs.forEach(async (v: any) => {
+        //         await this.cartStore.storeCart(el.product, v.pack, v.quantity, v.price, v.currency);
+        //     })
+        // });
+    }
 
     /**
      *
@@ -300,7 +308,7 @@ class CartRemote extends CartStore {
 
     async load(): Promise<CartItem2[]> {
         let ret = await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
-        return ret && ret.$page as any;
+        return ret && ret.$page && ret.$page.filter(v => v.product && v.pack) as any;
     }
 
     /**
@@ -350,15 +358,17 @@ class CartLocal extends CartStore {
             let cartDataBoxed = [];
             for (let i = 0; i < this.cartData.length; i++) {
                 let { product, pack, quantity, price, currency } = this.cartData[i];
-                let productbox = this.productTuid.boxId(product);
-                let packbox = this.packTuid.boxId(pack);
-                cartDataBoxed.push({
-                    product: productbox,
-                    pack: packbox,
-                    quantity: quantity,
-                    price: price,
-                    currency: currency
-                } as any)
+                if (product && pack) {
+                    let productbox = this.productTuid.boxId(product);
+                    let packbox = this.packTuid.boxId(pack);
+                    cartDataBoxed.push({
+                        product: productbox,
+                        pack: packbox,
+                        quantity: quantity,
+                        price: price,
+                        currency: currency
+                    } as any)
+                }
             }
             return cartDataBoxed;
         }

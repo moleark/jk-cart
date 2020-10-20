@@ -93,7 +93,7 @@ export class WebUser {
         let { id, _user } = this;
         if (this._user !== undefined) {
             let { webuser: webUserTuid, salesTask } = this.uqs;
-            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount } = webUserTuid;
+            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
             let webUser = await WebUser.load(this.id);
             if (webUser) {
                 let { firstName, gender, salutation, organizationName, departmentName } = webUser;
@@ -107,8 +107,10 @@ export class WebUser {
                     // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
                     this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
                 }
+
+                await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
             }
-           
+
 
             let contact = await WebUserContact.obj({ "webUser": id });
             if (contact) {
