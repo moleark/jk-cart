@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
+import { CAppBase, IConstructor, User, nav, Elements, Query, startRoute, WebNav, View } from 'tonva';
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";
@@ -19,23 +19,22 @@ import { CPointProduct } from "pointMarket/CPointProduct";
 import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
+import { Entrance } from 'ui/entrance';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
+import { NavHeaderView, NavFooterView } from 'ui/header';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
 
-    cart: Cart;
     topKey: any;
 
-    currentSalesRegion: any;
-    currentLanguage: any;
-    currentUser: WebUser;
     // currentCouponCode: string;
     // currentCreditCode: string;
 
     cHome: CHome;
     cCart: CCart;
+
     cProduct: CProduct;
     cOrder: COrder;
     cCoupon: CCoupon;
@@ -54,35 +53,17 @@ export class CApp extends CUqApp {
     }
     */
 
-    private setUser() {
-        this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
-        if (this.isLogined) {
-            this.currentUser.setUser(this.user);
-        }
-    }
-
     protected async internalStart() {
-        let { uqs } = this;
-        let { common } = uqs;
-        let { SalesRegion, Language } = common;
-        let [currentSalesRegion, currentLanguage] = await Promise.all([
-            SalesRegion.load(GLOABLE.SALESREGION_CN),
-            Language.load(GLOABLE.CHINESE),
-        ]);
-        this.setUser();
-        //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
-        //this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
-        this.currentSalesRegion = currentSalesRegion;
-        this.currentLanguage = currentLanguage;
+        await super.init();
 
         this.cart = new Cart(this);
         await this.cart.init();
 
-        this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
-        this.cCart = this.newC(CCart);
         this.cHome = this.newC(CHome);
+        this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
         this.cProduct = this.newC(CProduct);
         this.cOrder = this.newC(COrder);
+        this.cCart = this.newC(CCart);
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -149,9 +130,6 @@ export class CApp extends CUqApp {
                             window.location.href = window.location.origin;
                         });
                     break;
-                case "cart":
-                    this.cCart.start();
-                    break;
                 case "productlist":
                     this.cProduct.start(query.key);
                     break;
@@ -163,7 +141,8 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            this.showMain();
+            // this.showMain();
+            // this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
     }
@@ -177,8 +156,34 @@ export class CApp extends CUqApp {
         }
     }
 
-    protected afterStart = async () => {
+    // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
+    // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
+    protected onRoute() {
+        this.on(() => {
+            this.showMain();
+        });
+        this.on({
+            '/search/:key': (params: any, queryStr: any) => {
+                this.cProduct.start(params.key);
+            },
+            '/product/:id': (params: any, queryStr: any) => {
+                this.cProduct.showProductDetail(params.id);
+            },
+            '/cart': () => {
+                this.cCart.start();
+            },
+            '/productCategory/:id': (params: any, queryStr: any) => {
+                this.cProduct.showProductDetail(params.id);
+            },
+            '/pointshop': () => {
+                // 积分商城是否需要登录后才能查看？ 
+                this.cPointProduct.openMyPoint();
+            }
+        });
+    }
 
+    protected afterStart = async () => {
+        await super.afterStart();
         // elements定义div元素id与一个函数的对应关系，定义之后，
         // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
         let elements: Elements = {
@@ -186,7 +191,7 @@ export class CApp extends CUqApp {
             productlist: this.productList,
             productdetail: this.productDetail,
             carts: this.carts,
-        }
+        };
 
         this.hookElements(elements);
 
@@ -251,6 +256,14 @@ export class CApp extends CUqApp {
             // this.cartViewModel = await this.cartService.merge(cartLocal);
         }
         */
+    }
+
+    renderHeader = () => {
+        return this.renderView(NavHeaderView);
+    }
+
+    renderFooter = () => {
+        return this.renderView(NavFooterView);
     }
 
     protected onDispose() {

@@ -110,7 +110,8 @@ export class CMe extends CUqBase {
     }
 
     showLogin = (callback?: (user: User) => Promise<void>) => {
-        nav.showLogin(callback, true);
+        // nav.showLogin(callback, true);
+        nav.navigate('/login');
     }
 
     showLoginOut = (callback?: () => Promise<void>) => {

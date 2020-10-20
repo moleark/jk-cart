@@ -7,6 +7,7 @@ import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import classNames from 'classnames';
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
+import { Link } from 'react-router-dom';
 
 export class VCartProuductView extends View<CProduct> {
 

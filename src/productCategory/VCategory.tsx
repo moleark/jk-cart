@@ -53,11 +53,14 @@ export class VCategory extends VPage<CProductCategory> {
         if (this.instruction) {
             let instr: JQuery<Element> = $(this.instruction);
             $("a[href*='jkchemical.com']", instr).addClass('d-none');
-            instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+            // instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+            instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
         }
+
+        /* 
         return <div className="bg-white mb-3" key={name}>
             <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
-                <b>{name}</b>
+                <h1>{name}</h1>
                 {instructionUi}
             </div>
             <div className="cat-root-sub">
@@ -66,10 +69,26 @@ export class VCategory extends VPage<CProductCategory> {
                 </div>
             </div>
         </div>
+        */
+        return <section className="container mt-lg-2">
+            <div className="row">
+                <div className="col-lg-3 product-side d-none d-lg-block">
+                    {this.controller.renderRootSideBar()}
+                </div>
+                <div className="col-lg-9 product-introduct">
+                    <h1>{name}</h1>
+                    {instructionUi}
+                    <div className="row">
+                        {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
+                    </div>
+                </div>
+            </div>
+        </section>
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, subsub, total } = item;
+        let { name, children, total } = item;
+        /*
         return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
@@ -80,9 +99,17 @@ export class VCategory extends VPage<CProductCategory> {
                         &nbsp; {name}
                     </span>
                 </div>
-                {renderThirdCategory(subsub, total)}
+                {renderThirdCategory(children, total)}
             </div>
         </div>;
+        */
+        return <div className="col-lg-4 each-product" key={name}>
+            <h2 className="purple-bg">{name}</h2>
+            <div className="background-grey">
+                {children.map((v: any) => <a href="" key={v.name}><p>{v.name}</p></a>)}
+                <p className="text-right"> <a href="">更多 <i className="fa fa-angle-right" aria-hidden="true"></i></a></p>
+            </div>
+        </div>
     }
 
     private page = observer((categoryWapper: any) => {

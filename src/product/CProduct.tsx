@@ -10,38 +10,14 @@ import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VProductList_Web } from './VProductList_Web';
 import { VProduct_Web } from './VProduct_Web';
 import { ProductItem } from '../tools/ProductItem';
-import { CFavorites } from '../customer/CFavorites';
 import { VPDFView } from './VPDFView';
 import { VVerifyCode } from './VVerifyCode';
 import { GLOABLE } from 'cartenv';
 
-/*
-class PageProducts extends PageItems<any> {
-
-    private searchProductQuery: Query;
-
-    constructor(searchProductQuery: Query) {
-        super();
-        this.firstSize = this.pageSize = 10;
-        this.searchProductQuery = searchProductQuery;
-    }
-
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
-        if (pageStart === undefined) pageStart = 0;
-        let ret = await this.searchProductQuery.page(param, pageStart, pageSize, false);
-        return ret;
-    }
-
-    protected setPageStart(item: any): any {
-        this.pageStart = item === undefined ? 0 : item.seq;
-    }
-}
-*/
 /**
  *
  */
 export class CProduct extends CUqBase {
-    //pageProducts: PageProducts;
     productsPager: QueryPager<any>;
     @observable productSpecFiles: any[] = [];
     @observable productMSDSFiles: any[] = [];
@@ -62,27 +38,21 @@ export class CProduct extends CUqBase {
 
     searchByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
-        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
         console.log(this.productsPager);
     }
 
     searchWebByKey(key: string) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProduct);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 3, 3);
-        //this.pageProducts.first({ keyWord: key, salesRegion: currentSalesRegion.id });
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
     }
 
     async searchByCategory(category: any) {
         let { currentSalesRegion } = this.cApp;
-        //this.pageProducts = new PageProducts(this.uqs.product.SearchProductByCategory);
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         let { productCategoryId, name } = category;
-        //this.pageProducts.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
         await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id })
         this.openVPage(VProductList, name);
     }
@@ -93,25 +63,15 @@ export class CProduct extends CUqBase {
     showProductDetail = async (productId: BoxId | any, JumpSource?: any) => {
 
         if (productId) {
+            if (typeof productId !== 'object')
+                productId = this.uqs.product.ProductX.boxId(productId);
             let discount = 0, product = productId;
-            /*
-            product = await this.uqs.product.ProductX.load(productId);
-            let { currentUser } = this.cApp;
-            if (currentUser.hasCustomer) {
-                let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
-                discount = discountSetting && discountSetting.discount;
-            }
-            */
             let loader = new LoaderProductChemicalWithPrices(this.cApp);
             let productData = await loader.load(productId);
             if (JumpSource) this.closePage();
             this.openVPage(VProduct, { productData, product, discount });
         }
     }
-
-    /*   renderProductCarryFavorites = (product: any) => {
-          return this.renderView(VProductCarryFavorites, { product: product });
-      } */
 
     renderProductPrice = (product: BoxId, discount: number) => {
         return this.renderView(VProductPrice, { product: product, discount: discount });
@@ -272,7 +232,7 @@ export class CProduct extends CUqBase {
      */
     getPDFFileUrl = async (captcha: string) => {
         let lang = this.currentLanguage ? this.currentLanguage.id : undefined;
-        let productId = this.currentProduct ? this.currentProduct.id : undefined;        
+        let productId = this.currentProduct ? this.currentProduct.id : undefined;
         // let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${32}/${7084}`);
         let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${lang}/${productId}`);
         if (res.status === 200) {
@@ -280,7 +240,7 @@ export class CProduct extends CUqBase {
             return content;
         } else {
             return {
-                status:res.status,
+                status: res.status,
                 msg: res.status !== 412 ? res.statusText : '验证码错误!'
             }
         }

@@ -91,7 +91,9 @@ export class LoaderProductChemicalWithPrices extends Loader<MainSubs<MainProduct
             if (discount !== 0)
                 ret.vipPrice = Math.round(element.retail * (1 - discount));
             ret.currency = currentSalesRegion.currency;
-            ret.quantity = cart.getQuantity(productId, element.pack.id)
+            if (cart) {
+                ret.quantity = cart.getQuantity(productId, element.pack.id)
+            }
             return ret;
         });
 

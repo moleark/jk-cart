@@ -10,6 +10,8 @@ import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
+import { NavHeader, NavFooter } from 'tools/ShopPage';
+import { xs } from 'tools/browser';
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
 import { pdfIcon } from 'tools/images';
 import { TopicDivision } from 'pointMarket/VPointProduct';
@@ -35,9 +37,12 @@ export class VProduct extends VPage<CProduct> {
         let { getProductSpecFile, getProductMSDSFile } = this.controller;
         this.productBox = product;
         this.discount = discount;
-        // await getProductMSDSFile(product);
-        // await getProductSpecFile(product);
-        this.openPage(this.page, productData);
+        xs ? this.openPage(this.page, productData) : this.openPage(this.lpage, productData);
+    }
+
+    render(param: any) {
+
+        return <this.page product={param} />;
     }
 
     private renderProduct = (product: MainProductChemical) => {
@@ -139,7 +144,7 @@ export class VProduct extends VPage<CProduct> {
     }
 
     private dealWithPDF = (fileName: string) => {
-        let shiftArr =fileName ? fileName.replace(/\.pdf/ig, '').split('_'):[];
+        let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
         switch (shiftArr[1]) {
             case 'DE':
                 return '德文';
@@ -155,10 +160,10 @@ export class VProduct extends VPage<CProduct> {
     }
 
     private renderPDF = (content: any) => {
-        let { fileName } = content;      
+        let { fileName } = content;
         let language = this.dealWithPDF(fileName);
         let { ToVerifyPdf } = this.controller;
-        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({content,product: this.productBox}) }}>
+        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product: this.productBox }) }}>
             <img src={pdfIcon} alt="" style={{ width: 24 }} />
             <div className="small">{language}</div>
         </div>
@@ -220,5 +225,14 @@ export class VProduct extends VPage<CProduct> {
                 </div>
             </Page>
         }
+    }
+
+    private lpage = (product: any) => {
+
+        let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
+        viewProduct.model = product;
+        return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }}>
+            <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div>
+        </Page>
     }
 }

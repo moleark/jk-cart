@@ -1,22 +1,28 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
+import { VPage, Page, Scroller, nav } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
-import logo from '../images/logo.png';
-import magnifier from '../images/magnifier.svg'
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-// import { renderProduct } from './VProductView';
+import { NavHeader, NavFooter } from 'tools/ShopPage';
+import { xs } from 'tools/browser';
 import { observer } from 'mobx-react-lite';
 
 export class VProductList extends VPage<CProduct> {
     private searchKey: string;
     async open(key: string) {
         this.searchKey = key;
-        this.openPage(this.page);
+        xs ? this.openPage(this.page) : this.openPage(this.largePage);
+    }
+
+    render(key: any) {
+        this.searchKey = key;
+        return <this.page />
     }
 
     private onProductClick = async (product: any) => {
-        await this.controller.showProductDetail(product.id);
+        // await this.controller.showProductDetail(product.id);
+        let url = "/product/" + product.id.id;
+        console.log(url);
+        nav.navigate(url);
     }
 
     private onScrollBottom = async (scroller: Scroller) => {
@@ -40,100 +46,24 @@ export class VProductList extends VPage<CProduct> {
         let none = <div className="p-3 text-warning">[无]</div>
 
         return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
+            <div className="bg-white py-2 px-3 mb-1 text1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
+            <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+        </Page>
+    });
+
+    private largePage = () => {
+        let { productsPager, cApp } = this.controller;
+        let { renderHeader, renderFooter } = cApp;
+        let none = <div className="p-3 text-warning">[无]</div>
+        /*
+        return <ShopPage>
+            <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
+            <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+        </ShopPage>
+        */
+        return <Page webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}>
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
-
-        /*
-        return <div className="bg-light tv-page" onScroll={(e: any) => this.onScrollBottom(e)}>
-            <header className="d-flex align-items-center p-1">
-                <nav className="navbar navbar-expand-md">
-                    <Link to="/" className="navbar-brand mr-1">
-                        {<img className="m-1 ml-2" src={logo} alt="logo" style={{ height: "3rem", width: "2.5rem" }} />}
-                    </Link>
-                    <form className="custom-search-input">
-                        <div className="input-group">
-                            <input name="keyInput" type="text" className="form-control" style={{ borderRadius: 30 }} placeholder="Search" />
-                            <div className="input-group-append">
-                                <button className="btn" type="submit">
-                                    <img src={magnifier} alt="magnifier" />
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <button className="narbar-toggler" type="button" data-toggle="collapse" data-target="#navBarResponsive"
-                        aria-controls="navBarResponsive" aria-expanded="false">
-                        <span className="narbar-toggler-icon">nav</span>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navBarResponsive">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    产品<b className="caret"></b>
-                                </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                                </div>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    服务<b className="caret"></b>
-                                </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item"
-                                        href="http://www.jkchemical.com/Member/Center/SaleOrderList.aspx?language=ch">订单查询
-                                </a>
-                                    <a className="dropdown-item"
-                                        href="https://www.jkchemical.com/PointsSearch.aspx?language=ch">积分查询</a>
-
-                                </div>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" id="navbarDropdownBlog" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    会员<b className="caret"></b>
-                                </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item"
-                                        href="https://www.jkchemical.com/ChangePassword.aspx?language=ch">修改密码</a>
-                                </div>
-                            </li>
-                            <li className="nav-item">
-                                <div id="login">
-                                </div>
-                            </li>
-                            <li className="nav-item display-none">
-                                <a className="nav-link shopping-cart"
-                                    href="https://www.jkchemical.com/Member/Share/Shopping.aspx?language=ch">
-                                    <img src="<%=$root%>img/commerce-and-shopping.svg" width="40px" />
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </header>
-            <main>
-                <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-                <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
-            </main>
-           <Route path="/search/:key" render={(props: any) => {
-                let { match, location, history } = props;
-                let { params } = match;
-                this.controller.searchByKey(params.key);
-                return <main>
-                    <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-                    <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct }} />
-                </main>
-            }} /> 
-
-        </div>
-        */
-    });
-
-    render = (key: any) => {
-        this.searchKey = key;
-        return <this.page />
-    }
+    };
 }
