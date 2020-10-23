@@ -175,9 +175,6 @@ export class CApp extends CUqApp {
             '/productCategory/:id': (params: any, queryStr: any) => {
                 this.cProduct.showProductDetail(params.id);
             },
-            '/login': () => {
-                nav.showLogin();
-            },
             '/pointshop': () => {
                 // 积分商城是否需要登录后才能查看？ 
                 this.cPointProduct.openMyPoint();
