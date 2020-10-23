@@ -6,9 +6,12 @@ import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { schema, TopicDivision } from './VPointProduct';
 import giftPlate from 'images/giftPlate.png';
+import { observable } from 'mobx';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
+    @observable DetailSource: number;
     async open(param?: any) {
+        this.DetailSource = param;
         this.openPage(this.page);
     }
 
@@ -60,7 +63,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
         let { pointToExchanging, myEffectivePoints, pointProductsDetail } = this.controller;
         let availablePoints = (myEffectivePoints - pointToExchanging) >= 0 ? (myEffectivePoints - pointToExchanging) : 0;
         let pointsInsuffTip = availablePoints === 0 ? <span className="text-danger small">( <FA name="exclamation-circle" />积分不足 )</span> : null;
-        let right = this.controller.renderSelectedLable();
+        let right = this.controller.renderSelectedLable(this.DetailSource);
         let footer = <div className="d-flex justify-content-between m-2">
             <div className="align-self-center">当前可用:<span className="text-danger h4" >{availablePoints}</span>分 {pointsInsuffTip}</div>
         </div>;
