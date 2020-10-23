@@ -37,7 +37,7 @@ export class VVerifyCode extends VPage<CProduct> {
         let { verifyCode, getVerifyCode } = this.controller;
         let header = <div className="w-100 text-center">验证码</div>;
         return <Page header={header} right={<></>} >
-            <div className="d-flex flex-column px-5 pt-3">
+            <div className="d-flex flex-column pt-3 m-auto mt-lg-2" style={{ maxWidth: '20rem' }}>
                 <div className='d-flex '>
                     <img src={verifyCode} alt="" className="border p-1 rounded-lg" />
                     <button className="btn btn-link btn-block w-6c align-self-end py-0" onClick={() => getVerifyCode()}>换一张</button>

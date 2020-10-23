@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { nav, View } from 'tonva';
 import { CApp } from '../CApp';
 import logo from '../images/logo.svg';
 import footer_logo from '../images/footer-logo.svg';
@@ -11,7 +11,7 @@ export class NavHeaderView extends View<CApp> {
 
     render() {
         let { controller } = this;
-        let { cMe } = controller;
+        let { cMe,cCart } = controller;
 
         return <header>
             <div className="top-header">
@@ -97,6 +97,10 @@ export class NavHeaderView extends View<CApp> {
                             </li>
 
                             {cMe.renderLoginState()}
+                            {cCart.renderCartLabel()}
+                            {/* <li className="nav-item d-none d-lg-block" >
+                                <a className="nav-link shopping-cart" href="/cart">购物车</a>
+                            </li> */}
                         </ul>
                     </div>
                 </div>
@@ -174,29 +178,28 @@ export class NavFooter extends React.Component {
 
 export class NavFooterView extends View<CApp> {
     render() {
-        return <div className="d-none d-sm-block bg-light pt-3">
-            <div className="container">
-                <div className="row">
+        return <div className="d-none d-sm-block bg-light pt-4 reset-z-footer-bg">
+            <div className="container reset-z-ul reset-z-ul-a">
+                <div className="row reset-z-footer-title reset-z-contact">
                     <div className="col-lg-3 col-xs-6">
                         <img src={footer_logo} />
-                        <p className="mt-lg-3">促进科技与工业<br />
+                        <p className="mt-lg-3" style={{fontSize:12}}>促进科技与工业<br />
                                 发展，造福人类</p>
-                        <img src={qrcode} className="w-100 mt-lg-50 qrcode" />
+                        <img src={qrcode} className="w-75 mt-lg-28 qrcode" />
                     </div>
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
-                            <li><a href="#">公司简介</a></li>
+                            <li><a href="https://www.jkchemical.com/Company-inf.aspx?language=ch">公司简介</a></li>
                             <li><a href="#">企业承诺</a></li>
-                            <li><a href="#">合作品牌</a></li>
-                            <li><a href="#">招贤纳士</a></li>
-
+                            <li><a href="https://www.jkchemical.com/brand.aspx?language=ch">合作品牌</a></li>
+                            <li><a href="https://www.jkchemical.com/job.aspx?language=ch">招贤纳士</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
-                        <div className="mt-2 font-weight-bold">浏览</div>
+                        <div className="footer-title">专业服务</div>
                         <ul>
-                            <li><a href="#">资讯中心</a></li>
+                            <li><a href="https://web.jkchemical.com/information">资讯中心</a></li>
                             <li><a href="#">质量证书(COA)</a></li>
                             <li><a href="#">安全说明书(SDS)</a></li>
                             <li><a href="#">大包装与定制生产</a></li>
@@ -228,7 +231,7 @@ export class NavFooterView extends View<CApp> {
                     </div>
                 </div>
             </div>
-            <div className="footer-bottom">
+            <div className="footer-bottom mt-2">
                 <div className="container">
                     <div className="row text-center">
                         <div className="col-sm">© 2020 - Copyright <a href="#">J&K Scientific Ltd., All Rights Reserved</a></div>
