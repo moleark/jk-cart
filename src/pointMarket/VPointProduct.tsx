@@ -114,7 +114,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                                 this.isShowSelectForm
                                     ? <div className="w-100 d-flex justify-content-between align-items-right mt-1">{/* justify-content-end */}
                                         <small className="align-self-center mb-3 text-primary" ><FA name="shopping-bag" size='2x' /></small>
-                                        <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                        {/* <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" /> */}
                                     </div>
                                     : null
                             }
