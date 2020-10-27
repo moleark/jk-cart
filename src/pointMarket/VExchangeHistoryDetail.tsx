@@ -17,7 +17,7 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" /></div>
+                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" style={{maxHeight:"23vw"}} /></div>
                     <div className="col-8 small">
                         <div><label>{v.descriptionC}</label></div>
                         <div className="d-flex justify-content-between my-3">

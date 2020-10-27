@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, StringSchema } from 'tonva';
-import { CPointProduct } from 'pointMarket/CPointProduct';
+import { CPointProduct, PointProductDetailLevel } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
@@ -79,7 +79,7 @@ export class VPointProduct extends VPage<CPointProduct> {
     protected renderList = (isToDetail?: boolean) => {
         let { pointProducts, openPointProductDetail } = this.controller;
         return <div style={{ background: `url(${triangleShadingO}) no-repeat 99% 230px,url(${triangleShadingO}) no-repeat 1% 480px`, backgroundSize: '2.5%' }}>
-            <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: openPointProductDetail, className: 'w-50 px-3 bg-transparent' }} none={this.none}
+            <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: (v)=>{openPointProductDetail(v,PointProductDetailLevel.INDIRECT)}, className: 'w-50 px-3 bg-transparent' }} none={this.none}
                 className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
             ></List>
         </div>
@@ -172,7 +172,7 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     protected page = observer(() => {
         this.getTabs();
-        let right = this.controller.renderSelectedLable();
+        let right = this.controller.renderSelectedLable(PointProductDetailLevel.DIRECT);
         return <Page header={this.themeName} right={right}>
             {
                 this.themeName === '积分商城'

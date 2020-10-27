@@ -26,12 +26,19 @@ export const OrderSource = {
     PRIZEORDER: '奖品订单',
 }
 
+export const PointProductDetailLevel = {
+    DIRECT: 3,
+    INDIRECT:4,
+}
+
 export class CPointProduct extends CUqBase {
 
     @observable myPoints: any[] = [];                  /* 我的积分 */
     @observable myEffectivePoints: number = 0;         /* 我的积分(计算后) */
     @observable myTotalPoints: number = 0;             /* 我的积分(计算后) */
     @observable myPointTobeExpired: number = 0;        /* 我的快过期积分 */
+
+    @observable navCloseByOrderSuccess: number = 0;    /* 兑换成功后关闭页面层数 */
 
     @observable pointProducts: any[] = [];             /* 可兑产品列表 */
     @observable newPointProducts: any[] = [];          /* 新品推荐 */
@@ -107,7 +114,8 @@ export class CPointProduct extends CUqBase {
     /**
      * 可兑换产品的详情(可生成浏览量)
      */
-    openPointProductDetail = async (pointProduct: any) => {
+    openPointProductDetail = async (pointProduct: any,DetailLevel: number) => {
+        this.navCloseByOrderSuccess = DetailLevel; 
         this.pointProductsDetail = pointProduct;
         if (this.pointProductsSelected.length) {
             for (let i of this.pointProductsSelected) {
@@ -118,7 +126,7 @@ export class CPointProduct extends CUqBase {
             this.pointProductsDetail.quantity = 0;
         // this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
-        this.openVPage(VPointProductDetail);
+        this.openVPage(VPointProductDetail,DetailLevel);
     }
 
     /**
@@ -166,7 +174,9 @@ export class CPointProduct extends CUqBase {
     /**
      * 已选择的可兑换产品页面
      */
-    openSelectedPointProduct = async () => {
+    openSelectedPointProduct = async (DetailLevel: number) => {
+        this.navCloseByOrderSuccess = DetailLevel;        
+        this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
         this.openVPage(VSelectedPointProduct);
     }
 
@@ -184,8 +194,8 @@ export class CPointProduct extends CUqBase {
     /**
      * 已选择的可兑换产品图标
      */
-    renderSelectedLable() {
-        return this.renderView(VSelectedLable);
+    renderSelectedLable(DetailLevel: number) {
+        return this.renderView(VSelectedLable,DetailLevel);
     }
 
     /**
@@ -330,7 +340,8 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
-
+        /* let availablePoints = this.myEffectivePoints - this.pointToExchanging;
+        if (availablePoints <= 0) return;    */ 
         // 当前产品详情的数量
         this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
@@ -395,7 +406,8 @@ export class CPointProduct extends CUqBase {
         this.clearSelectedPointsProducts();
 
         // 打开下单成功显示界面
-        nav.popTo(this.cApp.topKey);
+        // nav.popTo(this.cApp.topKey);
+        this.closePage(this.navCloseByOrderSuccess);
         this.openVPage(OrderSuccess, result);
     }
 

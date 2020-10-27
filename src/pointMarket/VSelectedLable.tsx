@@ -6,15 +6,15 @@ import { CPointProduct } from './CPointProduct';
 
 export class VSelectedLable extends View<CPointProduct> {
 
-    render(param: any): JSX.Element {
-        return <this.content />
+    render(param?: any): JSX.Element { 
+        return <this.content param={param} />
     };
 
-    private content = observer(() => {
+    private content = observer((param?: any) => {
         let { pointProductsSelected, openSelectedPointProduct } = this.controller;
         let { length } = pointProductsSelected;
         let count = 0
-        let badge, onClick, pointer;
+        let badge, onClick:any, pointer;
         if (length) {
             for (let i of pointProductsSelected) {
                 count += i.quantity;
@@ -26,7 +26,7 @@ export class VSelectedLable extends View<CPointProduct> {
             if (count < 100) badge = <u>{count}</u>;
             else badge = <u>99+</u>;
         }
-        return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
+        return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={()=>{onClick(param.param)}}>
             <div>
                 <span className="fa-stack">
                     <i className="fa fa-square fa-stack-2x text-white"></i>
