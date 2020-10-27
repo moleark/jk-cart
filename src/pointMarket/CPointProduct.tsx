@@ -271,7 +271,8 @@ export class CPointProduct extends CUqBase {
      * 据类型筛选商品
      */
     filterByProductGenre = async (currentGenre: any) => {
-        let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
+        // let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
+        let pointProductFromGenre = await this.uqs.积分商城.GetPointProductByGenre.table({ genre: currentGenre });
         return pointProductFromGenre.map((v) => { return { genre: v.genre, product: v.pointProduct } });
     }
 
