@@ -135,14 +135,16 @@ export class VCategory extends VPage<CProductCategory> {
     })
 
     private lpage = observer((categoryWapper: any) => {
-        let { cHome,renderHeader,renderFooter } = this.controller.cApp;
+        let { cHome /*,renderHeader,renderFooter*/ } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
 
         let { categoryWapper: item, parent, labelColor } = categoryWapper;
-        return <Page webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}>
+        return <Page>
             {/*  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white"> */}
              {this.renderRootCategory(item, parent, labelColor)}
         </Page>
+
+		//webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
     })    
 }

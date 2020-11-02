@@ -396,7 +396,7 @@ export class VProuductView2 extends View<CProduct> {
                         {productPropItem('纯度', purity)}
                         {productPropItem('分子式', molecularFomula)}
                         {productPropItem('分子量', molecularWeight)}
-                        {tv(brand, renderBrand)}
+                        {tv(brand, renderBrand) /* 这个地方会在调试器报警告 */}
                     </div>
                 </div>
             </div>
