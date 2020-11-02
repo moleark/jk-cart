@@ -1,11 +1,11 @@
+/* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page } from 'tonva';
 import { CProductCategory } from './CProductCategory';
-import marked from 'marked';
-//import { tv } from 'tonva';
-import { renderThirdCategory } from './VRootCategory';
 import { observer } from 'mobx-react';
 import $ from 'jquery';
+import { xs } from '../tools/browser';
+import { NavFooter, NavHeader } from 'tools/ShopPage';
 
 export class VCategory extends VPage<CProductCategory> {
 
@@ -13,7 +13,7 @@ export class VCategory extends VPage<CProductCategory> {
     async open(categoryWapper: any) {
 
         this.instruction = categoryWapper.instruction;
-        this.openPage(this.page, categoryWapper);
+       xs ? this.openPage(this.page, categoryWapper) : this.openPage(this.lpage, categoryWapper);;
         // let { getCategoryInstruction } = this.controller;
         // this.instruction = await getCategoryInstruction(0);
     }
@@ -24,6 +24,9 @@ export class VCategory extends VPage<CProductCategory> {
     }*/
 
     private categoryClick = async (childWapper: any, parent: any, labelColor: string) => {
+       /*  console.log(childWapper);
+        console.log(parent); */
+        
         await this.controller.openMainPage(childWapper, parent, labelColor);
     }
 
@@ -88,8 +91,9 @@ export class VCategory extends VPage<CProductCategory> {
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
         let { name, children, total } = item;
-        /*
-        return <div key={name}
+        let isChildren = children.length !== 0;
+
+        /* return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
             onClick={() => this.categoryClick(item, parent, labelColor)}>
             <div className="py-2 px-2 cat-sub">
@@ -101,13 +105,20 @@ export class VCategory extends VPage<CProductCategory> {
                 </div>
                 {renderThirdCategory(children, total)}
             </div>
-        </div>;
-        */
-        return <div className="col-lg-4 each-product" key={name}>
+        </div>; */
+       
+        return <div className="col-lg-4 each-product" key={name} onClick={()=>{if(!isChildren){this.categoryClick(item, parent, labelColor)}}}>
             <h2 className="purple-bg">{name}</h2>
             <div className="background-grey">
-                {children.map((v: any) => <a href="" key={v.name}><p>{v.name}</p></a>)}
-                <p className="text-right"> <a href="">更多 <i className="fa fa-angle-right" aria-hidden="true"></i></a></p>
+                {/* {children.slice(0,3).map((v: any) => <a href="" key={v.name}><p>{v.name}</p></a>)} */}
+                {
+                    isChildren 
+                        ? <>
+                            {children.slice(0,3).map((v: any) => <div onClick={() => this.categoryClick(v, item, labelColor)} key={v.name}><p>{v.name}</p></div>)}
+                            <p className="text-right"> <span onClick={() => this.categoryClick(item, parent, labelColor)}>更多 <i className="fa fa-angle-right" aria-hidden="true"></i></span></p>
+                        </>
+                        : <div>{total > 1000 ? '>1000' : total}个产品</div>
+                }
             </div>
         </div>
     }
@@ -122,4 +133,18 @@ export class VCategory extends VPage<CProductCategory> {
             {this.renderRootCategory(item, parent, labelColor)}
         </Page>
     })
+
+    private lpage = observer((categoryWapper: any) => {
+        let { cHome /*,renderHeader,renderFooter*/ } = this.controller.cApp;
+        let header = cHome.renderSearchHeader();
+        let cartLabel = this.controller.cApp.cCart.renderCartLabel();
+
+        let { categoryWapper: item, parent, labelColor } = categoryWapper;
+        return <Page>
+            {/*  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white"> */}
+             {this.renderRootCategory(item, parent, labelColor)}
+        </Page>
+
+		//webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
+    })    
 }

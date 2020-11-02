@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import { NavView, nav, start } from 'tonva';
-import { CApp } from 'CApp';
+import { CApp } from './tapp';
 import { appConfig } from 'configuration';
 import { BrowserRouter as Router } from 'react-router-dom';
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { View } from 'tonva';
 import { CHome } from './CHome';

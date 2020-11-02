@@ -19,10 +19,21 @@
 		display: block;
 	}
 }
+
+article>section>header,article>section>footer{
+	margin: auto !important;
+}
+
 article>section>header>nav{
 	padding:10px!important;
 	background-color: #fff!important;
+	color: #000000 !important;
 }
+
+.tv-page-header,.tv-page-footer{
+	margin: 0 !important;
+}
+
 .tv-page-header .border-primary {
     border-color: #4b95b1 !important;
 }
@@ -1058,7 +1069,7 @@ nav .nav-item a:hover {
 }
 
 section {
-	margin-bottom: 75px;
+	/* margin-bottom: 75px; */
 }
 
 section.home {
@@ -3258,7 +3269,7 @@ tr.order-total {
 		margin-bottom: 0;
 	}
 	.product-introduct h1 {
-		font-size: 24px;
+		font-size: 24px !important;
 	}
 	.product-introduct .img-wrap {
 		width: 100%;
@@ -3363,6 +3374,7 @@ tr.order-total {
 	}
 	section {
 		padding-top: 0;
+		margin: 0 !important;
 	}
 	section.home {
 		padding-top: 0;

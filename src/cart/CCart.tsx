@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RowContext, nav, User, BoxId } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabel_Web } from './VCartLabel_Web';
 import { VCart } from './VCart';
@@ -41,13 +41,15 @@ export class CCart extends CUqBase {
         alert('onRowStateChanged')
     }
 
+	/*
     private loginCallback = async (user: User): Promise<void> => {
         let { cApp } = this;
         await cApp.currentUser.setUser(user);
         await cApp.loginCallBack(user);
         this.closePage(1);
         await this.doFirstOrderChecking();
-    };
+	};
+	*/
 
     onProductClick = (product: BoxId) => {
         let { cart, cProduct } = this.cApp;
@@ -79,12 +81,16 @@ export class CCart extends CUqBase {
     checkOut = async () => {
         let { cart } = this.cApp;
         this.selectedCartItems = cart.getSelectedItems();
-        if (this.selectedCartItems === undefined) return;
+		if (this.selectedCartItems === undefined) return;
+		/*
         if (!this.isLogined) {
             nav.showLogin(this.loginCallback, true);
         } else {
             await this.doFirstOrderChecking();
-        }
+		}
+		*/
+		await this.cApp.assureLogin();
+		await this.doFirstOrderChecking();
     }
 
     private doFirstOrderChecking = async () => {

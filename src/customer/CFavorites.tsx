@@ -1,5 +1,5 @@
 import { VFavorites } from './VFavorites';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { QueryPager, BoxId } from 'tonva';
 import moment from 'moment';
 import { VProductFavorateLabel } from './VProductFavorateLabel';

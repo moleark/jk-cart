@@ -1,4 +1,4 @@
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VSharedCoupon } from './VSharedCoupon';
 import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
 import { observable } from 'mobx';
@@ -11,6 +11,18 @@ export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
     'credits': { 'name': '积分券', 'view': VCredits },
     'vipcard': { 'name': 'VIP卡', 'view': VVIPCard }
+}
+
+
+const couponTips:{[key:number]: string} = {
+	"-1": '对不起，当前服务器繁忙，请稍后再试。',
+	"1": '有效',
+	"0": "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。",
+	"2": '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。',
+	"3": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+	"5": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+	"6": '不允许使用本人优惠券！',
+	"4": '该优惠券已经被使用过了，不允许重复使用。',
 }
 
 export class CCoupon extends CUqBase {
@@ -181,6 +193,8 @@ export class CCoupon extends CUqBase {
     }
 
     applyTip = (ret: any) => {
+		return couponTips[ret];
+		/*
         switch (ret) {
             case -1:
                 return '对不起，当前服务器繁忙，请稍后再试。';
@@ -199,7 +213,7 @@ export class CCoupon extends CUqBase {
                 return '该优惠券已经被使用过了，不允许重复使用。';
             default:
                 break;
-        }
+        }*/
     }
 
     /**
@@ -341,6 +355,9 @@ export class CCoupon extends CUqBase {
             }
         }
 
+		await this.cApp.assureLogin();
+		await allowCurrentUser();
+		/*
         let loginCallback = async (user: User) => {
             await cApp.currentUser.setUser(user);
             await cApp.loginCallBack(user);
@@ -351,7 +368,8 @@ export class CCoupon extends CUqBase {
             nav.showLogin(loginCallback, true);
         else {
             await allowCurrentUser();
-        }
+		}
+		*/
     }
 
     drawCoupon = async (credits: any) => {

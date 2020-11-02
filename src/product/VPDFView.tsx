@@ -15,10 +15,11 @@ export class VPDFView extends VPage<CProduct> {
     async open(param?: any) {
         this.fileName = this.controller.currentFileName;
         this.fileUrl = param;
+        setTimeout(() => {this.parsRenderPDF()}, 50);
         this.openPage(this.page);
     }
 
-    ParsRenderPDF = () => {
+    private parsRenderPDF = () => {
         if (this.fileUrl.status) {
             this.isFoundFile = false;
         } else {
@@ -36,7 +37,7 @@ export class VPDFView extends VPage<CProduct> {
     private page = observer(() => {
         let header = <div className="w-100 text-center">{this.fileName}</div>;
         let right = <></>;// <div className="mr-2" onClick={() => this.isShowActionSheet = true}><FA name='ellipsis-h' /></div>;
-        setTimeout(() => {this.ParsRenderPDF()}, 50);
+        //setTimeout(() => {this.ParsRenderPDF()}, 50);
         
         return <Page header={header} right={right} >
             {/* <div className="position-fixed d-flex flex-column justify-content-end" style={{ top: 0, left: 0, bottom: 0, right: 0, background: 'rgba(0, 0, 0, .3)' }}>

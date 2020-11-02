@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar } from './VRootCategorySideBar';
 import { VCategory } from './VCategory';
@@ -81,6 +81,7 @@ export class CProductCategory extends CUqBase {
             let len = secendSubCategory.length;
             let secendSub: any[] = [];
             for (let j = 0; j < len; j++) {
+				// eslint-disable-next-line
                 let { name, parent } = secendSubCategory[j];
                 if (!Tuid.equ(parent, f.productCategory)) continue;
 

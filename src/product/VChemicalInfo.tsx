@@ -7,14 +7,32 @@ import { productPropItem } from './VProductView';
 export class VChemicalInfoInCart extends View<CProduct> {
 
     render(param: any): JSX.Element {
-        let { id: productId } = param;
-        if (typeof productId === 'object')
-            productId = productId.id;
-        let { controller } = this;
-        controller.getChemicalInfo(productId);
-        return <this.content productId={productId} />;
+        //let { id: productId } = param;
+        //if (typeof productId === 'object')
+        //    productId = productId.id;
+        //let { controller } = this;
+        //controller.getChemicalInfo(productId);
+		//return <this.content productId={productId} />;
+		return React.createElement(observer(() => {
+			//let { productId } = param;
+			//let { chemicalInfoContainer } = this.controller;
+			//let chemicalInfo = chemicalInfoContainer[productId];
+			let chemicalInfo = this.controller.getChemicalInfo(param.id);
+			if (!chemicalInfo) return;
+			//if (chemicalInfo !== undefined) {
+				let { chemical, purity, CAS, molecularFomula, molecularWeight } = chemicalInfo;
+				return <>
+					{productPropItem('CAS', CAS)}
+					{productPropItem('纯度', purity)}
+					{productPropItem('分子式', molecularFomula)}
+					{productPropItem('分子量', molecularWeight)}
+				</>
+			//}
+			//return <></>;
+		}));
     }
 
+	/*
     private content = observer((param: any) => {
 
         let { productId } = param;
@@ -30,5 +48,6 @@ export class VChemicalInfoInCart extends View<CProduct> {
             </>
         }
         return <></>;
-    })
+	})
+	*/
 }

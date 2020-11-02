@@ -43,7 +43,7 @@ export class VPointSign extends VPage<CSignIn> {
     }
 
     private page = observer((param: any) => {
-        let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
+        let { isSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
         let { cLottery } = cApp;
         let date = moment().format('YYYY-MM-DD').split('-');
         let timer = `${date[0]} 年 ${date[1]} 月 ${date[2]} 日 `;
@@ -73,17 +73,16 @@ export class VPointSign extends VPage<CSignIn> {
                 </div> */}
                 <div className="pb-5">
                     <div className="h4">{timer}</div>
-                    {
-                        IsSignin ? <>
-                            <img src={积分图标P} alt="" className="h-5c" />
-                            <div className="pt-3">
-                                <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
-                            </div>
+                    {isSignin ? <>
+                        <img src={积分图标P} alt="" className="h-5c" />
+                        <div className="pt-3">
+                            <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
+                        </div>
+                    </>
+                        : <>
+                            <img src={已签到} alt="" className="h-4c mb-3 mt-2" />
+                            <div className="mb-2 h5">今日已签到</div>
                         </>
-                            : <>
-                                <img src={已签到} alt="" className="h-4c mb-3 mt-2" />
-                                <div className="mb-2 h5">今日已签到</div> 
-                            </>
                     }
                     {/* <div className="my-4 h5">今日已签到</div> */}
                 </div>
@@ -147,6 +146,6 @@ export class VPointSign extends VPage<CSignIn> {
     protected handleChange = async () => {
         this.showTips = "";
         if (!this.showTips)
-            setTimeout(() => { this.showTips = "none"; this.controller.IsSignin = false }, GLOABLE.TIPDISPLAYTIME);
+            setTimeout(() => { this.showTips = "none"; this.controller.isSignin = false }, GLOABLE.TIPDISPLAYTIME);
     }
 }

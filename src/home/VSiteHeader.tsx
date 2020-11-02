@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { LMR, FA, View } from 'tonva';
 import logo from '../images/logo.png';

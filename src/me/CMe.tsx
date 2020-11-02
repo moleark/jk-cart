@@ -1,7 +1,8 @@
+/* eslint-disable */
 import * as React from 'react';
 import _ from 'lodash';
 import { Context, nav, VPage, User } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
@@ -11,11 +12,13 @@ import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
+import { VAbout } from './about';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
     protected async internalStart(param?: any) {
-    }
+		this.openVPage(VMe);
+	}
 
     async changeWebUser(webUser: any) {
         let { currentUser } = this.cApp;
@@ -85,7 +88,11 @@ export class CMe extends CUqBase {
                 action: fn
             }
         });
-    }
+	}
+	
+	openAbout() {
+		this.openVPage(VAbout);
+	}
 
     openMeInfoFirstOrder = async (options?: any) => {
         await this.openVPage(EditMeInfoFirstOrder, options);
@@ -110,8 +117,12 @@ export class CMe extends CUqBase {
     }
 
     showLogin = (callback?: (user: User) => Promise<void>) => {
-        // nav.showLogin(callback, true);
-        nav.navigate('/login');
+		if (nav.isWebNav) {
+			nav.navigate('/login');
+		}
+		else {
+			nav.showLogin(callback, true);
+		}
     }
 
     showLoginOut = (callback?: () => Promise<void>) => {

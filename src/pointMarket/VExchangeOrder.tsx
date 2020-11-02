@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, nav, Page, LMR, FA, tv, List } from 'tonva';
+import { VPage, nav, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
@@ -9,7 +9,8 @@ import { randomColor } from 'tools/randomColor';
 import { pointIcon } from 'tools/images';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
-    @observable protected shippingAddressIsBlank: boolean = false;
+	//@observable protected shippingAddressIsBlank: boolean = false;
+	protected shippingAddressIsBlank = observable.box<boolean>();
     protected pageDesc: string = OrderSource.EXCHANGEORDER;
     async open(param?: any) {
         this.openPage(this.page);
@@ -57,13 +58,14 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         // 必填项验证
         let { shippingContact } = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData : cLottery.prizeOrderData;
         if (!shippingContact) {
-            this.shippingAddressIsBlank = true;
-            setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
+            this.shippingAddressIsBlank.set(true);
+            //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
         }
         await this.onSubmitOwn();
     }
 
+	/*
     protected renderTipsUI = () => {
         let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
@@ -73,18 +75,23 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             chevronRight,
             shippingAddressBlankTip
         }
-    }
+	}
+	*/
 
     protected renderContact = () => {
-        let { chevronRight, shippingAddressBlankTip } = this.renderTipsUI();
+        //let { chevronRight, shippingAddressBlankTip } = this.renderTipsUI();
         let { orderData, onSelectShippingContact, cApp } = this.controller;
         let data = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData.shippingContact : cApp.cLottery.prizeOrderData.shippingContact;
         return <div className="px-2">
             <div className="row py-3 bg-white mb-1" onClick={() => onSelectShippingContact()}>
                 <div className="col-3 text-muted pr-0">收货地址:</div>
                 <div className="col-9">
-                    <LMR className="w-100 align-items-center" right={chevronRight}>{tv(data, undefined, undefined, this.nullContact)}</LMR>
-                    {shippingAddressBlankTip}
+					<LMR className="w-100 align-items-center"
+						right={<FA name="chevron-right" className="cursor-pointer" />}>
+						{tv(data, undefined, undefined, this.nullContact)}
+					</LMR>
+                    {/*shippingAddressBlankTip*/}
+					{autoHideTips(this.shippingAddressIsBlank, ()=><div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>)}
                 </div>
             </div>
         </div>
@@ -114,7 +121,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
  * 领取奖品页面
  */
 export class VMyPrizeExchangeOrder extends VExchangeOrder {
-    @observable shippingAddressIsBlank: boolean = false;
+    //@observable shippingAddressIsBlank: boolean = false;
     protected pageDesc: string = OrderSource.PRIZEORDER;
 
     renderPointProduct = (pointProduct: any) => {

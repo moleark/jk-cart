@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { User } from 'tonva';
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';

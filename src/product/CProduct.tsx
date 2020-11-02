@@ -1,6 +1,6 @@
-import { observable } from 'mobx';
+import { observable, ObservableMap } from 'mobx';
 import { BoxId, nav, QueryPager, User } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
 import { LoaderProductChemicalWithPrices } from './itemLoader';
@@ -17,6 +17,15 @@ import { GLOABLE } from 'cartenv';
 /**
  *
  */
+
+interface ProductValues {
+	//packs?: {[packId:number]: PackValues};
+	inventoryAllocation?: any[];
+	futureDeliveryTimeDescription?: string;
+	chemical?: any;
+	prices?: any;
+}
+
 export class CProduct extends CUqBase {
     productsPager: QueryPager<any>;
     @observable productSpecFiles: any[] = [];
@@ -26,20 +35,30 @@ export class CProduct extends CUqBase {
     @observable verifyCode: any;
     @observable currentFileName: any;
     @observable currentLanguage: any;
-    @observable currentProduct: any;
+	@observable currentProduct: any;
+	private salesRegion: number;
+	private cache:ObservableMap<number, ProductValues>;
+
+	searchKey: string;
     protected async internalStart(param?: any) {
-        this.searchByKey(param);
-        this.openVPage(VProductList, param);
+		this.searchKey = param;
+        this.searchByKey();
+        this.openVPage(VProductList);
     }
 
+	/*
     renderProductList2(key: any) {
-        return this.renderView(VProductList, key);
-    }
+        return this.renderView(VProductList);
+	}
+	*/
 
-    searchByKey(key: string) {
+    private searchByKey() {
         let { currentSalesRegion } = this.cApp;
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProduct, 10, 10);
-        this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
+        this.productsPager.first({ 
+			keyWord: this.searchKey, 
+			salesRegion: currentSalesRegion.id 
+		});
         console.log(this.productsPager);
     }
 
@@ -53,8 +72,9 @@ export class CProduct extends CUqBase {
         let { currentSalesRegion } = this.cApp;
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         let { productCategoryId, name } = category;
-        await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id })
-        this.openVPage(VProductList, name);
+		await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
+		this.searchKey = name;
+        this.openVPage(VProductList);
     }
 
     /**
@@ -81,6 +101,22 @@ export class CProduct extends CUqBase {
         return this.renderView(VProductWithPrice, product);
     }
 
+	private getCacheProduct(product: number|BoxId): ProductValues {
+		if (!product) return;
+		if (this.salesRegion !== this.cApp.currentSalesRegion.id) {
+			this.cache = observable.map<number, ProductValues>({}, {deep: true});
+			this.salesRegion = this.cApp.currentSalesRegion.id;
+		}
+		if (typeof product === 'object') product = product.id;
+		let p = this.cache.get(product);
+		if (!p) {
+			p = {};
+			this.cache.set(product, p);
+		}
+		return p;
+	}
+
+	/*
     getProductPrice = async (product: BoxId, salesRegionId: number, discount: number) => {
         let { id: productId } = product;
         let { currentSalesRegion, cart, currentLanguage, uqs } = this.cApp;
@@ -109,12 +145,75 @@ export class CProduct extends CUqBase {
                 priceSet[i].promotionPrice = Math.round((1 - discount) * priceSet[i].retail);
         }
         return priceSet;
-    }
+	}
+	*/
 
     renderDeliveryTime = (pack: BoxId) => {
         return this.renderView(VProductDelivery, pack);
     }
 
+	getInventoryAllocation(product: number|BoxId, pack: number|BoxId): any[] {
+		let p = this.getCacheProduct(product);
+		let {inventoryAllocation} = p;
+		if (inventoryAllocation) return inventoryAllocation;		
+		this.uqs.warehouse.GetInventoryAllocation.table({ product, pack, salesRegion: this.cApp.currentSalesRegion }).then(results => {
+			p.inventoryAllocation = results;
+		});
+	}
+
+	getFutureDeliveryTimeDescription(product: number|BoxId) {
+		let p = this.getCacheProduct(product);
+		let {futureDeliveryTimeDescription} = p;
+		if (futureDeliveryTimeDescription) return futureDeliveryTimeDescription;
+		if (futureDeliveryTimeDescription === null) return null;
+    	this.uqs.product.GetFutureDeliveryTime.table({ product, salesRegion: this.cApp.currentSalesRegion.id}).then(futureDeliveryTime => {
+			let value: string;
+            if (futureDeliveryTime.length > 0) {
+                let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
+                value = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
+            } else {
+                value = null;
+			}
+			p.futureDeliveryTimeDescription = value;
+		});
+	}
+
+	getPrices(product: BoxId, discount:number): any[] {
+		let p = this.getCacheProduct(product);
+		let {prices} = p;
+		if (!prices) {
+			let { id: productId } = product;
+			let { currentSalesRegion, cart, currentLanguage, uqs } = this.cApp;
+	
+			uqs.product.PriceX.table({ product: product, salesRegion: currentSalesRegion }).then(pricesResult => {
+				let priceSet = pricesResult.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
+					let ret: any = {};
+					ret.pack = element.pack;
+					ret.retail = element.retail;
+					if (discount !== 0)
+						ret.vipPrice = Math.round(element.retail * (1 - discount));
+					ret.currency = currentSalesRegion.currency;
+					ret.quantity = cart.getQuantity(productId, element.pack.id)
+					return ret;
+				});
+				let promises: PromiseLike<any>[] = [];
+				priceSet.forEach(v => {
+					promises.push(uqs.promotion.GetPromotionPack.obj({ product: productId, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
+				})
+				Promise.all(promises).then(results => {		
+					for (let i = 0; i < priceSet.length; i++) {
+						let promotion = results[i];
+						let discount = promotion && promotion.discount;
+						if (discount)
+							priceSet[i].promotionPrice = Math.round((1 - discount) * priceSet[i].retail);
+					}
+					p.prices = priceSet;
+				});
+			})
+		}
+		return prices;
+	}
+	/*
     getInventoryAllocation = async (productId: number, packId: number, salesRegionId: number) => {
         return await this.uqs.warehouse.GetInventoryAllocation.table({ product: productId, pack: packId, salesRegion: this.cApp.currentSalesRegion });
     }
@@ -131,17 +230,29 @@ export class CProduct extends CUqBase {
             }
         }
         return this.futureDeliveryTimeDescriptionContainer[cacheId];
-    }
+	}
+	*/
 
     renderChemicalInfoInCart = (product: BoxId) => {
         return this.renderView(VChemicalInfoInCart, product);
     }
 
-    getChemicalInfo = async (productId: number) => {
+	/*
+    getChemicalInfo = async (productId: number) => {		
         if (this.chemicalInfoContainer[productId] === undefined) {
             this.chemicalInfoContainer[productId] = await this.uqs.product.ProductChemical.obj({ product: productId });
         }
-    }
+	}
+	*/
+	getChemicalInfo(product: number|BoxId):any {
+		let p = this.getCacheProduct(product);
+		let {chemical} = p;
+		if (chemical) return chemical;
+		this.uqs.product.ProductChemical.obj({ product }).then(value => {
+			p.chemical = value;
+		});
+		return;
+	}
 
     renderFavoritesLabel = (product: number) => {
         let { cApp } = this;
@@ -195,20 +306,21 @@ export class CProduct extends CUqBase {
      * 在线预览PDF,开启验证
      */
     ToVerifyPdf = async (fileInfo: any) => {
-        let { currentUser } = this.cApp;
+        //let { currentUser } = this.cApp;
         let { content, product } = fileInfo;
         let reg = /\w*\//ig
         this.currentFileName = content.fileName ? content.fileName.replace(reg, '').toLocaleUpperCase() : undefined;
         this.currentLanguage = content.language;
-        this.currentProduct = product;
-        let loginCallback = async (user: User) => {
-            await currentUser.setUser(user);
-            this.closePage(1);
-            await this.openVerifyCode();
-        };
-        if (!this.isLogined)
-            nav.showLogin(loginCallback, true);
-        else
+		this.currentProduct = product;
+		await this.cApp.assureLogin();
+        //let loginCallback = async (user: User) => {
+        //    await currentUser.setUser(user);
+        //    this.closePage(1);
+        //    await this.openVerifyCode();
+        //};
+        //if (!this.isLogined)
+        //    nav.showLogin(loginCallback, true);
+        //else
             await this.openVerifyCode();
     }
 
@@ -258,7 +370,7 @@ export class CProduct extends CUqBase {
      * 获取产品MSDS文件
      */
     getProductMSDSFile = async (product: any) => {
-        this.productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product });
+        this.productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product:11 });
         this.productMSDSFiles = this.productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
     }
 
@@ -266,6 +378,6 @@ export class CProduct extends CUqBase {
      * 获取产品Spec文件
      */
     getProductSpecFile = async (product: any) => {
-        this.productSpecFiles = await this.uqs.product.ProductSpecFile.table({ product });
+        this.productSpecFiles = await this.uqs.product.ProductSpecFile.table({ product:11 });
     }
 }

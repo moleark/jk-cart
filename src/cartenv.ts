@@ -5,7 +5,6 @@ import MaterialScience from './images/MaterialScience.png';
 import OrganicChemistry from './images/OrganicChemistry.png';
 import { env } from 'tonva';
 
-
 // 生产配置
 const GLOABLE_PRODUCTION = {
     CHINA: 44,
@@ -38,7 +37,6 @@ const GLOABLE_PRODUCTION = {
     PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
     CONTENTSITE: "https://web.jkchemical.com",
     // CONTENTSITE: "http://localhost:6061",
-
 }
 
 // 测试环境配置

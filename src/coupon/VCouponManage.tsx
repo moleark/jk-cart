@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager, autoHideTips } from 'tonva';
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
 import { observable } from 'mobx';
@@ -19,7 +19,8 @@ export class VCouponManage extends VPage<CCoupon> {
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
 
-    @observable tips: string;
+	//@observable tips: string;
+	private tips = observable.box();
     async open(param: any) {
         this.openPage(this.page);
     }
@@ -49,9 +50,10 @@ export class VCouponManage extends VPage<CCoupon> {
      */
     private receiveCoupon = async () => {
         let { drawCoupon, getCouponValidationResult, applyTip } = this.controller;
-        let coupon = this.couponInput.value;
+		let coupon = this.couponInput.value;
+		let tips: string;
         if (!coupon)
-            this.tips = "请输入您的优惠卡/券号";
+            tips = "请输入您的优惠卡/券号";
         else {
             this.couponInput.value = '';
 
@@ -59,14 +61,17 @@ export class VCouponManage extends VPage<CCoupon> {
             let { result } = validationResult;
             if (result === 1) {
                 await drawCoupon(validationResult);
-                this.tips = '领取成功！';
+                tips = '领取成功！';
             } else {
-                this.tips = applyTip(result);
+                tips = applyTip(result);
             }
-        }
+		}
+		this.tips.set(tips);
+		/*
         if (this.tips) {
-            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
-        }
+        //    setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+		}
+		*/
         // setTimeout(() => this.controller.closePage(), 500);
         // this.currentStatus = this.oss[0].state;
         // this.coupons = await getCoupons(this.currentStatus);
@@ -129,7 +134,8 @@ export class VCouponManage extends VPage<CCoupon> {
                 <LMR right={right}>
                     <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
                 </LMR>
-                {React.createElement(this.tipsUI)}
+				{/*React.createElement(this.tipsUI)*/}
+				{autoHideTips(this.tips)}
                 <div className="mt-2">
                     <Tabs tabs={this.tabs} tabPosition="top" />
                 </div>
