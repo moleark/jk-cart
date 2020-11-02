@@ -155,7 +155,10 @@ export class CProduct extends CUqBase {
 	getInventoryAllocation(product: number|BoxId, pack: number|BoxId): any[] {
 		let p = this.getCacheProduct(product);
 		let {inventoryAllocation} = p;
-		if (inventoryAllocation) return inventoryAllocation;		
+		if (inventoryAllocation) return inventoryAllocation;
+		if (inventoryAllocation === null) return null;
+		if (inventoryAllocation as any === '') return null;
+		p.inventoryAllocation = '' as any;
 		this.uqs.warehouse.GetInventoryAllocation.table({ product, pack, salesRegion: this.cApp.currentSalesRegion }).then(results => {
 			p.inventoryAllocation = results;
 		});
@@ -166,6 +169,8 @@ export class CProduct extends CUqBase {
 		let {futureDeliveryTimeDescription} = p;
 		if (futureDeliveryTimeDescription) return futureDeliveryTimeDescription;
 		if (futureDeliveryTimeDescription === null) return null;
+		if (futureDeliveryTimeDescription === '') return null;
+		p.futureDeliveryTimeDescription = '';
     	this.uqs.product.GetFutureDeliveryTime.table({ product, salesRegion: this.cApp.currentSalesRegion.id}).then(futureDeliveryTime => {
 			let value: string;
             if (futureDeliveryTime.length > 0) {
@@ -181,37 +186,38 @@ export class CProduct extends CUqBase {
 	getPrices(product: BoxId, discount:number): any[] {
 		let p = this.getCacheProduct(product);
 		let {prices} = p;
-		if (!prices) {
-			let { id: productId } = product;
-			let { currentSalesRegion, cart, currentLanguage, uqs } = this.cApp;
-	
-			uqs.product.PriceX.table({ product: product, salesRegion: currentSalesRegion }).then(pricesResult => {
-				let priceSet = pricesResult.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
-					let ret: any = {};
-					ret.pack = element.pack;
-					ret.retail = element.retail;
-					if (discount !== 0)
-						ret.vipPrice = Math.round(element.retail * (1 - discount));
-					ret.currency = currentSalesRegion.currency;
-					ret.quantity = cart.getQuantity(productId, element.pack.id)
-					return ret;
-				});
-				let promises: PromiseLike<any>[] = [];
-				priceSet.forEach(v => {
-					promises.push(uqs.promotion.GetPromotionPack.obj({ product: productId, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
-				})
-				Promise.all(promises).then(results => {		
-					for (let i = 0; i < priceSet.length; i++) {
-						let promotion = results[i];
-						let discount = promotion && promotion.discount;
-						if (discount)
-							priceSet[i].promotionPrice = Math.round((1 - discount) * priceSet[i].retail);
-					}
-					p.prices = priceSet;
-				});
+		if (prices) return prices;
+		if (prices === null) return null;
+		if (prices as any === '') return null;
+		p.prices = '';
+		let { id: productId } = product;
+		let { currentSalesRegion, cart, currentLanguage, uqs } = this.cApp;
+
+		uqs.product.PriceX.table({ product: product, salesRegion: currentSalesRegion }).then(pricesResult => {
+			let priceSet = pricesResult.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
+				let ret: any = {};
+				ret.pack = element.pack;
+				ret.retail = element.retail;
+				if (discount !== 0)
+					ret.vipPrice = Math.round(element.retail * (1 - discount));
+				ret.currency = currentSalesRegion.currency;
+				ret.quantity = cart.getQuantity(productId, element.pack.id)
+				return ret;
+			});
+			let promises: PromiseLike<any>[] = [];
+			priceSet.forEach(v => {
+				promises.push(uqs.promotion.GetPromotionPack.obj({ product: productId, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
 			})
-		}
-		return prices;
+			Promise.all(promises).then(results => {		
+				for (let i = 0; i < priceSet.length; i++) {
+					let promotion = results[i];
+					let discount = promotion && promotion.discount;
+					if (discount)
+						priceSet[i].promotionPrice = Math.round((1 - discount) * priceSet[i].retail);
+				}
+				p.prices = priceSet;
+			});
+		});
 	}
 	/*
     getInventoryAllocation = async (productId: number, packId: number, salesRegionId: number) => {
@@ -248,6 +254,9 @@ export class CProduct extends CUqBase {
 		let p = this.getCacheProduct(product);
 		let {chemical} = p;
 		if (chemical) return chemical;
+		if (chemical === null) return null;
+		if (chemical as any === '') return null;
+		p.chemical = '';
 		this.uqs.product.ProductChemical.obj({ product }).then(value => {
 			p.chemical = value;
 		});
