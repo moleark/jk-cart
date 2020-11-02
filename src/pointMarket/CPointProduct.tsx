@@ -14,6 +14,7 @@ import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
 import { GLOABLE } from 'cartenv';
 import { VDefaultPost } from './VDefaultPost';
+import moment from 'moment';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -124,9 +125,21 @@ export class CPointProduct extends CUqBase {
             }
         } else
             this.pointProductsDetail.quantity = 0;
+        let fm = 'YYYY-MM-DD HH:mm:ss';
+        this.pointProductsDetail.OffShelf = false;
+        let findProduct = await this.getPointProductLibLoad(pointProduct.product.id);
+        if (findProduct !== undefined && moment(undefined, fm) >= moment(findProduct.endDate, fm))
+            this.pointProductsDetail.OffShelf = true;
         // this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
         this.openVPage(VPointProductDetail,DetailLevel);
+    }
+
+    /**
+     * 据商品id 获取对应的商品所有信息
+     */
+    getPointProductLibLoad = async (id: number) => {
+        return await this.uqs.积分商城.PointProductLib.load(id);
     }
 
     /**
@@ -270,7 +283,8 @@ export class CPointProduct extends CUqBase {
      * 据类型筛选商品
      */
     filterByProductGenre = async (currentGenre: any) => {
-        let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
+        // let pointProductFromGenre = await this.getProductsFromGenre(currentGenre);
+        let pointProductFromGenre = await this.uqs.积分商城.GetPointProductByGenre.table({ genre: currentGenre });
         return pointProductFromGenre.map((v) => { return { genre: v.genre, product: v.pointProduct } });
     }
 

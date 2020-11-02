@@ -88,7 +88,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 action: this.pointRules
             }
         ];
-        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
+        let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
 

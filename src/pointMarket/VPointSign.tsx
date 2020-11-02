@@ -56,7 +56,7 @@ export class VPointSign extends VPage<CSignIn> {
                 action: () => openRevenueExpenditure(RevenueExpenditure.SIGNINHISTORY)
             }
         ];
-        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
+        let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         return <Page header='签到' right={right}>
             <div className="text-center text-light px-5 pt-5"

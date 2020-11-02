@@ -7,6 +7,7 @@ import { MinusPlusWidget } from 'tools';
 import { schema, TopicDivision } from './VPointProduct';
 import giftPlate from 'images/giftPlate.png';
 import { observable } from 'mobx';
+import 已下架 from 'images/已下架.png';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
     @observable DetailSource: number;
@@ -36,11 +37,16 @@ export class VPointProductDetail extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product } = pointProduct;
+        let { product, OffShelf } = pointProduct;
+        let OffShelfTip: any = undefined;
+        if(OffShelf) OffShelfTip = <div className="position-absolute" style={{top:0,left:0}}>
+            <img src={已下架} alt="" style={{width:'18vw'}} />
+        </div>
         return <>
             {tv(product, (v) => {
-                return <div className="w-100 px-4">
-                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" style={{maxHeight:'16rem'}} /></div>
+                return <div className="w-100 px-4 position-relative">
+                    {OffShelfTip}
+                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" style={{}} /></div>
                     <div className="small">
                         <div className="mt-2">{v.descriptionC}</div>
                         <div className="my-2">{v.grade}</div>
@@ -50,7 +56,11 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                                 <small>分</small>
                             </div>
                             <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
-                                <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                {
+                                    !OffShelf
+                                    ? <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                    : null
+                                }
                             </div>
                         </div>
                     </div>
