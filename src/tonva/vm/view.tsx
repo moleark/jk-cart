@@ -18,6 +18,7 @@ export abstract class View<C extends Controller> {
     }
 
 	protected get isDev() {return  env.isDevelopment}
+	get isWebNav(): boolean {return this.controller.isWebNav}
 	protected isMe(id:any) {return this.controller.isMe(id)}
     abstract render(param?:any): JSX.Element;
 
@@ -31,7 +32,11 @@ export abstract class View<C extends Controller> {
 
     protected async event(type:string, value?:any) {
         await this.controller.event(type, value);
-    }
+	}
+	
+	protected go(showPage:()=>void, url:string, absolute?:boolean) {
+		this.controller.go(showPage, url, absolute);
+	}
 
     async vCall<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any):Promise<any> {
         return await this.controller.vCall(vp, param);
@@ -66,15 +71,15 @@ export abstract class View<C extends Controller> {
 		return this.renderUser(user.id, imageClassName, textClassName);
 	}
 
-    protected openPage(view: React.StatelessComponent<any>, param?:any) {
+    protected openPage(view: React.StatelessComponent<any>, param?:any, onClosePage?:(ret:any)=>void) {
         let type = typeof param;
         if (type === 'object' || type === 'undefined') {
-            this.controller.openPage(React.createElement(view, param));
+            this.controller.openPage(React.createElement(view, param), onClosePage);
         }
         else {
             this.controller.openPage(<Page header="param type error">
                 View.openPage param must be object, but here is {type}
-            </Page>);
+            </Page>, onClosePage);
         }
     }
 
@@ -86,8 +91,8 @@ export abstract class View<C extends Controller> {
         this.controller.openPage(page, onClosePage);
     }
 
-    protected replacePageElement(page: JSX.Element) {
-        this.controller.replacePage(page);
+    protected replacePageElement(page: JSX.Element, onClosePage?: ()=>void) {
+        this.controller.replacePage(page, onClosePage);
     }
 
     protected backPage() {

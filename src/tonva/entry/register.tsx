@@ -89,7 +89,7 @@ export class RegisterController extends Controller {
             alert('something wrong!');
             return;
         }
-        await nav.logined(retUser);
+        await nav.userLogined(retUser);
     }
 
     private regReturn(registerReturn:number):string {

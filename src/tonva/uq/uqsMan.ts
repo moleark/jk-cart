@@ -1,5 +1,5 @@
 import { LocalMap, LocalCache, env } from '../tool';
-import { UqData } from '../net';
+import { UqData, UqAppData, loadAppUqs } from '../net';
 import { UqMan } from './uqMan';
 import { TuidImport, TuidInner } from './tuid';
 import { nav } from '../components';
@@ -11,6 +11,41 @@ export interface TVs {
 }
 
 export class UQsMan {
+	static _uqs: any;
+	static value: UQsMan;
+	static errors: string[];
+
+	static async load(tonvaAppName:string, version:string, tvs:TVs) {
+		let uqsMan = UQsMan.value = new UQsMan(tonvaAppName, tvs);
+        let {appOwner, appName} = uqsMan;
+        let {localData} = uqsMan;
+        let uqAppData:UqAppData = localData.get();
+        if (!uqAppData || uqAppData.version !== version) {
+			uqAppData = await loadAppUqs(appOwner, appName);
+			if (!uqAppData.id) {
+				return [
+					`${appOwner}/${appName}不存在。请仔细检查app全名。`
+				];
+			}
+            uqAppData.version = version;
+            localData.set(uqAppData);
+            // 
+            for (let uq of uqAppData.uqs) uq.newVersion = true;
+        }
+        let {id, uqs} = uqAppData;
+        uqsMan.id = id;
+        await uqsMan.init(uqs);
+        let retErrors = await uqsMan.load();
+        if (retErrors.length === 0) {
+            retErrors.push(...uqsMan.setTuidImportsLocal());
+            if (retErrors.length === 0) {
+                UQsMan._uqs = uqsMan.buildUQs();
+                return;
+            }
+        }
+        UQsMan.errors = retErrors;
+	}
+
     private collection: {[uqName: string]: UqMan};
     private readonly tvs: TVs;
 
@@ -21,7 +56,7 @@ export class UQsMan {
     readonly localData: LocalCache;
     id: number;
 
-    constructor(tonvaAppName:string, tvs:TVs) {
+    private constructor(tonvaAppName:string, tvs:TVs) {
         this.tvs = tvs || {};
         this.buildTVs();
         this.collection = {};

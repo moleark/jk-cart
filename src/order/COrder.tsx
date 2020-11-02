@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import { BoxId, Tuid } from 'tonva';
 import { nav } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';
 import { OrderSuccess } from './OrderSuccess';

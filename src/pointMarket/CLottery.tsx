@@ -1,4 +1,5 @@
-import { CUqBase } from 'CBase';
+/* eslint-disable */
+import { CUqBase } from 'tapp/CBase';
 import { VLottery } from './VLottery';
 import { observable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';

@@ -1,17 +1,48 @@
+/* eslint-disable */
 import * as React from 'react';
-import { View } from 'tonva';
-import { CApp } from '../CApp';
+import { VPage, Ax, FA, View, A } from 'tonva';
 import logo from '../images/logo.svg';
 import footer_logo from '../images/footer-logo.svg';
 import phone from '../images/Phone.svg';
 import magnifier from '../images/magnifier.svg';
 import qrcode from '../images/qrcode.png';
+import { CApp } from './CApp';
+
+//const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
+
+export class VMainWebNav extends VPage<CApp> {
+/*	
+    async open(param?: any) {
+        this.openPage(() => {
+			let { cHome } = this.controller;
+			return cHome.tab.content();
+		});
+	}
+*/
+	content() {
+		let { cHome } = this.controller;
+		return cHome.tab.content();
+	}
+}
+
 
 export class NavHeaderView extends View<CApp> {
-
     render() {
-        let { controller } = this;
-        let { cMe } = controller;
+        let { cMe, user } = this.controller;
+		let vLogin:any;
+		if (!user) {
+			vLogin = <div className="nav-link">
+				<a className="px-2" href="./register" target="_self">注册</a>
+				<A className="px-2" href="./login" target="_self">登录</A>
+			</div>;
+		}
+		else {
+		let { id, name, nick, icon } = user;
+			vLogin = <div className="nav-link">
+				<a className="px-2" href="./me" target="_self">{nick || name}</a>
+				<A className="px-2" href="./logout" target="_self">退出</A>
+			</div>;
+		}
 
         return <header>
             <div className="top-header">
@@ -95,8 +126,14 @@ export class NavHeaderView extends View<CApp> {
                                     <a className="dropdown-item" href="#">2 Column Portfolio</a>
                                 </div>
                             </li>
-
-                            {cMe.renderLoginState()}
+							<li className="nav-item">
+								<Ax className="nav-link" href="cart" onClick={() => this.controller.cCart.start()}>
+									<FA name="shopping-cart" /> 购物车
+								</Ax>
+							</li>
+							<li className="nav-item">
+								{vLogin}
+							</li>
                         </ul>
                     </div>
                 </div>
@@ -105,6 +142,7 @@ export class NavHeaderView extends View<CApp> {
     }
 }
 
+/*
 export class NavFooter extends React.Component {
     render() {
         return <div className="d-none d-sm-block bg-light pt-3">
@@ -127,7 +165,7 @@ export class NavFooter extends React.Component {
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
-                        <div className="mt-2 font-weight-bold">浏览</div>
+                        <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="#">资讯中心</a></li>
                             <li><a href="#">质量证书(COA)</a></li>
@@ -171,7 +209,7 @@ export class NavFooter extends React.Component {
         </div >
     }
 }
-
+*/
 export class NavFooterView extends View<CApp> {
     render() {
         return <div className="d-none d-sm-block bg-light pt-3">
@@ -186,7 +224,7 @@ export class NavFooterView extends View<CApp> {
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
-                            <li><a href="#">公司简介</a></li>
+                            <li><a href="/about">公司简介</a></li>
                             <li><a href="#">企业承诺</a></li>
                             <li><a href="#">合作品牌</a></li>
                             <li><a href="#">招贤纳士</a></li>
@@ -194,7 +232,7 @@ export class NavFooterView extends View<CApp> {
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
-                        <div className="mt-2 font-weight-bold">浏览</div>
+                        <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="#">资讯中心</a></li>
                             <li><a href="#">质量证书(COA)</a></li>

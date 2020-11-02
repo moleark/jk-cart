@@ -41,7 +41,7 @@ export class VPointSign extends VPage<CSignIn> {
     }
 
     private page = observer((param: any) => {
-        let { IsSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
+        let { isSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
         let { cLottery } = cApp;
         let date = moment().format('YYYY-MM-DD').split('-');
         let timer = `${date[0]} 年 ${date[1]} 月 ${date[2]} 日 `;
@@ -136,6 +136,6 @@ export class VPointSign extends VPage<CSignIn> {
     protected handleChange = async () => {
         this.showTips = "";
         if (!this.showTips)
-            setTimeout(() => { this.showTips = "none"; this.controller.IsSignin = false }, GLOABLE.TIPDISPLAYTIME);
+            setTimeout(() => { this.showTips = "none"; this.controller.isSignin = false }, GLOABLE.TIPDISPLAYTIME);
     }
 }

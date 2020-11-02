@@ -1,9 +1,7 @@
+/* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page } from 'tonva';
 import { CProductCategory } from './CProductCategory';
-import marked from 'marked';
-//import { tv } from 'tonva';
-import { renderThirdCategory } from './VRootCategory';
 import { observer } from 'mobx-react';
 import $ from 'jquery';
 

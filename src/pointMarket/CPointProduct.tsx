@@ -1,5 +1,5 @@
 import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
-import { CUqBase } from 'CBase';
+import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
 import { VExchangeOrder } from './VExchangeOrder';
@@ -448,8 +448,15 @@ export class CPointProduct extends CUqBase {
     /**
      * 检查客户信息是否完善（不完善需补充完善后方可领取积分）
      */
-    userInfoCompletedChecking = (options: any): boolean => {
-
+    userInfoCompletedChecking = async (options: any): Promise<boolean> => {
+		await this.cApp.assureLogin();
+		let { cMe, currentUser } = this.cApp;
+		if (!currentUser.allowOrdering) {
+			cMe.openMeInfoFirstOrder(options);
+			return false;
+		}
+		return true;
+		/*
         if (!this.isLogined) {
             this.openMeInfoOptions = options;
             nav.showLogin(this.loginCallback, true);
@@ -461,9 +468,10 @@ export class CPointProduct extends CUqBase {
                 return false;
             }
             return true;
-        }
+		}
+		*/
     }
-
+	/*
     private loginCallback = async (user: User): Promise<void> => {
         let { cApp } = this;
         await cApp.currentUser.setUser(user);
@@ -475,7 +483,7 @@ export class CPointProduct extends CUqBase {
             cMe.openMeInfoFirstOrder(this.openMeInfoOptions);
         }
     };
-
+	*/
     /**
      * TODO: delete
      */

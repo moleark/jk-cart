@@ -1,22 +1,29 @@
+/* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, Scroller, nav } from 'tonva';
+import { VPage, Scroller, nav } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
+/*
 import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
 import { observer } from 'mobx-react-lite';
+*/
 
 export class VProductList extends VPage<CProduct> {
+	/*
     private searchKey: string;
-    async open(key: string) {
-        this.searchKey = key;
-        xs ? this.openPage(this.page) : this.openPage(this.largePage);
-    }
+    async open() {
+        //this.searchKey = key;
+        //xs ? this.openPage(this.page) : this.openPage(this.largePage);
+	}
+	*/
 
+	/*
     render(key: any) {
         this.searchKey = key;
         return <this.page />
-    }
+	}
+	*/
 
     private onProductClick = async (product: any) => {
         // await this.controller.showProductDetail(product.id);
@@ -37,6 +44,24 @@ export class VProductList extends VPage<CProduct> {
         return this.controller.cApp.cProduct.renderProduct(p);
     }
 
+	header() {
+		return this.isWebNav===true? null: this.controller.cApp.cHome.renderSearchHeader();
+	}
+
+	right() {
+		return this.isWebNav===true? null: this.controller.cApp.cCart.renderCartLabel();
+	}
+
+	content() {
+        let { productsPager, searchKey } = this.controller;
+        let none = <div className="p-3 text-warning">[无]</div>;
+		return <>
+			<div className="bg-white py-2 px-3 mb-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
+			<List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+		</>;
+	}
+
+	/*
     private page = observer(() => {
 
         let { productsPager, cApp } = this.controller;
@@ -53,17 +78,12 @@ export class VProductList extends VPage<CProduct> {
 
     private largePage = () => {
         let { productsPager, cApp } = this.controller;
-        let { renderHeader, renderFooter } = cApp;
+        //let { renderHeader, renderFooter } = cApp;
         let none = <div className="p-3 text-warning">[无]</div>
-        /*
-        return <ShopPage>
-            <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
-            <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
-        </ShopPage>
-        */
         return <Page webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}>
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
-    };
+	};
+	*/
 }

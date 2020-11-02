@@ -10,6 +10,9 @@ import { SelectItemEdit } from './selectItemEdit';
 import { IdItemEdit } from './idItemEdit';
 import { TagSingleItemEdit, TagMultiItemEdit } from './tagItemEdit';
 import { TextAreaItemEdit } from './textAreaItemEdit';
+import { CheckBoxItemEdit } from './checkBoxItemEdit';
+import { RangeItemEdit } from './rangeItemEdit';
+import { NumberItemEdit } from './numberItemEdit';
 
 export interface EditProps {
     className?: string;
@@ -37,11 +40,11 @@ export class Edit extends React.Component<EditProps> {
 
     constructor(props: EditProps) {
         super(props);
-        let {topBorderClassName, bottomBorderClassName, sepClassName, rowContainerClassName, uiSchema, stopEdit} = props;
+        let {topBorderClassName, bottomBorderClassName, sepClassName, rowContainerClassName, uiSchema} = props;
         this.topBorder = <div className={topBorderClassName || this.defaultSepClassName} />;
         this.bottomBorder = <div className={bottomBorderClassName || this.defaultSepClassName} />;
         this.rowContainerClassName = rowContainerClassName || this.defaultRowContainerClassName;
-        if (stopEdit !== true) this.rowContainerClassName += ' cursor-pointer';
+        //if (stopEdit !== true) this.rowContainerClassName += ' cursor-pointer';
         this.sep = <div className={sepClassName || this.defaultSepClassName} />;
 		this.uiSchema = (uiSchema && uiSchema.items) || {};
     }
@@ -52,6 +55,7 @@ export class Edit extends React.Component<EditProps> {
         return <div>
 			{this.topBorder}
             {schema.map((itemSchema, index) => {
+				let {stopEdit} = this.props;
 				let {name} = itemSchema;
 				let uiItem = this.uiSchema===undefined? undefined : this.uiSchema[name];
 				let label:string, labelHide:any;
@@ -60,7 +64,13 @@ export class Edit extends React.Component<EditProps> {
 					labelHide = uiItem.labelHide;
 				};
 				let value = this.props.data[name];
-				let itemEdit = createItemEdit(itemSchema, uiItem, label, value);
+				let itemEdit = createItemEdit(this, itemSchema, uiItem, label, value);
+				let rowContainerClassName = this.rowContainerClassName;
+				let {editInRow} = itemEdit;
+				if (editInRow === false) {
+					if (stopEdit !== true) editInRow = false;
+				}
+				if (editInRow === false) rowContainerClassName += ' cursor-pointer';
 
 				let {required} = itemSchema;
 				let requireFlag = required===true && <span className="text-danger">*</span>;
@@ -74,13 +84,13 @@ export class Edit extends React.Component<EditProps> {
 				}
 				let ret = <React.Fragment key={index}>
 					{sep}
-					<div className={'d-flex align-items-center' + this.rowContainerClassName} 
+					<div className={'d-flex align-items-center' + rowContainerClassName} 
 						onClick={async ()=>await this.rowClick(itemEdit)}>
 						{divLabel}
 						<div className={cn}>{
 							itemEdit===undefined? undefined: itemEdit.renderContent()
 						}</div>
-						{this.props.stopEdit!==true && <div className="w-2c text-right"><i className="fa fa-angle-right" /></div>}
+						{editInRow === false && <div className="w-2c text-right"><i className="fa fa-angle-right" /></div>}
 					</div>
 				</React.Fragment>;
 				sep = this.sep;
@@ -90,14 +100,32 @@ export class Edit extends React.Component<EditProps> {
 		</div>;
     }
 
+	async onItemChanged(itemEdit:ItemEdit, newValue:any) {
+		let {itemSchema, uiItem, value} = itemEdit;
+		this.props.data[itemSchema.name] = newValue;
+        let {onItemChanged, stopEdit} = this.props;
+		if (stopEdit === true) return;
+		if (uiItem?.readOnly === true) return;
+		if (onItemChanged === undefined) {
+			alert(`${itemSchema.name} value changed, new: ${newValue}, pre: ${value}`);
+			// 2020-04-15：改值之后，应该赋值吧。所以这一句移到前面去
+			//this.props.data[itemSchema.name] = changeValue;
+		}
+		else {
+			await onItemChanged(itemSchema, newValue, value);
+		}
+	}
+
 	private rowClick = async (itemEdit:ItemEdit) => {
 		if (itemEdit === undefined) {
 			alert('item has no edit');
 			return;
 		}
-		let {itemSchema, uiItem, value} = itemEdit;
+		let {itemSchema, uiItem, value, editInRow} = itemEdit;
+		if (editInRow === true) return;
         let {onItemChanged, onItemClick, stopEdit} = this.props;
-        if (stopEdit === true) return;
+		if (stopEdit === true) return;
+		if (uiItem?.readOnly === true) return;
         let changeValue:any;
         if (onItemClick !== undefined) {
             await onItemClick(itemSchema, uiItem, value);
@@ -132,9 +160,9 @@ export class Edit extends React.Component<EditProps> {
     }
 }
 
-type NewItemEdit = new (itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) => ItemEdit;
+type NewItemEdit = new (edit: Edit, itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) => ItemEdit;
 
-function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any):ItemEdit {
+function createItemEdit(edit: Edit, itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any):ItemEdit {
 	let ie: ItemEdit;
     let itemEdit: NewItemEdit;
     if (uiItem !== undefined) {
@@ -145,15 +173,18 @@ function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, val
 			case 'textarea': itemEdit = TextAreaItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;
 			case 'select': itemEdit = SelectItemEdit; break;
-			case 'range': itemEdit = StringItemEdit; break;
+			case 'range': itemEdit = RangeItemEdit; break;
+			case 'number':
+			case 'updown': itemEdit = NumberItemEdit; break;
+			case 'checkbox': itemEdit = CheckBoxItemEdit; break;
             case 'radio': 
-				ie = new RadioItemEdit(itemSchema, uiItem as UiRadio, label, value);
+				ie = new RadioItemEdit(edit, itemSchema, uiItem as UiRadio, label, value);
 				break;
 			case 'tagSingle':
-				ie = new TagSingleItemEdit(itemSchema, uiItem as UiTagSingle, label, value);
+				ie = new TagSingleItemEdit(edit, itemSchema, uiItem as UiTagSingle, label, value);
 				break;
 			case 'tagMulti':
-				ie = new TagMultiItemEdit(itemSchema, uiItem as UiTagMulti, label, value);
+				ie = new TagMultiItemEdit(edit, itemSchema, uiItem as UiTagMulti, label, value);
 				break;
 			}
 	}
@@ -162,10 +193,13 @@ function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, val
 			switch (itemSchema.type) {
 				case 'string': itemEdit = StringItemEdit; break;
 				case 'image': itemEdit = ImageItemEdit; break;
+				case 'boolean': itemEdit = CheckBoxItemEdit; break;
+				case 'number':
+				case 'integer': itemEdit = RangeItemEdit; break;
 			}
 		}
 		if (itemEdit === undefined) return;
-		ie = new itemEdit(itemSchema, uiItem, label, value);
+		ie = new itemEdit(edit, itemSchema, uiItem, label, value);
 	}
 	ie.init();
 	return ie;

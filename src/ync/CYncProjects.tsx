@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CUqBase } from 'CBase';
+import { CUqBase } from 'tapp/CBase';
 import { VYncProjects } from './VYncProjects';
 import { YncProjectsResponse, YncProjectsItem } from './YncProductItem';
 

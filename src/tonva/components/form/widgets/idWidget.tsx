@@ -4,6 +4,8 @@ import { Widget } from './widget';
 import { UiIdItem, TempletType } from '../../schema';
 import { observable } from 'mobx';
 
+const none = <small className="text-muted">[无]</small>;
+
 export class IdWidget extends Widget {
     protected get ui(): UiIdItem {return this._ui as UiIdItem};
     @observable protected value:number;
@@ -37,7 +39,7 @@ export class IdWidget extends Widget {
         };
         let content;
         if (this.value === undefined || this.value === null) {
-            content = placeholder || <small className="text-muted">[无]</small>;
+            content = placeholder || none;
             cn['text-muted'] = true;
         }
         else if (Templet === undefined) {
@@ -47,7 +49,7 @@ export class IdWidget extends Widget {
             }
             else {
                 switch (typeof this.value) {
-                    case 'undefined': c = <small className="text-muted">[无]</small>; break;
+                    case 'undefined': c = none; break;
                     case 'object': c = (this.value as any).id; break;
                     default: c = this.value; break;
                 }

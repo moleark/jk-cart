@@ -67,7 +67,9 @@ export abstract class EntityCaller<T> extends Caller<T> {
 
     private rebuildSchema(schema: UqResponseSchema) {
         let {uq, entity} = schema;
-        if (uq !== undefined) this.entity.uq.buildEntities(uq);
+        if (uq !== undefined) {
+			this.entity.uq.buildEntities(uq);
+		}
         if (entity !== undefined) {
 			this.entity.setSchema(entity);
 		}

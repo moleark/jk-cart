@@ -3,7 +3,7 @@ import { ActionCaller } from './caller';
 
 export class Action extends Entity {
     get typeName(): string { return 'action';}
-    async submit(data:object) {
+    async submit(data:object, waiting: boolean = true) {
 		let caller = new ActionSubmitCaller(this, data)
 		let ret = await caller.request();
 		return ret;

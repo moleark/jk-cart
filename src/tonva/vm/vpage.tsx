@@ -14,6 +14,14 @@ export abstract class VPage<C extends Controller> extends View<C> {
 		return;
 	}
 
+    replaceOpen(param?:any, onClosePage?:(ret:any)=>void):Promise<void> {
+		this.init(param);
+		let _onClosePage: ()=>void;
+		if (onClosePage !== undefined) _onClosePage = () => onClosePage(this.retOnClosePage);
+		this.replacePageElement(this.renderPage(), _onClosePage);
+		return;
+	}
+
 	render(param?:any):JSX.Element {
 		this.init(param);
 		return this.renderPage();
@@ -40,6 +48,7 @@ export abstract class VPage<C extends Controller> extends View<C> {
 			afterBack={()=>this.afterBack()}
 			tabsProps={this.tabsProps}
 			logout={this.logout()}
+			webNav={this.controller.pageWebNav}
 		>
 			{this.content()}
 		</Page>;

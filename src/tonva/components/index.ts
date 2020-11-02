@@ -1,3 +1,4 @@
+export * from './navigo';
 export * from './nav';
 export * from './page';
 export * from './schema';
@@ -16,4 +17,5 @@ export * from './simple';
 export * from './media';
 export * from './searchBox';
 export * from './userIcon';
-
+export * from './ax';
+export * from './autoHideTips';

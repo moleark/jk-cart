@@ -1,4 +1,4 @@
-import { CUqApp } from "../CBase";
+import { CUqApp } from "../tapp/CBase";
 import { CProduct } from "./CProduct";
 import { CFavorites } from "customer/CFavorites";
 export class CAppProduct extends CUqApp {

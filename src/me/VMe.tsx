@@ -1,25 +1,27 @@
 import * as React from 'react';
-import { nav, User, Page, Image, VPage } from 'tonva';
+import { nav, User, Page, Image, VPage, autoHideTips } from 'tonva';
 import { Prop, Media, IconText, FA, PropGrid, LMR } from 'tonva';
-import { About } from './about';
+import { VAbout } from './about';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
+import { observable } from 'mobx';
 
 export class VMe extends VPage<CMe> {
-
+	/*
     async open(param?: any) {
-
-    }
+		this.open
+	}
+	*/
+	private tips = observable.box('a');
 
     private exit() {
         nav.showLogout();
     }
 
-    private about = () => nav.push(<About />);
     private contactUs = () => nav.push(<ContactUs />);
     private privacy = () => {
         this.controller.openPrivacy();
@@ -55,7 +57,9 @@ export class VMe extends VPage<CMe> {
 
     private meInfo = observer(() => {
         let { user } = nav;
-        if (user === undefined) return null;
+        if (user === undefined) {
+			return null;
+		}
         let { id, name, nick, icon } = user;
         return <LMR className="px-3 py-2 cursor-pointer w-100 bg-primary text-white"
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
@@ -100,7 +104,8 @@ export class VMe extends VPage<CMe> {
     }
     header() {
         return <this.meInfo />;
-    }
+	}
+	footer():JSX.Element {return null;}
 
     private page = observer(() => {
         const { user } = nav;
@@ -114,7 +119,7 @@ export class VMe extends VPage<CMe> {
             {
                 type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="关于百灵威" />,
-                onClick: this.about
+                onClick: () => this.controller.openAbout()
             },
             {
                 type: 'component',
@@ -206,7 +211,11 @@ export class VMe extends VPage<CMe> {
             ]
             rows.push(...aboutRows, ...logOutRows);
         }
-        return <PropGrid rows={rows} values={{}} />;
+        return <>
+			<PropGrid rows={rows} values={{}} />
+			<button onClick={()=>this.tips.set('ddddd')}>push</button>
+			{autoHideTips(this.tips, <div className="text-danger">{this.tips}</div>)}
+		</>;
     })
 }
 

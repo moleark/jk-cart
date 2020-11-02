@@ -193,7 +193,7 @@ export class Form extends React.Component<FormProps> {
     render() {
         let content = this.renderContent();
         return <ContextContainer.Provider value={this.formContext}>
-            <this.formContext.renderErrors />
+            {React.createElement(this.formContext.renderErrors)}
             {this.Container(content)}
         </ContextContainer.Provider>;
     }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { CProduct } from './CProduct';
 import {
@@ -47,10 +48,15 @@ export class VProduct extends VPage<CProduct> {
 
     private renderProduct = (product: MainProductChemical) => {
 
-        let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
+		let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
+		let eName = <div className="py-2"><strong>{description}</strong></div>;
+		let cName:any;
+		if (descriptionC !== description) {
+			cName = <div>{descriptionC}</div>;
+		}
         return <div className="mb-3 px-2">
-            <div className="py-2"><strong>{description}</strong></div>
-            <div>{descriptionC}</div>
+            {eName}
+            {cName}
             <div className="row mt-3">
                 <div className="col-12 col-sm-3">
                     <ProductImage chemicalId={imageUrl} className="w-100" />

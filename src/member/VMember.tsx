@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { VPage, Image } from 'tonva';
 import { CMember } from './CMember';

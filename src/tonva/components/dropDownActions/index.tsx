@@ -4,14 +4,18 @@ import classNames from 'classnames';
 export interface DropdownAction {
     icon?: string;
     caption?: string;
-    action?: () => void;
+	action?: () => void;
+	iconClass?: string;
+	captionClass?: string;
 }
 
 export interface DropdownActionsProps {
     icon?: string;
     actions: DropdownAction[];
     isRight?: boolean;
-    className?: string;
+	className?: string;
+	itemIconClass?: string;
+	itemCaptionClass?: string;
 }
 
 export interface DropdownActionsState {
@@ -53,13 +57,13 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
     }
 
     render() {
-        let {icon, actions, isRight, className} = this.props;
+        let {icon, actions, isRight, className, itemIconClass, itemCaptionClass} = this.props;
         if (isRight === undefined) isRight = true;
         let hasIcon = actions.some(v => v.icon!==undefined);
         let {dropdownOpen} = this.state;
 		//isOpen={this.state.dropdownOpen} toggle={this.toggle}
-		let cn = 'cursor-pointer dropdown-toggle btn btn-sm ';
-		if (className) cn += className;
+		let cn = className || 'cursor-pointer dropdown-toggle btn btn-sm';
+		//if (className) cn += className;
         return <div className={'dropdown'}>
 			<button ref={v=>this.button=v} 
 				className={cn}
@@ -71,13 +75,17 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
             <div ref={v => this.menu=v} className={classNames({"dropdown-menu":true, "dropdown-menu-right":isRight, "show":dropdownOpen})}>
                 {
                     actions.map((v,index) => {
-                        let {icon, caption, action} = v;
+						if (!v) {
+                            return <div className="dropdown-divider" key={index}/>;
+						}
+                        let {icon, caption, action, iconClass, captionClass} = v;
                         if (icon === undefined && caption === undefined) 
                             return <div className="dropdown-divider" />;
                         let i:any;
                         if (hasIcon === true) {
                             if (icon !== undefined) icon = 'fa-' + icon;
-                            i = <><i className={classNames('fa', icon, 'fa-fw')} aria-hidden={true}></i>&nbsp; </>;
+							i = <i className={classNames('mr-2', 'fa', icon, 'fa-fw', iconClass || itemIconClass)}
+								aria-hidden={true}></i>;
                         }
                         if (action === undefined) 
                             return <h6 className="dropdown-header">{i} {caption}</h6>;
@@ -91,7 +99,7 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
                             // eslint-disable-next-line
                         return <a className="dropdown-item" key={index} href="#/" 
                             onClick={onMenuItemClick} onTouchStart={onTouchStart}
-                            >{i} {caption}</a>
+                            >{i} <span className={captionClass || itemCaptionClass}>{caption}</span></a>
                     })
                 }
             </div>

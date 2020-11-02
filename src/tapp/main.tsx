@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
-import { CApp } from '../CApp';
-// import { Switch, Route } from 'react-router-dom';
-import { CUqBase } from 'CBase';
+import { CApp } from './CApp';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -29,7 +27,7 @@ export class VMain extends VPage<CApp> {
                 label: '我的',
                 icon: 'user',
                 //content: cMe.tab 
-                page: cMe.tabPage
+                page: cMe.tabPage,
             }
         ].map(v => {
             let { name, label, icon, page, notify } = v;

@@ -110,7 +110,10 @@ export class IdCache {
     async cacheIds():Promise<void> {
         if (this.waitingIds.length === 0) return;
 		let tuidValues = await this.loadIds();
-		if (tuidValues === undefined) return;
+		if (tuidValues === undefined || tuidValues.length === 0) {
+			this.waitingIds.splice(0, this.waitingIds.length);
+			return;
+		}
         this.cacheIdValues(tuidValues);
     }
 
@@ -182,7 +185,7 @@ export class IdCache {
                 let p = row.indexOf('\t');
                 if (p < 0) p = row.length;
                 let id = Number(row.substr(0, p));
-                _.remove(netIds, v => v === id);
+				_.remove(netIds, v => v === id);
                 ret.push(row);
                 this.localArr.setItem(id, row);
             }

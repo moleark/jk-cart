@@ -283,7 +283,7 @@ export class TabsView {
 
     render() {
 		let {tabPosition} = this.props;
-		let tabs = <this.tabs />;
+		let tabs = React.createElement(this.tabs);
 		let header:any, footer:any;
 		let visibility:React.CSSProperties = {display:'none'};
 		if (tabPosition === 'top') {

@@ -3,7 +3,7 @@ import { TuidDiv, BoxId, Tuid } from 'tonva';
 //import { CCartApp } from '../CCartApp';
 import { PackRow } from 'product/Product';
 import { groupByProduct } from 'tools/groupByProduct';
-import { CUqApp } from 'CBase';
+import { CUqApp } from 'tapp/CBase';
 
 export interface CartItem2 {
     product: BoxId;

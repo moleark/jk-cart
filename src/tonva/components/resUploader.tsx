@@ -109,10 +109,12 @@ function formatSize(size:number, pointLength:number=2, units?:string[]) {
 interface ImageUploaderProps {
     id?: string;
     label?: string;
-    size?: 'sm' | 'md' | 'lg';
-    onSaved?: (imageId:string) => Promise<void>;
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'raw';
+	onSaved?: (imageId:string) => Promise<void>;
+	imageTypes?: string[];
 }
 
+const xlargeSize = 1600;
 const largeSize = 800;
 const mediumSize = 400;
 const smallSize = 180;
@@ -120,7 +122,8 @@ const smallSize = 180;
 @observer
 export class ImageUploader extends React.Component<ImageUploaderProps> {
 	private static imageTypes = ['gif', 'jpg', 'jpeg', 'png', 'svg', 'apng', 'bmp', 'ico', 'cur', 'tiff', 'tif', 'webp'];
-    private imgBaseSize: number;
+	private imgBaseSize: number;
+	private imageTypes: string[];
     private suffix: string;
     private resUploader: ResUploader;
     @observable private file: File;    
@@ -139,7 +142,8 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
 
     constructor(props: ImageUploaderProps) {
         super(props);
-        this.resId = props.id;
+		this.resId = props.id;
+		this.imageTypes = props.imageTypes || ImageUploader.imageTypes;
     }
 
     private onFileChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,8 +154,8 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
             this.file = evt.target.files[0];
             let pos = this.file.name.lastIndexOf('.');
             if (pos >= 0) this.suffix = this.file.name.substr(pos+1).toLowerCase();
-            if(ImageUploader.imageTypes.indexOf(this.suffix) < 0){
-                this.fileError = `图片类型必须是 ${ImageUploader.imageTypes.join(', ')} 中的一种`;
+            if(this.imageTypes.indexOf(this.suffix) < 0){
+                this.fileError = `图片类型必须是 ${this.imageTypes.join(', ')} 中的一种`;
                 return;
             }
             let reader = new FileReader();
@@ -172,7 +176,7 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
         }
     }
 
-    private async setSize(size?: 'sm' | 'md' | 'lg') {
+    private async setSize(size?: 'sm' | 'md' | 'lg' | 'xl' | 'raw') {
         switch (size) {
             default:
             case 'sm':
@@ -180,7 +184,11 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
             case 'md':
                 this.imgBaseSize = mediumSize; break;
             case 'lg':
-                this.imgBaseSize = largeSize; break;
+				this.imgBaseSize = largeSize; break;
+			case 'xl':
+				this.imgBaseSize = xlargeSize; break;
+			case 'raw':
+				this.imgBaseSize = -1; break;
 		}
 		this.desImage = await this.compress();
     }
@@ -196,8 +204,12 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
                 this.srcImgWidth = width;
                 this.srcImgHeight = height;
                 let scale = width / height;
-                let w:number, h:number;
-                if (width <= this.imgBaseSize && height <= this.imgBaseSize) {
+				let w:number, h:number;
+				if (this.imgBaseSize < 0) {
+					w = width;
+					h = height;
+				}
+                else if (width <= this.imgBaseSize && height <= this.imgBaseSize) {
                     w = width;
                     h = height;
                 }
@@ -294,6 +306,10 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
         if (this.srcImgHeight > largeSize || this.srcImgWidth > largeSize) {
             arr.push({caption:'大图', size:'lg'});
         }
+        if (this.srcImgHeight > xlargeSize || this.srcImgWidth > xlargeSize) {
+			arr.push({caption:'超大图', size:'xl'});
+			arr.push({caption:'原图', size:'raw'});
+        }
         if (arr.length < 2) return;
         return <div>{arr.map((v, index) => {
             let {caption, size} = v;
@@ -317,7 +333,7 @@ export class ImageUploader extends React.Component<ImageUploaderProps> {
                             multiple={false} maxSize={2048} 
                             label="选择图片文件"
                             onFilesChange={this.onFileChange} />
-                        <div className="small text-muted">支持 {ImageUploader.imageTypes.join(', ')} 格式图片。</div>
+                        <div className="small text-muted">支持 {this.imageTypes.join(', ')} 格式图片。</div>
                         {this.fileError && <div className="text-danger">{this.fileError}</div>}
                     </div>
                     <LMR left=

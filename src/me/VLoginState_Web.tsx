@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { View, nav, LMR, Image, FA } from 'tonva';
 import { EditMeInfo } from './EditMeInfo';

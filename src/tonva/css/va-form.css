@@ -147,6 +147,15 @@ max-width: 5rem !important;
 .w-max-8c {
   max-width: 8rem !important;
 }
+.w-10c {
+	width: 10rem !important;
+}
+.w-min-10c {
+	min-width: 10rem !important;
+}
+.w-max-10c {
+	max-width: 10rem !important;
+}
 .w-12c {
   width: 12rem !important;
 }
@@ -265,6 +274,15 @@ max-width: 5rem !important;
 .h-max-8c {
   max-height: 8rem !important;
 }
+.h-10c {
+  height: 10rem !important;
+}
+.h-min-10c {
+  min-height: 10rem !important;
+}
+.h-max-10c {
+  max-height: 10rem !important;
+}
 .h-12c {
   height: 12rem !important;
 }
@@ -336,12 +354,12 @@ fieldset.edit-container {
   border-color: #f8f8f8;
 }
 .image-none {
-  display: flex;
+  background-color: #f0f0f0;
+  color: #d0d0d0;
+  display: inline-flex;
   height: 100%;
   align-items: center;
   justify-content: center;
   border: 1px solid #e0e0e0;
   border-radius: 0.3rem;
-  background-color: #f0f0f0;
-  color: #d0d0d0;
 }

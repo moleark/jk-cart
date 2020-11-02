@@ -1,13 +1,9 @@
 import { LocalMap } from './localDb';
 
-const testingTags:string[] = ['/test', '/test/', '-test', '-test/'];
+// 如果路径上有独立的test单词，则是test环境
 function isTesting():boolean {
-    let {pathname} = document.location;
-    let pn = pathname.toLowerCase();
-    for (let item of testingTags) {
-        if (pn.endsWith(item) === true) return true;
-    }
-    return false;
+	let ret = /(\btest\b)/i.test(document.location.href);
+	return ret;
 }
 
 export const env = (function () {

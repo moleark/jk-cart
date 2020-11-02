@@ -1,4 +1,5 @@
-import { CUqBase } from 'CBase';
+/* eslint-disable */
+import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
 import { QueryPager } from 'tonva';
 import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
@@ -9,7 +10,7 @@ const pointBase: number = 3; /* 积分基数 */
 export class CSignIn extends CUqBase {
     @observable signinval: number = pointBase;         /* 签到可领积分 */
     @observable signinConsecutiveDays: number = 0;     /* 连续签到天数 */
-    @observable IsSignin: boolean = false;             /* 是否签到 */
+    @observable isSignin: boolean = false;             /* 是否签到 */
     @observable signinPageHistory: QueryPager<any>;    /* 签到记录 */
 
     async internalStart(param?: any) { }
@@ -19,7 +20,7 @@ export class CSignIn extends CUqBase {
      */
     openPointSign = async () => {
         await this.isSignined();
-        if (this.IsSignin)
+        if (this.isSignin)
             await this.addSigninSheet(47, this.signinval);
         await this.getSigninConsecutiveDays();
         this.openVPage(VPointSign);
@@ -39,7 +40,7 @@ export class CSignIn extends CUqBase {
     isSignined = async () => {
         let { checkIsSignin } = this.uqs.积分商城;
         let res = await checkIsSignin.obj({});
-        this.IsSignin = res.result === 0 ? true : false;
+        this.isSignin = res.result === 0 ? true : false;
     }
 
     /**

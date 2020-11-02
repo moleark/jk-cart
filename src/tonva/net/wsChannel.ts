@@ -1,3 +1,4 @@
+import { messageHub } from "./messageHub";
 
 let subAppWindow:Window;
 function postWsToSubApp(msg:any) {
@@ -20,10 +21,14 @@ export function postWsToTop(msg:any) {
 }
 
 export abstract class WsBase {
+	private messageHub = messageHub;
+	/*
     wsBaseId:string;
     private handlerSeed = 1;
     private anyHandlers:{[id:number]:(msg:any)=>Promise<void>} = {};
-    private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>Promise<void>}} = {};
+	private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>Promise<void>}} = {};
+	*/
+	/*
     onWsReceiveAny(handler:(msg:any)=>Promise<void>):number {
         let seed = this.handlerSeed++;
         this.anyHandlers[seed] = handler;
@@ -37,8 +42,11 @@ export abstract class WsBase {
     endWsReceive(handlerId:number) {
         delete this.anyHandlers[handlerId];
         delete this.msgHandlers[handlerId];
-    }
+	}
+	*/
     async receive(msg:any) {
+		this.messageHub.dispatch(msg);
+		/*
         let {$type} = msg;
         for (let i in this.anyHandlers) {
             await this.anyHandlers[i](msg);
@@ -47,7 +55,8 @@ export abstract class WsBase {
             let {type, handler} = this.msgHandlers[i];
             if (type !== $type) continue;
             await handler(msg);
-        }
+		}
+		*/
     }
 }
 

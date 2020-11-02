@@ -8,10 +8,11 @@ import FetchErrorView, { SystemNotifyPage } from './fetchErrorView';
 import {FetchError} from '../net/fetchError';
 import {appUrl, setAppInFrame, getExHash, getExHashPos} from '../net/appBridge';
 import {LocalData, env} from '../tool';
-import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, appInFrame, host, resUrlFromHost} from '../net';
-import { WsBase, wsBridge } from '../net/wsChannel';
+import {guestApi, logoutApis, setCenterUrl, setCenterToken, appInFrame, host, resUrlFromHost, messageHub} from '../net';
+//import { WsBase, wsBridge } from '../net/wsChannel';
 import { resOptions } from '../res/res';
 import { Loading } from './loading';
+import { Navigo, RouteFunc, Hooks, NamedRoute } from './navigo';
 
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
@@ -38,9 +39,7 @@ const logs:string[] = [];
 
 export interface Props //extends React.Props<Nav>
 {
-    //view: JSX.Element | (()=>JSX.Element);
-    //start?: ()=>Promise<void>;
-    onLogined: ()=>Promise<void>;
+    onLogined: (isUserLogin?:boolean)=>Promise<void>;
     notLogined?: ()=>Promise<void>;
 };
 let stackKey = 1;
@@ -65,19 +64,18 @@ export class NavView extends React.Component<Props, NavViewState> {
 
     constructor(props:Props) {
         super(props);
-        //this.back = this.back.bind(this);
-        //this.navBack = this.navBack.bind(this);
         this.stack = [];
         this.state = {
             stack: this.stack,
             wait: 0,
             fetchError: undefined
         };
+        nav.set(this);
     }
     async componentDidMount()
     {
-        window.addEventListener('popstate', this.navBack);
-        nav.set(this);
+		window.addEventListener('popstate', this.navBack);
+		if (nav.isRouting === false) await nav.init();
         await nav.start();
     }
 
@@ -264,7 +262,10 @@ export class NavView extends React.Component<Props, NavViewState> {
     private popAndDispose() {
         this.removeCeased();
         let item = this.stack.pop();
-        if (item === undefined) return;
+		if (item === undefined) return;
+		//if (nav.isRouting) {
+		//	window.history.back();
+		//}
         let {disposer} = item;
         this.dispose(disposer);
         this.removeCeased();
@@ -333,7 +334,7 @@ export class NavView extends React.Component<Props, NavViewState> {
     }
     render() {
         const {wait, fetchError} = this.state;
-        let stack = this.state.stack;
+        let {stack} = this.state;
         let top = stack.length - 1;
         let elWait = null, elError = null;
         switch (wait) {
@@ -379,10 +380,12 @@ export interface NavSettings {
 
 export class Nav {
     private nav:NavView;
-    private ws: WsBase;
+    //private ws: WsBase;
     private wsHost: string;
     private local: LocalData = new LocalData();
-    private navSettings: NavSettings;
+	private navigo: Navigo;
+	isRouting: boolean = false;
+	navSettings: NavSettings;
     @observable user: User/*InNav*/ = undefined;
     testing: boolean;
     language: string;
@@ -393,7 +396,7 @@ export class Nav {
         let {lang, district} = resOptions;
         this.language = lang;
         this.culture = district;
-        this.testing = false;
+		this.testing = false;
     }
 
     get guest(): number {
@@ -407,22 +410,22 @@ export class Nav {
     set(nav:NavView) {
         //this.logo = logo;
         this.nav = nav;
-    }
-
+	}
+	/*
     registerReceiveHandler(handler: (message:any)=>Promise<void>):number {
-        if (this.ws === undefined) return;
-        return this.ws.onWsReceiveAny(handler);
+        //if (this.ws === undefined) return;
+        return messageHub.onReceiveAny(handler);
     }
 
     unregisterReceiveHandler(handlerId:number) {
-        if (this.ws === undefined) return;
+        //if (this.ws === undefined) return;
         if (handlerId === undefined) return;
-        this.ws.endWsReceive(handlerId);
+        messageHub.endReceive(handlerId);
     }
-
+	*/
     async onReceive(msg:any) {
-        if (this.ws === undefined) return;
-        await this.ws.receive(msg);
+        //if (this.ws === undefined) return;
+        await messageHub.dispatch(msg);
     }
 
 	private async loadUnitJson() {
@@ -438,8 +441,12 @@ export class Nav {
 		}
 	}
 
-    private async getPredefinedUnitName() {
-		let el = document.getElementById('unit.json');
+    private async getPredefinedUnitName() {		
+		let el = document.getElementById('unit');
+		if (el) {
+			return el.innerText;
+		}
+		el = document.getElementById('unit.json');
 		if (!el) {
 			return await this.loadUnitJson();
 		}
@@ -490,8 +497,7 @@ export class Nav {
     private arrs = ['/test', '/test/'];
     private unitJsonPath():string {
         let {origin, pathname} = document.location;
-        //href = href.toLowerCase();
-        pathname = pathname.toLowerCase();
+		pathname = pathname.toLowerCase();
         for (let item of this.arrs) {
             if (pathname.endsWith(item) === true) {
                 pathname = pathname.substr(0, pathname.length - item.length);
@@ -504,10 +510,12 @@ export class Nav {
         return origin + pathname + '/unit.json';
     }
     private windowOnError = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+		debugger;
         console.error('windowOnError');
         console.error(error);
     }
     private windowOnUnhandledRejection = (ev: PromiseRejectionEvent) => {
+		debugger;
         console.error('windowOnUnhandledRejection');
         console.error(ev.reason);
     }
@@ -520,10 +528,57 @@ export class Nav {
     }
     private windowOnScroll = (ev: Event) => {
         console.log('scroll event');
-    }
+	}
+	
+	async init() {
+		this.testing = env.testing;
+		await host.start(this.testing);
+		let hash = document.location.hash;
+		if (hash !== undefined && hash.length > 0) {
+			let pos = getExHashPos();
+			if (pos < 0) pos = undefined;
+			this.hashParam = hash.substring(1, pos);
+		}
+		let {url, ws, resHost} = host;
+		this.centerHost = url;
+		this.resUrl = resUrlFromHost( resHost);
+		this.wsHost = ws;
+		setCenterUrl(url);
+
+		let guest:Guest = this.local.guest.get();
+		if (guest === undefined) {
+			guest = await guestApi.guest();
+		}
+		if (!guest) {
+			debugger;
+			throw Error('guest can not be undefined');
+		}
+		nav.setGuest(guest);
+
+		let exHash = getExHash();
+		let appInFrame = setAppInFrame(exHash);
+		if (exHash !== undefined && window !== window.parent) {
+			// is in frame
+			if (appInFrame !== undefined) {
+				//this.ws = wsBridge;
+				console.log('this.ws = wsBridge in sub frame');
+				//nav.user = {id:0} as User;
+				if (window.self !== window.parent) {
+					window.parent.postMessage({type:'sub-frame-started', hash: appInFrame.hash}, '*');
+				}
+				// 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
+				//await this.showAppView();
+				return;
+			}
+		}
+
+		let predefinedUnit = await this.loadPredefinedUnit();
+		appInFrame.predefinedUnit = predefinedUnit;
+	}
+
     async start() {
         try {
-            window.onerror = this.windowOnError;
+			window.onerror = this.windowOnError;
             window.onunhandledrejection = this.windowOnUnhandledRejection;
             //window.addEventListener('click', this.windowOnClick);
             //window.addEventListener('mousemove', this.windowOnMouseMove);
@@ -534,48 +589,9 @@ export class Nav {
                 document.oncontextmenu = function() {return false;}
             }
             //window.setInterval(()=>console.error('tick every 5 seconds'), 5000);
-            this.testing = env.testing;
-            await host.start(this.testing);
-            let hash = document.location.hash;
-            if (hash !== undefined && hash.length > 0) {
-                let pos = getExHashPos();
-                if (pos < 0) pos = undefined;
-                this.hashParam = hash.substring(1, pos);
-            }
-            nav.clear();
-            this.startWait();
-            let {url, ws, resHost} = host;
-            this.centerHost = url;
-            this.resUrl = resUrlFromHost( resHost);
-            this.wsHost = ws;
-            setCenterUrl(url);
+			nav.clear();
+			this.startWait();
             
-            let guest:Guest = this.local.guest.get();
-            if (guest === undefined) {
-                guest = await guestApi.guest();
-            }
-            nav.setGuest(guest);
-
-            let exHash = getExHash();
-            let appInFrame = setAppInFrame(exHash);
-            if (exHash !== undefined && window !== window.parent) {
-                // is in frame
-                if (appInFrame !== undefined) {
-                    this.ws = wsBridge;
-                    console.log('this.ws = wsBridge in sub frame');
-                    //nav.user = {id:0} as User;
-                    if (window.self !== window.parent) {
-                        window.parent.postMessage({type:'sub-frame-started', hash: appInFrame.hash}, '*');
-                    }
-                    // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
-                    //await this.showAppView();
-                    return;
-                }
-            }
-
-            let predefinedUnit = await this.loadPredefinedUnit();
-            appInFrame.predefinedUnit = predefinedUnit;
-
             let user: User = this.local.user.get();
             if (user === undefined) {
                 let {notLogined} = this.nav.props;
@@ -591,21 +607,64 @@ export class Nav {
             await nav.logined(user);
         }
         catch (err) {
+			console.error(err);
+			debugger;
         }
         finally {
             this.endWait();
         }
-    }
+	}
 
-    async showAppView() {
+	resolveRoute() {
+		if (this.isRouting === false) return;
+		if (this.navigo === undefined) return;
+		this.navigo.resolve();
+	}
+
+	on(routeFunc:RouteFunc, hooks?:Hooks):Navigo;
+	on(url:string, routeFunc:RouteFunc, hooks?:Hooks):Navigo;
+	on(regex:RegExp, routeFunc:RouteFunc, hooks?:Hooks):Navigo;
+	on(options: {[url:string]: RouteFunc|NamedRoute}):Navigo;
+	on(...args:any[]):Navigo {
+		if (this.navigo === undefined) {
+			this.navigo = new Navigo();
+		}
+		return this.navigo.on(args[0], args[1], args[2]);
+	}
+
+	get isWebNav():boolean { 
+		if (!this.navigo) return false;
+		return !isMobile;
+	}
+
+	get isMobile():boolean {return isMobile;}
+
+	navigate(url:string, absolute?:boolean) {
+		if (!this.navigo) {
+			alert('Is not in webnav state, cannot navigate to url "' + url + '"');
+			return;
+		}
+		this.clear();
+		return this.navigo.navigate(url, absolute);
+	}
+
+	go(showPage:()=>void, url:string, absolute?:boolean) {
+		if (this.navigo !== undefined) {
+			this.navigate(url, absolute);
+		}
+		else {
+			showPage();
+		}
+	}
+
+    async showAppView(isUserLogin?: boolean) {
         let {onLogined} = this.nav.props;
         if (onLogined === undefined) {
             nav.push(<div>NavView has no prop onLogined</div>);
             return;
         }
         nav.clear();
-        await onLogined();
-        //console.log('logined: AppView shown');
+        await onLogined(isUserLogin);
     }
 
     setGuest(guest: Guest) {
@@ -623,24 +682,36 @@ export class Nav {
         this.user.nick = me.nick;
     }
 
-    async logined(user: User, callback?: (user:User)=>Promise<void>) {
+	private async internalLogined(user: User, callback: (user:User)=>Promise<void>, isUserLogin:boolean) {
         logoutApis();
         console.log("logined: %s", JSON.stringify(user));
         this.user = user;
         this.saveLocalUser();
-        netToken.set(user.id, user.token);
+		netToken.set(user.id, user.token);
+		nav.clear();
+
         if (callback !== undefined) //this.loginCallbacks.has)
             callback(user);
             //this.loginCallbacks.call(user);
         else {
-            await this.showAppView();
+            await this.showAppView(isUserLogin);
         }
+	}
+
+	// 缓冲登录
+    async logined(user: User, callback?: (user:User)=>Promise<void>) {
+		await this.internalLogined(user, callback, false);
     }
 
-    wsConnect() {
-        let ws:WSChannel = this.ws = new WSChannel(this.wsHost, this.user.token);
-        ws.connect();
+	// 用户操作之后登录
+    async userLogined(user: User, callback?: (user:User)=>Promise<void>) {
+		await this.internalLogined(user, callback, true);
     }
+
+    //wsConnect() {
+        //let ws:WSChannel = this.ws = new WSChannel(this.wsHost, this.user.token);
+        //ws.connect();
+    //}
 
     loginTop(defaultTop:JSX.Element) {
         return (this.navSettings && this.navSettings.loginTop) || defaultTop;
@@ -708,9 +779,10 @@ export class Nav {
 
     async showLogin(callback?: (user:User)=>Promise<void>, withBack?:boolean) {
         let lv = await import('../entry/login');
-        let loginView = <lv.default 
-            withBack={withBack} 
-            callback={callback} />;
+        let loginView = React.createElement(
+			lv.default, 
+			{withBack, callback}
+		);
         if (withBack !== true) {
             this.nav.clear();
             this.pop();
@@ -739,15 +811,8 @@ export class Nav {
         logoutApis();
         let guest = this.local.guest.get();
         setCenterToken(0, guest && guest.token);
-        this.ws = undefined;
-        /*
-        if (this.loginCallbacks.has)
-            this.logoutCallbacks.call();
-        else {
-            if (notShowLogin === true) return;
-        }
-        await nav.start();
-        */
+		//this.ws = undefined;
+		this.clear();
         if (callback === undefined)
             await nav.start();
         else
@@ -763,10 +828,10 @@ export class Nav {
         return this.nav.level;
     }
     startWait() {
-        this.nav.startWait();
+        this.nav?.startWait();
     }
     endWait() {
-        this.nav.endWait();
+        this.nav?.endWait();
     }
     async onError(error: FetchError) {
         await this.nav.onError(error);
@@ -794,7 +859,7 @@ export class Nav {
         this.nav.popTo(key);
     }
     clear() {
-        this.nav.clear();
+        this.nav?.clear();
     }
     navBack() {
         this.nav.navBack();
@@ -922,3 +987,7 @@ export class Nav {
     }
 }
 export const nav: Nav = new Nav();
+
+export class TonvaView extends NavView {
+
+}

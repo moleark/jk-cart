@@ -1,28 +1,24 @@
-import * as React from 'react';
+/* eslint-disable */
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements, Query, startRoute, WebNav, View } from 'tonva';
-//import { UQs } from "./uqs";
-import { Cart } from "./cart/Cart";
-import { WebUser } from "./CurrentUser";
-import { CHome } from "./home";
-import { CCart } from "./cart";
-import { CProduct } from "./product";
-import { COrder } from "./order/COrder";
-import { CProductCategory } from "./productCategory/CProductCategory";
-import { CMember } from "./member";
-import { CMe } from "./me/CMe";
+import { User, nav, Elements } from 'tonva';
+import { Cart } from "../cart/Cart";
+import { CHome } from "../home";
+import { CCart } from "../cart";
+import { CProduct } from "../product";
+import { COrder } from "../order/COrder";
+import { CProductCategory } from "../productCategory/CProductCategory";
+import { CMember } from "../member";
+import { CMe } from "../me/CMe";
 import { CUqApp } from "./CBase";
-import { VMain } from 'ui/main';
+import { VMain } from 'tapp/main';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
 import { CPointProduct } from "pointMarket/CPointProduct";
-import { GLOABLE } from "cartenv";
 import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
-import { Entrance } from 'ui/entrance';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
-import { NavHeaderView, NavFooterView } from 'ui/header';
+//import { NavHeaderView, NavFooterView } from 'tapp/header';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -53,10 +49,10 @@ export class CApp extends CUqApp {
     }
     */
 
-    protected async internalStart() {
-        await super.init();
+    protected async internalStart(params: any) {
+        //await super.init();
 
-        this.cart = new Cart(this);
+        this.cart = new Cart(this );
         await this.cart.init();
 
         this.cHome = this.newC(CHome);
@@ -141,8 +137,8 @@ export class CApp extends CUqApp {
                     break;
             }
         } else {
-            // this.showMain();
-            // this.openVPage(Entrance);
+            this.showMain();
+            //this.openVPage(Entrance);
         }
         this.topKey = nav.topKey();
     }
@@ -155,7 +151,7 @@ export class CApp extends CUqApp {
             this.openPage(this.cMe.renderLoginState());
         }
     }
-
+/*
     // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
     // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
     protected onRoute() {
@@ -181,7 +177,7 @@ export class CApp extends CUqApp {
             }
         });
     }
-
+*/
     protected afterStart = async () => {
         await super.afterStart();
         // elements定义div元素id与一个函数的对应关系，定义之后，
@@ -245,6 +241,25 @@ export class CApp extends CUqApp {
         }
     }
 
+	async assureLogin(): Promise<void> {
+        if (this.isLogined) return;
+		return new Promise<void>((resolve, reject) => {
+			let loginCallback = async (user: User) => {
+				if (user) {
+					await this.currentUser.setUser(user);
+					await this.loginCallBack(user);
+				}
+				if (this.isWebNav) {
+					window.history.back();
+				}
+				else {
+					this.closePage(1);
+				}
+				resolve();
+			};
+			nav.showLogin(loginCallback, true);
+		});
+	}
 
     async loginCallBack(user: User) {
         /*
@@ -257,14 +272,15 @@ export class CApp extends CUqApp {
         }
         */
     }
-
+	/*
     renderHeader = () => {
         return this.renderView(NavHeaderView);
     }
 
     renderFooter = () => {
         return this.renderView(NavFooterView);
-    }
+	}
+	*/
 
     protected onDispose() {
         this.cart.dispose();

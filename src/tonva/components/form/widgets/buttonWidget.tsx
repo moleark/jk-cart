@@ -61,6 +61,6 @@ export class ButtonWidget extends Widget {
     protected get label():string {return null}
 
     render() {
-        return <this.observerRender />
+        return React.createElement(this.observerRender);
     }
 }

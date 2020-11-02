@@ -1,6 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
+import _ from 'lodash';
 import {PageItems} from '../../tool/pageItems';
 import {ListBase} from './base';
 import {Clickable} from './clickable';
@@ -12,19 +13,21 @@ import { resLang } from '../../res/res';
 import { ListRes, listRes } from '../../res';
 
 type StaticRow = string|JSX.Element|(()=>string|JSX.Element);
+interface ItemProps {
+	className?: string|string[];
+	render?: (item:any, index:number) => JSX.Element;
+	onSelect?: (item:any, isSelected:boolean, anySelected:boolean)=>void;
+	onClick?: (item:any)=>void;
+	key?: (item:any)=>string|number;
+}
 
 export interface ListProps {
     className?: string|string[];
     items: any[] | IObservableArray<any> | PageItems<any>;
-    item: {
-        className?: string|string[];
-        render?: (item:any, index:number) => JSX.Element;
-        onSelect?: (item:any, isSelected:boolean, anySelected:boolean)=>void;
-        onClick?: (item:any)=>void;
-        key?: (item:any)=>string|number;
-    };
-    compare?:(item:any, selectItem:any)=>boolean;
-    selectedItems?:any[];
+    item: ItemProps;
+	isItemSelected?: (item:any) => boolean;
+    compare?: (item:any, selectItem:any) => boolean;
+	selectedItems?:any[];
     header?: StaticRow;
     footer?: StaticRow;
     before?: StaticRow;
@@ -37,7 +40,7 @@ export interface ListProps {
 export class List extends React.Component<ListProps> {
 	private static res:ListRes = resLang<ListRes>(listRes);
 
-    private listBase: ListBase;
+	private listBase: ListBase;
 	private selectable: Selectable;
     constructor(props:ListProps) {
 		super(props);
@@ -55,12 +58,13 @@ export class List extends React.Component<ListProps> {
             this.listBase = new Clickable(this);
         else
             this.listBase = new Static(this);
-    }
-    /*
-    componentWillUpdate(nextProps:ListProps, nextState, nextContext) {
-        //this.listBase.updateProps(nextProps);
-    }
-    */
+	}
+	componentDidUpdate(prevProps: Readonly<ListProps>, prevState: Readonly<any>) {
+		if (_.isEqual(this.props.item, prevProps.item) === false) {
+			this.buildBase();
+			this.forceUpdate();
+		}
+	}
     componentWillUnmount() {
         this.listBase.dispose();
     }

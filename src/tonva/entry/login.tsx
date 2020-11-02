@@ -46,8 +46,8 @@ export default class Login extends React.Component<LoginProps> {
             let type:string = sender !== undefined? sender.caption : '用户名';
             return type + '或密码错！';
         }
-        console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
-        await nav.logined(user, this.props.callback);
+		console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
+        await nav.userLogined(user, this.props.callback);
     }
     private onEnter = async (name:string, context:Context):Promise<string> => {
         if (name === 'password') {

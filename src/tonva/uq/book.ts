@@ -11,13 +11,5 @@ export class Book extends Query {
 }
 
 export class BookQueryCaller extends QueryQueryCaller {
-    //protected get entity(): Query {return this._entity as Query};
     get path():string {return `book/${this.entity.name}`;}
-    /*
-    xresult(res:any) {
-        let data = this.entity.unpackReturns(res);
-        return data;
-    }
-    buildParams() {return this.entity.buildParams(this.params);}
-    */
 }

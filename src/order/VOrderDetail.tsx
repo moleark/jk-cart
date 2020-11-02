@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { VPage, Page, BoxId, EasyDate } from 'tonva';
 import { COrder } from './COrder';

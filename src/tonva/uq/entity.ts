@@ -2,10 +2,26 @@ import { UqApi } from '../net';
 import { LocalCache } from '../tool';
 import { UqMan, Field, ArrFields, FieldMap } from './uqMan';
 import { Tuid } from './tuid';
-//import { EntityCache } from './caches';
+import { getObjPropIgnoreCase } from '../tool';
 
 const tab = '\t';
 const ln = '\n';
+const chars = '\\ntbfvr';
+const codeBackSlash = chars.charCodeAt(0);
+const codeN = chars.charCodeAt(1);
+const codeT = chars.charCodeAt(2);
+const codeB = chars.charCodeAt(3);
+const codeF = chars.charCodeAt(4);
+const codeV = chars.charCodeAt(5);
+const codeR = chars.charCodeAt(6);
+
+const codes = '\n\t\b\f\v\r';
+const codeBN = codes.charCodeAt(0);
+const codeBT = codes.charCodeAt(1);
+const codeBB = codes.charCodeAt(2);
+const codeBF = codes.charCodeAt(3);
+const codeBV = codes.charCodeAt(4);
+const codeBR = codes.charCodeAt(5);
 
 export abstract class Entity {
     private jName: string;
@@ -151,18 +167,32 @@ export abstract class Entity {
             let {name, type} = field;            
             let d = params[name];
             let val:any;
-            if (type === 'datetime') {
-                val = this.buildDateTimeParam(d);
-            }
-            else {
-                switch (typeof d) {
-                    default: val = d; break;
-                    case 'object':
-                        let tuid = field._tuid;
-                        if (tuid === undefined) val = d.id;
-                        else val = tuid.getIdFromObj(d);
-                        break;
-                }
+            switch (type) {
+				case 'datetime':
+                	val = this.buildDateTimeParam(d);
+					break;
+				case 'date':
+					if (d instanceof Date) {
+						val = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+					}
+					else {
+						val = d;
+					}
+					break;
+				default:
+					switch (typeof d) {
+						default: val = d; break;
+						case 'object':
+							if (d instanceof Date) {
+								val = d;
+								break;
+							}
+							let tuid = field._tuid;
+							if (tuid === undefined) val = d.id;
+							else val = tuid.getIdFromObj(d);
+							break;
+					}
+					break;
             }
             result[name] = val;
         }
@@ -202,8 +232,8 @@ export abstract class Entity {
         if (arrs !== undefined) {
             for (let arr of arrs) {
 				let {name, fields} = arr;
-				let arrData = data[name];
-				if (!arrData) arrData = data[name.toLowerCase()];
+				let arrData = getObjPropIgnoreCase(data, name);
+				//if (!arrData) arrData = data[name.toLowerCase()];
                 this.packArr(ret, fields, arrData);
             }
         }
@@ -226,12 +256,19 @@ export abstract class Entity {
                         let len = d.length;
                         let r = '', p = 0;
                         for (let i=0;i<len;i++) {
-                            let c:number = d.charCodeAt(i);
+                            let c:number = d.charCodeAt(i), ch:string;
                             switch(c) {
-                                case 9: r += d.substring(p, i) + '\\t'; p = i+1; break;
-								case 10: r += d.substring(p, i) + '\\n'; p = i+1; break;
-								case 92: r += d.substring(p, i) + '\\\\'; p = i+1; break;
-                            }
+								default: continue;
+								case codeBackSlash: ch = '\\\\'; break;
+                                case codeBT: ch = '\\t'; break;
+								case codeBN: ch = '\\n'; break;
+								case codeBF: ch = '\\f'; break;
+								case codeBV: ch = '\\v'; break;
+								case codeBB: ch = '\\b'; break;
+								case codeBR: ch = '\\r'; break;
+							}
+							r += d.substring(p, i) + ch;
+							p = i+1;
                         }
                         return r + d.substring(p);
                     case 'undefined': return '';
@@ -253,10 +290,18 @@ export abstract class Entity {
 
     private packArr(result:string[], fields:Field[], data:any[]) {
         if (data !== undefined) {
-            for (let row of data) {
-                this.packRow(result, fields, row);
-            }
-        }
+			if (data.length === 0) {
+				result.push(ln);
+			}
+			else {
+				for (let row of data) {
+					this.packRow(result, fields, row);
+				}
+			}
+		}
+		else {
+			result.push(ln);
+		}
         result.push(ln);
     }
     protected cacheFieldsInValue(values:any, fields:Field[]) {
@@ -377,7 +422,10 @@ export abstract class Entity {
 
     private to(ret:any, v:string, f:Field):any {
         switch (f.type) {
-            default: return v;
+			default: return v;
+			case 'text':
+			case 'char':
+				return this.reverseNT(v);
             case 'datetime':
             case 'time':
 			case 'timestamp':
@@ -399,14 +447,53 @@ export abstract class Entity {
                 if (_tuid === undefined) return id;
                 return _tuid.boxId(id);
         }
-    }
+	}
+	
+	private reverseNT(text:string):string {
+		if (text === undefined) return;
+		if (text === null) return;
+		let len = text.length;
+		let r = '';
+		let p = 0;
+		for (let i=0; i<len; i++) {
+			let c = text.charCodeAt(i);
+			if (c === codeBackSlash) {
+				if (i===len-1) break;
+				let c1 = text.charCodeAt(i+1);
+				let ch:string;
+				switch (c1) {
+					default: continue;
+					case codeBackSlash: ch = '\\'; break;
+					case codeN: ch = '\n'; break;
+					case codeT: ch = '\t'; break;
+					case codeB: ch = '\b'; break;
+					case codeF: ch = '\f'; break;
+					case codeV: ch = '\v'; break;
+					case codeR: ch = '\r'; break;
+				}
+				r += text.substring(p, i) + ch;
+				p = i+2;
+				++i;
+			}
+		}
+		r += text.substring(p, len);
+		return r;
+	}
 
     private unpackArr(ret:any, arr:ArrFields, data:string, p:number):number {
+		let p0 = p;
         let vals:any[] = [], len = data.length;
         let {name, fields} = arr;
         while (p<len) {
             let ch = data.charCodeAt(p);
             if (ch === 10) {
+				if (p === p0) {
+					ch = data.charCodeAt(p);
+					if (ch !== 10) {
+						throw new Error('upackArr: arr第一个字符是10，则必须紧跟一个10，表示整个arr的结束')
+					}
+					++p;
+				}
                 ++p;
                 break;
             }

@@ -1,11 +1,9 @@
 import { CSub, CBase, CAppBase, IConstructor } from 'tonva';
-import { UQs } from './uqs';
+import { UQs } from '../uqs';
 import { CApp } from './CApp';
 import { GLOABLE } from 'cartenv';
 import { WebUser } from 'CurrentUser';
 import { Cart } from 'cart/Cart';
-import { CHome } from 'home';
-import { CCart } from 'cart';
 
 export abstract class CUqBase extends CBase {
     get cApp(): CApp { return this._cApp; }
@@ -19,6 +17,9 @@ export abstract class CUqSub<T extends CUqBase> extends CSub<T> {
 }
 
 export abstract class CUqApp extends CAppBase {
+	static currentSalesRegion:any;
+	static currentLanguage:any;
+
     get uqs(): UQs { return this._uqs };
 
     currentSalesRegion: any;
@@ -39,7 +40,9 @@ export abstract class CUqApp extends CAppBase {
         }
     }
 
-    async init() {
+	/*
+    init() {
+		super.init();
         let { uqs } = this;
         let { common } = uqs;
         let { SalesRegion, Language } = common;
@@ -53,5 +56,31 @@ export abstract class CUqApp extends CAppBase {
         this.currentLanguage = currentLanguage;
 
         this.setUser();
-    }
+	}
+	*/
+
+	protected async beforeStart():Promise<boolean> {
+		let ret = await super.beforeStart();
+		if (ret === false) return false;
+
+		if (CUqApp.currentLanguage === undefined) {
+			let { uqs } = this;
+			let { common } = uqs;
+			let { SalesRegion, Language } = common;
+			let [currentSalesRegion, currentLanguage] = await Promise.all([
+				SalesRegion.load(GLOABLE.SALESREGION_CN),
+				Language.load(GLOABLE.CHINESE),
+			]);
+			CUqApp.currentSalesRegion = currentSalesRegion;
+			CUqApp.currentLanguage = currentLanguage;
+			//this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
+			//this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
+		}
+
+        this.currentSalesRegion = CUqApp.currentSalesRegion;
+        this.currentLanguage = CUqApp.currentLanguage;
+
+        this.setUser();
+		return true;
+	}
 }

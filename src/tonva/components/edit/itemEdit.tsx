@@ -4,21 +4,25 @@ import { nav } from '../nav';
 import { observable } from 'mobx';
 import { FieldRule } from '../form/rules';
 import { Image } from '../image';
+import { Edit } from './edit';
 
 export abstract class ItemEdit {
+	protected edit: Edit;
 	protected name: string;
 	protected _itemSchema: ItemSchema;
     get itemSchema(): ItemSchema {return this._itemSchema}
     protected _uiItem:UiItem;
     get uiItem():UiItem {return this._uiItem}
     value: any;
-    label: string;
+	label: string;
+	get editInRow(): boolean {return false;}
 
     @observable protected error: string;
     @observable protected isChanged: boolean = false;
     protected newValue: any;
 
-    constructor(itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) {
+    constructor(edit:Edit, itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) {
+		this.edit = edit;
         this._itemSchema = itemSchema;
         this._uiItem = uiItem
         this.value = value;
@@ -40,7 +44,7 @@ export abstract class ItemEdit {
         await this.internalEnd()
     }
 
-	renderContent() {		
+	renderContent() {
         let {name, type} = this._itemSchema;
         let divValue:any;
         let uiItem = this._uiItem;

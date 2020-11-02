@@ -1,3 +1,4 @@
+/* eslint-disable */
 export let browser = {
     versions: function () {
         var u = navigator.userAgent, app = navigator.appVersion;

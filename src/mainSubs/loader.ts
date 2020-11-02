@@ -1,7 +1,5 @@
 import { Entity } from 'tonva';
-import { CApp } from '../CApp';
-import { CUqApp } from 'CBase';
-//import { CCartApp } from 'CCartApp';
+import { CUqApp } from 'tapp/CBase';
 
 export abstract class Loader<T> {
     protected cApp: CUqApp;

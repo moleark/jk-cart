@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import logo from '../images/logo.svg';
 import footer_logo from '../images/footer-logo.svg';
@@ -30,7 +31,7 @@ export class NavHeader extends React.Component {
                             </div>
                             <div className="area">
                                 <a className="btn" data-toggle="modal" data-target="#choosecountry">
-                                    中国
+                                    中 国
                                 </a>
                             </div>
                         </div>
@@ -133,7 +134,7 @@ export class NavFooter extends React.Component {
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
-                            <li><a href="#">公司简介</a></li>
+                            <li><a href="/about">公司简介</a></li>
                             <li><a href="#">企业承诺</a></li>
                             <li><a href="#">合作品牌</a></li>
                             <li><a href="#">招贤纳士</a></li>
@@ -141,7 +142,7 @@ export class NavFooter extends React.Component {
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
-                        <div className="mt-2 font-weight-bold">浏览</div>
+                        <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="#">资讯中心</a></li>
                             <li><a href="#">质量证书(COA)</a></li>

@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema, ArrSchema, UiArr } from 'tonva';
+import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema } from 'tonva';
 import { CProduct } from './CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
 import { MinusPlusWidget } from 'tools';
 import { observable } from 'mobx';
 import classNames from 'classnames';
+/*
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
 import { Link } from 'react-router-dom';
+*/
 
 export class VCartProuductView extends View<CProduct> {
 
@@ -17,16 +19,17 @@ export class VCartProuductView extends View<CProduct> {
 
 
     private renderCartProduct = (product: any) => {
-        let { id, brand, description, descriptionC, origin, imageUrl } = product;
-
+        let { brand, description, descriptionC, origin, imageUrl } = product;
+		let cName:any;
+		if (descriptionC !== description) {
+			cName = <div className="pb-2"><strong>{descriptionC}</strong></div>;
+		}
         return <div className="row d-flex mb-3 px-2">
             <div className="col-12">
                 <div className="py-2">
                     <strong>{description}</strong>
                 </div>
-                <div className="pb-2">
-                    <strong>{descriptionC}</strong>
-                </div>
+				{cName}
                 <div className="row">
                     <div className="col-3">
                         <ProductImage chemicalId={imageUrl} className="w-4c h-4c" />
@@ -141,11 +144,13 @@ export class VProductPrice extends View<CProduct> {
         }
     }
 
+	/*
     @observable private prices: any;
     private initPrices = async (product: BoxId, salesRegionId: number, discount: number) => {
         if (this.prices === undefined)
             this.prices = await this.controller.getProductPrice(product, salesRegionId, discount);
-    }
+	}
+	*/
 
     private renderPrice(item: any) {
         let { pack, retail, vipPrice, promotionPrice } = item;
@@ -183,10 +188,36 @@ export class VProductPrice extends View<CProduct> {
     render(param: any): JSX.Element {
         let { product, discount } = param;
         this.product = product;
-        let { currentSalesRegion } = this.controller.cApp;
-        return <this.content product={product} SalesRegionId={currentSalesRegion} discount={discount} />;
+        //let { currentSalesRegion } = this.controller.cApp;
+        //return <this.content product={product} SalesRegionId={currentSalesRegion} discount={discount} />;
+        let { renderDeliveryTime } = this.controller;
+		//this.initPrices(product, SalesRegionId, discount);
+		let prices = this.controller.getPrices(product, discount);
+        if (prices && prices.length > 0) {
+            return <>{prices.map((v: any, index: number) => {
+                let { pack, retail } = v;
+				if (!retail) return <small>请询价</small>;
+				return <div className="px-2" key={pack.id}>
+					<div className="row">
+						<div className="col-6">
+							<div><b>{tv(pack)}</b></div>
+							<div>{renderDeliveryTime(pack)}</div>
+						</div>
+						<div className="col-6">
+							{this.renderPrice(v)}
+						</div>
+					</div>
+				</div>;
+            })}</>;
+		}
+		/*
+        return <>
+            {priceUI}
+		</>;
+		*/
     }
 
+	/*
     private content = observer((param?: any) => {
         let priceUI;
         let { product, SalesRegionId, discount } = param;
@@ -216,7 +247,8 @@ export class VProductPrice extends View<CProduct> {
         return <>
             {priceUI}
         </>;
-    })
+	})
+	*/
 }
 
 export class VProductWithPrice extends View<CProduct> {
@@ -339,11 +371,16 @@ export class VProuductView2 extends View<CProduct> {
     private renderProduct = observer((param: any) => {
         let { product } = param;
         let { renderFavoritesLabel } = this.controller;
-        let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
+		let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, discountinued } = product;
+		let eName = <div className="mr-3"><strong>{description}</strong></div>;
+		let cName:any;
+		if (descriptionC !== description) {
+			cName = <div>{descriptionC}</div>;
+		}
         return <div className="d-block mb-4 px-3 bg-white">
             <div className="py-2">
-                <div className="mr-3"><strong>{description}</strong></div>
-                <div>{descriptionC}</div>
+                {eName}
+                {cName}
                 <div>
                     {renderFavoritesLabel(id)}
                 </div>

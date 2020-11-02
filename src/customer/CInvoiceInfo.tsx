@@ -1,5 +1,5 @@
 //import { Controller } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VInvoiceInfo } from './VInvoiceInfo';
 //import { CCartApp } from 'CCartApp';
 //import { Tuid } from 'tonva';

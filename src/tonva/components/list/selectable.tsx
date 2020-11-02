@@ -53,7 +53,7 @@ export class Selectable extends ListBase {
     }
 
     private buildItems = () => {
-        let {items, selectedItems, compare} = this.list.props;
+        let {items, isItemSelected, selectedItems, compare} = this.list.props;
         let itemsArray:any[] | IObservableArray<any>;
         if (items === undefined) {
             this._items = undefined;
@@ -70,30 +70,40 @@ export class Selectable extends ListBase {
         else {
             itemsArray = (items as PageItems<any>).items;
         }
-        //let items = this.items;
-        //this._selectedItems = selectedItems;
 
-        let comp: ((item:any, selectItem:any)=>boolean);
-        if (compare === undefined) {
-            comp = (item:any, selectItem:any) => item === selectItem;
-        }
-        else {
-            comp = compare;
-        }
-        let retItems = itemsArray.map(v => {
-            //let isObserved = isObservable(v);
-            //let obj = isObserved === true? toJS(v) : v;
-            //let obj = v;
-            let selected = selectedItems === undefined?
-                false
-                : selectedItems.find(si => comp(v, si)) !== undefined;
-            return {
-                selected: selected, 
-                item: v, 
-                labelId:uid()
-            };
-        });
-        this._items = retItems;
+		if (isItemSelected) {
+			let retItems = itemsArray.map(v => {
+				return {
+					selected: isItemSelected(v),
+					item: v, 
+					labelId:uid()
+				};
+			});
+			this._items = retItems;
+		}
+		else {
+			let comp: ((item:any, selectItem:any)=>boolean);
+			if (compare === undefined) {
+				comp = (item:any, selectItem:any) => item === selectItem;
+			}
+			else {
+				comp = compare;
+			}
+			let retItems = itemsArray.map(v => {
+				//let isObserved = isObservable(v);
+				//let obj = isObserved === true? toJS(v) : v;
+				//let obj = v;
+				let selected = selectedItems === undefined?
+					false
+					: selectedItems.find(si => comp(v, si)) !== undefined;
+				return {
+					selected: selected, 
+					item: v, 
+					labelId:uid()
+				};
+			});
+			this._items = retItems;
+		}
     }
 
     get items() {
@@ -156,7 +166,7 @@ export class Selectable extends ListBase {
     //m-0 w-100
     render = (item:SelectableItem, index:number):JSX.Element => {
         let {key} = this.list.props.item;
-        return <this.row item={item} index={index} key={key===undefined?index:key(item)} />;
+		return React.createElement(this.row, {item, index, key:key===undefined?index:key(item)});
     }
 
     private row = observer((props: {item:SelectableItem, index:number}):JSX.Element => {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from 'tonva';
 import { CPointProduct } from './CPointProduct';

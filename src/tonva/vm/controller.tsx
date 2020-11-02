@@ -1,9 +1,10 @@
 import * as React from 'react';
 import _ from 'lodash';
-import {nav, Page, resOptions} from '../components';
+import {nav, Page, resOptions, PageHeaderProps, PageWebNav} from '../components';
 import { User, env } from '../tool';
 import { VPage } from './vpage';
 import { View } from './view';
+import { messageHub } from '../net';
 
 export interface ConfirmOptions {
     caption?: string;
@@ -14,6 +15,14 @@ export interface ConfirmOptions {
     no?: string;
 }
 
+export interface WebNav<C extends Controller> {
+	VNavHeader?: new (controller: C) => View<C>;
+	VNavRawHeader?: new (controller: C) => View<C>;
+	VNavFooter?: new (controller: C) => View<C>;
+	VNavRawFooter?: new (controller: C) => View<C>;
+	renderPageHeader?: (props: PageHeaderProps) => JSX.Element;
+}
+
 export abstract class Controller {
     readonly res: any;
 	readonly x: any;
@@ -21,7 +30,8 @@ export abstract class Controller {
 	readonly t: (str:string)=>any;
     icon: string|JSX.Element;
     label:string;
-    readonly isDev:boolean = env.isDevelopment;
+	readonly isDev:boolean = env.isDevelopment;
+	pageWebNav: PageWebNav;
     get user():User {return nav.user}
     get isLogined():boolean {
         let {user} = nav;
@@ -34,11 +44,42 @@ export abstract class Controller {
 		this.t = (str:string):any => this.internalT(str) || str;
 	}
 
-	init(param?: any) {}
+	init(...param: any[]) {
+		this.pageWebNav = this.getPageWebNav();
+	}
 
 	internalT(str:string):any {
 		return this._t[str];
 	}
+
+	get webNav(): WebNav<any> {return undefined;}
+
+	getWebNav(): WebNav<any> {return this.webNav;}
+
+	private getPageWebNav(): PageWebNav {
+		if (nav.isWebNav === false) return;
+		let webNav =  this.getWebNav();
+		if (webNav === undefined) return;
+		let {VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader} = webNav;
+		let navHeader:JSX.Element;
+		if (VNavHeader) navHeader = this.renderView(VNavHeader);
+		let navRawHeader:JSX.Element;
+		if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
+		let navFooter:JSX.Element; 
+		if (VNavFooter) navFooter = this.renderView(VNavFooter);
+		let navRawFooter:JSX.Element;
+		if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
+		let ret:PageWebNav = {
+			navHeader,
+			navRawHeader,
+			navFooter,
+			navRawFooter,
+			renderPageHeader,
+		};
+		return ret;
+	}
+
+	get isWebNav(): boolean {return nav.isWebNav}
 	
 	protected setRes(res:any) {
 		if (res === undefined) return;
@@ -57,16 +98,19 @@ export abstract class Controller {
 	}
 
     private receiveHandlerId:number;
-    private disposer:()=>void;
+    //private disposer:()=>void;
 
-    private dispose = () => {
+    protected dispose = () => {
         // message listener的清理
-        nav.unregisterReceiveHandler(this.receiveHandlerId);
+		//nav.unregisterReceiveHandler(this.receiveHandlerId);
+		messageHub.unregisterReceiveHandler(this.receiveHandlerId);
         this.onDispose();
     }
 
     protected onDispose() {
-    }
+	}
+	
+	get isRouting() {return nav.isRouting;}
 
 	isMe(id:any):boolean {
 		if (id === null) return false;
@@ -82,6 +126,10 @@ export abstract class Controller {
 
     protected async openVPage<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any, afterBack?:(ret:any)=>void):Promise<void> {
         await (new vp((this as any) as C)).open(param, afterBack);
+    }
+
+    protected async replaceVPage<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any, afterBack?:(ret:any)=>void):Promise<void> {
+        await (new vp((this as any) as C)).replaceOpen(param, afterBack);
     }
 
     protected renderView<C extends Controller>(view: new (controller: C)=>View<C>, param?:any) {
@@ -125,13 +173,13 @@ export abstract class Controller {
 	protected async afterStart():Promise<void> {
 	}
     protected registerReceiveHandler() {
-        this.receiveHandlerId = nav.registerReceiveHandler(this.onMessageReceive);
+        this.receiveHandlerId = messageHub.registerReceiveHandler(this.onMessageReceive);
     }
 
     protected abstract internalStart(param?:any, ...params:any[]):Promise<void>;
     async start(param?:any, ...params:any[]):Promise<void> {
-        this.disposer = this.dispose;
-        this.registerReceiveHandler();
+        //this.disposer = this.dispose;
+		this.registerReceiveHandler();
         let ret = await this.beforeStart();
         if (ret === false) return;
 		await this.internalStart(param, ...params);
@@ -167,22 +215,22 @@ export abstract class Controller {
         resolve(value);
     }
 
-    openPage(page:JSX.Element, onClosePage?: ()=>void) {
+    openPage(page:JSX.Element, onClosePage?: (ret:any)=>void) {
 		let disposer: ()=>void;
 		if (onClosePage !== undefined) {
 			disposer = () => {
-				if (this.disposer) this.disposer();
-				onClosePage();
+				//if (this.disposer) this.disposer();
+				onClosePage(undefined);
 			}
 		}
 
         nav.push(page, disposer);
-        this.disposer = undefined;
+        //this.disposer = undefined;
     }
 
-    replacePage(page:JSX.Element) {
-        nav.replace(page, this.disposer);
-        this.disposer = undefined;
+    replacePage(page:JSX.Element, onClosePage?: ()=>void) {
+        nav.replace(page, onClosePage);
+        //this.disposer = undefined;
     }
 
     backPage() {
@@ -195,7 +243,11 @@ export abstract class Controller {
 
     ceasePage(level?:number) {
         nav.ceaseTop(level);
-    }
+	}
+	
+	go(showPage:()=>void, url:string, absolute?:boolean) {
+		nav.go(showPage, url, absolute);
+	}
 
     removeCeased() {
         nav.removeCeased();
@@ -208,7 +260,13 @@ export abstract class Controller {
 	private topPageKey:any;
 	protected startAction() {
 		this.topPageKey = nav.topKey();
-	}
+    }
+    get TopKey() {
+        return this.topPageKey;
+    }
+    SetTopKey(key:any) {
+        this.topPageKey = key;
+    }
 	public popToTopPage() {
 		nav.popTo(this.topPageKey);
 	}

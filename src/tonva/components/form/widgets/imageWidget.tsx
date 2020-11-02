@@ -18,7 +18,7 @@ export class ImageWidget extends Widget {
     }
 
     protected onClick = async () => {
-        let edit = new ImageItemEdit(this.itemSchema, this.ui, this.ui.label, this.value);
+        let edit = new ImageItemEdit(undefined, this.itemSchema, this.ui, this.ui.label, this.value);
         let ret = await edit.start();
         if (ret !== null) {
             this.setValue(ret);
@@ -28,7 +28,7 @@ export class ImageWidget extends Widget {
     }
 
     render() {
-        return <this.observerRender />;
+        return React.createElement(this.observerRender);
     }
 
     private observerRender = observer(() => {

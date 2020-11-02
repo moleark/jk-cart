@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import classNames from 'classnames';
 import { View, nav } from 'tonva';

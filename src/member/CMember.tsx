@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 //import Loadable from 'react-loadable';
 import { observable } from 'mobx';
@@ -5,16 +6,11 @@ import { observer } from 'mobx-react';
 import { FA } from 'tonva';
 import { Controller, Loading, nav } from 'tonva';
 import { Action, Map, BoxId } from 'tonva';
-import { CApp } from '../CApp';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VMember } from './VMember';
-//import { CCartApp } from 'CCartApp';
-//import { jnkTop } from 'me/loginTop';
 
 export class CMember extends CUqBase {
 
-    //cApp: CCartApp;
-    //    cApp: CApp;
     @observable member: any;
     private referrer: BoxId;
 

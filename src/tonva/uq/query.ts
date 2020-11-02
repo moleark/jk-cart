@@ -165,27 +165,15 @@ export class Query extends Entity {
     }
 
     async page(params:any, pageStart:any, pageSize:number, showWaiting: boolean = true):Promise<{[name:string]:any[]}> {
-        /*
-        await this.loadSchema();
-        let res = await this.uqApi.page(this.name, pageStart, pageSize+1, this.buildParams(params));
-        */
-        let p = {pageStart:pageStart, pageSize:pageSize, params:params};
+        let p = {pageStart, pageSize, params};
         let res = await this.pageCaller(p, showWaiting).request();
-        //let data = this.unpackReturns(res);
-        //return data.$page;// as any[];
         return res;
     }
     protected queryCaller(params: any, showWaiting: boolean = true): QueryQueryCaller {
         return new QueryQueryCaller(this, params, showWaiting);
     }
     async query(params:any, showWaiting:boolean = true):Promise<any> {
-        /*
-        await this.loadSchema();
-        let res = await this.uqApi.query(this.name, this.buildParams(params));
-        */
         let res = await this.queryCaller(params, showWaiting).request();
-        //let data = this.unpackReturns(res);
-        //return data;
         return res;
     }
     async table(params:any, showWaiting:boolean = true): Promise<any[]> {

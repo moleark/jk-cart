@@ -62,6 +62,7 @@ function centerWsFromHost(host:string) {
     return `ws://${host}/tv/`
 }
 export function resUrlFromHost(host:string) {
+	if (!host) return;
     let url = urlFromHost(host);
     return url + 'res/';
 }

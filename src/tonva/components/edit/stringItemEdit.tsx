@@ -5,6 +5,13 @@ import { Page } from '../page/page';
 import { observer } from 'mobx-react';
 import { ItemEdit } from './itemEdit';
 
+export interface InputOptions {
+	type: string;
+	min?: number;
+	max?: number;
+	step?: number;
+}
+
 export class StringItemEdit extends ItemEdit {
     get uiItem(): UiTextItem {return this._uiItem as UiTextItem}
     protected async internalStart():Promise<any> {
@@ -26,7 +33,13 @@ export class StringItemEdit extends ItemEdit {
 
     private onFocus = () => {
         this.error = undefined;
-    }
+	}
+	
+	protected inputOptions():InputOptions {
+		return {
+			type: 'text',
+		}
+	}
 
     private page = observer((props:{resolve:(value:any)=>void, reject: (resean?:any)=>void}):JSX.Element => {
 		let {resolve} = props;
@@ -44,15 +57,16 @@ export class StringItemEdit extends ItemEdit {
 		let onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
 			if (evt.keyCode === 13) onSave();
 		}
+		let {type, max, min, step} = this.inputOptions();
         return <Page header={this.label} right={right}>
             <div className="m-3">
-                <input type="text" 
+				<input type={type}
 					onChange={this.onChange}
 					onKeyDown={onKeyDown}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}
                     className="form-control" 
-                    defaultValue={this.value} />
+                    defaultValue={this.value} min={min} max={max} step={step} />
                 {
                     this.uiItem && <div className="small muted m-2">{this.uiItem.placeholder}</div>
                 }

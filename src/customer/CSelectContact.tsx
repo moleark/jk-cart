@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 import { Context, BoxId } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VContactList } from './VContactList';
 import { VContact } from './VContact';
 import { CAddress } from './CAddress';

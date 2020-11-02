@@ -1,7 +1,8 @@
+/* eslint-disable */
 import * as React from 'react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA } from 'tonva';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips } from 'tonva';
 import { Schema } from 'tonva';
 import { CInvoiceInfo } from './CInvoiceInfo';
 
@@ -119,8 +120,9 @@ const valueAddedVisible = {
 
 export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private form: Form;
-    @observable showTip: boolean = false;
-    saveTip: string = "";
+	//@observable showTip: boolean = false;	
+	//saveTip: string = "";
+	private saveTip = observable.box();
     private invoiceInfoData: any;
 
     async open(origInvoice?: any) {
@@ -144,14 +146,16 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         };
         this.invoiceInfoData = data;
 
+		let tip:string;
         try {
             await this.controller.saveInvoiceInfo(invoice);
-            this.saveTip = "发票信息已经保存";
+            tip = "发票信息已经保存";
         } catch (error) {
-            this.saveTip = "发票信息保存失败，请稍后再试";
+            tip = "发票信息保存失败，请稍后再试";
         }
-        this.showTip = true;
-        setTimeout(() => { this.showTip = false; }, 2000);
+        //this.showTip = true;
+		//setTimeout(() => { this.showTip = false; }, 2000);
+		this.saveTip.set(tip);
     }
 
     private onSaveInvoice = async () => {
@@ -184,10 +188,12 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private page = observer(() => {
         let frm = this.buildForm();
 
+		/*
         let tipUI = this.showTip ? (<div className="alert alert-primary" role="alert">
             <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
             {this.saveTip}
-        </div>) : null;
+		</div>) : null;
+		*/
         return <Page header="发票">
             <div className="px-3">
                 <div className="form-group row py-3 mb-1 bg-white">
@@ -211,7 +217,11 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                 <button type="button"
                     className="btn btn-primary w-100"
                     onClick={this.onSaveInvoice}>确定</button>
-                {tipUI}
+                {/*tipUI*/}
+				{autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
+					<FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+					{this.saveTip}
+				</div>)}
             </div>
         </Page>
     });

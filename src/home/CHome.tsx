@@ -1,6 +1,6 @@
 import { QueryPager, Tuid } from 'tonva';
 import { PageItems } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from '../tapp/CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
 import { VScanCode } from './VScanCode';

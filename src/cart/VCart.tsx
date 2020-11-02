@@ -28,9 +28,11 @@ const cartSchema = [
 ];
 
 export class VCart extends VPage<CCart> {
+	/*
     async open() {
         this.openPage(this.page);
-    }
+	}
+	*/
 
     protected CheckOutButton = observer(() => {
         let { checkOut, strikeOut, cApp } = this.controller;
@@ -141,6 +143,7 @@ export class VCart extends VPage<CCart> {
         // cart.editButton.set(!cart.editButton.get());
     }
 
+	/*
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
         let footer: any, content: any;
@@ -160,7 +163,33 @@ export class VCart extends VPage<CCart> {
         return <Page header="购物车" footer={footer}>
             {content}
         </Page>;
-    })
+	})
+	*/
+
+	header() {return '购物车'}
+	footer() {
+        let { cart } = this.controller.cApp;
+        let footer: any;
+        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+            footer = undefined;
+        }
+        else {
+            footer = React.createElement(this.CheckOutButton);
+		}
+		return footer;
+	}
+
+	content() {
+        let { cart } = this.controller.cApp;
+        let content: any;
+        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+            content = this.empty();
+        }
+        else {
+            content = React.createElement(this.cartForm);
+		}
+		return content;
+	}
 
     private tab = observer(() => {
         let { cart } = this.controller.cApp;
@@ -182,23 +211,25 @@ export class VCart extends VPage<CCart> {
         </>;
     });
 
+	/*
     header() {
         let { cart } = this.controller.cApp;
         let cancel = cart.editButton.get() ? '取消' : '编辑';
         let header = <header className="py-2 text-center bg-info text-white position-relative">
             <FA className="mr-3" name="shopping-cart" size="lg" />
             <span>购物车</span>
-            {/* <small className="position-absolute" onClick={this.whetherToEdit} style={{ right: 20 }} >{cancel}</small> */}
         </header>;
         return header;
-    }
+	}
+	*/
 	/*
 	footer() {
 		return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
 	}
 	*/
-
+	/*
     content() {
         return <this.tab />
-    }
+	}
+	*/
 }

@@ -26,7 +26,6 @@ export class Map extends Entity {
         this.schemaFrom = this.schema.from;
         let {actions, queries, keys} = schema;
         this.uq.buildFieldTuid(this.keys = keys);
-        //let t = this.schemaStringify();
         for (let i in actions) {
             let actionSchema = actions[i];
             let {name} = actionSchema;
@@ -46,46 +45,26 @@ export class Map extends Entity {
     }
 
     async add(param:any) {
-        /*
-        await this.loadSchema();
-        return await this.actions.add.submit(param);
-        */
         let ret = await new AddCaller(this, param).request();
         return ret;
     }
 
     async del(param:any) {
-        /*
-        await this.loadSchema();
-        return await this.actions.del.submit(param);
-        */
         let ret = await new DelCaller(this, param).request();
         return ret;
     }
 
     async all() {
-        /*
-        await this.loadSchema();
-        return await this.queries.all.query({});
-        */
         let ret = await new AllCaller(this, undefined).request();
         return ret;
     }
 
     async page(param:any, pageStart:any, pageSize: number) {
-        /*
-        await this.loadSchema();
-        return await this.queries.page.page(param, pageStart, pageSize);
-        */
         let ret = await new PageCaller(this, {pageStart:pageStart, pageSize:pageSize, param:param}).request();
         return ret;
     }
 
     async query(param:any) {
-        /*
-        await this.loadSchema();
-        return await this.queries.query.query(param);
-        */
        let qc = new QueryCaller(this, param);
        let ret = await qc.request();
        return ret;
@@ -164,14 +143,6 @@ class MapAddCaller extends ActionSubmitCaller {
 
     get path():string {return `map/${this.map.name}/add`}
     get headers(): {[header:string]: string} {return undefined;}
-    /*
-        let {ver, uq} = this.map;
-        let {uqVersion} = uq;
-        return {
-            uq: `${uqVersion}`,
-            en: `${ver}`,
-        }
-    }*/
 }
 
 class MapDelCaller extends ActionSubmitCaller {
@@ -183,14 +154,6 @@ class MapDelCaller extends ActionSubmitCaller {
 
     get path():string {return `map/${this.map.name}/del`}
     get headers(): {[header:string]: string} {return undefined}
-    /*
-        let {ver, uq} = this.map;
-        let {uqVersion} = uq;
-        return {
-            uq: `${uqVersion}`,
-            en: `${ver}`,
-        }
-    }*/
 }
 
 class MapAllCaller extends QueryPageCaller {
@@ -202,16 +165,7 @@ class MapAllCaller extends QueryPageCaller {
 
     get path():string {return `map/${this.map.name}/all`}
     get headers(): {[header:string]: string} {return undefined}
-    /*
-        let {ver, uq} = this.map;
-        let {uqVersion} = uq;
-        return {
-            uq: `${uqVersion}`,
-            en: `${ver}`,
-        }
-    }*/
 }
-
 
 class MapPageCaller extends QueryPageCaller {
     private map: Map;
@@ -222,14 +176,6 @@ class MapPageCaller extends QueryPageCaller {
 
     get path():string {return `map/${this.map.name}/page`}
     get headers(): {[header:string]: string} {return undefined}
-    /*
-        let {ver, uq} = this.map;
-        let {uqVersion} = uq;
-        return {
-            uq: `${uqVersion}`,
-            en: `${ver}`,
-        }
-    }*/
 }
 
 class MapQueryCaller extends QueryQueryCaller {
@@ -241,12 +187,4 @@ class MapQueryCaller extends QueryQueryCaller {
 
     get path():string {return `map/${this.map.name}/query`}
     get headers(): {[header:string]: string} {return undefined}
-    /*
-        let {ver, uq} = this.map;
-        let {uqVersion} = uq;
-        return {
-            uq: `${uqVersion}`,
-            en: `${ver}`,
-        }
-    }*/
 }

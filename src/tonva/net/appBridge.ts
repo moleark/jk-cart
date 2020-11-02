@@ -118,7 +118,7 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Uq
     let {unit, predefinedUnit} = appInFrame;
     unit = unit || predefinedUnit;
     if (!unit) {
-        console.error('no unit defined in unit.json or not logined in', unit);
+        console.error('no unit defined in unit.json or in index.html, or not logined in', unit);
     }
     let parts = apiName.split('/');
     let param = {unit: unit, uqOwner: parts[0], uqName: parts[1], appOwner: parts[2], appName:parts[3]};
@@ -201,11 +201,11 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
 }
 
 function getUnit():number {
-    let {unit, predefinedUnit} = appInFrame;
+	let {unit, predefinedUnit} = appInFrame;
     let realUnit = unit || predefinedUnit;
     if (realUnit === undefined) {
         throw new Error('no unit defined in unit.json or not logined in');
-    }
+	}
     return realUnit;
 }
 
@@ -217,7 +217,7 @@ const uqTokenActions:{[uq:string]: UqTokenAction} = {};
 export async function buildAppUq(uq:string, uqOwner:string, uqName:string, appOwner:string, appName:string):Promise<void> {
     if (!isBridged()) {
         let unit = getUnit();
-        let uqToken = await uqTokenApi.uq({unit:unit,  uqOwner:uqOwner, uqName:uqName, appOwner:appOwner, appName:appName});
+        let uqToken = await uqTokenApi.uq({unit,  uqOwner, uqName, appOwner, appName});
         if (uqToken.token === undefined) uqToken.token = centerToken;
         let {db, url, urlTest} = uqToken;
         let realUrl = host.getUrlOrTest(db, url, urlTest);

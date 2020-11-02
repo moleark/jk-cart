@@ -9,18 +9,18 @@ export class VProductFavorateLabel extends View<CProduct> {
     @observable private isProductFarirates: boolean = false;
     private favoriteOrCancel = async (product: number) => {
         let { cApp } = this.controller;
-        let { cFavorites, currentUser, cMe } = cApp;
-        const { user } = nav;
-        if (user !== undefined) {
+		let { cFavorites, cMe } = cApp;
+		await cApp.assureLogin();
+        //const { user } = nav;
+        //if (user !== undefined) {
             if (this.isProductFarirates)
                 await cFavorites.delProductFavorites(product);
             else
                 await cFavorites.addProductFavorites(product);
             await this.initInventoryAllocation(product);
-        } else {
-
-            cMe.showLogin();
-        }
+        //} else {
+        //    cMe.showLogin();
+        //}
     }
 
     private isMyFarirates = async (id: number) => {

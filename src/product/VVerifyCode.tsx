@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
-import { VPage, Page } from 'tonva';
+import { VPage, Page, autoHideTips } from 'tonva';
 import { observable } from 'mobx';
-
 import { observer } from 'mobx-react-lite';
-import { GLOABLE } from 'cartenv';
+//import { GLOABLE } from 'cartenv';
 
 export class VVerifyCode extends VPage<CProduct> {
     @observable verifyCodeInput: HTMLInputElement;
-    @observable verifyInfo: string;
+	//@observable verifyInfo: string;
+	private verifyInfo = observable.box<string>();
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -17,15 +17,15 @@ export class VVerifyCode extends VPage<CProduct> {
         let verifyCode = this.verifyCodeInput.value;
         let {openPDFView, getPDFFileUrl } = this.controller;
         if (!verifyCode) {
-            this.verifyInfo = '验证码不可为空';
-            setTimeout(() => this.verifyInfo = undefined, GLOABLE.TIPDISPLAYTIME);
+            this.verifyInfo.set('验证码不可为空');
+            //setTimeout(() => this.verifyInfo = undefined, GLOABLE.TIPDISPLAYTIME);
             return;
         }
         this.verifyCodeInput.value = '';      
         let content:any = await getPDFFileUrl(verifyCode);        
         if (content.status && content.status === 412) {
-            this.verifyInfo = content.msg;
-            setTimeout(() => this.verifyInfo = undefined, GLOABLE.TIPDISPLAYTIME);
+            this.verifyInfo.set(content.msg);
+            //setTimeout(() => this.verifyInfo = undefined, GLOABLE.TIPDISPLAYTIME);
             return;
         } else {
             this.closePage(); 
@@ -46,7 +46,10 @@ export class VVerifyCode extends VPage<CProduct> {
                     <input ref={v => this.verifyCodeInput = v} type="text" className='form-control border-primary mt-2' placeholder='输入验证码' style={{ maxWidth: '20rem' }} />
                 </form>
                 
-                {this.verifyInfo && <div className='small text-danger'>* {this.verifyInfo}</div>}
+				{
+					// this.verifyInfo && <div className='small text-danger'>* {this.verifyInfo}</div>
+					autoHideTips(this.verifyInfo, tip => <div className='small text-danger'>* {tip}</div>)
+				}
                 <button className="btn btn-sm btn-outline-primary mt-2" type="button" onClick={this.onSubmit} style={{ maxWidth: '20rem' }}>确 认</button>
             </div>
         </Page>

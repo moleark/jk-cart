@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from 'react';
 import { tv } from 'tonva';
 import { ProductImage } from 'tools/productImage';

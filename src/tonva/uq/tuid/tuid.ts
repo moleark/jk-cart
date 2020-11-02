@@ -11,6 +11,11 @@ export interface TuidSaveResult {
     inId: number;
 }
 
+export interface TuidNOResult {
+	date: string;
+	no: number;
+}
+
 export abstract class Tuid extends Entity {
     protected noCache: boolean;
     readonly typeName:string = 'tuid';
@@ -34,7 +39,7 @@ export abstract class Tuid extends Entity {
     abstract boxId(id:number):BoxId;
     abstract valueFromId(id:number):any;
 	abstract resetCache(id:number|BoxId):void;
-    abstract async assureBox<T> (id:number): Promise<T>;
+    abstract async assureBox<T> (id:number|BoxId): Promise<T>;
     static equ(id1:BoxId|number, id2:BoxId|number): boolean {
         if (id1 === undefined) return false;
         if (id2 === undefined) return false;
@@ -60,7 +65,8 @@ export abstract class Tuid extends Entity {
     abstract async searchArr(owner:number, key:string, pageStart:string|number, pageSize:number):Promise<any>;
     abstract async loadArr(arr:string, owner:number, id:number):Promise<any>;
     abstract async saveArr(arr:string, owner:number, id:number, props:any):Promise<void>;
-    abstract async posArr(arr:string, owner:number, id:number, order:number):Promise<void>;
+	abstract async posArr(arr:string, owner:number, id:number, order:number):Promise<void>;
+	abstract async no():Promise<TuidNOResult>;
 }
 
 export class TuidInner extends Tuid {
@@ -108,7 +114,9 @@ export class TuidInner extends Tuid {
 		if (typeof id === 'object') id = id.id;
 		this.idCache.resetCache(id);
 	}
-    async assureBox<T> (id:number):Promise<T> {
+    async assureBox<T> (id:number|BoxId):Promise<T> {
+		if (!id) return;
+		if (typeof id === 'object') id = id.id;
 		await this.idCache.assureObj(id);
 		return this.idCache.getValue(id);
     }
@@ -187,9 +195,14 @@ export class TuidInner extends Tuid {
 
     public buildFieldsTuid() {
         super.buildFieldsTuid();
-        let {mainFields} = this.schema;
-        if (mainFields === undefined) debugger;
-        this.uq.buildFieldTuid(this.cacheFields = mainFields || this.fields);
+        let {mainFields, $create, $update, stampOnMain} = this.schema;
+		if (mainFields === undefined) debugger;
+		this.cacheFields = mainFields || this.fields;
+		if (stampOnMain === true) {
+			if ($create === true) this.cacheFields.push({name: '$create', type: 'timestamp', _tuid: undefined});
+			if ($update === true) this.cacheFields.push({name: '$update', type: 'timestamp', _tuid: undefined});
+		}
+        this.uq.buildFieldTuid(this.cacheFields);
     }
 
     unpackTuidIds(values:string[]):any[] {
@@ -244,7 +257,10 @@ export class TuidInner extends Tuid {
     async posArr(arr:string, owner:number, id:number, order:number) {
         //return await this.uqApi.tuidArrPos(this.name, arr, owner, id, order);
         return await new ArrPosCaller(this, {arr:arr, owner:owner, id:id, order:order}).request();
-    }
+	}
+	async no():Promise<TuidNOResult> {
+		return await new TuidNoCaller(this, undefined).request();
+	}
 }
 
 abstract class TuidCaller<T> extends EntityCaller<T> {
@@ -356,7 +372,6 @@ class SaveArrCaller extends TuidCaller<{arr:string, owner:number, id:number, pro
         return params;
     }
 }
-
 class ArrPosCaller extends TuidCaller<{arr:string, owner:number, id:number, order:number}> {
     get path():string {
         let {arr, owner} = this.params;
@@ -365,6 +380,18 @@ class ArrPosCaller extends TuidCaller<{arr:string, owner:number, id:number, orde
     buildParams():any {
         let {id, order} = this.params;
         return { bid: id, $order: order}
+    }
+}
+class TuidNoCaller extends TuidCaller<{}> {
+    get path():string {
+        return `tuid-no/${this.entity.name}/`;
+    }
+    buildParams():any {
+		let d = new Date();
+		let year = d.getFullYear();
+		let month = d.getMonth() + 1;
+		let date = d.getDate();
+        return {year, month, date};
     }
 }
 
@@ -424,6 +451,9 @@ export class TuidImport extends Tuid {
     async posArr(arr:string, owner:number, id:number, order:number):Promise<void> {
         await this.tuidLocal.posArr(arr, owner, id, order);
     }
+	async no():Promise<TuidNOResult> {
+		return await this.tuidLocal.no();
+	}
 }
 
 // field._tuid 用这个接口
