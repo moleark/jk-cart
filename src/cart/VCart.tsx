@@ -44,7 +44,7 @@ export class VCart extends VPage<CCart> {
             <>{check}</>;
         if (cart.editButton.get()) {
             return <div className="d-flex justify-content-end">
-                <button className="btn btn-success w-25 mx-5"
+                <button className="btn btn-success w-25 mx-5" style={{ background: '#28a745' }}
                     type="button"
                     onClick={strikeOut}>
                     {content}
@@ -52,7 +52,7 @@ export class VCart extends VPage<CCart> {
             </div>;
         } else {
             return <div className="d-flex justify-content-center">
-                <button className="btn btn-success w-75 mx-5"
+                <button className="btn btn-success w-75 mx-5" style={{ background: '#28a745' }}
                     type="button"
                     onClick={checkOut} disabled={amount <= 0}>
                     {content}

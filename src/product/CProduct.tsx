@@ -370,7 +370,7 @@ export class CProduct extends CUqBase {
      * 获取产品MSDS文件
      */
     getProductMSDSFile = async (product: any) => {
-        this.productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product });
+        this.productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product:11 });
         this.productMSDSFiles = this.productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
     }
 
@@ -378,6 +378,6 @@ export class CProduct extends CUqBase {
      * 获取产品Spec文件
      */
     getProductSpecFile = async (product: any) => {
-        this.productSpecFiles = await this.uqs.product.ProductSpecFile.table({ product });
+        this.productSpecFiles = await this.uqs.product.ProductSpecFile.table({ product:11 });
     }
 }

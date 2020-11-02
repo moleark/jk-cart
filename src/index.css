@@ -30,3 +30,30 @@
 .sep-product-select {
   border-top: 1px solid #f0f0f0;
 }
+
+.reset-z-fieldset fieldset{
+  margin: 0 !important;
+}
+
+.reset-z-ul ul{
+  padding: 0 !important;
+  list-style: none !important;
+  font-size: 14px;
+}
+
+.reset-z-ul-a a{
+   color: #666666 !important;
+}
+
+.reset-z-footer-title .footer-title{
+  font-weight: 600 !important;
+}
+
+.reset-z-contact .contact{
+  color: #666666 !important;
+  font-size: 14px;
+}
+
+.reset-z-footer-bg{
+  background: #f1f1f1 !important;
+}
