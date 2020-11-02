@@ -8,7 +8,7 @@
 # testing
 /coverage
 /build
-/src/tonva
+#/src/tonva
 # production
 
 # misc
