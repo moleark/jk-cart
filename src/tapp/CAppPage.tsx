@@ -38,6 +38,13 @@ export abstract class CAppPage extends CApp {
 		}
 	}
 
+	protected beforeInit() {
+		nav.isWebNav = true;
+		if (!nav.isMobile) {
+			nav.pageWebNav = this.pageWebNav;
+		}
+	}
+
     protected async internalStart(params: any) {
         //await super.init();
 
@@ -157,4 +164,3 @@ export function renderCApp(AppClass : new() => CAppBase, param?: any, ...params:
 	}
 	renderDom(<App />);
 }
-

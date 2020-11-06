@@ -7,8 +7,12 @@ import { host } from './host';
 import { LocalMap, env } from '../tool';
 import {decodeUserToken} from '../tool/user';
 
-let channelUIs:{[name:string]: HttpChannel} = {};
-let channelNoUIs:{[name:string]: HttpChannel} = {};
+interface PromiseValue<T> {
+	resolve: (value?: T | PromiseLike<T>) => void;
+	reject: (reason?: any) => void;
+}
+let channelUIs:{[name:string]: HttpChannel|(PromiseValue<any>[])} = {};
+let channelNoUIs:{[name:string]: HttpChannel|(PromiseValue<any>[])} = {};
 
 export function logoutApis() {
     channelUIs = {};
@@ -141,7 +145,7 @@ export class UqApi extends ApiBase {
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {
-        let channels: {[name:string]: HttpChannel};
+        let channels: {[name:string]: HttpChannel|(PromiseValue<any>[])};
         let channelUI: HttpChannelNavUI;
         if (this.showWaiting === true || this.showWaiting === undefined) {
             channels = channelUIs;
@@ -151,17 +155,31 @@ export class UqApi extends ApiBase {
             channels = channelNoUIs;
         }
         let channel = channels[this.uq];
-        if (channel !== undefined) return channel;
-        let uqToken = appUq(this.uq); //, this.uqOwner, this.uqName);
-        if (!uqToken) {
-            //debugger;
-            await this.init();
-            uqToken = appUq(this.uq);
-        }
-        let {url, token} = uqToken;
-        this.token = token;
-        channel = new UqHttpChannel(url, token, channelUI);
-        return channels[this.uq] = channel;
+		if (channel !== undefined) {
+			if (Array.isArray(channel) === false) return channel as HttpChannel;
+		}
+		else {
+			channel = channels[this.uq] = [];
+		}
+		let arr = channel as PromiseValue<any>[];
+		return new Promise(async (resolve, reject) => {
+			arr.push({resolve, reject});
+			if (arr.length !== 1) return;
+			let uqToken = appUq(this.uq); //, this.uqOwner, this.uqName);
+			if (!uqToken) {
+				//debugger;
+				await this.init();
+				uqToken = appUq(this.uq);
+			}
+			let {url, token} = uqToken;
+			this.token = token;
+			channel = new UqHttpChannel(url, token, channelUI);
+			channels[this.uq] = channel;
+			for (let pv of arr) {
+				pv.resolve(channel);
+			}
+
+		});
     }
 
     /*async update():Promise<string> {

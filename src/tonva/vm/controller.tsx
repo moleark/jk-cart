@@ -44,7 +44,10 @@ export abstract class Controller {
 		this.t = (str:string):any => this.internalT(str) || str;
 	}
 
+	protected beforeInit() {}
+
 	init(...param: any[]) {
+		this.beforeInit();
 		this.pageWebNav = this.getPageWebNav();
 	}
 

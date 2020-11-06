@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { observable, ObservableMap } from 'mobx';
 import { BoxId, nav, QueryPager, User } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
@@ -13,6 +14,7 @@ import { ProductItem } from '../tools/ProductItem';
 import { VPDFView } from './VPDFView';
 import { VVerifyCode } from './VVerifyCode';
 import { GLOABLE } from 'cartenv';
+import { VProductFavorateLabel } from './VProductFavorateLabel';
 
 /**
  *
@@ -24,6 +26,7 @@ interface ProductValues {
 	futureDeliveryTimeDescription?: string;
 	chemical?: any;
 	prices?: any;
+	favorite?: boolean;
 }
 
 export class CProduct extends CUqBase {
@@ -68,11 +71,13 @@ export class CProduct extends CUqBase {
         this.productsPager.first({ keyWord: key, salesRegion: currentSalesRegion.id })
     }
 
-    async searchByCategory(category: any) {
+    async searchByCategory({ productCategory, name }: { productCategory:number; name:string }) {
         let { currentSalesRegion } = this.cApp;
         this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
-        let { productCategoryId, name } = category;
-		await this.productsPager.first({ productCategory: productCategoryId, salesRegion: currentSalesRegion.id });
+		await this.productsPager.first({
+			productCategory,
+			salesRegion: currentSalesRegion.id 
+		});
 		this.searchKey = name;
         this.openVPage(VProductList);
     }
@@ -112,6 +117,7 @@ export class CProduct extends CUqBase {
 		if (!p) {
 			p = {};
 			this.cache.set(product, p);
+			p = this.cache.get(product);
 		}
 		return p;
 	}
@@ -263,10 +269,57 @@ export class CProduct extends CUqBase {
 		return;
 	}
 
+    isFavorite(product: number) {
+		let p = this.getCacheProduct(product);
+		let {favorite} = p;
+		if (favorite === true) return true;
+		if (favorite === false) return false;
+		if (favorite === null) return null;
+		if (favorite as any === '') return null;
+		p.favorite = '' as any;
+        this.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product }).then(value => {
+			p.favorite = (value !== undefined);
+		});
+        return ;
+    }
+
     renderFavoritesLabel = (product: number) => {
-        let { cApp } = this;
-        let { cFavorites } = cApp;
-        return cFavorites.renderFavoritesLabel(product);
+        //let { cApp } = this;
+        //let { cFavorites } = cApp;
+		//return cFavorites.renderFavoritesLabel(product);
+		return this.renderView(VProductFavorateLabel, product);
+    }
+
+    private async addProductFavorites(productId: number) {
+        let { currentUser } = this.cApp;
+        let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
+        await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: productId, arr1: [{ pack: 0, date: createDate }] });
+    }
+
+    private async delProductFavorites(productId: number) {
+        let { currentUser } = this.cApp;
+        await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: productId, arr1: [{ pack: 0 }] });
+	}
+	
+	favoriteOrCancel = async (product: number) => {
+		await this.cApp.assureLogin();
+        //const { user } = nav;
+        //if (user !== undefined) {
+		let isFavorite = this.isFavorite(product);
+        if (isFavorite === true) {
+			await this.delProductFavorites(product);
+			isFavorite = false;
+		}
+		else {
+			await this.addProductFavorites(product);
+			isFavorite = true;
+		}
+		let p = this.getCacheProduct(product);
+		p.favorite = isFavorite;
+        //await this.initInventoryAllocation(product);
+        //} else {
+        //    cMe.showLogin();
+        //}
     }
 
     /**

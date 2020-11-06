@@ -21,6 +21,7 @@ import '../css/animation.css';
 import { FA } from './simple';
 import { userApi } from '../net';
 import { ReloadPage, ConfirmReloadPage } from './reloadPage';
+import { PageWebNav } from './page';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -632,10 +633,15 @@ export class Nav {
 		return this.navigo.on(args[0], args[1], args[2]);
 	}
 
+	/*
 	get isWebNav():boolean { 
 		if (!this.navigo) return false;
 		return !isMobile;
 	}
+	*/
+	isWebNav:boolean = false;
+
+	pageWebNav: PageWebNav;
 
 	get isMobile():boolean {return isMobile;}
 

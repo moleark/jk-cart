@@ -28,6 +28,7 @@ serviceWorker.unregister();
 
 //let { location } = document;
 //if (location.host && false) {
+
 (async function() {
 	if (!nav.isMobile) {
 		require('style-loader!./css/style.css');

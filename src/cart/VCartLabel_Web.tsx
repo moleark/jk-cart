@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { View } from 'tonva';
+import { Ax, View } from 'tonva';
 import { CCart } from './CCart';
 import { observer } from 'mobx-react';
 
@@ -24,7 +24,10 @@ export class VCartLabel_Web extends View<CCart> {
             if (count < 100) badge = <u>{count}</u>;
             else badge = <u>99+</u>;
         }
-        return <div className={classNames('jk-cart ml-1 mr-2', pointer)} onClick={onClick}>
+		return <Ax
+			className={classNames('jk-cart ml-1 mr-2', pointer)}
+			onClick={onClick}
+			href="/cart">
             <div>
                 <span className="fa-stack">
                     <i className="fa fa-square fa-stack-2x text-white"></i>
@@ -32,6 +35,6 @@ export class VCartLabel_Web extends View<CCart> {
                 </span>
                 {badge}
             </div>
-        </div>
+        </Ax>
     });
 }
