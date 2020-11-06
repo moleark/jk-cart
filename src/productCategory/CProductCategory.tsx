@@ -122,6 +122,37 @@ export class CProductCategory extends CUqBase {
      * @param categoryId 
      */
     async showCategoryPage(categoryId: number) {
+        await this.getRootCategories();
+        let filterCategoryId;
+        let parent;
+        for (let key of this.rootCategories) {
+            filterCategoryId = key.children.filter((v: any) => v.productCategory.id === Number(categoryId));
+            parent = key;
+            if (filterCategoryId.length) break;
+        }
 
+        let result = await this.getCategoryChildren(categoryId);
+        if (result.first.length !== 0) {
+            let rootCategory = this.buildCategories(filterCategoryId[0], result.first, result.secend);
+            let instruction = undefined;
+            // let instruction = await this.getCategoryInstruction(categoryId);
+            this.openVPage(VCategory, { categoryWapper: rootCategory, parent:undefined, labelColor:'', instruction });
+        }else {
+            let { cProduct } = this.cApp;
+            await cProduct.searchByCategory({ productCategoryId:categoryId, name:filterCategoryId[0].name });
+        }
+    }
+
+    async getRootCategories(){
+        let { currentSalesRegion, currentLanguage } = this.cApp;
+        let results = await this.uqs.product.GetRootCategory.query({
+            salesRegion: currentSalesRegion.id,
+            language: currentLanguage.id
+        });
+
+        let { first, secend, third } = results;
+        this.rootCategories = (first as any[]).map(v => {
+            return this.buildCategories(v, secend, third);
+        });  
     }
 }

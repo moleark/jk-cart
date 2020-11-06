@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { A, View } from 'tonva';
 import { CProductCategory } from './CProductCategory';
 
 export class VRootCategorySideBar extends View<CProductCategory>{
@@ -18,7 +18,9 @@ export class VRootCategorySideBar extends View<CProductCategory>{
                         return <li className="active" key={v.name}>
                             <a href={"#Submenu" + v.name} data-toggle="collapse" aria-expanded="false">{v.name}</a>
                             <ul className="collapse list-unstyled" id={"Submenu" + v.name}>
-                                {v.children.map((e: any) => <li onClick={() => this.categoryClick(e, undefined, '')} key={e.name}>{e.name}</li>)}
+                                {v.children.map((e: any) => <li onClick={() => this.categoryClick(e, undefined, '')} key={e.name}>
+                                    <A onClick={() => this.categoryClick(e, undefined, '')} href={"/productCategory/" + e.productCategory.id}>{e.name}</A></li>
+                                )}
                             </ul>
                         </li>
                     })}
