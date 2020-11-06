@@ -13,7 +13,7 @@ import { ProductImage } from 'tools/productImage';
 import { productPropItem, renderBrand } from './VProductView';
 import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
-import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
+//import { VProductFavorateLabel } from 'product/VProductFavorateLabel';
 import { pdfIcon } from 'tools/images';
 import { TopicDivision } from 'pointMarket/VPointProduct';
 import { browser } from 'tools/browser';
@@ -187,8 +187,18 @@ export class VProduct extends VPage<CProduct> {
         </>;
     }
 
+	static languageCaptions:{[language:string]:string} = {
+		'DE': '德文',
+		'EN': '英文',
+		'EN-US': '英美',
+		'CN': '中文',
+	}
     private dealWithPDF = (fileName: string) => {
-        let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
+		let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
+		let lang = shiftArr[1];
+		let caption = VProduct.languageCaptions[lang];
+		if (!caption) caption = VProduct.languageCaptions['CN'];
+		/*
         switch (shiftArr[1]) {
             case 'DE':
                 return '德文';
@@ -200,7 +210,9 @@ export class VProduct extends VPage<CProduct> {
                 return '中文';
             default:
                 return '中文';
-        }
+		}
+		*/
+		return caption;
     }
 
     private renderPDF = (content: any) => {

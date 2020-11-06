@@ -33,8 +33,11 @@ class CCartPage extends CAppPage {
 }
 
 class CProductCategoryPage extends CAppPage {
-	protected async onPageStart(params: any): Promise<void> {
-		this.cProductCategory.showCategoryPage(params?.id);
+	protected async onPageStart(params:any):Promise<void> {
+		//this.cProductCategory.start(params?.id);
+		let id = params.id;
+		if (id) id = Number(id);
+		await this.cProductCategory.showCategoryPage(id);
 	}
 }
 

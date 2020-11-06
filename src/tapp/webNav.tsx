@@ -127,7 +127,7 @@ export class NavHeaderView extends View<CApp> {
                                 </div>
                             </li>
 							<li className="nav-item">
-								<Ax className="nav-link" href="cart" onClick={() => this.controller.cCart.start()}>
+								<Ax className="nav-link" href="/cart" onClick={() => this.controller.cCart.start()}>
 									<FA name="shopping-cart" /> 购物车
 								</Ax>
 							</li>

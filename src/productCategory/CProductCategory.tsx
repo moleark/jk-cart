@@ -1,3 +1,4 @@
+import React from 'react';
 import _ from 'lodash';
 import { CUqBase } from '../tapp/CBase';
 import { VRootCategory } from './VRootCategory';
@@ -5,13 +6,26 @@ import { VRootCategorySideBar } from './VRootCategorySideBar';
 import { VCategory } from './VCategory';
 import { GLOABLE } from "cartenv";
 import './cat.css';
-import { Tuid } from 'tonva';
+import { Ax, BoxId, Tuid } from 'tonva';
+import { VCategoryPage } from './VCategoryPage';
+
+export interface ProductCategory {
+	productCategory: number; //ID ProductCategory,
+	parent: number; // ID,
+	name: string; // char(200),
+	total: number; // int
+	children?: ProductCategory[];
+};
 
 export class CProductCategory extends CUqBase {
-    rootCategories: any[] = [];
+    rootCategories: ProductCategory[];
+	current: ProductCategory;		// 当前显示的目录
+	instruction: string; 			// 当前目录的介绍
     //@observable categories2: any[] = [];
 
     async internalStart(param: any) {
+		await this.loadRoot();
+		/*
         this.uqs.product.ProductCategory.stopCache();
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
@@ -22,13 +36,43 @@ export class CProductCategory extends CUqBase {
         let { first, secend, third } = results;
         this.rootCategories = (first as any[]).map(v => {
             return this.buildCategories(v, secend, third);
-        });
+		});
+		*/
         /*
         let result2 = await this.getRootCategoriesQuery.query({ salesRegion: currentSalesRegion.id, language: currentLanguage.id });
         if (result2)
             this.categories2 = result2.ret;
         */
-    }
+	}
+	
+	async loadRoot() {
+        this.uqs.product.ProductCategory.stopCache();
+
+        let { currentSalesRegion, currentLanguage } = this.cApp;
+        let results = await this.uqs.product.GetRootCategory.query({
+            salesRegion: currentSalesRegion, // 去掉.id, 如果传入的是obj参数，会自动取id
+            language: currentLanguage, // 去掉.id, 如果传入的是obj参数，会自动取id
+        });
+        let { first, secend, third } = results;
+        this.rootCategories = (first as any[]).map(v => {
+            return this.buildCategories(v, secend, third);
+        });
+	}
+
+	async load(id:number) {
+		if (!this.rootCategories) await this.loadRoot();
+		let promises = [this.getCategoryChildren(id), this.getCategoryInstruction(id)];
+		let [results, instruction] = await Promise.all(promises);
+		//let results = await this.getCategoryChildren(id);
+		let {first, secend} = results;
+		this.current = {
+			productCategory: id,
+			parent: undefined,
+			name: undefined,
+			total: undefined,
+			children: this.buildChildren(id, first, secend),
+		}
+	}
 
     renderRootList = () => {
         return this.renderView(VRootCategory);
@@ -49,7 +93,8 @@ export class CProductCategory extends CUqBase {
         let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
         if (res.ok) {
             let content = await res.text();
-            return content;
+            //return content;
+			this.instruction = content;
         }
     };
 
@@ -73,7 +118,7 @@ export class CProductCategory extends CUqBase {
      * @param secendSubCategory 是第一个参数的孙节点
      * @returns 装配了子节点和孙节点的ProductCategory object
      */
-    private buildCategories(categoryWapper: any, subCategories: any[], secendSubCategory: any[]): any {
+    private buildCategories(categoryWapper: ProductCategory, subCategories: ProductCategory[], secendSubCategory: ProductCategory[]): any {
         let { productCategory } = categoryWapper;
         let children: any[] = [];
         for (let f of subCategories) {
@@ -92,9 +137,28 @@ export class CProductCategory extends CUqBase {
         }
         //categoryWapper.children = firstCategory.filter((v: any) => v.parent === pcid);
         let ret = _.clone(categoryWapper);
-        ret.children = children; // firstCategory.filter((v: any) => v.parent === pcid);
+		ret.children = children; // firstCategory.filter((v: any) => v.parent === pcid);
         return ret;
-    }
+	}
+	
+	private buildChildren(id:number, subCategories: ProductCategory[], secendSubCategory: ProductCategory[]): ProductCategory[] {
+        let children: ProductCategory[] = [];
+        for (let f of subCategories) {
+            if (!Tuid.equ(id, f.parent)) continue;
+            let len = secendSubCategory.length;
+            let secendSub: any[] = [];
+            for (let j = 0; j < len; j++) {
+				// eslint-disable-next-line
+                let { name, parent } = secendSubCategory[j];
+                if (!Tuid.equ(parent, f.productCategory)) continue;
+
+                secendSub.push(secendSubCategory[j]);
+            }
+            f.children = secendSub;
+            children.push(f);
+		}
+		return children;
+	}
 
     /**
      * 
@@ -102,57 +166,64 @@ export class CProductCategory extends CUqBase {
      * @param parent 
      * @param labelColor 
      */
-    async openMainPage(categoryWaper: any, parent: any, labelColor: string) {
-
+    async openMainPage(categoryWaper: any, parent?: any, labelColor?: string) {
+		this.current = categoryWaper;
         let { productCategory, name } = categoryWaper;
         let { id: productCategoryId } = productCategory;
         let results = await this.getCategoryChildren(productCategoryId);
         if (results.first.length !== 0) {
-            let rootCategory = this.buildCategories(categoryWaper, results.first, results.secend);
-            let instruction = await this.getCategoryInstruction(productCategoryId);
-            this.openVPage(VCategory, { categoryWapper: rootCategory, parent, labelColor, instruction });
+            this.buildCategories(categoryWaper, results.first, results.secend);
+			//let instruction = 
+			await this.getCategoryInstruction(productCategoryId);
+            this.openVPage(VCategory/*, { categoryWapper: rootCategory, parent, labelColor, instruction }*/);
         } else {
             let { cProduct } = this.cApp;
-            await cProduct.searchByCategory({ productCategoryId, name });
+            await cProduct.searchByCategory({ productCategory: productCategoryId, name });
         }
-    }
+	}
+	
+	onClickCategory = async (pc: ProductCategory) => {
+		this.current = pc;
+        let { productCategory, name } = pc;
+        let { id: productCategoryId } = ((productCategory as any) as BoxId);
+        let results = await this.getCategoryChildren(productCategoryId);
+        if (results.first.length !== 0) {
+			//let rootCategory = 
+			this.buildCategories(pc, results.first, results.secend);
+			//let instruction = 
+			await this.getCategoryInstruction(productCategoryId);
+            this.openVPage(VCategory/*, { categoryWapper: rootCategory, parent, labelColor, instruction }*/);
+        } else {
+            let { cProduct } = this.cApp;
+            await cProduct.searchByCategory({ productCategory:productCategoryId, name });
+        }
+	}
 
     /**
      * 
      * @param categoryId 
      */
     async showCategoryPage(categoryId: number) {
-        await this.getRootCategories();
-        let filterCategoryId;
-        let parent;
-        for (let key of this.rootCategories) {
-            filterCategoryId = key.children.filter((v: any) => v.productCategory.id === Number(categoryId));
-            parent = key;
-            if (filterCategoryId.length) break;
-        }
+		await this.load(categoryId);
+		let {children} = this.current;
+		if (children && children.length > 0) {
+			this.openVPage(VCategoryPage);
+		}
+		else {
+			await this.cApp.cProduct.searchByCategory({ 
+				productCategory:categoryId, 
+				name: this.current.name 
+			});
+		}
+	}
 
-        let result = await this.getCategoryChildren(categoryId);
-        if (result.first.length !== 0) {
-            let rootCategory = this.buildCategories(filterCategoryId[0], result.first, result.secend);
-            let instruction = undefined;
-            // let instruction = await this.getCategoryInstruction(categoryId);
-            this.openVPage(VCategory, { categoryWapper: rootCategory, parent:undefined, labelColor:'', instruction });
-        }else {
-            let { cProduct } = this.cApp;
-            await cProduct.searchByCategory({ productCategoryId:categoryId, name:filterCategoryId[0].name });
-        }
-    }
-
-    async getRootCategories(){
-        let { currentSalesRegion, currentLanguage } = this.cApp;
-        let results = await this.uqs.product.GetRootCategory.query({
-            salesRegion: currentSalesRegion.id,
-            language: currentLanguage.id
-        });
-
-        let { first, secend, third } = results;
-        this.rootCategories = (first as any[]).map(v => {
-            return this.buildCategories(v, secend, third);
-        });  
-    }
+	renderCategoryItem(pc: ProductCategory, className?: string, content?: any):JSX.Element {
+		if (!pc) debugger;
+		let {productCategory, name} = pc;
+		let pcId = typeof productCategory === 'object'? (productCategory as any).id : productCategory;
+		return <Ax key={pcId}
+			href={'/productCategory/' + pcId} 
+			className={className}
+			onClick={()=>this.onClickCategory(pc)}>{content || name}</Ax>
+	}
 }

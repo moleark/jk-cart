@@ -1,8 +1,7 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../tapp/CBase';
-import { QueryPager, BoxId } from 'tonva';
-import moment from 'moment';
-import { VProductFavorateLabel } from './VProductFavorateLabel';
+import { QueryPager } from 'tonva';
+//import { VProductFavorateLabel } from './VProductFavorateLabel';
 
 export class CFavorites extends CUqBase {
     productsFavorites: QueryPager<any>;
@@ -25,27 +24,11 @@ export class CFavorites extends CUqBase {
         return myFavorites.ret;
     }
     */
-
-    async getProductIsFavorites(product: number) {
-        let { currentUser } = this.cApp;
-        let myFavorites = await this.uqs.webuser.myFavorites.obj({ webUser: currentUser, product: product });
-        return myFavorites !== undefined;
-    }
-
-    async addProductFavorites(productId: number) {
-        let { currentUser } = this.cApp;
-        let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
-        await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: productId, arr1: [{ pack: 0, date: createDate }] });
-    }
-
-    async delProductFavorites(productId: number) {
-        let { currentUser } = this.cApp;
-        await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: productId, arr1: [{ pack: 0 }] });
-    }
-
+	/*
     renderFavoritesLabel = (productid: number) => {
         let { currentUser } = this.cApp;
         // let myFavorite = await this.uqs.webuser.myFavorites.obj({ webUser: currentUser, product: productid });
         return this.renderView(VProductFavorateLabel, productid)
-    }
+	}
+	*/
 }

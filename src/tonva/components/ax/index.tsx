@@ -10,23 +10,28 @@ export interface AxProps {
 	aClassName?: string;
 	naClassName?: string;
 	target?: string;
+	props?: any;
 }
 
-export const Ax = (props: AxProps) => {
-	let {children, className} = props;
+// 如果是web方式，用webNav方式route网页
+// 如果是app方式，用click方式压栈页面
+export const Ax = (axProps: AxProps) => {
+	let {children, className, props} = axProps;
 	if (nav.isWebNav === true) {
-		let {href, aClassName, target} = props;
+		let {href, aClassName, target} = axProps;
 		if (!href) return null;
 		if (nav.testing === true) href += '#test';
-		return <a className={classNames(className, aClassName)} href={href} target={target}>{children}</a>;
+		return <a className={classNames(className, aClassName)} href={href} target={target} {...props}>{children}</a>;
 	}
 	else {
-		let {onClick, naClassName} = props;
+		let {onClick, naClassName} = axProps;
 		if (!onClick) return null;
-		return <span className={classNames(className, naClassName)} onClick={onClick}>{children}</span>;
+		return <span className={classNames(className, 'cursor-pointer', naClassName)} onClick={onClick}>{children}</span>;
 	}
 }
 
+// 同普通的a tag
+// 会自动处理href，处理生产版跟测试版之间的不同
 export const A = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => {
 	if (nav.isWebNav === false) {
 		return <a {...props} />;

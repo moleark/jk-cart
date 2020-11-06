@@ -1,0 +1,22 @@
+[0928/162319.588:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½É¡ï¿½ (0x0)
+[0930/155245.290:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½É¡ï¿½ (0x0)
+[1010/084722.849:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ (0x3)
+[1012/083218.226:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ (0x3)
+[1012/095800.058:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\z539\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\86ef2544-9cd5-4fc0-abd1-7b68c5269d1b: ÏµÍ³ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ (0x3)
+[1012/095821.098:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½É¡ï¿½ (0x0)
+[1021/083306.663:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ (0x3)
+[1023/083425.398:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ (0x3)
+[1102/002818.954:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1102/224231.662:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1103/213407.137:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1104/110502.867:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1105/120505.621:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/122005.629:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/123505.643:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/125005.654:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/130755.867:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1105/134224.451:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/135224.454:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/135224.455:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Henry\AppData\Local\Temp\.profile\Crashpad\reports\73e82f88-d89f-4563-9538-76d075ff0a29.dmp: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÎÄ¼þ¡£ (0x2)
+[1105/135224.457:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)
+[1105/181322.651:ERROR:directory_reader_win.cc(43)] FindFirstFile: ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶¡£ (0x3)

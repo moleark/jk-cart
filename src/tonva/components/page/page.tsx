@@ -3,6 +3,7 @@ import {observer} from 'mobx-react';
 import {PageHeaderProps, renderPageHeader} from './pageHeader';
 import { TabsProps, TabsView } from './tabs';
 import { ScrollProps, ScrollView, PageWebNav, WebNavScrollView } from './scrollView';
+import { nav } from '../nav';
 
 export interface IVPage {
 	content():JSX.Element;
@@ -27,6 +28,9 @@ export interface PageProps extends ScrollProps {
 export class Page extends React.Component<PageProps> {
 	private tabsView: TabsView;
     constructor(props: PageProps) {
+		if (nav.pageWebNav) {
+			props.webNav = nav.pageWebNav;
+		}
 		super(props);
 		let {tabsProps} = props;
 		if (tabsProps) {
