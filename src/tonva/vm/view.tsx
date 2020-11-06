@@ -19,6 +19,7 @@ export abstract class View<C extends Controller> {
 
 	protected get isDev() {return  env.isDevelopment}
 	get isWebNav(): boolean {return this.controller.isWebNav}
+	navigate(url:string) {this.controller.navigate(url)}
 	protected isMe(id:any) {return this.controller.isMe(id)}
     abstract render(param?:any): JSX.Element;
 

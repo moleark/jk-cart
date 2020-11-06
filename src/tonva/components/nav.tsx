@@ -651,6 +651,7 @@ export class Nav {
 			return;
 		}
 		this.clear();
+		if (this.testing === true) url += '#test';
 		return this.navigo.navigate(url, absolute);
 	}
 

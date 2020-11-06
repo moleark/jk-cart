@@ -20,3 +20,4 @@
 [1105/135224.455:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Henry\AppData\Local\Temp\.profile\Crashpad\reports\73e82f88-d89f-4563-9538-76d075ff0a29.dmp: 系统找不到指定的文件。 (0x2)
 [1105/135224.457:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
 [1105/181322.651:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
+[1105/223239.652:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系统找不到指定的路径。 (0x3)
