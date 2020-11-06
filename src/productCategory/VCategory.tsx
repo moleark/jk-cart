@@ -13,7 +13,7 @@ export class VCategory extends VPage<CProductCategory> {
     async open(categoryWapper: any) {
 
         this.instruction = categoryWapper.instruction;
-       xs ? this.openPage(this.page, categoryWapper) : this.openPage(this.lpage, categoryWapper);;
+        xs ? this.openPage(this.page, categoryWapper) : this.openPage(this.lpage, categoryWapper);;
         // let { getCategoryInstruction } = this.controller;
         // this.instruction = await getCategoryInstruction(0);
     }
@@ -24,9 +24,9 @@ export class VCategory extends VPage<CProductCategory> {
     }*/
 
     //private categoryClick = async (childWapper: any, parent: any, labelColor: string) => {
-       /*  console.log(childWapper);
-        console.log(parent); */
-        
+    /*  console.log(childWapper);
+     console.log(parent); */
+
     //    await this.controller.openMainPage(childWapper, parent, labelColor);
     //}
 
@@ -60,19 +60,6 @@ export class VCategory extends VPage<CProductCategory> {
             instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
         }
 
-        /* 
-        return <div className="bg-white mb-3" key={name}>
-            <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
-                <h1>{name}</h1>
-                {instructionUi}
-            </div>
-            <div className="cat-root-sub">
-                <div className="row no-gutters">
-                    {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
-                </div>
-            </div>
-        </div>
-        */
         return <section className="container mt-lg-2">
             <div className="row">
                 <div className="col-lg-3 product-side d-none d-lg-block">
@@ -90,32 +77,18 @@ export class VCategory extends VPage<CProductCategory> {
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, children, total } = item;
+        let { productCategory, name, children, total } = item;
         let isChildren = children.length !== 0;
 
-        /* return <div key={name}
-            className="col-6 col-md-4 col-lg-3 cursor-pointer"
-            onClick={() => this.categoryClick(item, parent, labelColor)}>
-            <div className="py-2 px-2 cat-sub">
-                <div className="cat-title-title">
-                    <span className="ml-1 align-middle">
-                        <FA name="chevron-circle-right" className={labelColor} />
-                        &nbsp; {name}
-                    </span>
-                </div>
-                {renderThirdCategory(children, total)}
-            </div>
-        </div>; */
-       
-		return <div className="col-lg-4 each-product" key={name} 
-			onClick={()=>{if(!isChildren){this.controller.onClickCategory(item)}}}>
+        return <div className="col-lg-4 each-product" key={name}
+            onClick={() => { if (!isChildren) { this.controller.onClickCategory(item) } }}>
             <h2 className="purple-bg">{name}</h2>
             <div className="background-grey">
                 {/* {children.slice(0,3).map((v: any) => <a href="" key={v.name}><p>{v.name}</p></a>)} */}
                 {
-                    isChildren 
+                    isChildren
                         ? <>
-                            {children.slice(0,3).map((v: any) => <div onClick={() => this.controller.onClickCategory(v)} key={v.name}><p>{v.name}</p></div>)}
+                            {children.slice(0, 3).map((v: any) => <div onClick={() => this.controller.onClickCategory(v)} key={v.name}><p>{v.name}</p></div>)}
                             <p className="text-right"> <span onClick={() => this.controller.onClickCategory(item)}>更多 <i className="fa fa-angle-right" aria-hidden="true"></i></span></p>
                         </>
                         : <div>{total > 1000 ? '>1000' : total}个产品</div>
@@ -143,9 +116,9 @@ export class VCategory extends VPage<CProductCategory> {
         let { categoryWapper: item, parent, labelColor } = categoryWapper;
         return <Page>
             {/*  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white"> */}
-             {this.renderRootCategory(item, parent, labelColor)}
+            {this.renderRootCategory(item, parent, labelColor)}
         </Page>
 
-		//webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
-    })    
+        //webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
+    })
 }
