@@ -40,6 +40,9 @@ export abstract class CAppPage extends CApp {
 
 	protected beforeInit() {
 		nav.isWebNav = true;
+	}
+
+	protected afterInit() {
 		if (!nav.isMobile) {
 			nav.pageWebNav = this.pageWebNav;
 		}

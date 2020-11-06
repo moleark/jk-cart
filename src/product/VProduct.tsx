@@ -40,8 +40,9 @@ export class VProduct extends VPage<CProduct> {
         this.productBox = product;
         this.discount = discount;
         await getProductMSDSFile(product);
-        await getProductSpecFile(product);
-        xs ? this.openPage(this.page, productData) : this.openPage(this.lpage, productData);
+		await getProductSpecFile(product);
+		let page = xs ? this.page : this.lpage;
+        this.openPage(page, productData);
     }
 
     render(param: any) {

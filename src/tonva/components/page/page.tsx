@@ -28,9 +28,6 @@ export interface PageProps extends ScrollProps {
 export class Page extends React.Component<PageProps> {
 	private tabsView: TabsView;
     constructor(props: PageProps) {
-		if (nav.pageWebNav) {
-			props.webNav = nav.pageWebNav;
-		}
 		super(props);
 		let {tabsProps} = props;
 		if (tabsProps) {
@@ -94,13 +91,20 @@ export class Page extends React.Component<PageProps> {
 			<main>{children}</main>
 			{this.renderFooter()}
 		</>;
-		if (webNav) {
+		let pageWebNav:PageWebNav;
+		if (!webNav) {
+			pageWebNav = nav.pageWebNav;
+		}
+		else {
+			pageWebNav = webNav;
+		}
+		if (pageWebNav) {
 			return <WebNavScrollView
 				onScroll={onScroll}
 				onScrollTop={onScrollTop}
 				onScrollBottom={onScrollBottom}
 				className={className}
-				webNav={webNav}
+				webNav={pageWebNav}
 			>
 				{content}
 			</WebNavScrollView>;

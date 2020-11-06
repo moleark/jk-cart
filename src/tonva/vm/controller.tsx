@@ -45,10 +45,12 @@ export abstract class Controller {
 	}
 
 	protected beforeInit() {}
+	protected afterInit() {}
 
 	init(...param: any[]) {
 		this.beforeInit();
 		this.pageWebNav = this.getPageWebNav();
+		this.afterInit();
 	}
 
 	internalT(str:string):any {
@@ -83,6 +85,9 @@ export abstract class Controller {
 	}
 
 	get isWebNav(): boolean {return nav.isWebNav}
+	navigate(url:string) {
+		nav.navigate(url);
+	}
 	
 	protected setRes(res:any) {
 		if (res === undefined) return;

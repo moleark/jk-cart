@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Scroller, nav } from 'tonva';
+import { VPage, Scroller } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
 /*
@@ -26,10 +26,16 @@ export class VProductList extends VPage<CProduct> {
 	*/
 
     private onProductClick = async (product: any) => {
-        // await this.controller.showProductDetail(product.id);
-        let url = "/product/" + product.id.id;
-        console.log(url);
-        nav.navigate(url);
+		let {id} = product;
+		// await this.controller.showProductDetail(product.id);
+		if (this.isWebNav === true) {
+			let url = "/product/" + id.id;
+			console.log(url);
+			this.navigate(url);
+		}
+		else {
+			await this.controller.showProductDetail(id);
+		}
     }
 
     private onScrollBottom = async (scroller: Scroller) => {
