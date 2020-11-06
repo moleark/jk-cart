@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { A, View } from 'tonva';
 import { CProductCategory } from './CProductCategory';
 import { FA } from 'tonva';
 import { GLOABLE } from 'cartenv';
@@ -61,19 +61,20 @@ export class VRootCategory extends View<CProductCategory> {
     }
 
     private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { name, children, total } = item;
+        let { name, children, total,productCategory } = item;
         return <div key={name}
-            className="col-6 col-md-4 col-lg-3 cursor-pointer"
-            onClick={() => this.categoryClick(item, parent, labelColor)}>
-            <div className="py-2 px-2 cat-sub">
-                <div className="text-truncate">
-                    <span className="ml-1 align-middle">
-                        <FA name="chevron-circle-right" className={labelColor} />
-                        &nbsp; {name}
-                    </span>
+            className="col-6 col-md-4 col-lg-3 cursor-pointer">
+            <A onClick={() => this.categoryClick(item, parent, labelColor)} href={"/productCategory/"+ productCategory.id}>
+                <div className="py-2 px-2 cat-sub">
+                    <div className="text-truncate">
+                        <span className="ml-1 align-middle">
+                            <FA name="chevron-circle-right" className={labelColor} />
+                            &nbsp; {name}
+                        </span>
+                    </div>
+                    {renderThirdCategory(children, total)}
                 </div>
-                {renderThirdCategory(children, total)}
-            </div>
+            </A>
         </div>;
     }
 
