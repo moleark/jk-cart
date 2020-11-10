@@ -1,6 +1,7 @@
-import { CUqApp } from "../tapp/CBase";
-import { CProduct } from "./CProduct";
+import { CUqApp } from "../../tapp/CBase";
+import { CProduct } from "../CProduct";
 import { CFavorites } from "customer/CFavorites";
+/*
 export class CAppProduct extends CUqApp {
 
     cProduct: CProduct;
@@ -33,3 +34,4 @@ export class CAppProductDetail extends CUqApp {
     }
 
 }
+*/

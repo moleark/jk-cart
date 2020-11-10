@@ -25,6 +25,14 @@ export interface MainProductChemical extends MainProduct {
     packs: Pack[];
 }
 
+export interface Chemical {
+    chemical: number;
+    CAS: string;
+    purity: string;
+    molecularFomula: string;
+    molecularWeight: string;
+}
+
 export interface Pack extends Id {
     radiox: number;
     radioy: number;

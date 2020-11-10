@@ -2,13 +2,13 @@ import * as React from 'react';
 import { RowContext, nav, User, BoxId } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
-import { VCartLabel_Web } from './VCartLabel_Web';
 import { VCart } from './VCart';
-import { CartPackRow, CartItem2 } from './Cart';
+import { CartPackRow, CartItem } from './Cart';
+import { Product } from 'model';
 
 export class CCart extends CUqBase {
 
-    private selectedCartItems: CartItem2[];
+    private selectedCartItems: CartItem[];
 
     protected async internalStart(param: any) {
         this.openVPage(VCart);
@@ -21,10 +21,11 @@ export class CCart extends CUqBase {
     renderCartLabel() {
         return this.renderView(VCartLabel);
     }
-
+	/*
     renderCartLabel_Web() {
         return this.renderView(VCartLabel_Web);
-    }
+	}
+	*/
 
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
         let { data, parentData } = context;
@@ -34,7 +35,7 @@ export class CCart extends CUqBase {
         if (value > 0)
             await cart.add(product, pack, value, price, retail, currency);
         else
-            await cart.removeFromCart([{ productId: product.id, packId: pack.id }]);
+            await cart.removeItem([{ productId: product.id, packId: pack.id }]);
     }
 
     onRowStateChanged = async (context: RowContext, selected: boolean, deleted: boolean) => {
@@ -51,10 +52,11 @@ export class CCart extends CUqBase {
 	};
 	*/
 
-    onProductClick = (product: BoxId) => {
-        let { cart, cProduct } = this.cApp;
+    onItemClick = (cartItem: CartItem) => {
+		let { cart, cProduct } = this.cApp;
+		let { product } = cartItem;
         if (!cart.isDeleted(product.id)) {
-            cProduct.showProductDetail(product);
+            cProduct.showProductDetail(product.id);
         }
     }
     /**
@@ -133,7 +135,7 @@ export class CCart extends CUqBase {
         return cProduct.renderDeliveryTime(pack);
     }
 
-    renderCartProduct = (product: BoxId) => {
+    renderCartProduct = (product: Product) => {
         let { cProduct } = this.cApp;
         return cProduct.renderCartProduct(product);
     }

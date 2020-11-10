@@ -152,5 +152,6 @@ export async function navStart() {
 	nav.on(() => {
 		renderCApp(CHomePage);
 	});
+	
 	await startRoute(appConfig);
 }

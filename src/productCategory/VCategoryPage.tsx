@@ -132,11 +132,9 @@ export class VCategoryPage extends VPage<CProductCategory> {
 			{this.controller.renderCategoryItem(
 				item, 
 				undefined, 
-				<>
-					<h2 className="purple-bg">{name}</h2>
-					<div className="background-grey">{vItem}</div>
-				</>
+				<h2 className="purple-bg">{name}</h2>
 			)}
+			<div className="background-grey">{vItem}</div>
         </div>
     }
 

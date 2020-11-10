@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { View, FA, BoxId, nav } from 'tonva';
-import { CProduct } from './CProduct';
+import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
+import { Product } from '../../model';
 
-export class VProductFavorateLabel extends View<CProduct> {
+export class VFavorite extends View<CProduct> {
 	/*
     @observable private isProductFarirates: boolean = false;
     private favoriteOrCancel = async (product: number) => {
@@ -35,21 +36,24 @@ export class VProductFavorateLabel extends View<CProduct> {
             this.isProductFarirates = await this.isMyFarirates(id);
     }
 	*/
-    render(param: BoxId): JSX.Element {
-        return <this.content productId={param} />;
-    }
+    render(product: Product): JSX.Element {
+    	return React.createElement(observer(() => {
+			let {favorite, favoriteOrCancel} = product;
+			
+			//let { currentUser } = this.controller.cApp;
+			//if (currentUser)
+			//    this.initInventoryAllocation(productId);
+			let icon = favorite === true ? "heart" : 'heart-o';
+			let onClick = (evt: React.MouseEvent) => {
+				evt.stopPropagation();
+				favoriteOrCancel();
+			}
 
-    private content = observer((param: any): any => {
-		let { productId } = param;
-		let isFavorite = this.controller.isFavorite(productId);
-		
-        //let { currentUser } = this.controller.cApp;
-        //if (currentUser)
-        //    this.initInventoryAllocation(productId);
-        return <div className="d-flex justify-content-end">
-            <small onClick={(e) => { e.stopPropagation(); this.controller.favoriteOrCancel(productId) }} style={{ zIndex: 9 }}>
-                <FA className="mr-3 text-danger" name={isFavorite === true ? "heart" : 'heart-o'} size="lg" />
-            </small>
-        </div>;
-    });
+			return <div className="d-flex justify-content-end">
+				<small onClick={onClick} style={{ zIndex: 9 }}>
+					<FA className="mr-3 text-danger" name={icon} size="lg" />
+				</small>
+			</div>;
+		}));
+	}
 }

@@ -5,7 +5,7 @@ import { COrder } from './COrder';
 import { tv } from 'tonva';
 import { List } from 'tonva';
 import { OrderItem } from './Order';
-import { CartItem2 } from 'cart/Cart';
+import { CartItem } from 'cart/Cart';
 
 export class VOrderDetail extends VPage<COrder> {
 
@@ -42,24 +42,8 @@ export class VOrderDetail extends VPage<COrder> {
                 }</div>
             </div>
         </div>;
-    }
-
-    orderAgain = async (data: any) => {
-        let { cOrder } = this.controller.cApp;
-        let { orderItems } = data;
-
-        orderItems = orderItems.map((el: CartItem2) => {
-            return {
-                product: el.product,
-                packs: el.packs,
-                $isDeleted: false,
-                $isSelected: true,
-                createdate: 'undefined'
-            }
-        })
-        // console.log('orderItems', orderItems);
-        await cOrder.createOrderFromCart(orderItems)
-    }
+	}
+	
     private page = (order: any) => {
 
         let { brief, data } = order;
@@ -102,7 +86,7 @@ export class VOrderDetail extends VPage<COrder> {
             }
         }
         let orderAgainUI = <div className="d-flex justify-content-center">
-            <button className="btn btn-primary w-50" onClick={async () => { this.orderAgain(order.data) }}>再次下单</button>
+            <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button>
         </div>
 
         let header = <>订单详情: {no}</>            //orderAgainUI

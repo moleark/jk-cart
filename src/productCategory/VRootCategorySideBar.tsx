@@ -10,7 +10,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 	
     render() {
         return <>
-            <h2>产品分类</h2>
+            <h2>产品大类</h2>
             <nav id="sidebar">
                 <ul className="list-unstyled components">
                     {this.controller.rootCategories.map(v => {

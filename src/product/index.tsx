@@ -1,2 +1,2 @@
 export * from './CProduct';
-export * from './VProduct';
+export * from './VPageProduct';

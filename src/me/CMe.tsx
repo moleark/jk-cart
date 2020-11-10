@@ -11,7 +11,6 @@ import { CAddress } from '../customer/CAddress';
 import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
-import { VLoginState_Web } from './VLoginState_Web';
 import { VAbout } from './about';
 
 export class CMe extends CUqBase {
@@ -133,13 +132,15 @@ export class CMe extends CUqBase {
         let { cCart } = this.cApp;
         return cCart.renderCartLabel();
     }
-
+	/*
     renderLoginState_Web() {
         return this.renderView(VLoginState_Web);
-    }
-
+	}
+	*/
+	/*
     renderCarLabel_Web() {
         let { cCart } = this.cApp;
         return cCart.renderCartLabel_Web();
-    }
+	}
+	*/
 }

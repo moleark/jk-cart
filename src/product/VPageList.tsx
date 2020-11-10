@@ -3,13 +3,14 @@ import * as React from 'react';
 import { VPage, Scroller } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
+import { Product } from 'model';
 /*
 import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
 import { observer } from 'mobx-react-lite';
 */
 
-export class VProductList extends VPage<CProduct> {
+export class VPageList extends VPage<CProduct> {
 	/*
     private searchKey: string;
     async open() {
@@ -25,17 +26,17 @@ export class VProductList extends VPage<CProduct> {
 	}
 	*/
 
-    private onProductClick = async (product: any) => {
+    private onProductClick = async (product: Product) => {
 		let {id} = product;
 		// await this.controller.showProductDetail(product.id);
-		if (this.isWebNav === true) {
-			let url = "/product/" + id.id;
+		//if (this.isWebNav === true) {
+			let url = "/product/" + id;
 			console.log(url);
 			this.navigate(url);
-		}
-		else {
-			await this.controller.showProductDetail(id);
-		}
+		//}
+		//else {
+		//	await this.controller.showProductDetail(id);
+		//}
     }
 
     private onScrollBottom = async (scroller: Scroller) => {
@@ -45,7 +46,7 @@ export class VProductList extends VPage<CProduct> {
         productsPager.more();
     }
 
-    private renderProduct = (p: any) => {
+    private renderProduct = (p: Product) => {
         // console.log(p);
         return this.controller.cApp.cProduct.renderProduct(p);
     }

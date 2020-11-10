@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MainProduct, SubPack } from './model';
+import { MainProduct, SubPack } from '../model/model';
 
 export type Render<T> = (model: T) => JSX.Element;
 

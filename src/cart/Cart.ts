@@ -1,12 +1,12 @@
 import { observable, autorun, IReactionDisposer } from 'mobx';
 import { TuidDiv, BoxId, Tuid } from 'tonva';
 //import { CCartApp } from '../CCartApp';
-import { PackRow } from 'product/Product';
+import { PackRow, Product } from 'model';
 import { groupByProduct } from 'tools/groupByProduct';
-import { CUqApp } from 'tapp/CBase';
+import { CApp } from 'tapp';
 
-export interface CartItem2 {
-    product: BoxId;
+export interface CartItem {
+    product: Product; // BoxId;
     packs: CartPackRow[];
     $isSelected?: boolean;
     $isDeleted?: boolean;
@@ -31,21 +31,23 @@ export interface CartPackRow extends PackRow {
 }
 
 export class Cart {
-    cApp: CUqApp;
+    private cApp: CApp;
 
     private cartStore: CartStore;
     private disposer: IReactionDisposer;
 
+	/*
     @observable data: any = {
-        list: observable<CartItem2>([]),
-    };
-    cartItems: CartItem2[];
+        list: observable<CartItem>([]),
+	};
+	*/
+    @observable cartItems: CartItem[];
     count = observable.box<number>(0);
     amount = observable.box<number>(0);
     editButton = observable.box<boolean>(false);
-    constructor(cApp: CUqApp) {
+    constructor(cApp: CApp) {
         this.cApp = cApp;
-        this.cartItems = this.data.list;
+        //this.cartItems = this.data.list;
         this.disposer = autorun(this.calcSum);
     }
 
@@ -53,7 +55,8 @@ export class Cart {
         this.disposer();
     }
 
-    protected calcSum = () => {
+    private calcSum = () => {
+		if (!this.cartItems) return;
         let count = 0, amount = 0;
         for (let cp of this.cartItems) {
             let { $isSelected, $isDeleted, packs } = cp;
@@ -94,19 +97,25 @@ export class Cart {
             }
         }
 
-        let cartDataGrouped = groupByProduct(cartData);
+		let cartDataGrouped = groupByProduct(cartData);
+		let productPromises: Promise<any>[] = [];
         if (cartDataGrouped && cartDataGrouped.length > 0) {
+			let cartItems: CartItem[] = [];
             for (let i = 0; i < cartDataGrouped.length; i++) {
-                let { product, packs, createdate } = cartDataGrouped[i];
-                this.cartItems.push({
+				let { product: productId, packs, createdate } = cartDataGrouped[i];
+				let product = this.cApp.getProduct(productId);
+				productPromises.push(product.loadListItem());
+                cartItems.push({
                     product: product,
                     packs: packs,
                     $isSelected: true,
                     $isDeleted: false,
                     createdate: createdate,
                 })
-            }
-        }
+			}
+			this.cartItems = cartItems;
+		}
+		Promise.all(productPromises);
     }
 
     /*
@@ -145,7 +154,7 @@ export class Cart {
         return i !== -1;
     }
 
-    getSelectedItems(): CartItem2[] {
+    getSelectedItems(): CartItem[] {
         return this.cartItems.filter(v => {
             let { $isSelected, $isDeleted } = v;
             return $isSelected === true && $isDeleted !== true;
@@ -155,17 +164,16 @@ export class Cart {
     /**
      *
      */
-    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
+    add = async (product: Product/*BoxId*/, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
         let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
         if (!cartItemExists) {
-            cartItemExists = {
+            this.cartItems.push({
                 product: product,
                 packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency }],
                 $isSelected: true,
                 $isDeleted: false,
                 createdate: Date.now()
-            };
-            this.cartItems.push(cartItemExists);
+            });
         }
         else {
             let { $isDeleted, packs } = cartItemExists;
@@ -211,7 +219,7 @@ export class Cart {
      *
      * @param rows
      */
-    async removeFromCart(rows: [{ productId: number, packId: number }]) {
+    async removeItem(rows: [{ productId: number, packId: number }]) {
         if (rows && rows.length > 0) {
             rows.forEach(pe => {
                 let cartItemIndex = this.cartItems.findIndex(e => e.product.id === pe.productId);
@@ -278,13 +286,13 @@ export class Cart {
 
 abstract class CartStore {
 
-    protected cApp: CUqApp;
-    constructor(cApp: CUqApp) {
+    protected cApp: CApp;
+    constructor(cApp: CApp) {
         this.cApp = cApp;
     }
-    abstract get isLocal(): boolean;
-    abstract async load(): Promise<CartItem2[]>;
-    abstract async storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
+    //abstract get isLocal(): boolean;
+    abstract async load(): Promise<CartItem[]>;
+    abstract async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
     abstract async removeFromCart(rows: [{ productId: number, packId: number }]): Promise<void>;
 }
 
@@ -293,7 +301,7 @@ class CartRemote extends CartStore {
     //private setCartAction: Action;
     //private removeFromCartAction: Action;
 
-    get isLocal(): boolean { return false }
+    //get isLocal(): boolean { return false }
 
     /*
     constructor(cApp: CApp) {
@@ -306,7 +314,7 @@ class CartRemote extends CartStore {
     }
     */
 
-    async load(): Promise<CartItem2[]> {
+    async load(): Promise<CartItem[]> {
         let ret = await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
         return ret && ret.$page && ret.$page.filter(v => v.product && v.pack) as any;
     }
@@ -319,9 +327,9 @@ class CartRemote extends CartStore {
      * @param price
      * @param currency
      */
-    async storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any) {
+    async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any) {
         await this.cApp.uqs.order.SetCart.submit({
-            product: product.id,
+            product,
             pack: pack.id,
             price: price,
             currency: currency,
@@ -341,16 +349,16 @@ class CartLocal extends CartStore {
     private cartData: any[] = [];
     private productTuid: Tuid;
     private packTuid: TuidDiv;
-    constructor(cApp: CUqApp) {
+    constructor(cApp: CApp) {
         super(cApp);
 
         this.productTuid = this.cApp.uqs.product.ProductX;
         this.packTuid = this.productTuid.div('packx');
     }
 
-    get isLocal(): boolean { return true }
+    //get isLocal(): boolean { return true }
 
-    async load(): Promise<CartItem2[]> {
+    async load(): Promise<CartItem[]> {
         try {
             let cartstring = localStorage.getItem(LOCALCARTNAME);
             if (cartstring === null) return [];
@@ -379,7 +387,7 @@ class CartLocal extends CartStore {
         }
     }
 
-    async storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any) {
+    async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any) {
         let cartItemExists = this.cartData.find(e => Tuid.equ(e.product, product) && TuidDiv.equ(e.pack, pack));
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;

@@ -5,10 +5,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 //import './css/style.css';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
-import { NavView, start, nav } from 'tonva';
+import { NavView, start, nav, startPage } from 'tonva';
 import { appConfig } from 'configuration';
 import './App.css';
 import { CApp, navStart } from './tapp';
+import { CAppPage } from 'tapp/CAppPage';
 //import logo from './logo.svg';
 
 /*
@@ -30,26 +31,31 @@ serviceWorker.unregister();
 //if (location.host && false) {
 
 (async function() {
-	if (!nav.isMobile) {
-		require('style-loader!./css/style.css');
-		await navStart();
+	nav.setSettings(appConfig);
+	let onLogined: () => Promise<void>;
+
+	if (nav.isMobile || window.location.pathname.endsWith('/app')) {
+		onLogined = async () => {
+			await start(CApp, appConfig);
+		}
 	}
 	else {
-		nav.setSettings(appConfig);
-		const App: React.FC = () => {
-			const onLogined = async () => {
-				await start(CApp, appConfig);
-			}
-			return <NavView onLogined={onLogined} notLogined={onLogined} />;
-		}
-
-		ReactDOM.render(
-			<React.StrictMode>
-				<App />
-			</React.StrictMode>,
-			document.getElementById('root')
-		);
+		require('style-loader!./css/style.css');
+		onLogined = async () => {
+			await startPage(CAppPage, appConfig);
+		};
 	}
+
+	const App: React.FC = () => {
+		return <NavView onLogined={onLogined} notLogined={onLogined} />;
+	}
+
+	ReactDOM.render(
+		<React.StrictMode>
+			<App />
+		</React.StrictMode>,
+		document.getElementById('root')
+	);
 	// If you want your app to work offline and load faster, you can change
 	// unregister() to register() below. Note this comes with some pitfalls.
 	// Learn more about service workers: https://bit.ly/CRA-PWA

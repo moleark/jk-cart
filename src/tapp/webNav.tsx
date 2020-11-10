@@ -32,15 +32,15 @@ export class NavHeaderView extends View<CApp> {
 		let vLogin:any;
 		if (!user) {
 			vLogin = <div className="nav-link">
-				<a className="px-2" href="./register" target="_self">注册</a>
-				<A className="px-2" href="./login" target="_self">登录</A>
+				<A className="px-2" href="/register" target="_self">注册</A>
+				<A className="px-2" href="/login" target="_self">登录</A>
 			</div>;
 		}
 		else {
 		let { id, name, nick, icon } = user;
 			vLogin = <div className="nav-link">
-				<a className="px-2" href="./me" target="_self">{nick || name}</a>
-				<A className="px-2" href="./logout" target="_self">退出</A>
+				<A className="px-2" href="/me" target="_self">{nick || name}</A>
+				<A className="px-2" href="/logout" target="_self">退出</A>
 			</div>;
 		}
 
@@ -64,7 +64,7 @@ export class NavHeaderView extends View<CApp> {
 
             <nav className="navbar navbar-expand-lg">
                 <div className="container">
-                    <a href="#" className="header-logo"><img src={logo} alt="logo" className="img-fluid" /></a>
+                    <A href="/home" className="header-logo"><img src={logo} alt="logo" className="img-fluid" /></A>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="#">特惠活动</a> </li>

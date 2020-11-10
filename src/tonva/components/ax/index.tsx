@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from 'classnames';
 import { nav } from "../nav";
 
 export interface AxProps {
 	children: React.ReactNode;
 	href: string;
-	onClick: (event:React.MouseEvent) => void;
+	onClick?: (event:React.MouseEvent) => void;
 	className?: string;
 	aClassName?: string;
 	naClassName?: string;
@@ -16,16 +16,22 @@ export interface AxProps {
 // 如果是web方式，用webNav方式route网页
 // 如果是app方式，用click方式压栈页面
 export const Ax = (axProps: AxProps) => {
-	let {children, className, props} = axProps;
+	let {href, children, className, props} = axProps;
 	if (nav.isWebNav === true) {
-		let {href, aClassName, target} = axProps;
+		let {aClassName, target} = axProps;
 		if (!href) return null;
-		if (nav.testing === true) href += '#test';
-		return <a className={classNames(className, aClassName)} href={href} target={target} {...props}>{children}</a>;
+		//if (nav.testing === true) href += '#test';
+		let onClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+			evt.preventDefault();
+			nav.navigate(href);
+		}
+		return <a className={classNames(className, aClassName)} href={href} target={target} onClick={onClick} {...props}>{children}</a>;
 	}
 	else {
 		let {onClick, naClassName} = axProps;
-		if (!onClick) return null;
+		if (!onClick) {
+			onClick = () => nav.navigate(href);
+		}
 		return <span className={classNames(className, 'cursor-pointer', naClassName)} onClick={onClick}>{children}</span>;
 	}
 }
@@ -37,6 +43,10 @@ export const A = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTML
 		return <a {...props} />;
 	}
 	let {href} = props;
-	if (nav.testing === true) href += '#test';
-	return <a {...props} href={href} />;
+	//if (nav.testing === true) href += '#test';
+	let onClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+		evt.preventDefault();
+		nav.navigate(href);
+	}
+	return <a {...props} href={href} onClick={onClick} />;
 }

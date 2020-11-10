@@ -84,7 +84,9 @@ export class Form extends React.Component<FormProps> {
             return typeof(Templet) === 'function'? Templet(this.data) : Templet;
         }
 
-        this.formContext = new FormContext(this, false);
+		if (!this.formContext) {
+			this.formContext = new FormContext(this, false);
+		}
         return <>{this.schema.map((v, index) => {
             return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
         })}</>;

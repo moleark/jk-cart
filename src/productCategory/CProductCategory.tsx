@@ -46,6 +46,7 @@ export class CProductCategory extends CUqBase {
 	}
 	
 	async loadRoot() {
+		if (this.rootCategories) return;
         this.uqs.product.ProductCategory.stopCache();
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
@@ -60,7 +61,8 @@ export class CProductCategory extends CUqBase {
 	}
 
 	async load(id:number) {
-		if (!this.rootCategories) await this.loadRoot();
+		if (this.current && this.current.productCategory === id) return;
+		await this.loadRoot();
 		let promises = [this.getCategoryChildren(id), this.getCategoryInstruction(id)];
 		let [results, instruction] = await Promise.all(promises);
 		//let results = await this.getCategoryChildren(id);

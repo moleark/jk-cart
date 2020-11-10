@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import { ProductPackRow } from './Product';
-import { Loader } from '../mainSubs/loader';
-import { MainSubs, MainProductChemical, MainBrand } from '../mainSubs';
-import { LoaderProductChemical } from '../tools/productChemical';
+import { ProductPackRow } from '../../model';
+import { Loader } from '../../mainSubs/loader';
+import { MainSubs } from '../../mainSubs';
+import { MainProductChemical, MainBrand } from '../../model';
+import { LoaderProductChemical } from '../../tools/productChemical';
 
 export class LoaderBrand extends Loader<MainBrand> {
     protected async loadToData(brandId: number, data: MainBrand): Promise<void> {

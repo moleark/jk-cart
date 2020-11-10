@@ -5,7 +5,7 @@ import { FA } from 'tonva';
 import { tv } from 'tonva';
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
-import { CartPackRow, CartItem2 } from './Cart';
+import { CartPackRow, CartItem } from './Cart';
 
 const cartSchema = [
     {
@@ -65,13 +65,13 @@ export class VCart extends VPage<CCart> {
         return <this.tab />;
     }
 
-    private renderCartItem = (item: CartItem2) => {
+    private renderCartItem = (item: CartItem) => {
         let { product } = item;
         let { controller } = this;
-        let { onProductClick, renderCartProduct } = controller;
+        let { onItemClick, renderCartProduct } = controller;
         return <div className="pr-1">
             <div className="row">
-                <div className="col-lg-6 pb-3" onClick={() => onProductClick(product)}>
+                <div className="col-lg-6 pb-3" onClick={() => onItemClick(item)}>
                     {renderCartProduct(product)}
                 </div>
                 <div className="col-lg-6"><FormField name="packs" /></div>
@@ -127,8 +127,9 @@ export class VCart extends VPage<CCart> {
 
     protected cartForm = observer(() => {
         let { cart } = this.controller.cApp;
-        let { data: cartData } = cart;
-        return <Form className="bg-white flex-fill overflow-auto" schema={cartSchema} uiSchema={this.uiSchema} formData={cartData} />
+		let { cartItems } = cart;
+		let data = {list: cartItems};
+        return <Form className="bg-white flex-fill overflow-auto" schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
     });
 
     private empty() {

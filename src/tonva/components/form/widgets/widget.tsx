@@ -15,8 +15,8 @@ export abstract class Widget {
     protected children: React.ReactNode;
     protected _itemSchema: ItemSchema;
     protected _ui: UiItem;
-    protected defaultValue: any;
-    protected value: any;
+	protected defaultValue: any;
+	protected value: any;
     protected rules: Rule[];
     @observable errors: string[] = [];
     @observable protected contextErrors: string[] = [];

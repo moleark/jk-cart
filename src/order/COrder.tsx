@@ -10,8 +10,9 @@ import { VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
-import { CartItem2, CartPackRow } from '../cart/Cart';
+import { CartItem, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
+import { Product } from 'model';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -31,7 +32,7 @@ export class COrder extends CUqBase {
     protected async internalStart(param: any) {
     }
 
-    createOrderFromCart = async (cartItems: CartItem2[]) => {
+    createOrderFromCart = async (cartItems: CartItem[]) => {
         let { cApp, uqs } = this;
         let { currentUser, currentSalesRegion, cCoupon } = cApp;
         this.orderData.webUser = currentUser.id;
@@ -65,9 +66,9 @@ export class COrder extends CUqBase {
 
         if (cartItems !== undefined && cartItems.length > 0) {
             this.orderData.currency = cartItems[0].packs[0].currency;
-            this.orderData.orderItems = cartItems.map((e: any) => {
-                var item = new OrderItem();
-                item.product = e.product;
+            this.orderData.orderItems = cartItems.map(e => {
+				let {product, packs} = e;
+                var item = new OrderItem(product);
                 item.packs = e.packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
                 item.packs.forEach((pk) => {
                     pk.priceInit = pk.price;
@@ -152,6 +153,23 @@ export class COrder extends CUqBase {
         return defaultSetting.invoiceInfo;
     }
 
+
+    orderAgain = async (data: any) => {
+        let { orderItems } = data;
+
+        orderItems = orderItems.map((el: CartItem) => {
+            return {
+                product: el.product,
+                packs: el.packs,
+                $isDeleted: false,
+                $isSelected: true,
+                createdate: 'undefined'
+            }
+        })
+        // console.log('orderItems', orderItems);
+        await this.createOrderFromCart(orderItems)
+    }
+
     /**
      * 提交订单
      */
@@ -188,7 +206,7 @@ export class COrder extends CUqBase {
                 param.push({ productId: e.product.id, packId: v.pack.id })
             })
         });
-        cart.removeFromCart(param);
+        cart.removeItem(param);
 
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
@@ -388,7 +406,7 @@ export class COrder extends CUqBase {
         return cProduct.renderDeliveryTime(pack);
     }
 
-    renderOrderItemProduct = (product: BoxId) => {
+    renderOrderItemProduct = (product: Product) => {
         let { cProduct } = this.cApp;
         return cProduct.renderCartProduct(product);
     }

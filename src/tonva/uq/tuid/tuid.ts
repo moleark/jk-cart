@@ -39,17 +39,29 @@ export abstract class Tuid extends Entity {
     abstract boxId(id:number):BoxId;
     abstract valueFromId(id:number):any;
 	abstract resetCache(id:number|BoxId):void;
-    abstract async assureBox<T> (id:number|BoxId): Promise<T>;
-    static equ(id1:BoxId|number, id2:BoxId|number): boolean {
-        if (id1 === undefined) return false;
-        if (id2 === undefined) return false;
+	abstract async assureBox<T> (id:number|BoxId): Promise<T>;
+	static idValue(id: {id:number}|number):number {
+		switch (typeof id) {
+			default: debugger; throw new Error('unknown id');
+			case 'object': return id.id;
+			case 'number': return id;
+		}
+	}
+    static equ(id1:{id:number}|number, id2:{id:number}|number): boolean {
+        if (id1 === undefined || id1 === null) return false;
+		if (id2 === undefined || id2 === null) return false;
+		return Tuid.idValue(id1) === Tuid.idValue(id2);
+		/*
         if (typeof id1 === 'object') {
-            return id1.equ(id2);
+			let id1Id = id1.id;
+            return typeof id2 === 'object'? id1Id === id2.id : id1Id === id2;
         }
         if (typeof id2 === 'object') {
-            return id2.equ(id1);
+			let id2Id = id2.id;
+            return typeof id1 === 'object'? id2Id === id1.id : id2Id === id1;
         }
-        return id1 === id2;
+		return id1 === id2;
+		*/
     }
     cacheIds() {}
     async modifyIds(ids:any[]) {}

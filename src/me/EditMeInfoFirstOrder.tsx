@@ -30,7 +30,14 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
     }
 
     @observable private webUserData: any;
-    @observable private webUserContactData: any;
+	@observable private webUserContactData: any;
+	
+	private ref = (f:Form) => {
+		if (this.form === f) {
+			debugger;
+		}
+		this.form = f;
+	}
 
     constructor(props: any) {
         super(props);
@@ -130,7 +137,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
             </div>
 
             <div className="App-container container text-left">
-                <Form ref={v => this.form = v} className="my-3"
+                <Form ref={this.ref} className="my-3"
                     schema={schemaArr.filter(schemaFilter)}
                     uiSchema={uiSchema}
                     formData={data}

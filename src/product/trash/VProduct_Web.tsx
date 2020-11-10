@@ -1,17 +1,17 @@
 /* eslint-disable */
 import * as React from 'react';
-import { CProduct } from './CProduct';
+import { CProduct } from '../CProduct';
 import {
     VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId, View
 } from 'tonva';
 import { tv } from 'tonva';
-import { MinusPlusWidget } from '../tools/minusPlusWidget';
-import { ProductPackRow } from './Product';
-import { ViewMainSubs, MainProductChemical } from 'mainSubs';
+import { MinusPlusWidget } from '../../tools/minusPlusWidget';
+import { ProductPackRow, MainProductChemical } from '../../model';
+import { ViewMainSubs } from 'mainSubs';
 import { ProductImage } from 'tools/productImage';
-import { productPropItem, renderBrand } from './VProductView';
-import { ProductItem } from '../tools/ProductItem';
+import { renderPropItem, renderBrand } from '../renders';
+import { ProductItem } from '../../tools/ProductItem';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -24,7 +24,7 @@ const schema: ItemSchema[] = [
     { name: 'futureDeliveryTimeDescription', type: 'string' }
 ];
 
-export class VProduct_Web extends View<CProduct> {
+export class VProduct_Web1 extends View<CProduct> {
 
     private productBox: BoxId;
     private discount: number;
@@ -43,11 +43,11 @@ export class VProduct_Web extends View<CProduct> {
                 </div>
                 <div className="col-12 col-sm-9">
                     <div className="row mx-3">
-                        {productPropItem('产品编号', origin, "font-weight-bold")}
-                        {productPropItem('CAS', CAS, "font-weight-bold")}
-                        {productPropItem('纯度', purity)}
-                        {productPropItem('分子式', molecularFomula)}
-                        {productPropItem('分子量', molecularWeight)}
+                        {renderPropItem('产品编号', origin, "font-weight-bold")}
+                        {renderPropItem('CAS', CAS, "font-weight-bold")}
+                        {renderPropItem('纯度', purity)}
+                        {renderPropItem('分子式', molecularFomula)}
+                        {renderPropItem('分子量', molecularWeight)}
                         {renderBrand(brand)}
                     </div>
                 </div>
@@ -98,9 +98,9 @@ export class VProduct_Web extends View<CProduct> {
         let { cApp } = this.controller;
         let { cart } = cApp;
         if (value > 0)
-            await cart.add(this.productBox, pack, value, price, retail, currency);
+            await cart.add(this.productBox as any, pack, value, price, retail, currency);
         else
-            await cart.removeFromCart([{ productId: this.productBox.id, packId: pack.id }]);
+            await cart.removeItem([{ productId: this.productBox.id, packId: pack.id }]);
     }
 
     private minPrice(vipPrice: any, promotionPrice: any) {

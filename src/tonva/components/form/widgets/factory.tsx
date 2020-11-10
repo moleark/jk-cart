@@ -160,10 +160,13 @@ export function factory(context: Context, itemSchema: ItemSchema, children:React
         //label = uiLabel || name;
     }
     
-    let {widgets} = context;
-    let widget = new typeWidget(context, itemSchema, fieldProps, children);
-    widget.init();
-    widgets[name] = widget;
+	let {widgets} = context;
+	let widget = widgets[name];
+	if (!widget) {
+		widget = new typeWidget(context, itemSchema, fieldProps, children);
+		widget.init();
+		widgets[name] = widget;
+	}
 
     return <widget.container />;
     /*

@@ -1,6 +1,7 @@
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
 import { CartPackRow } from 'cart/Cart';
+import { Product } from 'model';
 
 export class Order {
 
@@ -86,8 +87,7 @@ export class Order {
 }
 
 export class OrderItem {
-
-    product: BoxId;
+    product: Product;
     @observable packs: CartPackRow[];
     @computed get subAmount() {
         return this.packs.reduce((p, c) => {
@@ -98,5 +98,9 @@ export class OrderItem {
         return this.packs.reduce((p, c) => {
             return p + c.retail * c.quantity
         }, 0);
-    }
+	}
+	
+	constructor(product: Product) {
+		this.product = product;
+	}
 }

@@ -1,4 +1,4 @@
-import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute } from "../components";
+import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute, NavPage } from "../components";
 import { Controller } from '../vm';
 import { UQsMan, TVs } from "../uq";
 import { appInFrame } from "../net";
@@ -94,7 +94,7 @@ export abstract class CAppBase extends Controller {
 	
     protected async beforeStart():Promise<boolean> {
         try {
-			this.onRoute();
+			this.onNavRoutes();
 			if (nav.isRouting === false) {
 				//await nav.init();
 				let {appName, version, tvs} = this.appConfig;
@@ -185,8 +185,7 @@ export abstract class CAppBase extends Controller {
 		return nav.on(args[0], args[1], args[2]);
 	}
 
-	protected onRoute() {
-	}
+	protected onNavRoutes() {return;}
 
     private showUnsupport(predefinedUnit: number) {
         nav.clear();

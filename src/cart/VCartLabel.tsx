@@ -41,7 +41,7 @@ export class VCartLabel extends View<CCart> {
             <div>
                 <span className="fa-stack">
                     <i className="fa fa-square fa-stack-2x text-white d-none"></i>
-                    <a className="shopping-cart" href="#"></a>
+                    <span className="shopping-cart"></span>
                 </span>
                 {badge}
             </div>

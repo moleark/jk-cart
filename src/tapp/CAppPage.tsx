@@ -1,35 +1,15 @@
 import { appConfig } from 'configuration';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, nav, NavView, startRoute, User, WebNav } from 'tonva';
+import { CAppBase, nav, NavView, WebNav } from 'tonva';
 import { CApp } from "./CApp";
-import { Cart } from "../cart/Cart";
-import { CHome } from "../home";
-import { CCart } from "../cart";
-import { CProduct } from "../product";
-import { COrder } from "../order/COrder";
-import { CProductCategory } from "../productCategory/CProductCategory";
-import { CMember } from "../member";
-import { CMe } from "../me/CMe";
-/*
-import { CUqApp } from "./CBase";
-import { VMain } from 'tapp/main';
-import * as qs from 'querystringify';
-*/
-import { CCoupon } from "coupon/CCoupon";
-import { CPointProduct } from "pointMarket/CPointProduct";
-import { CYncProjects } from "ync/CYncProjects";
-import { CFavorites } from 'customer/CFavorites';
-import { CLottery } from 'pointMarket/CLottery';
-import { CSignIn } from 'pointMarket/CSignIn';
 import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
 
-export abstract class CAppPage extends CApp {
-	protected onRoute() {
-	}
 
-	protected abstract async onPageStart(params:any):Promise<void>;
+export class CAppPage extends CApp {
+
+	//protected abstract async onPageStart(params:any):Promise<void>;
 
 	get webNav(): WebNav<any> {
 		return { 
@@ -47,10 +27,16 @@ export abstract class CAppPage extends CApp {
 			nav.pageWebNav = this.pageWebNav;
 		}
 	}
+	
+	protected async afterStart():Promise<void> {
+		await super.afterStart();
+        this.topKey = nav.topKey();
+		nav.resolveRoute();
+	}
 
     protected async internalStart(params: any) {
         //await super.init();
-
+		/*
         this.cart = new Cart(this);
         await this.cart.init();
 
@@ -67,7 +53,7 @@ export abstract class CAppPage extends CApp {
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
-
+		*/
 		/*
         await this.cHome.getSlideShow();
 
@@ -137,9 +123,11 @@ export abstract class CAppPage extends CApp {
         } else {
             this.showMain();
             //this.openVPage(Entrance);
-        }*/
-		this.topKey = nav.topKey();
-		await this.onPageStart(params);
+		}*/
+		//let n = nav;
+		//this.topKey = nav.topKey();
+		//await this.onPageStart(params);
+		nav.resolveRoute();
 	}
 
 	showMain() {

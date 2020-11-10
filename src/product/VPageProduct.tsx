@@ -1,23 +1,22 @@
 /* eslint-disable */
 import * as React from 'react';
-import { CProduct } from './CProduct';
+import classNames from 'classnames';
 import {
-    VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
+    tv, VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId, FA, List
 } from 'tonva';
-import { tv } from 'tonva';
+import { CProduct } from './CProduct';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
-import { ProductPackRow } from './Product';
-import { ViewMainSubs, MainProductChemical } from 'mainSubs';
+import { ProductPackRow, MainProductChemical, Product } from '../model';
 import { ProductImage } from 'tools/productImage';
-import { productPropItem, renderBrand } from './VProductView';
+import { renderPropItem, renderBrand } from './renders';
 import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
 //import { VProductFavorateLabel } from 'product/VProductFavorateLabel';
 import { pdfIcon } from 'tools/images';
 import { TopicDivision } from 'pointMarket/VPointProduct';
 import { browser } from 'tools/browser';
-import classNames from 'classnames';
+import { VFavorite, VPrice } from './views';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -30,29 +29,101 @@ const schema: ItemSchema[] = [
     { name: 'futureDeliveryTimeDescription', type: 'string' }
 ];
 
-export class VProduct extends VPage<CProduct> {
-    private productBox: BoxId;
-    private discount: number;
+const languageCaptions:{[language:string]:string} = {
+	'DE': '德文',
+	'EN': '英文',
+	'EN-US': '英美',
+	'CN': '中文',
+}
+
+export class VPageProduct extends VPage<CProduct> {
+    //private productBox: BoxId;
+    //private discount: number;
 
     async open(param: any) {
-        let { productData, product, discount } = param;
-        let { getProductSpecFile, getProductMSDSFile } = this.controller;
-        this.productBox = product;
-        this.discount = discount;
-        await getProductMSDSFile(product);
-		await getProductSpecFile(product);
-		let page = xs ? this.page : this.lpage;
-        this.openPage(page, productData);
-    }
+        //let { productData, product, discount } = param;
+        //let { getProductSpecFile, getProductMSDSFile } = this.controller;
+		//let page = xs ? this.page : this.lpage;
+        this.openPage(() => {
+			let { cApp, product } = this.controller;
+			let { MSDSFiles, specFiles, data } = product;
+			/* let CurrentUA = browser.versions.mobile;
+			let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
+	
+			let header:any, cartLabel:any, material:any;
+			if (!xs) {
+			 	header = cApp.cHome.renderSearchHeader();
+				cartLabel = cApp.cCart.renderCartLabel();
+				material = <div className="col-lg-9 mt-lg-2 display-mobile mb-lg-2">
+					{this.renderProductMaterial()}
+				</div>;
+			}
+			/* let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
+			viewProduct.model = product; */
 
+			return <Page header={header} right={cartLabel} className="bg-white">
+				<section className="container mt-lg-2 product-sigle-page">
+					<div className="row">
+						{this.renderProduct(product)}
+						{material}
+					</div>
+				</section>
+				
+				{/* 产品信息 */}
+				{/* <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div> */}
+				{/* PDF */}
+				{/* {
+					productPdfM
+						? <div className="py-2 px-3 bg-light">
+							{TopicDivision('产品资料')}
+							<div>{this.renderProductMaterial()}</div>
+						</div>
+						: null
+				} */}
+			</Page>;			
+			//} else {
+				/*
+				下面的做法大概不行，因为嵌套的层次较深，且都是observer的，上层observable的变化会嵌套执行下层的代码，而下层代码的render
+				会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
+				*/
+			   /*
+				let { controller, productBox } = this;
+				let { renderProductWithPrice } = controller;
+				return <Page header={header} right={cartLabel}>
+					<div className="px-2 py-2 bg-white mb-3">
+						{renderProductWithPrice(productBox)}
+					</div>
+				</Page>
+				*/
+			//}
+		});
+	}
+	
+	/*
+	private lpage = () => {
+		//let { renderHeader, renderFooter } = this.controller.cApp;
+		let {product} = this.controller;
+		let {data} = product;
+		   return <Page>
+			 <section className="container mt-lg-2 product-sigle-page">
+					<div className="row">
+						{this.renderProduct(data.main, data.subs)}
+					</div>
+				</section>
+		</Page>
+	}
+	*/
+
+	/*
     render(param: any) {
 
-        return <this.page product={param} />;
-    }
+        return <this.page />;
+	}
+	*/
 
-    private renderProduct = (product: MainProductChemical,packs:any) => {
-
-		let { id, brand, description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = product;
+    private renderProduct = (product: Product) => {
+		let { id, brand, props } = product;
+		let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
 		let eName = <div className="py-2"><strong>{description}</strong></div>;
 		let cName:any;
 		if (descriptionC !== description) {
@@ -67,18 +138,19 @@ export class VProduct extends VPage<CProduct> {
                 </div>
                 <div className="col-12 col-sm-9">
                     <div className="row mx-3">
-                        {productPropItem('产品编号', origin, "font-weight-bold")}
-                        {productPropItem('CAS', CAS, "font-weight-bold")}
-                        {productPropItem('纯度', purity)}
-                        {productPropItem('分子式', molecularFomula)}
-                        {productPropItem('分子量', molecularWeight)}
+                        {renderPropItem('产品编号', origin, "font-weight-bold")}
+                        {renderPropItem('CAS', CAS, "font-weight-bold")}
+                        {renderPropItem('纯度', purity)}
+                        {renderPropItem('分子式', molecularFomula)}
+                        {renderPropItem('分子量', molecularWeight)}
                         {renderBrand(brand)}
                     </div>
                 </div>
             </div>
-            {this.controller.renderFavoritesLabel(id)}
+            {this.renderVm(VFavorite, product)/*this.controller.renderFavoritesLabel(product)*/}
+			{this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
 		</div>;
-		
+		/*
         let NewProductPropItem = (caption: string, value: any, captionClass?: string,isSplit?:boolean) => {
             if (value === null || value === undefined || value === '0') return null;
             let Class = captionClass ? classNames(captionClass) : "";
@@ -105,14 +177,15 @@ export class VProduct extends VPage<CProduct> {
                         {NewProductPropItem('分子式',molecularWeight)}
                         {NewProductPropItem('品牌',brand.name)}
                     </p>
-                    {/* <p>产品编号：{origin} | CAS： {CAS} { brand ? `|  品牌：${brand.name}`:''}</p> */}
+                    {false && <p>产品编号：{origin} | CAS： {CAS} { brand ? `|  品牌：${brand.name}`:''}</p> }
                 </div>
                 {this.controller.renderFavoritesLabel(id)}
                 <div className="mt-lg-2">
                     {packs.map((v: any) => <div key={v.pack.id}>{this.renderPack(v)}</div> )}
                 </div>
             </div>
-        </>
+		</>
+		*/
         // { this.renderVm(VProductFavirateLabel, this.productBox) }
     }
 
@@ -156,12 +229,12 @@ export class VProduct extends VPage<CProduct> {
         let { data } = context;
         let { pack, retail, vipPrice, promotionPrice, currency } = data;
         let price = this.minPrice(vipPrice, promotionPrice) || retail;
-        let { cApp } = this.controller;
-        let { cart } = cApp;
+        let { cApp, product } = this.controller;
+		let { cart } = cApp;
         if (value > 0)
-            await cart.add(this.productBox, pack, value, price, retail, currency);
+            await cart.add(product, pack, value, price, retail, currency);
         else
-            await cart.removeFromCart([{ productId: this.productBox.id, packId: pack.id }]);
+            await cart.removeItem([{ productId: product.id, packId: pack.id }]);
     }
 
     private minPrice(vipPrice: any, promotionPrice: any) {
@@ -188,17 +261,11 @@ export class VProduct extends VPage<CProduct> {
         </>;
     }
 
-	static languageCaptions:{[language:string]:string} = {
-		'DE': '德文',
-		'EN': '英文',
-		'EN-US': '英美',
-		'CN': '中文',
-	}
     private dealWithPDF = (fileName: string) => {
 		let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
 		let lang = shiftArr[1];
-		let caption = VProduct.languageCaptions[lang];
-		if (!caption) caption = VProduct.languageCaptions['CN'];
+		let caption = languageCaptions[lang];
+		if (!caption) caption = languageCaptions['CN'];
 		/*
         switch (shiftArr[1]) {
             case 'DE':
@@ -219,99 +286,42 @@ export class VProduct extends VPage<CProduct> {
     private renderPDF = (content: any) => {
         let { fileName } = content;
         let language = this.dealWithPDF(fileName);
-        let { ToVerifyPdf } = this.controller;
-        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product: this.productBox }) }}>
+        let { ToVerifyPdf, product } = this.controller;
+        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product }) }}>
             <img src={pdfIcon} alt="" style={{ width: 24 }} />
             <div className="small">{language}</div> 
         </div>
     }
 
-    renderListItemPDF = (Material: any,index:number) => {
-        let { type, content } = Material;
-        if (content.length) {
-            /* return <div className="d-flex pt-2 border-bottom">
-                <div className="w-3c align-self-center mr-2 mb-2" >{type}</div>
-                <List items={content} item={{ render: this.renderPDF, className: 'px-2 border-left' }} className="d-flex bg-light mb-1" />
-            </div> */
-            return <>
-                    <div className="accordion background-grey w-100" style={{background:'#F2F2F2'}}>
-                        <a className="w-100 btn text-left collapsed" data-toggle="collapse" href={`#description${index}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank">
-                            {type}&emsp;<i className="fa fa-chevron-down"></i>
-                        </a>
-                    </div>
-                    <div className="container collapse show w-100 pt-2 px-0 border border-top-0" id={`description${index}`}>
-                        <List items={content} item={{ render: this.renderPDF, className: 'px-2' }} className="d-flex bg-light mb-1" />
-                    </div>
-            </>
-        } else {
-            return null;
-        }
-    }
-
-    renderProductMaterial = () => {
-        let { productMSDSFiles, productSpecFiles } = this.controller;
-        let MaterialArr = [{ type: '化学品安全技术说明书(MSDS)', content: productMSDSFiles }, { type: '技术规格说明书(SPEC)', content: productSpecFiles }];//COA EUM
+    private renderProductMaterial = () => {
+		let { MSDSFiles, specFiles, data } = this.controller.product;
+        let MaterialArr = [
+			{ type: '化学品安全技术说明书(MSDS)', content: MSDSFiles }, 
+			{ type: '技术规格说明书(SPEC)', content: specFiles }
+		];//COA EUM
         // let MaterialArr = [{ type: 'MSDS', content: productMSDSFiles }, { type: 'SPEC', content: productSpecFiles }];//COA EUM
-        return <List items={MaterialArr} item={{ render: this.renderListItemPDF ,className:"d-block pb-2"}} />
-    }
 
-    private page = (product: any) => {
-
-        let { cApp, productMSDSFiles, productSpecFiles } = this.controller;
-        /* let CurrentUA = browser.versions.mobile;
-        let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
-
-        let header = cApp.cHome.renderSearchHeader();
-        let cartLabel = cApp.cCart.renderCartLabel();
-        if (true) {
-            /* let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
-            viewProduct.model = product; */
-
-            return <Page header={header} right={cartLabel} className="bg-white">
-                <section className="container mt-lg-2 product-sigle-page">
-                    <div className="row">
-                        {this.renderProduct(product.main, product.subs)}
-                        <div className="col-lg-9 mt-lg-2 display-mobile mb-lg-2">
-                            {this.renderProductMaterial()}
-                        </div>
-                    </div>
-                </section>
-                
-                {/* 产品信息 */}
-                {/* <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div> */}
-                {/* PDF */}
-                {/* {
-                    productPdfM
-                        ? <div className="py-2 px-3 bg-light">
-                            {TopicDivision('产品资料')}
-                            <div>{this.renderProductMaterial()}</div>
-                        </div>
-                        : null
-                } */}
-            </Page>
-        } else {
-            /*
-            下面的做法大概不行，因为嵌套的层次较深，且都是observer的，上层observable的变化会嵌套执行下层的代码，而下层代码的render
-            会操作数据库，得不偿失（和React的可能还不一样，React只会更新必要的html，不会再执行查询DB的操作）
-            */
-            let { controller, productBox } = this;
-            let { renderProductWithPrice } = controller;
-            return <Page header={header} right={cartLabel}>
-                <div className="px-2 py-2 bg-white mb-3">
-                    {renderProductWithPrice(productBox)}
-                </div>
-            </Page>
-        }
-    }
-
-    private lpage = (product: any) => {
-        //let { renderHeader, renderFooter } = this.controller.cApp;
-       return <Page>
-             <section className="container mt-lg-2 product-sigle-page">
-                    <div className="row">
-                        {this.renderProduct(product.main, product.subs)}
-                    </div>
-                </section>
-		</Page>
+		let renderListItemPDF = (Material: any,index:number) => {
+			let { type, content } = Material;
+			if (content.length) {
+				/* return <div className="d-flex pt-2 border-bottom">
+					<div className="w-3c align-self-center mr-2 mb-2" >{type}</div>
+					<List items={content} item={{ render: this.renderPDF, className: 'px-2 border-left' }} className="d-flex bg-light mb-1" />
+				</div> */
+				return <>
+						<div className="accordion background-grey w-100" style={{background:'#F2F2F2'}}>
+							<a className="w-100 btn text-left collapsed" data-toggle="collapse" href={`#description${index}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+								{type}&emsp;<i className="fa fa-chevron-down"></i>
+							</a>
+						</div>
+						<div className="container collapse show w-100 pt-2 px-0 border border-top-0" id={`description${index}`}>
+							<List items={content} item={{ render: this.renderPDF, className: 'px-2' }} className="d-flex bg-light mb-1" />
+						</div>
+				</>
+			} else {
+				return null;
+			}
+		};
+		return <List items={MaterialArr} item={{ render: renderListItemPDF ,className:"d-block pb-2"}} />;
     }
 }

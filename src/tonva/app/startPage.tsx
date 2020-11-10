@@ -1,8 +1,8 @@
-import { AppConfig } from './CAppBase';
+import { AppConfig, CAppBase } from './CAppBase';
 import { nav } from '../components';
 import { UQsMan } from '../uq';
 
-export async function startRoute(appConfig: AppConfig) {
+export async function startPage(CApp: new (config: AppConfig) => CAppBase, appConfig: AppConfig) {
 	let {htmlTitle} = appConfig;
 	if (htmlTitle) {
 		document.title = htmlTitle;
@@ -19,5 +19,9 @@ export async function startRoute(appConfig: AppConfig) {
 	await nav.init();
 	let {appName, version, tvs} = appConfig;
 	await UQsMan.load(appName, version, tvs);
-	nav.resolveRoute();
+	//nav.resolveRoute();
+
+	let cApp = new CApp(appConfig);
+	cApp.init();
+    await cApp.start();
 }

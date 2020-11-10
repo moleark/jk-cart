@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { tv, View } from 'tonva';
-import { CProduct } from './CProduct';
+import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 
-export class VProductDelivery extends View<CProduct> {
+export class VDelivery extends View<CProduct> {
 	/*
     @observable private inventoryAllocation: any[];
     @observable private futureDeliveryTimeDescription: string;
@@ -17,9 +16,11 @@ export class VProductDelivery extends View<CProduct> {
 		//return <this.content packId={packId} productId={productId} currentSalesRegion={currentSalesRegion} />;
 		return React.createElement(observer(() => {
 			//let { packId, productId } = param;
-			let inventoryAllocation = this.controller.getInventoryAllocation(productId, packId);
+			let {product} = this.controller;
+			if (!product) return;
+			let {futureDeliveryTimeDescription} = product;
+			let inventoryAllocation = product.getInventoryAllocation(packId);
 			if (!inventoryAllocation) return null;
-			let futureDeliveryTimeDescription = this.controller.getFutureDeliveryTimeDescription(productId);
 			if (!futureDeliveryTimeDescription) return null;
 	
 			if (inventoryAllocation.length === 0) {

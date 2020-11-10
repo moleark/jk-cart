@@ -35,10 +35,10 @@ export class Page extends React.Component<PageProps> {
 		}
 	}
 
-	private renderHeader() {
+	private renderHeader(webNav?: PageWebNav) {
 		const {back, header, right, headerClassName, afterBack, logout} = this.props;
 		if (header === false) return;
-		const {webNav} = this.props;
+		//const {webNav} = this.props;
 		let inWebNav = false;
 		let pageHeaderProps:PageHeaderProps = {
 			back,
@@ -70,8 +70,8 @@ export class Page extends React.Component<PageProps> {
 		*/
 	}
 
-	private renderFooter() {
-		const {footer, webNav} = this.props;
+	private renderFooter(webNav?: PageWebNav) {
+		const {footer} = this.props;
 		if (!footer) return;
 		let elFooter = <footer>{footer}</footer>;
 		if (webNav) return elFooter;
@@ -86,11 +86,6 @@ export class Page extends React.Component<PageProps> {
 			return React.createElement(this.tabsView.content);
 		}
 		const {onScroll, onScrollTop, onScrollBottom, children, className, webNav} = this.props;
-		let content = <>
-			{this.renderHeader()}
-			<main>{children}</main>
-			{this.renderFooter()}
-		</>;
 		let pageWebNav:PageWebNav;
 		if (!webNav) {
 			pageWebNav = nav.pageWebNav;
@@ -98,6 +93,11 @@ export class Page extends React.Component<PageProps> {
 		else {
 			pageWebNav = webNav;
 		}
+		let content = <>
+			{this.renderHeader(pageWebNav)}
+			<main>{children}</main>
+			{this.renderFooter(pageWebNav)}
+		</>;
 		if (pageWebNav) {
 			return <WebNavScrollView
 				onScroll={onScroll}

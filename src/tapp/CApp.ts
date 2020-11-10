@@ -1,6 +1,6 @@
 /* eslint-disable */
 import ReactDOM from 'react-dom';
-import { User, nav, Elements } from 'tonva';
+import { User, nav, NavPage, Elements, BoxId } from 'tonva';
 import { Cart } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";
@@ -18,9 +18,12 @@ import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
+import { Product } from '../model';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
 
 export class CApp extends CUqApp {
+	private cache: Map<number, Product>;
+
     //get uqs(): UQs { return this._uqs as UQs };
 
     topKey: any;
@@ -49,8 +52,9 @@ export class CApp extends CUqApp {
     }
     */
 
-    protected async internalStart(params: any) {
-        //await super.init();
+	protected async beforeStart():Promise<boolean> {
+		if (await super.beforeStart() === false) return false;
+		this.cache = new Map();
 
         this.cart = new Cart(this );
         await this.cart.init();
@@ -69,8 +73,12 @@ export class CApp extends CUqApp {
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
 
-        await this.cHome.getSlideShow();
+		await this.cHome.getSlideShow();
+		return true;
+	}
 
+    protected async internalStart(params: any) {
+        //await super.init();
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
@@ -140,8 +148,12 @@ export class CApp extends CUqApp {
             this.showMain();
             //this.openVPage(Entrance);
         }
+	}
+	
+	protected async afterStart():Promise<void> {
+		await super.afterStart();
         this.topKey = nav.topKey();
-    }
+	}
 
     showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
@@ -150,7 +162,30 @@ export class CApp extends CUqApp {
             // this.openPage(this.cCart.renderCartLabel());
             this.openPage(this.cMe.renderLoginState());
         }
-    }
+	}
+	
+
+	getProduct(id: number|BoxId): Product {
+		if (!id) return;
+		// region, language 改变的时候，直接清cache
+		/*
+		let {currentSalesRegion, currentLanguage} = this;
+		if (this.salesRegion !== currentSalesRegion
+			|| this.language != currentLanguage) {
+			this.cache = new Map<number, Product>();
+			this.salesRegion = currentSalesRegion;
+			this.language = currentLanguage;
+		}
+		*/
+		if (typeof id === 'object') id = id.id;
+		let product = this.cache.get(id);
+		if (!product) {
+			product = new Product(this, id);
+			this.cache.set(id, product);
+		}
+		return product;
+	}
+
 /*
     // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
     // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
@@ -178,6 +213,7 @@ export class CApp extends CUqApp {
         });
     }
 */
+/*
     protected async afterStart() {
         await super.afterStart();
         // elements定义div元素id与一个函数的对应关系，定义之后，
@@ -195,8 +231,111 @@ export class CApp extends CUqApp {
             this.hookElements(elements);
         }
         return;
-    }
+	}
+*/	
+	private navHome:NavPage = async (params:any) => {
+		await this.cHome.getSlideShow();
 
+		let promises: PromiseLike<void>[] = [];
+		promises.push(this.cProductCategory.start());
+		await Promise.all(promises);
+		this.showMain();
+	}
+
+	private navSearch:NavPage = async (params:any) => {
+		this.cProduct.start(params?.key);
+	}
+
+	private navProduct:NavPage = async (params:any) => {
+		this.cProduct.showProductDetail(params?.id);
+	}
+
+	private navCart:NavPage = async (params:any) => {
+		this.cCart.start();
+	}
+
+	private navProductCategory:NavPage = async (params:any) => {
+		let id = params.id;
+		if (id) id = Number(id);
+		await this.cProductCategory.showCategoryPage(id);
+	}
+
+	private navPointShop:NavPage = async (params:any) => {
+		this.cPointProduct.openMyPoint();
+	}
+
+	private navAbout:NavPage = async (params:any) => {
+		this.cMe.openAbout();
+	}
+
+	private navMe:NavPage = async (params:any) => {
+		this.cMe.start();
+	}
+
+	private navLogin:NavPage = async (params:any) => {
+	}
+
+	private navLogout:NavPage = async (params:any) => {
+		nav.showLogin(async (user: User) => window.history.back(), false);
+	}
+
+	private navRegister:NavPage = async (params:any) => {
+		nav.showLogout(async () => window.history.back());
+	}
+
+	/*
+	protected onRoute() {
+		let routes: { [route: string]: NavPage } = {
+			'/app': this.navApp,
+			'/index': this.navHome,
+			'/home': this.navHome,
+			'/search/:key': this.navSearch,
+			'/product/:id': this.navProduct,
+			'/cart': this.navCart,
+			'/productCategory/:id': this.navProductCategory,
+			'/pointshop': this.navPointShop,
+			'/about': this.navAbout,
+			'/me': this.navMe,
+			'/login': this.navLogin,
+			'/logout': this.navLogout,
+			'/register': this.navRegister,
+		};
+	
+		let navOns: { [route: string]: (params: any, queryStr: any) => void } = {};
+		for (let route in routes) {
+			navOns[route] = (params: any, queryStr: any) => {
+				//renderCApp(routes[route], params);
+				let navPage = routes[route];
+				if (navPage) {
+					nav.clear();
+					navPage(params);
+				}
+			}
+		}
+		this.on(navOns);
+	}
+	*/
+
+	protected onNavRoutes() {
+		let routes: { [route: string]: NavPage } = {
+			'/app': this.navHome,
+			'/index': this.navHome,
+			'/home': this.navHome,
+			'/search/:key': this.navSearch,
+			'/product/:id': this.navProduct,
+			'/cart': this.navCart,
+			'/productCategory/:id': this.navProductCategory,
+			'/pointshop': this.navPointShop,
+			'/about': this.navAbout,
+			'/me': this.navMe,
+			'/login': this.navLogin,
+			'/logout': this.navLogout,
+			'/register': this.navRegister,
+		};
+		nav.onNavRoutes(routes);
+	}
+
+	/*
     private showLogin = (element: HTMLElement) => {
         ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
@@ -240,6 +379,7 @@ export class CApp extends CUqApp {
             ReactDOM.render(this.cCart.tab(), element);
         }
     }
+	*/
 
 	async assureLogin(): Promise<void> {
         if (this.isLogined) return;

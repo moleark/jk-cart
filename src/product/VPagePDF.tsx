@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import Pdfh5 from 'pdfh5'
 import "pdfh5/css/pdfh5.css";
 
-export class VPDFView extends VPage<CProduct> {
+export class VPagePDF extends VPage<CProduct> {
     @observable pdfh5: any;
     @observable fileName: string = '';      /* 文件名称 */
     @observable fileUrl: any;               /* 文件路径 */

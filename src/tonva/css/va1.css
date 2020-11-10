@@ -56,7 +56,7 @@ main.tv-tabs>footer {
 }
 div.tv-page-webnav>article>header,
 div.tv-page-webnav>article>footer {
-	visibility: visible;
+	visibility: inherit;
 }
 div.tv-page-webnav>header>main,
 div.tv-page-webnav>footer>main,

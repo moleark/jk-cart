@@ -3,6 +3,7 @@ import {observable, IObservableArray, computed} from 'mobx';
 
 export abstract class PageItems<T> {
     constructor(itemObservable:boolean = false) {
+		if (itemObservable === undefined) itemObservable = false;
         this._items = observable.array<T>([], {deep:itemObservable});
     }
 	private isFirst: boolean = true;
