@@ -5,7 +5,7 @@ import { GLOABLE } from "cartenv";
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',
-    version: '1.1.123',
+    version: '1.1.124',
     tvs: tvs,
     loginTop: jnkTop,
     oem: '百灵威',

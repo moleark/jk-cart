@@ -42,68 +42,50 @@ export class VCategoryPage extends VPage<CProductCategory> {
     }*/
 
     private renderCategory(/*item: any, parent: any, labelColor: string*/) {
-		let {instruction, current} = this.controller;
-        let { productCategory, name, children } = current;
-        let instructionUi;
-        if (instruction) {
-            let instr: JQuery<Element> = $(instruction);
-            $("a[href*='jkchemical.com']", instr).addClass('d-none');
-            // instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
-            instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
-        }
-
-        /* 
-        return <div className="bg-white mb-3" key={name}>
-            <div className="py-2 px-3 cursor-pointer" onClick={() => this.categoryClick(item, parent, labelColor)}>
+        let { instruction, current } = this.controller;
+        let main;
+        if (current) {
+            let { productCategory, name, children } = current;
+            let instructionUi;
+            if (instruction) {
+                let instr: JQuery<Element> = $(instruction);
+                $("a[href*='jkchemical.com']", instr).addClass('d-none');
+                // instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+                instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+            }
+            main = <div className="col-lg-9 product-introduct">
                 <h1>{name}</h1>
                 {instructionUi}
-            </div>
-            <div className="cat-root-sub">
-                <div className="row no-gutters">
-                    {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
+                <div className="row">
+                    {children.map(v => this.renderSubcategory(v))}
                 </div>
             </div>
-        </div>
-        */
+        } else {
+            main = <div>
+                无
+            </div>
+        }
+
         return <section className="container mt-lg-2">
             <div className="row">
                 <div className="col-lg-3 product-side d-none d-lg-block">
                     {this.controller.renderRootSideBar()}
                 </div>
-                <div className="col-lg-9 product-introduct">
-                    <h1>{name}</h1>
-                    {instructionUi}
-                    <div className="row">
-                        {children.map(v => this.renderSubcategory(v))}
-                    </div>
-                </div>
+                {main}
             </div>
         </section>
     }
 
-    private renderSubcategory(item:ProductCategory/*item: any, parent: any, labelColor: string*/) {
-		//let labelColor = 'text-success';
+    private renderSubcategory(item: ProductCategory/*item: any, parent: any, labelColor: string*/) {
+        //let labelColor = 'text-success';
         let { name, children, total } = item;
-		let hasChildren = children && children.length > 0;
+        let hasChildren = children && children.length > 0;
 
-        /* return <div key={name}
-            className="col-6 col-md-4 col-lg-3 cursor-pointer"
-            onClick={() => this.categoryClick(item, parent, labelColor)}>
-            <div className="py-2 px-2 cat-sub">
-                <div className="cat-title-title">
-                    <span className="ml-1 align-middle">
-                        <FA name="chevron-circle-right" className={labelColor} />
-                        &nbsp; {name}
-                    </span>
-                </div>
-                {renderThirdCategory(children, total)}
-            </div>
-        </div>; */
-        let vItem = hasChildren === true?
-			<>
-				{
-					children.slice(0,3).map(v => {
-						return this.controller.renderCategoryItem(v, 'mr-3');
+        let vItem = hasChildren === true ?
+            <>
+                {
+                    children.slice(0, 3).map(v => {
+                        return this.controller.renderCategoryItem(v, 'mr-3');
 						/*
 						return <div key={v.name}
 							onClick={() => this.categoryClick(v, item, labelColor)}>
@@ -138,34 +120,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         </div>
     }
 
-	header() {return this.controller.cApp.cHome.renderSearchHeader();}
-	right() {return this.controller.cApp.cCart.renderCartLabel();}
-	content() {return this.renderCategory();}
-
-	/*
-    private page = observer((categoryWapper: any) => {
-        let { cHome } = this.controller.cApp;
-        let header = cHome.renderSearchHeader();
-        let cartLabel = this.controller.cApp.cCart.renderCartLabel();
-
-        let { categoryWapper: item, parent, labelColor } = categoryWapper;
-        return <Page header={header} right={cartLabel}>
-            {this.renderRootCategory(item, parent, labelColor)}
-        </Page>
-    })
-
-    private lpage = observer((categoryWapper: any) => {
-        let { cHome } = this.controller.cApp;
-        let header = cHome.renderSearchHeader();
-        let cartLabel = this.controller.cApp.cCart.renderCartLabel();
-
-        let { categoryWapper: item, parent, labelColor } = categoryWapper;
-        return <Page>
-             {this.renderRootCategory(item, parent, labelColor)}
-        </Page>
-
-		//webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
-        //  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white">
-	})
-	*/
+    header() { return this.controller.cApp.cHome.renderSearchHeader(); }
+    right() { return this.controller.cApp.cCart.renderCartLabel(); }
+    content() { return this.renderCategory(); }
 }

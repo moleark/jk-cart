@@ -8,6 +8,8 @@ import { CSignIn } from './CSignIn';
 import { RevenueExpenditure } from './basicRefer';
 import classNames from 'classnames';
 import moment from 'moment';
+import 积分图标P from 'images/积分图标P.png'
+import 已签到 from 'images/已签到.png'
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -54,7 +56,7 @@ export class VPointSign extends VPage<CSignIn> {
                 action: () => openRevenueExpenditure(RevenueExpenditure.SIGNINHISTORY)
             }
         ];
-        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
+        let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         return <Page header='签到' right={right}>
             <div className="text-center text-light px-5 pt-5"
@@ -71,10 +73,18 @@ export class VPointSign extends VPage<CSignIn> {
                 </div> */}
                 <div className="pb-5">
                     <div className="h4">{timer}</div>
-                    <div className="my-4 h5">今日已签到</div>
-                    <div className="pt-3">
-                        <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
-                    </div>
+                    {isSignin ? <>
+                        <img src={积分图标P} alt="" className="h-5c" />
+                        <div className="pt-3">
+                            <span className="bg-white px-3 py-1 font-weight-bolder" style={{ borderRadius: "25px", color: 'rgb(165,34,48)' }}>本次签到获取{signinval}分</span>
+                        </div>
+                    </>
+                        : <>
+                            <img src={已签到} alt="" className="h-4c mb-3 mt-2" />
+                            <div className="mb-2 h5">今日已签到</div>
+                        </>
+                    }
+                    {/* <div className="my-4 h5">今日已签到</div> */}
                 </div>
                 {/* <div className="rounded-circle mx-auto w-12c h-12c"
                     style={{ background: 'linear-gradient(#FCF4F3 15%, #EFDCD4, #CC9287, #C17162, #A93338, #A52230)', padding: '.8rem' }}>

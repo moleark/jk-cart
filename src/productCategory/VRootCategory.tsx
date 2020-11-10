@@ -27,16 +27,6 @@ export const subStyle: React.CSSProperties = {
 */
 
 export class VRootCategory extends View<CProductCategory> {
-    /**
-     * 
-     * @param categoryWapper 装配了子节点和孙节点的productCategory
-     * @param parent 
-     * @param labelColor 
-     */
-	/*
-    private categoryClick = async (categoryWapper: any, parent: any, labelColor: string) => {
-        await this.controller.openMainPage(categoryWapper, parent, labelColor);
-    }*/
 
     /**
      * 
@@ -48,10 +38,12 @@ export class VRootCategory extends View<CProductCategory> {
         let { id: productCategoryID } = productCategory;
         let { src, labelColor } = GLOABLE.ROOTCATEGORY[productCategoryID];
         return <div className="bg-white mb-3" key={name}>
-            <div className="py-2 px-3 cursor-pointer" onClick={() => this.controller.onClickCategory(item)}>
+            <Ax className="py-2 px-3 cursor-pointer"
+                href={'/productCategory/' + productCategoryID}
+                onClick={() => this.controller.showCategoryPage(productCategoryID)}>
                 <img className="mr-4 cat-root-img" src={src} alt={name} />
                 <b>{name}</b>
-            </div>
+            </Ax>
             <div className="cat-root-sub">
                 <div className="row no-gutters">
                     {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
@@ -93,7 +85,7 @@ export class VRootCategory extends View<CProductCategory> {
                 </div>
                 {renderThirdCategory(children, total)}
             </div>
-		</Ax>;
+        </Ax>;
     }
 
     render(param: any): JSX.Element {

@@ -17,26 +17,26 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 						let {productCategory, name, children} = v;
 						let pcId = (productCategory as any).id;
 						let menuId = "Submenu" + pcId;
-                        return <li className="active" key={pcId}>
-							<a href={'#'+menuId} data-toggle="collapse" aria-expanded="false">{name}</a>
+						return <li className="active" key={pcId}>
+							<a href={'#' + menuId} data-toggle="collapse" aria-expanded="false">{name}</a>
 							{this.renderChildren(children, menuId)}
-                        </li>
-                    })}
-                </ul>
-            </nav>
-        </>;
-        //<a href={'/productCategory/'+productCategory} data-toggle="collapse" aria-expanded="false">{name}</a>
+						</li>
+					})}
+				</ul>
+			</nav>
+		</>;
+		//<a href={'/productCategory/'+productCategory} data-toggle="collapse" aria-expanded="false">{name}</a>
 	}
-	
+
 	private renderChildren(children: ProductCategory[], menuId: string) {
 		return <ul className="collapse list-unstyled" id={menuId}>
-		{children.map(e => {
-			let {productCategory} = e;
-			let pcId = (productCategory as any).id;
-			return <li key={pcId}>
-				{this.controller.renderCategoryItem(e)}
-			</li>;
-		})}
+			{children.map(e => {
+				let { productCategory } = e;
+				let pcId = (productCategory as any).id;
+				return <li key={pcId}>
+					{this.controller.renderCategoryItem(e)}
+				</li>;
+			})}
 		</ul>
 	}
 }

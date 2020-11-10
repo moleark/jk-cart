@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from "tonva";
-import { CPointProduct, topicClump } from "./CPointProduct";
+import { CPointProduct, PointProductDetailLevel, topicClump } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
 import { PointProductImage } from 'tools/productImage';
@@ -50,7 +50,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 items={imgArr.slice(0, 3)}
                 item={{
                     render:pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
-                    onClick: (v) => toWhere(v),
+                    onClick: (v) => toWhere(v,PointProductDetailLevel.DIRECT),
                     className: "col-4 p-0 bg-transparent"
                 }}
                 none='暂无产品' />
@@ -88,7 +88,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 action: this.pointRules
             }
         ];
-        let right = <DropdownActions className="align-self-center mr-1" icon="navicon" actions={actions} />;
+        let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
 
