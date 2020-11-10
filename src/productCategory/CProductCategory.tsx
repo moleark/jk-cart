@@ -56,7 +56,8 @@ export class CProductCategory extends CUqBase {
         let { first, secend, third } = results;
         (first as any[]).forEach(v => {
             v.children = this.buildChildren(v.productCategory.id, secend, third);
-        });
+		});
+		this.rootCategories = first;
 	}
 
 	async load(id:number) {
