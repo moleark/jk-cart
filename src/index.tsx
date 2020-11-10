@@ -8,8 +8,7 @@ import './index.css';
 import { NavView, start, nav, startPage } from 'tonva';
 import { appConfig } from 'configuration';
 import './App.css';
-import { CApp, navStart } from './tapp';
-import { CAppPage } from 'tapp/CAppPage';
+import { CApp, CWeb } from './tapp';
 //import logo from './logo.svg';
 
 /*
@@ -42,7 +41,7 @@ serviceWorker.unregister();
 	else {
 		require('style-loader!./css/style.css');
 		onLogined = async () => {
-			await startPage(CAppPage, appConfig);
+			await startPage(CWeb, appConfig);
 		};
 	}
 

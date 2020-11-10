@@ -1,2 +1,2 @@
 export {CApp} from './CApp';
-export {navStart} from './CPages';
+export {CWeb} from './CWeb';

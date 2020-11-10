@@ -7,7 +7,7 @@ import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
 
 
-export class CAppPage extends CApp {
+export class CWeb extends CApp {
 
 	//protected abstract async onPageStart(params:any):Promise<void>;
 
