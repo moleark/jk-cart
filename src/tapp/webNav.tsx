@@ -39,9 +39,11 @@ export class NavHeaderView extends View<CApp> {
 			let {cart} = this.controller;
 			if (!cart) return null;
 			let count = cart.count.get(); 
-			if (!count) count = undefined;
+			let vCount:any;
+			if (count) vCount = <u>{count}</u>;
+			//if (!count) count = undefined;
 			return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
-				<FA name="shopping-cart" /><u>{count}</u>
+				<FA name="shopping-cart" />{vCount}
 			</Ax>;
 		});
         return <header>

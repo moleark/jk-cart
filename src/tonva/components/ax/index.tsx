@@ -16,15 +16,15 @@ export interface AxProps extends React.DetailedHTMLProps<React.AnchorHTMLAttribu
 // 如果是web方式，用webNav方式route网页
 // 如果是app方式，用click方式压栈页面
 export const Ax = (axProps: AxProps) => {
-	let {href, children, className} = axProps;
+	let {href, children, className, onClick} = axProps;
 	if (nav.isWebNav === true) {
 		let {aClassName } = axProps;
 		if (!href) return <span className="text-danger">Error: href not defined in Ax</span>;
-		let onClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+		let onAxClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
 			evt.preventDefault();
-			nav.navigate(href);
+			onClick? onClick(evt) : nav.navigate(href);
 		}
-		return <a className={classNames(className, aClassName)} onClick={onClick} {...axProps}>{children}</a>;
+		return <a className={classNames(className, aClassName)} onClick={onAxClick} {...axProps}>{children}</a>;
 	}
 	else {
 		let {onClick, naClassName} = axProps;

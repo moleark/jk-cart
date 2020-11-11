@@ -86,11 +86,11 @@ export abstract class CAppBase extends Controller {
         try {
 			nav.onSysNavRoutes();
 			this.onNavRoutes();
-			if (nav.isRouting === false) {
+			//if (nav.isRouting === false) {
 				//await nav.init();
 				let {appName, version, tvs} = this.appConfig;
 				await UQsMan.load(appName, version, tvs);
-			}
+			//}
 			this._uqs = UQsMan._uqs;
 		
             //let retErrors = await this.load();

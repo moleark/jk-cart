@@ -1,19 +1,18 @@
 /* eslint-disable */
 import * as React from 'react';
 import { VPage, Page } from 'tonva';
-import { CProductCategory } from './CProductCategory';
+import { CProductCategory, ProductCategory } from './CProductCategory';
 import { observer } from 'mobx-react';
 import $ from 'jquery';
 import { xs } from '../tools/browser';
-import { NavFooter, NavHeader } from 'tools/ShopPage';
 
 export class VCategory extends VPage<CProductCategory> {
 
     instruction: string;
-    async open(categoryWapper: any) {
+    async open() {
 
-        this.instruction = categoryWapper.instruction;
-        xs ? this.openPage(this.page, categoryWapper) : this.openPage(this.lpage, categoryWapper);;
+        //this.instruction = categoryWapper.instruction;
+        this.openPage(xs ? this.page : this.lpage);
         // let { getCategoryInstruction } = this.controller;
         // this.instruction = await getCategoryInstruction(0);
     }
@@ -50,8 +49,8 @@ export class VCategory extends VPage<CProductCategory> {
         </>
     }*/
 
-    private renderRootCategory = (item: any, parent: any, labelColor: string) => {
-        let { productCategory, name, children } = item;
+    private renderRootCategory = () => {
+        //let { productCategory, name, children } = this.controller.rootCategories;
         let instructionUi;
         if (this.instruction) {
             let instr: JQuery<Element> = $(this.instruction);
@@ -69,15 +68,15 @@ export class VCategory extends VPage<CProductCategory> {
                     <h1>{name}</h1>
                     {instructionUi}
                     <div className="row">
-                        {children.map((v: any) => this.renderSubCategory(v, item, labelColor))}
+                        {this.controller.rootCategories.map(v => this.renderSubCategory(v))}
                     </div>
                 </div>
             </div>
         </section>
     }
 
-    private renderSubCategory = (item: any, parent: any, labelColor: string) => {
-        let { productCategory, name, children, total } = item;
+    private renderSubCategory = (item: ProductCategory) => {
+        let { name, children, total } = item;
         let isChildren = children.length !== 0;
 
         return <div className="col-lg-4 each-product" key={name}
@@ -97,26 +96,26 @@ export class VCategory extends VPage<CProductCategory> {
         </div>
     }
 
-    private page = observer((categoryWapper: any) => {
+    private page = observer(() => {
         let { cHome } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
 
-        let { categoryWapper: item, parent, labelColor } = categoryWapper;
+        //`let { categoryWapper: item, parent, labelColor } = categoryWapper;
         return <Page header={header} right={cartLabel}>
-            {this.renderRootCategory(item, parent, labelColor)}
+            {this.renderRootCategory()}
         </Page>
     })
 
-    private lpage = observer((categoryWapper: any) => {
+    private lpage = observer(() => {
         let { cHome /*,renderHeader,renderFooter*/ } = this.controller.cApp;
         let header = cHome.renderSearchHeader();
         let cartLabel = this.controller.cApp.cCart.renderCartLabel();
 
-        let { categoryWapper: item, parent, labelColor } = categoryWapper;
+        //let { categoryWapper: item, parent, labelColor } = categoryWapper;
         return <Page>
             {/*  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white"> */}
-            {this.renderRootCategory(item, parent, labelColor)}
+            {this.renderRootCategory()}
         </Page>
 
         //webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}

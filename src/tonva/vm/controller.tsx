@@ -97,7 +97,7 @@ export abstract class Controller {
     protected onDispose() {
 	}
 	
-	get isRouting() {return nav.isRouting;}
+	//get isRouting() {return nav.isRouting;}
 
 	isMe(id:any):boolean {
 		if (id === null) return false;

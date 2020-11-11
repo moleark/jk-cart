@@ -79,7 +79,9 @@ export class NavView extends React.Component<Props, NavViewState> {
     async componentDidMount()
     {
 		window.addEventListener('popstate', this.navBack);
-		if (nav.isRouting === false) await nav.init();
+		//if (nav.isRouting === false) {
+		await nav.init();
+		//}
         await nav.start();
     }
 
@@ -388,7 +390,7 @@ export class Nav {
     private wsHost: string;
     private local: LocalData = new LocalData();
 	private navigo: Navigo;
-	isRouting: boolean = false;
+	//isRouting: boolean = false;
 	navSettings: NavSettings;
     @observable user: User/*InNav*/ = undefined;
     testing: boolean;
@@ -620,7 +622,7 @@ export class Nav {
 	}
 
 	resolveRoute() {
-		if (this.isRouting === false) return;
+		//if (this.isRouting === false) return;
 		if (this.navigo === undefined) return;
 		this.navigo.resolve();
 	}

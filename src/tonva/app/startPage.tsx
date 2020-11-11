@@ -15,10 +15,10 @@ export async function startPage(CApp: new (config: AppConfig) => CAppBase, appCo
 	}
 	
 	nav.setSettings(appConfig);
-	nav.isRouting = true;
-	await nav.init();
-	let {appName, version, tvs} = appConfig;
-	await UQsMan.load(appName, version, tvs);
+	//nav.isRouting = true;
+	//await nav.init();
+	//let {appName, version, tvs} = appConfig;
+	//await UQsMan.load(appName, version, tvs);
 	//nav.resolveRoute();
 
 	let cApp = new CApp(appConfig);

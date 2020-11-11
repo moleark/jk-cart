@@ -72,9 +72,11 @@ export class VRootCategory extends View<CProductCategory> {
 		</div>;
 		*/
 		//onClick={() => this.controller.onClickCategory(item)}
+		let productCategoryId = item.productCategory.id;
         return <Ax key={name}
 			className="col-6 col-md-4 col-lg-3 cursor-pointer"
-			href={'/productCategory/' + item.productCategory.id}
+			href={'/productCategory/' + productCategoryId}
+			onClick={() => this.controller.showCategoryPage(productCategoryId)}
             >
             <div className="py-2 px-2 cat-sub">
                 <div className="text-truncate">

@@ -8,28 +8,28 @@ const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
 const uqDebugBuilderHost = 'localhost:3009';
 interface HostValue {
     value: string;
-    local: boolean;
+	local: boolean;
 }
 const hosts:{[name:string]:HostValue} = {
     centerhost: {
         value: process.env['REACT_APP_CENTER_DEBUG_HOST'] || centerDebugHost, 
-        local: false
+		local: false,
     },
     reshost: {
         value: process.env['REACT_APP_RES_DEBUG_HOST'] || resDebugHost,
-        local: false
+		local: false,
     },
     uqhost: {
         value: process.env['REACT_APP_UQ_DEBUG_HOST'] || uqDebugHost, 
-        local: false
+		local: false,
     },
     unitxhost: {
         value: process.env['REACT_APP_UQ_DEBUG_HOST'] || uqDebugHost, 
-        local: false
+		local: false,
     },
     "uq-build": {
         value: process.env['REACT_APP_UQ_DEBUG_BUILDER_HOST'] || uqDebugBuilderHost, 
-        local: false
+		local: false,
     }
 }
 

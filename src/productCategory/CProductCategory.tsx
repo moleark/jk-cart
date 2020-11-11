@@ -5,8 +5,9 @@ import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar } from './VRootCategorySideBar';
 import { GLOABLE } from "cartenv";
 import './cat.css';
-import { Ax, BoxId, Tuid } from 'tonva';
+import { Ax, BoxId, Controller, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';
+import { VCategory } from './VCategory';
 
 export interface ProductCategory {
     productCategory: number; //ID ProductCategory,
@@ -159,11 +160,19 @@ export class CProductCategory extends CUqBase {
     async showCategoryPage(categoryId: number) {
         if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
 
-        await this.load(categoryId);
+		await this.load(categoryId);
+		let VP:new (c:CProductCategory) => VPage<any>;
+		// 如果想要web跟app方式的产品分类页面不一样，可以这么处理
+		if (this.isWebNav) {
+			VP = VCategoryPage;
+		}
+		else {
+			VP = VCategory;
+		}
         if (this.current) {
             let { children } = this.current;
             if (children && children.length > 0) {
-                this.openVPage(VCategoryPage);
+                this.openVPage(VP);
             }
             else {
                 await this.cApp.cProduct.searchByCategory({
@@ -172,7 +181,7 @@ export class CProductCategory extends CUqBase {
                 });
             }
         } else {
-            this.openVPage(VCategoryPage);
+            this.openVPage(VP);
         }
     }
 
