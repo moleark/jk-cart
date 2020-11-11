@@ -310,6 +310,7 @@ export class CApp extends CUqApp {
 			'/me': this.navMe,
 		};
 		nav.onNavRoutes(routes);
+		nav.onNavRoute(this.navHome);
 	}
 
 	/*

@@ -665,18 +665,24 @@ export class Nav {
 	}
 
 	private navPageRoutes: {[url:string]: NavPage};
+	private routeFromNavPage(navPage: NavPage) {
+		return (params: any, queryStr: any) => {
+			if (navPage) {
+				if (this.isWebNav) nav.clear();
+				navPage(params);
+			}
+		}
+	}
+	onNavRoute(navPage: NavPage) {
+		this.on(this.routeFromNavPage(navPage));
+	}
 	onNavRoutes(navPageRoutes: {[url:string]: NavPage}) {
 		if (!navPageRoutes) return;
 		this.navPageRoutes = _.merge(this.navPageRoutes, navPageRoutes);
 		let navOns: { [route: string]: (params: any, queryStr: any) => void } = {};
 		for (let route in navPageRoutes) {
-			navOns[route] = (params: any, queryStr: any) => {
-				let navPage = navPageRoutes[route];
-				if (navPage) {
-					if (this.isWebNav) nav.clear();
-					navPage(params);
-				}
-			}
+			let navPage = navPageRoutes[route];
+			navOns[route] = this.routeFromNavPage(navPage);
 		}
 		this.on(navOns);
 	}
