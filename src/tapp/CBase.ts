@@ -1,20 +1,20 @@
-import { CSub, CBase, CAppBase, IConstructor } from 'tonva';
+import { CSub, CBase, CAppBase, IConstructor, PageWebNav } from 'tonva';
 import { UQs } from '../uqs';
 import { CApp } from './CApp';
 import { GLOABLE } from 'cartenv';
 import { WebUser } from 'CurrentUser';
-import { Cart } from 'cart/Cart';
-import { Product } from 'model';
 
 export abstract class CUqBase extends CBase {
     get cApp(): CApp { return this._cApp; }
-    protected get uqs(): UQs { return this._uqs as UQs };
+	protected get uqs(): UQs { return this._uqs as UQs };
+	getPageWebNav(): PageWebNav {return this.cApp.getPageWebNav();}
 }
 
 export abstract class CUqSub<T extends CUqBase> extends CSub<T> {
     get cApp(): CApp { return this.cApp; }
     protected get uqs(): UQs { return this._uqs as UQs };
-    protected get owner(): T { return this._owner as T }
+	protected get owner(): T { return this._owner as T }
+	getPageWebNav(): PageWebNav {return this.cApp.getPageWebNav();}
 }
 
 export abstract class CUqApp extends CAppBase {
@@ -23,7 +23,6 @@ export abstract class CUqApp extends CAppBase {
     currentSalesRegion: any;
     currentLanguage: any;
     currentUser: WebUser;
-    cart: Cart;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         let c = new type(this);

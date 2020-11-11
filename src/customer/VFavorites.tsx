@@ -23,9 +23,9 @@ export class VFavorites extends VPage<CFavorites> {
     }
 
     private page = (param: any) => {
-        let { productsFavorites, cApp } = this.controller;
-        let { cProduct } = cApp;
-        let none = <div className="p-3 text-warning mt-4 d-flex justify-content-center">『 无任何收藏产品 』</div>
+        let { productsFavorites } = this.controller;
+        //let { cProduct } = cApp;
+        let none = <div className="p-3 text-warning mt-4 d-flex justify-content-center">[无收藏]</div>
         return <Page header="商品收藏" onScrollBottom={this.onScrollBottom}>
             <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>

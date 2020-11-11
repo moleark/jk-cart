@@ -1,11 +1,11 @@
 import { Entity } from 'tonva';
-import { CUqApp } from 'tapp/CBase';
+import { CApp } from 'tapp';
 
 export abstract class Loader<T> {
-    protected cApp: CUqApp;
+    protected cApp: CApp;
     private entities: Entity[] = [];
     private schemaLoaded: boolean = false;
-    constructor(cApp: CUqApp) {
+    constructor(cApp: CApp) {
         this.cApp = cApp;
         //this.initEntities();
     }

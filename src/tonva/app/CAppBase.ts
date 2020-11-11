@@ -1,4 +1,4 @@
-import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute, NavPage } from "../components";
+import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute } from "../components";
 import { Controller } from '../vm';
 import { UQsMan, TVs } from "../uq";
 import { appInFrame } from "../net";
@@ -54,16 +54,6 @@ export abstract class CAppBase extends Controller {
 	protected setRes(res:any) {
 		setGlobalRes(res);
 	}
-	
-	protected hookElements(elements: Elements) {
-		if (elements === undefined) return;
-		for (let i in elements) {
-			let el = document.getElementById(i);
-			if (el) {
-				elements[i](el);
-			}
-		}
-	};
 
 	private appUnit:any;
 	private roleDefines: string[];
@@ -94,6 +84,7 @@ export abstract class CAppBase extends Controller {
 	
     protected async beforeStart():Promise<boolean> {
         try {
+			nav.onSysNavRoutes();
 			this.onNavRoutes();
 			if (nav.isRouting === false) {
 				//await nav.init();

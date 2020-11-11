@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { RowContext, nav, User, BoxId } from 'tonva';
+import { RowContext, BoxId } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCart } from './VCart';

@@ -13,7 +13,7 @@ export class CInvoiceInfo extends CUqBase {
     }
 
     async saveInvoiceInfo(invoice: any) {
-        let { invoiceType, invoiceInfo, isDefault } = invoice;
+        let { invoiceType, invoiceInfo } = invoice;
         let newInvoiceInfo = await this.uqs.customer.InvoiceInfo.save(undefined, invoiceInfo);
 
         let { id: newInvoiceInfoId } = newInvoiceInfo;

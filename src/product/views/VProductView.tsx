@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 export class VProuductView extends View<CProduct> {
     render(product: Product): JSX.Element {
         return React.createElement(observer(() => {
-			let { id, brand, props } = product;
+			let { brand, props } = product;
 			let { description, descriptionC, origin, imageUrl } = props;
 			return <div className="d-block mb-4 px-3">
 				<div className="d-flex py-2">

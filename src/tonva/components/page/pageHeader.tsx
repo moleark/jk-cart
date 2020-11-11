@@ -60,10 +60,10 @@ export function renderPageHeader(props: PageHeaderProps, inWebNav?: boolean) {
 				break;
 			default:
 			case 'back':
-				vBack = <nav onClick={onBack}><i className="fa fa-angle-left" /></nav>;
+				vBack = <nav onClick={onBack}>{nav.backIcon}</nav>;
 				break;
 			case 'close':
-				vBack = <nav onClick={onBack}><i className="fa fa-close" /></nav>;
+				vBack = <nav onClick={onBack}>{nav.backIcon}</nav>;
 				break;
 		}
 	}

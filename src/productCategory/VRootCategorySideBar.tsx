@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Ax, View } from 'tonva';
+import { View } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 
 export class VRootCategorySideBar extends View<CProductCategory>{

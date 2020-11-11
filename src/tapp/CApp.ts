@@ -1,6 +1,6 @@
 /* eslint-disable */
 import ReactDOM from 'react-dom';
-import { User, nav, NavPage, Elements, BoxId } from 'tonva';
+import { User, nav, NavPage, Elements, BoxId, View, Controller, PageWebNav } from 'tonva';
 import { Cart } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";
@@ -23,6 +23,7 @@ import { Product } from '../model';
 
 export class CApp extends CUqApp {
 	private cache: Map<number, Product>;
+    cart: Cart;
 
     //get uqs(): UQs { return this._uqs as UQs };
 
@@ -154,6 +155,29 @@ export class CApp extends CUqApp {
 		await super.afterStart();
         this.topKey = nav.topKey();
 	}
+	
+	getPageWebNav(): PageWebNav {
+		if (nav.isWebNav === false) return;
+		let webNav =  this.getWebNav();
+		if (webNav === undefined) return;
+		let {VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader} = webNav;
+		let navHeader:JSX.Element;
+		if (VNavHeader) navHeader = this.renderView(VNavHeader);
+		let navRawHeader:JSX.Element;
+		if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
+		let navFooter:JSX.Element; 
+		if (VNavFooter) navFooter = this.renderView(VNavFooter);
+		let navRawFooter:JSX.Element;
+		if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
+		let ret:PageWebNav = {
+			navHeader,
+			navRawHeader,
+			navFooter,
+			navRawFooter,
+			renderPageHeader,
+		};
+		return ret;
+	}
 
     showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
@@ -272,50 +296,6 @@ export class CApp extends CUqApp {
 		this.cMe.start();
 	}
 
-	private navLogin:NavPage = async (params:any) => {
-	}
-
-	private navLogout:NavPage = async (params:any) => {
-		nav.showLogin(async (user: User) => window.history.back(), false);
-	}
-
-	private navRegister:NavPage = async (params:any) => {
-		nav.showLogout(async () => window.history.back());
-	}
-
-	/*
-	protected onRoute() {
-		let routes: { [route: string]: NavPage } = {
-			'/app': this.navApp,
-			'/index': this.navHome,
-			'/home': this.navHome,
-			'/search/:key': this.navSearch,
-			'/product/:id': this.navProduct,
-			'/cart': this.navCart,
-			'/productCategory/:id': this.navProductCategory,
-			'/pointshop': this.navPointShop,
-			'/about': this.navAbout,
-			'/me': this.navMe,
-			'/login': this.navLogin,
-			'/logout': this.navLogout,
-			'/register': this.navRegister,
-		};
-	
-		let navOns: { [route: string]: (params: any, queryStr: any) => void } = {};
-		for (let route in routes) {
-			navOns[route] = (params: any, queryStr: any) => {
-				//renderCApp(routes[route], params);
-				let navPage = routes[route];
-				if (navPage) {
-					nav.clear();
-					navPage(params);
-				}
-			}
-		}
-		this.on(navOns);
-	}
-	*/
-
 	protected onNavRoutes() {
 		let routes: { [route: string]: NavPage } = {
 			'/app': this.navHome,
@@ -328,9 +308,6 @@ export class CApp extends CUqApp {
 			'/pointshop': this.navPointShop,
 			'/about': this.navAbout,
 			'/me': this.navMe,
-			'/login': this.navLogin,
-			'/logout': this.navLogout,
-			'/register': this.navRegister,
 		};
 		nav.onNavRoutes(routes);
 	}

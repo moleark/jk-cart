@@ -5,7 +5,7 @@
 .jk-cart>div {
   position: relative;
 }
-.jk-cart>div>u {
+.jk-cart>div>u, .jk-cart>u {
   position: absolute;
   right: -0.5rem;
   top: 0rem;
@@ -21,6 +21,12 @@
   text-decoration: none;
   justify-content: center;
   border-radius: 0.6rem;
+}
+
+.jk-cart>u {
+	right: -0.7rem;
+	top: -0.3rem;
+	font-size: 0.6.rem;
 }
 
 .text-danger-2 {

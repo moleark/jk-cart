@@ -1,4 +1,4 @@
-import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
+import { BoxId, RowContext, QueryPager } from 'tonva';
 import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
@@ -381,7 +381,7 @@ export class CPointProduct extends CUqBase {
             this.orderData.customer = currentUser.currentCustomer.id;
         }
         if (this.pointProductsSelected !== undefined && this.pointProductsSelected.length > 0) {
-            this.orderData.exchangeItems = this.pointProductsSelected.map((e: any) => {
+            this.orderData.exchangeItems = this.pointProductsSelected.map(e => {
                 if (e.quantity > 0) {
                     var item = new OrderItem();
                     item.product = e.product;

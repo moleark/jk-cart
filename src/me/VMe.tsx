@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { nav, User, Page, Image, VPage, autoHideTips } from 'tonva';
-import { Prop, Media, IconText, FA, PropGrid, LMR } from 'tonva';
-import { VAbout } from './about';
+import { nav, Image, VPage, autoHideTips } from 'tonva';
+import { Prop, IconText, FA, PropGrid, LMR } from 'tonva';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 import { EditMeInfo } from './EditMeInfo';
@@ -214,7 +213,7 @@ export class VMe extends VPage<CMe> {
         return <>
 			<PropGrid rows={rows} values={{}} />
 			<button onClick={()=>this.tips.set('ddddd')}>push</button>
-			{autoHideTips(this.tips, <div className="text-danger">{this.tips}</div>)}
+			{autoHideTips(this.tips, <div className="text-danger">{this.tips.get()}</div>)}
 		</>;
     })
 }

@@ -115,6 +115,9 @@ export class Cart {
 			}
 			this.cartItems = cartItems;
 		}
+		else {
+			this.cartItems = [];
+		}
 		Promise.all(productPromises);
     }
 

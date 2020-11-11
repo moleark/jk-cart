@@ -61,28 +61,7 @@ export abstract class Controller {
 
 	getWebNav(): WebNav<any> {return this.webNav;}
 
-	private getPageWebNav(): PageWebNav {
-		if (nav.isWebNav === false) return;
-		let webNav =  this.getWebNav();
-		if (webNav === undefined) return;
-		let {VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader} = webNav;
-		let navHeader:JSX.Element;
-		if (VNavHeader) navHeader = this.renderView(VNavHeader);
-		let navRawHeader:JSX.Element;
-		if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
-		let navFooter:JSX.Element; 
-		if (VNavFooter) navFooter = this.renderView(VNavFooter);
-		let navRawFooter:JSX.Element;
-		if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
-		let ret:PageWebNav = {
-			navHeader,
-			navRawHeader,
-			navFooter,
-			navRawFooter,
-			renderPageHeader,
-		};
-		return ret;
-	}
+	getPageWebNav(): PageWebNav {return undefined;}
 
 	get isWebNav(): boolean {return nav.isWebNav}
 	navigate(url:string) {

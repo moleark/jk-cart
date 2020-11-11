@@ -1,9 +1,8 @@
-import { GLOABLE } from 'cartenv';
 import { observable } from 'mobx';
 import moment from 'moment';
 import { CApp } from 'tapp';
 import { BoxId } from 'tonva';
-import { MainBrand, Chemical, MainProduct } from './model';
+import { MainBrand, Chemical } from './model';
 
 export interface InventoryAllocation {
 	warehouse: BoxId;

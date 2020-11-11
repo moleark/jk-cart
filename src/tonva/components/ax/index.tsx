@@ -2,30 +2,29 @@ import React from "react";
 import classNames from 'classnames';
 import { nav } from "../nav";
 
-export interface AxProps {
-	children: React.ReactNode;
-	href: string;
-	onClick?: (event:React.MouseEvent) => void;
-	className?: string;
+export interface AxProps extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
+	//children: React.ReactNode;
+	//href: string;
+	//onClick?: (event:React.MouseEvent) => void;
+	//className?: string;
 	aClassName?: string;
 	naClassName?: string;
-	target?: string;
-	props?: any;
+	//target?: string;
+	//props?: any;
 }
 
 // 如果是web方式，用webNav方式route网页
 // 如果是app方式，用click方式压栈页面
 export const Ax = (axProps: AxProps) => {
-	let {href, children, className, props} = axProps;
+	let {href, children, className} = axProps;
 	if (nav.isWebNav === true) {
-		let {aClassName, target} = axProps;
-		if (!href) return null;
-		//if (nav.testing === true) href += '#test';
+		let {aClassName } = axProps;
+		if (!href) return <span className="text-danger">Error: href not defined in Ax</span>;
 		let onClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
 			evt.preventDefault();
 			nav.navigate(href);
 		}
-		return <a className={classNames(className, aClassName)} href={href} target={target} onClick={onClick} {...props}>{children}</a>;
+		return <a className={classNames(className, aClassName)} onClick={onClick} {...axProps}>{children}</a>;
 	}
 	else {
 		let {onClick, naClassName} = axProps;

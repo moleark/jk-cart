@@ -9,11 +9,8 @@ export class VDelivery extends View<CProduct> {
     @observable private futureDeliveryTimeDescription: string;
 	*/
     render(param: any): JSX.Element {
-        let { obj: packObj, id: packId } = param;
-        let { owner: productId } = packObj;
-        //let { controller } = this;
-        //let { currentSalesRegion } = controller.cApp;
-		//return <this.content packId={packId} productId={productId} currentSalesRegion={currentSalesRegion} />;
+        let { id: packId } = param;
+        //let { obj: packObj } = param;
 		return React.createElement(observer(() => {
 			//let { packId, productId } = param;
 			let {product} = this.controller;

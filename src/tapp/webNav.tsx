@@ -8,55 +8,55 @@ import magnifier from '../images/magnifier.svg';
 import qrcode from '../images/qrcode.png';
 import { CApp } from './CApp';
 
-//const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
-
 export class VMainWebNav extends VPage<CApp> {
-/*	
-    async open(param?: any) {
-        this.openPage(() => {
-			let { cHome } = this.controller;
-			return cHome.tab.content();
-		});
-	}
-*/
 	content() {
 		let { cHome } = this.controller;
 		return cHome.tab.content();
 	}
 }
 
-
 export class NavHeaderView extends View<CApp> {
     render() {
-        let { cMe, user } = this.controller;
-		let vLogin:any;
-		if (!user) {
-			vLogin = <div className="nav-link">
-				<A className="px-2" href="/register" target="_self">注册</A>
-				<A className="px-2" href="/login" target="_self">登录</A>
-			</div>;
-		}
-		else {
-		let { id, name, nick, icon } = user;
-			vLogin = <div className="nav-link">
-				<A className="px-2" href="/me" target="_self">{nick || name}</A>
-				<A className="px-2" href="/logout" target="_self">退出</A>
-			</div>;
-		}
-
+		let vLogin = React.createElement(() => {
+			let { user } = this.controller;
+			let v:any;
+			if (!user) {
+				v = <>
+					<A className="" href="/register" target="_self">注册</A>/
+					<A className="" href="/login" target="_self">登录</A>
+				</>;
+			}
+			else {
+				let { name, nick } = user;
+				v = <>
+					<A className="mr-2" href="/me" target="_self">{nick || name}</A>
+					<A className="mr-2" href="/logout" target="_self">退出</A>
+				</>;
+			}
+			return <span className="small">{v}</span>;
+		});
+		let vCartLabel = React.createElement(() => {
+			let {cart} = this.controller;
+			if (!cart) return null;
+			let count = cart.count.get(); 
+			if (!count) count = undefined;
+			return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
+				<FA name="shopping-cart" /><u>{count}</u>
+			</Ax>;
+		});
         return <header>
             <div className="top-header">
                 <div className="container">
                     <div className="row">
-                        <div className="col-auto ml-auto d-flex align-items-center flot-right">
-                            <div className="phone">
-                                <img src={phone} /> Call Us 400-666-7788
+                        <div className="col-auto ml-auto d-flex align-items-center">
+                            <div className="phone mr-2 small">
+                                <img src={phone} /> 400-666-7788
                             </div>
-                            <div className="area">
-                                <a className="btn" data-toggle="modal" data-target="#choosecountry">
-                                    中国
-                                </a>
-                            </div>
+							<a className="small mr-2" data-toggle="modal" data-target="#choosecountry">
+								中国
+							</a>
+							{vCartLabel}
+							{vLogin}
                         </div>
                     </div>
                 </div>
@@ -126,14 +126,6 @@ export class NavHeaderView extends View<CApp> {
                                     <a className="dropdown-item" href="#">2 Column Portfolio</a>
                                 </div>
                             </li>
-							<li className="nav-item">
-								<Ax className="nav-link" href="/cart" onClick={() => this.controller.cCart.start()}>
-									<FA name="shopping-cart" /> 购物车
-								</Ax>
-							</li>
-							<li className="nav-item">
-								{vLogin}
-							</li>
                         </ul>
                     </div>
                 </div>

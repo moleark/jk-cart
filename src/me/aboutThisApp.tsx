@@ -18,7 +18,7 @@ export class AboutThisApp extends VPage<CMe>{
         return <Page header="关于百灵威购物APP" right={right}>
             <div className='bg-white p-3'>
                 <div className="h3 flex-fill text-center">
-                    <img src={logo} />
+                    <img src={logo} alt="logo" />
                 </div>
                 <div className="h3 flex-fill text-center">
                     <span className="text-primary mr-3">百灵威购物APP</span>

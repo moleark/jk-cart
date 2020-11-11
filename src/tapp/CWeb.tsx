@@ -1,4 +1,3 @@
-import { appConfig } from 'configuration';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CAppBase, nav, NavView, WebNav } from 'tonva';
@@ -19,7 +18,7 @@ export class CWeb extends CApp {
 	}
 
 	protected beforeInit() {
-		nav.isWebNav = true;
+		nav.setIsWebNav();
 	}
 
 	protected afterInit() {

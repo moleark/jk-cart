@@ -637,6 +637,33 @@ export class Nav {
 		return this.navigo.on(args[0], args[1], args[2]);
 	}
 
+	private navLogin:NavPage = async (params:any) => {
+		nav.showLogin(async (user: User) => window.history.back(), false);
+	}
+
+	private navLogout:NavPage = async (params:any) => {
+		nav.showLogout(async () => window.history.back());
+	}
+
+	private navRegister:NavPage = async (params:any) => {
+		nav.showRegister();
+	}
+
+	private navForget:NavPage = async (params:any) => {
+		nav.showForget();
+	}
+
+	private sysRoutes: { [route: string]: NavPage } = {
+		'/login': this.navLogin,
+		'/logout': this.navLogout,
+		'/register': this.navRegister,
+		'/forget': this.navForget,
+	}
+
+	onSysNavRoutes() {
+		this.onNavRoutes(this.sysRoutes);
+	}
+
 	private navPageRoutes: {[url:string]: NavPage};
 	onNavRoutes(navPageRoutes: {[url:string]: NavPage}) {
 		if (!navPageRoutes) return;
@@ -661,6 +688,13 @@ export class Nav {
 	}
 	*/
 	isWebNav:boolean = false;
+	backIcon = <i className="fa fa-angle-left" />;
+	closeIcon = <i className="fa fa-close" />;
+	setIsWebNav() {
+		this.isWebNav = true;
+		this.backIcon = <i className="fa fa-arrow-left" />;
+		this.closeIcon = <i className="fa fa-close" />;
+	}
 
 	pageWebNav: PageWebNav;
 
@@ -829,7 +863,19 @@ export class Nav {
                 </div>
             </div>
         </Page>);
-    }
+	}
+	
+	async showRegister() {
+		let lv = await import('../entry/register');
+		let c = new lv.RegisterController(undefined);
+		await c.start();
+	}
+
+	async showForget() {
+		let lv = await import('../entry/register');
+		let c = new lv.ForgetController(undefined);
+		await c.start();
+	}
 
     async logout(callback?:()=>Promise<void>) { //notShowLogin?:boolean) {
         appInFrame.unit = undefined;
