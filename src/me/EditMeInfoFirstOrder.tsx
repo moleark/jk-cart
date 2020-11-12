@@ -5,7 +5,6 @@ import { ItemSchema, Page, VPage, FA, Form, Context, autoHideTips } from 'tonva'
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';
-import { GLOABLE } from 'cartenv';
 
 interface Options {
     onlyRequired: boolean;

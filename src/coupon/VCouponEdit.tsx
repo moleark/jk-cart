@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { VPage, FA, Page, List, LMR, tv, EasyDate, autoHideTips } from 'tonva';
+import { VPage, FA, Page, autoHideTips } from 'tonva';
 import { CCoupon } from './CCoupon';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { GLOABLE } from 'cartenv';
 import { VVIPCard } from './VVIPCard';
 
 const tipsMap:{[key:number]: string} = {

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { CUqBase } from '../tapp/CBase';
 import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar } from './VRootCategorySideBar';
-import { GLOABLE } from "cartenv";
+import { GLOABLE } from "global";
 import './cat.css';
 import { Ax, BoxId, Controller, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';

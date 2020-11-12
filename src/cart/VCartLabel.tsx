@@ -9,7 +9,7 @@ export class VCartLabel extends View<CCart> {
 
     private showCart = async () => {
         let { cart } = this.controller.cApp;
-        cart.editButton.set(false);
+		cart.editButton.set(false);
         nav.navigate("/cart");
     }
 

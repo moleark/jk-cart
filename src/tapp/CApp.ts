@@ -19,11 +19,16 @@ import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
 import { Product } from '../model';
+import { WebUser } from 'CurrentUser';
+import { GLOABLE } from 'global';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
 
 export class CApp extends CUqApp {
 	private cache: Map<number, Product>;
     cart: Cart;
+    currentSalesRegion: any;
+    currentLanguage: any;
+    currentUser: WebUser;
 
     //get uqs(): UQs { return this._uqs as UQs };
 
@@ -55,8 +60,11 @@ export class CApp extends CUqApp {
 
 	protected async beforeStart():Promise<boolean> {
 		if (await super.beforeStart() === false) return false;
-		this.cache = new Map();
+		this.currentSalesRegion = GLOABLE.SALESREGION_CN;
+		this.currentLanguage = GLOABLE.CHINESE;
+        this.setUser();
 
+		this.cache = new Map();
         this.cart = new Cart(this );
         await this.cart.init();
 
@@ -155,7 +163,12 @@ export class CApp extends CUqApp {
 		await super.afterStart();
         this.topKey = nav.topKey();
 	}
-	
+
+    private setUser() {
+        this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
+        this.currentUser.setUser(this.user);
+	}
+
 	getPageWebNav(): PageWebNav {
 		if (nav.isWebNav === false) return;
 		let webNav =  this.getWebNav();
@@ -275,7 +288,8 @@ export class CApp extends CUqApp {
 	}
 
 	private navCart:NavPage = async (params:any) => {
-		this.cCart.start();
+		await this.cart.buildItems();
+		await this.cCart.start();
 	}
 
 	private navProductCategory:NavPage = async (params:any) => {

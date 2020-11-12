@@ -154,7 +154,7 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     bk: '',
-                    component: <div className="text-center flex-fill"><button className="btn btn-danger w-75" onClick={this.exit}>
+                    component: <div className="text-center flex-fill mb-3"><button className="btn btn-danger w-75" onClick={this.exit}>
                         <FA name="sign-out" size="lg" /> 退出登录
 						</button>
                     </div>
@@ -212,9 +212,9 @@ export class VMe extends VPage<CMe> {
         }
         return <>
 			<PropGrid rows={rows} values={{}} />
-			<button onClick={()=>this.tips.set('ddddd')}>push</button>
-			{autoHideTips(this.tips, <div className="text-danger">{this.tips.get()}</div>)}
 		</>;
+		// <button onClick={()=>this.tips.set('ddddd')}>push</button>
+		// {autoHideTips(this.tips, <div className="text-danger">{this.tips.get()}</div>)}
     })
 }
 

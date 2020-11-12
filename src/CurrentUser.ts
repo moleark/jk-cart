@@ -5,13 +5,11 @@ import { observable, computed } from 'mobx';
 import { UQs } from './uqs';
 
 export class WebUser {
-
+    private _user: User;
     id: number;
     name: string;
     nick?: string;
     icon?: string;
-    guest: number;
-    token: string;
 
     @observable firstName: string;
     gender: string;
@@ -65,8 +63,6 @@ export class WebUser {
             (this.mobile && this.firstName && this.organizationName);
     }
 
-    private _user: User;
-
     private webUserSettings: any;
 
     private uqs: UQs;
@@ -77,17 +73,14 @@ export class WebUser {
     }
 
     setUser = async (user: User) => {
-        if (user !== undefined) {
-            this._user = user;
-            this.id = user.id;
-            this.name = user.name;
-            this.nick = user.nick;
-            this.icon = user.icon;
-            this.guest = user.guest;
-            this.token = user.token;
+		if (!user) return;
+		this._user = user;
+		this.id = user.id;
+		this.name = user.name;
+		this.nick = user.nick;
+		this.icon = user.icon;
 
-            await this.loadWebUser();
-        }
+		await this.loadWebUser();
     }
 
     private async loadWebUser() {

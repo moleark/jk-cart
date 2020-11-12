@@ -4,7 +4,7 @@ import { CHome } from './CHome';
 import { VSiteHeader } from './VSiteHeader';
 import { VSlider } from './VSlider';
 import { browser } from 'tools/browser';
-import { GLOABLE } from 'cartenv';
+import { GLOABLE } from 'global';
 
 export class VHome extends VPage<CHome> {
 

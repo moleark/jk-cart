@@ -3,7 +3,6 @@ import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scrolle
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
 import { observable } from 'mobx';
-import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
 

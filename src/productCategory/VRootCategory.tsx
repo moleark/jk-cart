@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Ax, View } from 'tonva';
 import { CProductCategory } from './CProductCategory';
 import { FA } from 'tonva';
-import { GLOABLE } from 'cartenv';
+import { GLOABLE, rootCategroyResFromId } from 'global';
 //import { observer } from 'mobx-react';
 
 /*
@@ -36,7 +36,7 @@ export class VRootCategory extends View<CProductCategory> {
     private renderRootCategory = (item: any, parent: any) => {
         let { name, children, productCategory } = item;
         let { id: productCategoryID } = productCategory;
-        let { src, labelColor } = GLOABLE.ROOTCATEGORY[productCategoryID];
+        let { src, labelColor } = rootCategroyResFromId(productCategoryID);
         return <div className="bg-white mb-3" key={name}>
             <Ax className="py-2 px-3 cursor-pointer"
                 href={'/productCategory/' + productCategoryID}

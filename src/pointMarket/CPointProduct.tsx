@@ -12,7 +12,7 @@ import { VExchangeHistory } from './VExchangeHistory';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
-import { GLOABLE } from 'cartenv';
+import { GLOABLE } from 'global';
 import { VDefaultPost } from './VDefaultPost';
 import moment from 'moment';
 

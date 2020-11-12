@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, DropdownAction, DropdownActions, FA, nav } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
-import { GLOABLE } from 'cartenv';
+import { GLOABLE } from 'global';
 import { signTopicMap, Homemadelogo } from 'tools/images';
 import { CSignIn } from './CSignIn';
 import { RevenueExpenditure } from './basicRefer';
@@ -141,10 +141,11 @@ export class VPointSign extends VPage<CSignIn> {
         </Page >; */
     })
 
-
+	/*
     protected handleChange = async () => {
         this.showTips = "";
         if (!this.showTips)
             setTimeout(() => { this.showTips = "none"; this.controller.isSignin = false }, GLOABLE.TIPDISPLAYTIME);
-    }
+	}
+	*/
 }

@@ -1,7 +1,7 @@
 import { AppConfig } from "tonva";
 import { jnkTop } from "./me/loginTop";
 import { tvs } from "./tvs";
-import { GLOABLE } from "cartenv";
+import { GLOABLE } from "global";
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',

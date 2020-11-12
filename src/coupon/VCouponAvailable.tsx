@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { VPage, Page, List, FA, LMR, autoHideTips } from 'tonva';
-import { CCoupon, COUPONBASE } from './CCoupon';
+import { CCoupon } from './CCoupon';
 import { observable } from 'mobx';
 import { VVIPCard, VCoupon, VCredits } from './VVIPCard';
-import { GLOABLE } from 'cartenv';
-import { observer } from 'mobx-react';
-import { Credits } from './Coupon';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
 

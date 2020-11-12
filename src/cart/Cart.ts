@@ -32,7 +32,7 @@ export interface CartPackRow extends PackRow {
 
 export class Cart {
     private cApp: CApp;
-
+	private cartData: any;
     private cartStore: CartStore;
     private disposer: IReactionDisposer;
 
@@ -73,13 +73,25 @@ export class Cart {
     }
 
     async init(): Promise<void> {
-        let { isLogined, uqs, currentSalesRegion } = this.cApp;
+        let { isLogined } = this.cApp;
         if (isLogined)
             this.cartStore = new CartRemote(this.cApp);
         else
             this.cartStore = new CartLocal(this.cApp);
-        let cartData = await this.cartStore.load();
+		let cartData = await this.cartStore.load();
+		this.cartData = cartData;
+		let count = 0;
+		for (let cd of cartData) { 
+			let {quantity} = cd as any;
+			count += quantity;
+		}
+		this.count.set(count);
+	}
 
+	async buildItems() {
+		if (this.cartItems) return;
+        let { uqs, currentSalesRegion } = this.cApp;
+		let cartData = this.cartData;
         // 初始化购物车中产品的目录价
         let { product } = uqs;
         let { PriceX } = product;
@@ -99,8 +111,8 @@ export class Cart {
 
 		let cartDataGrouped = groupByProduct(cartData);
 		let productPromises: Promise<any>[] = [];
+		let cartItems: CartItem[] = [];
         if (cartDataGrouped && cartDataGrouped.length > 0) {
-			let cartItems: CartItem[] = [];
             for (let i = 0; i < cartDataGrouped.length; i++) {
 				let { product: productId, packs, createdate } = cartDataGrouped[i];
 				let product = this.cApp.getProduct(productId);
@@ -113,12 +125,9 @@ export class Cart {
                     createdate: createdate,
                 })
 			}
-			this.cartItems = cartItems;
 		}
-		else {
-			this.cartItems = [];
-		}
-		Promise.all(productPromises);
+		await Promise.all(productPromises);
+		this.cartItems = cartItems;
     }
 
     /*

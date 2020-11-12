@@ -127,7 +127,7 @@ export class CCart extends CUqBase {
         // await cOrder.start(this.selectedCartItems);
     }
 
-    tab = () => this.renderView(VCart);
+    //tab = () => this.renderView(VCart);
 
     renderDeliveryTime = (pack: BoxId) => {
         let { cProduct } = this.cApp;
