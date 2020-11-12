@@ -1,21 +1,16 @@
 /* eslint-disable */
 import * as React from 'react';
-import classNames from 'classnames';
 import {
-    tv, VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
-    ObjectSchema, RowContext, UiCustom, FormField, BoxId, FA, List
+    tv, VPage, Page, Form, ItemSchema, NumSchema, UiSchema,
+    ObjectSchema, RowContext, UiCustom, FormField, List
 } from 'tonva';
 import { CProduct } from './CProduct';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
-import { ProductPackRow, MainProductChemical, Product } from '../model';
+import { ProductPackRow, Product } from '../model';
 import { ProductImage } from 'tools/productImage';
 import { renderPropItem, renderBrand } from './renders';
-import { NavHeader, NavFooter } from 'tools/ShopPage';
 import { xs } from 'tools/browser';
-//import { VProductFavorateLabel } from 'product/VProductFavorateLabel';
 import { pdfIcon } from 'tools/images';
-import { TopicDivision } from 'pointMarket/VPointProduct';
-import { browser } from 'tools/browser';
 import { VFavorite, VPrice } from './views';
 
 const schema: ItemSchema[] = [

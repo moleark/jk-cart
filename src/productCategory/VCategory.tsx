@@ -10,12 +10,23 @@ export class VCategory extends VPage<CProductCategory> {
 
     instruction: string;
     async open() {
-
         //this.instruction = categoryWapper.instruction;
-        this.openPage(xs ? this.page : this.lpage);
         // let { getCategoryInstruction } = this.controller;
         // this.instruction = await getCategoryInstruction(0);
+        this.openPage(this.page);
     }
+
+    private page = observer(() => {
+        let { cHome } = this.controller.cApp;
+		let header: any, cartLabel: any;
+		if (xs) {
+			header = cHome.renderSearchHeader();
+        	cartLabel = this.controller.cApp.cCart.renderCartLabel();
+		}
+        return <Page header={header} right={cartLabel}>
+            {this.renderRootCategory()}
+        </Page>
+    })
 
     /*
     private renderChild = (childWapper: any) => {
@@ -95,29 +106,4 @@ export class VCategory extends VPage<CProductCategory> {
             </div>
         </div>
     }
-
-    private page = observer(() => {
-        let { cHome } = this.controller.cApp;
-        let header = cHome.renderSearchHeader();
-        let cartLabel = this.controller.cApp.cCart.renderCartLabel();
-
-        //`let { categoryWapper: item, parent, labelColor } = categoryWapper;
-        return <Page header={header} right={cartLabel}>
-            {this.renderRootCategory()}
-        </Page>
-    })
-
-    private lpage = observer(() => {
-        let { cHome /*,renderHeader,renderFooter*/ } = this.controller.cApp;
-        let header = cHome.renderSearchHeader();
-        let cartLabel = this.controller.cApp.cCart.renderCartLabel();
-
-        //let { categoryWapper: item, parent, labelColor } = categoryWapper;
-        return <Page>
-            {/*  return <Page webNav={{ navRawHeader: <NavHeader />, navRawFooter: <NavFooter /> }} className="bg-white"> */}
-            {this.renderRootCategory()}
-        </Page>
-
-        //webNav={{ navRawHeader: renderHeader(), navRawFooter: renderFooter() }}
-    })
 }

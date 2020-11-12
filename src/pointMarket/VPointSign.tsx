@@ -3,10 +3,9 @@ import { VPage, Page, DropdownAction, DropdownActions, FA, nav } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
-import { signViceMap, signTopicMap, Homemadelogo, logo } from 'tools/images';
+import { signTopicMap, Homemadelogo } from 'tools/images';
 import { CSignIn } from './CSignIn';
 import { RevenueExpenditure } from './basicRefer';
-import classNames from 'classnames';
 import moment from 'moment';
 import 积分图标P from 'images/积分图标P.png'
 import 已签到 from 'images/已签到.png'

@@ -4,7 +4,6 @@ import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
-import { GLOABLE } from 'cartenv';
 import { randomColor } from 'tools/randomColor';
 import { pointIcon } from 'tools/images';
 
