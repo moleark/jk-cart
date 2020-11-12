@@ -128,6 +128,7 @@ export class Cart {
 		}
 		await Promise.all(productPromises);
 		this.cartItems = cartItems;
+		delete this.cartData;
     }
 
     /*
