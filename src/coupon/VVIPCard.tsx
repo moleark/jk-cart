@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CCoupon, COUPONBASE } from './CCoupon';
-import { View, FA, EasyDate, LMR, tv } from 'tonva';
+import { View, FA, LMR } from 'tonva';
 import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
 import moment from 'moment';
 
@@ -177,7 +177,7 @@ export class VCredits extends VCoupon {
     protected renderActivityDescription = (): JSX.Element => {
         let { startDate, endDate } = activityTime;
         return IsInActivePeriod() ? <div className="text-danger mt-1">
-            <small className="text-muted">{startDate.replace(/\-/g, '.')} 至 {endDate.replace(/\-/g, '.')} 内下单可获四倍积分 </small>
+            <small className="text-muted">{startDate.replace(/-/g, '.')} 至 {endDate.replace(/-/g, '.')} 内下单可获四倍积分 </small>
         </div> : null;
     }
 

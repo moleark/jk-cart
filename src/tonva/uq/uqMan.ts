@@ -95,8 +95,8 @@ export class UqMan {
             this.createBoxId = this.createBoxIdFromTVs;
             this.tvs = tvs || {};
         }
-        let {id, uqOwner, uqName, access, newVersion: clearTuids} = uqData;
-        this.newVersion = clearTuids;
+        let {id, uqOwner, uqName, access, newVersion} = uqData;
+        this.newVersion = newVersion;
         this.uqOwner = uqOwner;
         this.uqName = uqName;
         this.id = id;

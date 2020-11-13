@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, Context, BoxId, Form, ItemSchema } from 'tonva';
+import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema } from 'tonva';
 import { CProduct } from '../CProduct';
 import { MinusPlusWidget } from 'tools';
 import { Product } from 'model';
@@ -57,7 +57,7 @@ export class VPrice extends View<CProduct> {
 			}
 		}
 	
-        let { pack, retail, vipPrice, promotionPrice } = item;
+        let { retail, vipPrice, promotionPrice } = item;
         let right = null;
         if (retail) {
             let price: number = this.minPrice(vipPrice, promotionPrice);

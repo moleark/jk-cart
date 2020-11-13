@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, DropdownAction, DropdownActions, FA, nav } from 'tonva';
+import { VPage, Page, DropdownAction, DropdownActions, FA } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
-import { GLOABLE } from 'global';
 import { signTopicMap, Homemadelogo } from 'tools/images';
 import { CSignIn } from './CSignIn';
 import { RevenueExpenditure } from './basicRefer';
@@ -42,8 +41,8 @@ export class VPointSign extends VPage<CSignIn> {
     }
 
     private page = observer((param: any) => {
-        let { isSignin, signinval, signinConsecutiveDays, openRevenueExpenditure, cApp } = this.controller;
-        let { cLottery } = cApp;
+        let { isSignin, signinval, openRevenueExpenditure } = this.controller;
+        //let { cLottery } = cApp;
         let date = moment().format('YYYY-MM-DD').split('-');
         let timer = `${date[0]} 年 ${date[1]} 月 ${date[2]} 日 `;
 

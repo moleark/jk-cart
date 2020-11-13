@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId, Tuid } from 'tonva';
+import { BoxId } from 'tonva';
 import { nav } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCreateOrder } from './VCreateOrder';
@@ -69,8 +69,8 @@ export class COrder extends CUqBase {
             this.orderData.orderItems = cartItems.map(e => {
 				let {product, packs} = e;
                 var item = new OrderItem(product);
-                item.packs = e.packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
-                item.packs.forEach((pk) => {
+                item.packs = packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
+                item.packs.forEach(pk => {
                     pk.priceInit = pk.price;
                 })
                 return item;
@@ -182,7 +182,7 @@ export class COrder extends CUqBase {
         let { id: orderId, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
         // 如果使用了coupon/credits，需要将其标记为已使用
-        let { id: couponId, code, types } = this.couponAppliedData;
+        let { id: couponId, types } = this.couponAppliedData;
         if (couponId) {
             let nowDate = new Date();
             let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;

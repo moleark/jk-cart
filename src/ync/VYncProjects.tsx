@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, LMR, SearchBox, FA } from 'tonva';
+import { VPage, Page, List, LMR, FA } from 'tonva';
 import { observer } from 'mobx-react';
 import { CYncProjects } from './CYncProjects';
 

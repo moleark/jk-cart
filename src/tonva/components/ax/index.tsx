@@ -38,8 +38,9 @@ export const Ax = (axProps: AxProps) => {
 // 同普通的a tag
 // 会自动处理href，处理生产版跟测试版之间的不同
 export const A = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => {
+	let {children} = props;
 	if (nav.isWebNav === false) {
-		return <a {...props} />;
+		return <a {...props}>{children}</a>;
 	}
 	let {href} = props;
 	//if (nav.testing === true) href += '#test';
@@ -47,5 +48,5 @@ export const A = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTML
 		evt.preventDefault();
 		nav.navigate(href);
 	}
-	return <a {...props} href={href} onClick={onClick} />;
+	return <a {...props} href={href} onClick={onClick}>{children}</a>;
 }

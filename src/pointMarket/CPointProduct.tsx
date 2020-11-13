@@ -382,14 +382,13 @@ export class CPointProduct extends CUqBase {
         }
         if (this.pointProductsSelected !== undefined && this.pointProductsSelected.length > 0) {
             this.orderData.exchangeItems = this.pointProductsSelected.map(e => {
-                if (e.quantity > 0) {
-                    var item = new OrderItem();
-                    item.product = e.product;
-                    // item.pack = e.pack;
-                    item.quantity = e.quantity;
-                    item.point = e.point;
-                    return item;
-                }
+				if (e.quantity <= 0) return undefined;
+				var item = new OrderItem();
+				item.product = e.product;
+				// item.pack = e.pack;
+				item.quantity = e.quantity;
+				item.point = e.point;
+				return item;
             });
         }
     }

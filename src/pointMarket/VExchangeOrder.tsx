@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, nav, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
+import { VPage, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
@@ -20,30 +20,30 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product, point, quantity } = pointProduct;
-        if (quantity > 0) {
-            return <>
-                {tv(product, (v) => {
-                    return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
-                        <div title={v.description} className="w-100" style={{ height: '35vw',border:`2px solid ${randomColor()}` }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
-                        <div className="small w-100">
-                            <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
-                            <div className="d-flex justify-content-between">
-                                {/*  <div>
-                                    <FA name='database' className="text-warning" />
-                                    <span className="text-danger h5"> {point}</span>
-                                </div> */}
-                                <div className='d-flex'>
-                                    <img src={pointIcon} alt="" style={{ height: 24 }} />
-                                    <span className="text-danger h5 m-0 ml-1 align-self-end"> {v.point}</span>
-                                </div>
-                                <div>*{quantity}</div>
-                            </div>
-                        </div>
-                    </div>
-                })}
-            </>
-        }
+        let { product, quantity } = pointProduct;
+		if (quantity <= 0) return;
+		let style:React.CSSProperties = { height: '35vw',border:`2px solid ${randomColor()}` };
+		return tv(product, (v) => {
+			return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
+				<div title={v.description} className="w-100" style={style} >
+					<PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" />
+				</div>
+				<div className="small w-100">
+					<div className="text-truncate w-100 my-1">{v.descriptionC}</div>
+					<div className="d-flex justify-content-between">
+						{/*  <div>
+							<FA name='database' className="text-warning" />
+							<span className="text-danger h5"> {point}</span>
+						</div> */}
+						<div className='d-flex'>
+							<img src={pointIcon} alt="" style={{ height: 24 }} />
+							<span className="text-danger h5 m-0 ml-1 align-self-end"> {v.point}</span>
+						</div>
+						<div>*{quantity}</div>
+					</div>
+				</div>
+			</div>
+		});
     }
 
     protected onSubmitOwn = async () => {

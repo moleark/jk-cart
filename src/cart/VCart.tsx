@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom } from 'tonva';
-import { FA } from 'tonva';
-import { tv } from 'tonva';
+import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv } from 'tonva';
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
 import { CartPackRow, CartItem } from './Cart';
@@ -80,7 +78,7 @@ export class VCart extends VPage<CCart> {
     }
 
     private packsRow = (item: CartPackRow) => {
-        let { pack, price, currency } = item;
+        let { pack, price } = item;
 
         return <div className="px-2">
             <div className="d-flex align-items-center">

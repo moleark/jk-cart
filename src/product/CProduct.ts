@@ -5,7 +5,7 @@ import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
 import { VPagePDF } from './VPagePDF';
 import { VPageVerifyCode } from './VPageVerifyCode';
-import { VDelivery, VInCart, VProductWithPrice, VPrice, VProuductView2, VChemicalInfoInCart, VFavorite } from './views';
+import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../model';
 
 /**

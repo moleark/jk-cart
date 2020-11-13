@@ -27,7 +27,7 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private packsRow = (item: CartPackRow, index: number) => {
-        let { pack, quantity, retail, price, priceInit } = item;
+        let { pack, quantity, retail, price } = item;
 
         let retailUI: any;
         if (price !== retail) {
@@ -118,7 +118,7 @@ export class VCreateOrder extends VPage<COrder> {
     private renderBuyerAccount = (item: any) => {
         let { buyerAccount } = item;
         return <div>{tv(buyerAccount, (v) => {
-            let { id, description, organization } = v;
+            let { description, organization } = v;
             return <>{description}{tv(organization, (o) => {
                 return <>{o.name}</>
             }, undefined, () => null)}</>

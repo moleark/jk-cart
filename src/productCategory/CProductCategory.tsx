@@ -1,11 +1,10 @@
 import React from 'react';
-import _ from 'lodash';
 import { CUqBase } from '../tapp/CBase';
 import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar } from './VRootCategorySideBar';
 import { GLOABLE } from "global";
 import './cat.css';
-import { Ax, BoxId, Controller, Tuid, VPage } from 'tonva';
+import { Ax, BoxId, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';
 import { VCategory } from './VCategory';
 
@@ -65,9 +64,9 @@ export class CProductCategory extends CUqBase {
 		if (this.current && this.current.productCategory === id) return;
 		await this.loadRoot();
 		let promises = [this.getCategoryChildren(id), this.getCategoryInstruction(id)];
-		let [results, instruction] = await Promise.all(promises);
+		let [{first, secend}, instruction] = await Promise.all(promises);
 		//let results = await this.getCategoryChildren(id);
-		let {first, secend} = results;
+		this.instruction = instruction;
 		this.current = {
 			productCategory: id,
 			parent: undefined,
@@ -92,11 +91,10 @@ export class CProductCategory extends CUqBase {
      * 获取目录节点相关的介绍贴文
      * @param categoryId 目录节点id
      */
-    getCategoryInstruction = async (categoryId: number) => {
+    private getCategoryInstruction = async (categoryId: number) => {
         let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
         if (res.ok) {
             let content = await res.text();
-            this.instruction = content;
             return content;
         }
     };
@@ -148,7 +146,7 @@ export class CProductCategory extends CUqBase {
             await cProduct.searchByCategory({ productCategory: productCategoryId, name });
         }
         */
-        let { productCategory, name } = pc;
+        let { productCategory } = pc;
         let { id: productCategoryId } = ((productCategory as any) as BoxId);
         await this.showCategoryPage(productCategoryId);
     }

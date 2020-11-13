@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CCoupon, COUPONBASE } from './CCoupon';
-import { VPage, Page, List, FA } from 'tonva';
+import { CCoupon } from './CCoupon';
+import { VPage, Page, List } from 'tonva';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
@@ -66,13 +66,10 @@ export class VSharedCoupon extends VPage<CCoupon> {
                     return <>{this.renderVm(VCoupon, sharedCouponValidationResult)}</>;
                 else
                     return <>{this.renderVm(VVIPCard, sharedCouponValidationResult)}</>;
-                break;
             case 'credits':
                 return <>{this.renderVm(VCredits, sharedCouponValidationResult)}</>;
-                break;
             case 'vipcard':
                 return <>{this.renderVm(VVIPCard, sharedCouponValidationResult)}</>;
-                break
             default:
                 break;
         }

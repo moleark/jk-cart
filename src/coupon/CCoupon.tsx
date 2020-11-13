@@ -1,7 +1,7 @@
+import { observable } from 'mobx';
+import { QueryPager } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VSharedCoupon } from './VSharedCoupon';
-import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
-import { observable } from 'mobx';
 import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';

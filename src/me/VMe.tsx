@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { nav, Image, VPage, autoHideTips } from 'tonva';
+import { nav, Image, VPage } from 'tonva';
 import { Prop, IconText, FA, PropGrid, LMR } from 'tonva';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';

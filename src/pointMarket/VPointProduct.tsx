@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { CPointProduct, PointProductDetailLevel } from 'pointMarket/CPointProduct';
 import {
-    VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp,
-    TabCaptionComponent, StringSchema, autoHideTips
+    VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, autoHideTips
 } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
@@ -57,7 +56,7 @@ export class VPointProduct extends VPage<CPointProduct> {
         this.openPage(this.page);
     }
     private getTabs = async () => {
-        let { pointProducts, getPointsIntervalProducts } = this.controller;
+        let { getPointsIntervalProducts } = this.controller;
         this.tabs = this.rankInterval.map((v: any) => {
             let { caption, state, icon, borderC } = v;
             return {
@@ -70,7 +69,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                 isSelected: this.currentInterval === state,
                 load: async () => {
                     this.currentInterval = state;
-                    pointProducts = await getPointsIntervalProducts(this.currentInterval);
+                    this.controller.pointProducts = await getPointsIntervalProducts(this.currentInterval);
                 }
             };
         });
@@ -206,7 +205,7 @@ export class VSelectedPointProduct extends VPointProduct {
     }
 
     page = observer(() => {
-        let { pointProductsSelected, clearSelectedPointsProducts } = this.controller;
+        let { pointProductsSelected } = this.controller;
         let footer = this.getRelatedUI();
 
         // let right = <div className="mr-2" onClick={clearSelectedPointsProducts}><FA name="trash-o" className='text-light' /></div>;

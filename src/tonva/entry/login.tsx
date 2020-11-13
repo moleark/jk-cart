@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang, StringSchema, Ax} from '../components';
-import { RegisterController, ForgetController } from './register';
 import { userApi } from '../net';
 import { LoginRes, loginRes } from '../res';
 import { tonvaTop, getSender } from './tools';

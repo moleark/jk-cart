@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, tv } from 'tonva';
+import { View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
@@ -14,7 +14,7 @@ export class VProuductView2 extends View<CProduct> {
 
     render(product: Product): JSX.Element {
 		return React.createElement(observer(() => {
-			let { id, brand, chemical, props } = product;
+			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl } = props;
 			let discountinued = 0;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};

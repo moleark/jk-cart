@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { View, tv } from 'tonva';
+import { observer } from 'mobx-react';
+import { View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
-import { observer } from 'mobx-react';
-//import { observable } from 'mobx';
-import {renderBrand, renderPropItem, renderUnsold} from '../renders';
+import { renderBrand, renderPropItem } from '../renders';
 import { Product } from '../../model';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VPrice } from './VPrice';
@@ -25,13 +24,7 @@ export class VProductWithPrice extends View<CProduct> {
 	*/
     render(product: Product): JSX.Element {
         return React.createElement(observer(() => {
-			/*
-			let { productBox } = param;
-			this.getProudct(productBox);
-			if (!this.product)
-				return null;
-			*/
-			let { id, brand, props } = product;
+			let { brand, props } = product;
 			let { description, descriptionC, origin, imageUrl } = props;
 			return <div className="d-block mb-2 px-3">
 				<div className="py-2">

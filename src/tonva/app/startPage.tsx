@@ -1,6 +1,5 @@
 import { AppConfig, CAppBase } from './CAppBase';
 import { nav } from '../components';
-import { UQsMan } from '../uq';
 
 export async function startPage(CApp: new (config: AppConfig) => CAppBase, appConfig: AppConfig) {
 	let {htmlTitle} = appConfig;
