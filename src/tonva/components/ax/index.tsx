@@ -32,7 +32,7 @@ export const Ax = (axProps: AxProps) => {
 			}
 			return ret;
 		}
-		return <a className={classNames(className, aClassName)} onClick={onAxClick} {...axProps}>{children}</a>;
+		return <a {...axProps} className={classNames(className, aClassName)} onClick={onAxClick}>{children}</a>;
 	}
 	else {
 		let {onClick, naClassName} = axProps;
