@@ -24,7 +24,7 @@ import { GLOABLE } from 'global';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
 
 export class CApp extends CUqApp {
-	private cache: Map<number, Product>;
+    private cache: Map<number, Product>;
     cart: Cart;
     currentSalesRegion: any;
     currentLanguage: any;
@@ -58,14 +58,14 @@ export class CApp extends CUqApp {
     }
     */
 
-	protected async beforeStart():Promise<boolean> {
-		if (await super.beforeStart() === false) return false;
-		this.currentSalesRegion = GLOABLE.SALESREGION_CN;
-		this.currentLanguage = GLOABLE.CHINESE;
+    protected async beforeStart(): Promise<boolean> {
+        if (await super.beforeStart() === false) return false;
+        this.currentSalesRegion = GLOABLE.SALESREGION_CN;
+        this.currentLanguage = GLOABLE.CHINESE;
         this.setUser();
 
-		this.cache = new Map();
-        this.cart = new Cart(this );
+        this.cache = new Map();
+        this.cart = new Cart(this);
         await this.cart.init();
 
         this.cHome = this.newC(CHome);
@@ -82,9 +82,9 @@ export class CApp extends CUqApp {
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
 
-		await this.cHome.getSlideShow();
-		return true;
-	}
+        await this.cHome.getSlideShow();
+        return true;
+    }
 
     protected async internalStart(params: any) {
         //await super.init();
@@ -157,40 +157,40 @@ export class CApp extends CUqApp {
             this.showMain();
             //this.openVPage(Entrance);
         }
-	}
-	
-	protected async afterStart():Promise<void> {
-		await super.afterStart();
+    }
+
+    protected async afterStart(): Promise<void> {
+        await super.afterStart();
         this.topKey = nav.topKey();
-	}
+    }
 
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         this.currentUser.setUser(this.user);
-	}
+    }
 
-	getPageWebNav(): PageWebNav {
-		if (nav.isWebNav === false) return;
-		let webNav =  this.getWebNav();
-		if (webNav === undefined) return;
-		let {VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader} = webNav;
-		let navHeader:JSX.Element;
-		if (VNavHeader) navHeader = this.renderView(VNavHeader);
-		let navRawHeader:JSX.Element;
-		if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
-		let navFooter:JSX.Element; 
-		if (VNavFooter) navFooter = this.renderView(VNavFooter);
-		let navRawFooter:JSX.Element;
-		if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
-		let ret:PageWebNav = {
-			navHeader,
-			navRawHeader,
-			navFooter,
-			navRawFooter,
-			renderPageHeader,
-		};
-		return ret;
-	}
+    getPageWebNav(): PageWebNav {
+        if (nav.isWebNav === false) return;
+        let webNav = this.getWebNav();
+        if (webNav === undefined) return;
+        let { VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader } = webNav;
+        let navHeader: JSX.Element;
+        if (VNavHeader) navHeader = this.renderView(VNavHeader);
+        let navRawHeader: JSX.Element;
+        if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
+        let navFooter: JSX.Element;
+        if (VNavFooter) navFooter = this.renderView(VNavFooter);
+        let navRawFooter: JSX.Element;
+        if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
+        let ret: PageWebNav = {
+            navHeader,
+            navRawHeader,
+            navFooter,
+            navRawFooter,
+            renderPageHeader,
+        };
+        return ret;
+    }
 
     showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
@@ -199,135 +199,135 @@ export class CApp extends CUqApp {
             // this.openPage(this.cCart.renderCartLabel());
             this.openPage(this.cMe.renderLoginState());
         }
-	}
-	
-
-	getProduct(id: number|BoxId): Product {
-		if (!id) return;
-		// region, language 改变的时候，直接清cache
-		/*
-		let {currentSalesRegion, currentLanguage} = this;
-		if (this.salesRegion !== currentSalesRegion
-			|| this.language != currentLanguage) {
-			this.cache = new Map<number, Product>();
-			this.salesRegion = currentSalesRegion;
-			this.language = currentLanguage;
-		}
-		*/
-		if (typeof id === 'object') id = id.id;
-		let product = this.cache.get(id);
-		if (!product) {
-			product = new Product(this, id);
-			this.cache.set(id, product);
-		}
-		return product;
-	}
-
-/*
-    // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
-    // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
-    protected onRoute() {
-        this.on(() => {
-            this.showMain();
-        });
-        this.on({
-            '/search/:key': (params: any, queryStr: any) => {
-                this.cProduct.start(params.key);
-            },
-            '/product/:id': (params: any, queryStr: any) => {
-                this.cProduct.showProductDetail(params.id);
-            },
-            '/cart': () => {
-                this.cCart.start();
-            },
-            '/productCategory/:id': (params: any, queryStr: any) => {
-                this.cProduct.showProductDetail(params.id);
-            },
-            '/pointshop': () => {
-                // 积分商城是否需要登录后才能查看？ 
-                this.cPointProduct.openMyPoint();
-            }
-        });
     }
-*/
-/*
-    protected async afterStart() {
-        await super.afterStart();
-        // elements定义div元素id与一个函数的对应关系，定义之后，
-        // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
-        let elements: Elements = {
-            login: this.showLogin,
-            productlist: this.productList,
-            productdetail: this.productDetail,
-            carts: this.carts,
-        };
 
-        this.hookElements(elements);
 
-        window.onfocus = () => {
-            this.hookElements(elements);
+    getProduct(id: number | BoxId): Product {
+        if (!id) return;
+        // region, language 改变的时候，直接清cache
+        /*
+        let {currentSalesRegion, currentLanguage} = this;
+        if (this.salesRegion !== currentSalesRegion
+            || this.language != currentLanguage) {
+            this.cache = new Map<number, Product>();
+            this.salesRegion = currentSalesRegion;
+            this.language = currentLanguage;
         }
-        return;
-	}
-*/	
-	private navHome:NavPage = async (params:any) => {
-		await this.cHome.getSlideShow();
+        */
+        if (typeof id === 'object') id = id.id;
+        let product = this.cache.get(id);
+        if (!product) {
+            product = new Product(this, id);
+            this.cache.set(id, product);
+        }
+        return product;
+    }
 
-		let promises: PromiseLike<void>[] = [];
-		promises.push(this.cProductCategory.start());
-		await Promise.all(promises);
-		this.showMain();
-	}
+    /*
+        // onRoute在beforeStart中调用。this.on的作用是将url和function的关系（即route)配置在导航基础结构中供使用
+        // 导航的基本原理是：根据当前的location.href，从配置好的route中找到匹配项，执行对应的function。
+        protected onRoute() {
+            this.on(() => {
+                this.showMain();
+            });
+            this.on({
+                '/search/:key': (params: any, queryStr: any) => {
+                    this.cProduct.start(params.key);
+                },
+                '/product/:id': (params: any, queryStr: any) => {
+                    this.cProduct.showProductDetail(params.id);
+                },
+                '/cart': () => {
+                    this.cCart.start();
+                },
+                '/productCategory/:id': (params: any, queryStr: any) => {
+                    this.cProduct.showProductDetail(params.id);
+                },
+                '/pointshop': () => {
+                    // 积分商城是否需要登录后才能查看？ 
+                    this.cPointProduct.openMyPoint();
+                }
+            });
+        }
+    */
+    /*
+        protected async afterStart() {
+            await super.afterStart();
+            // elements定义div元素id与一个函数的对应关系，定义之后，
+            // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
+            let elements: Elements = {
+                login: this.showLogin,
+                productlist: this.productList,
+                productdetail: this.productDetail,
+                carts: this.carts,
+            };
+    
+            this.hookElements(elements);
+    
+            window.onfocus = () => {
+                this.hookElements(elements);
+            }
+            return;
+        }
+    */
+    private navHome: NavPage = async (params: any) => {
+        await this.cHome.getSlideShow();
 
-	private navSearch:NavPage = async (params:any) => {
-		this.cProduct.start(params?.key);
-	}
+        let promises: PromiseLike<void>[] = [];
+        promises.push(this.cProductCategory.start());
+        await Promise.all(promises);
+        this.showMain();
+    }
 
-	private navProduct:NavPage = async (params:any) => {
-		this.cProduct.showProductDetail(params?.id);
-	}
+    private navSearch: NavPage = async (params: any) => {
+        this.cProduct.start(params?.key);
+    }
 
-	private navCart:NavPage = async (params:any) => {
-		await this.cart.buildItems();
-		await this.cCart.start();
-	}
+    private navProduct: NavPage = async (params: any) => {
+        this.cProduct.showProductDetail(params?.id);
+    }
 
-	private navProductCategory:NavPage = async (params:any) => {
-		let id = params.id;
-		if (id) id = Number(id);
-		await this.cProductCategory.showCategoryPage(id);
-	}
+    private navCart: NavPage = async (params: any) => {
+        await this.cart.buildItems();
+        await this.cCart.start();
+    }
 
-	private navPointShop:NavPage = async (params:any) => {
-		this.cPointProduct.openMyPoint();
-	}
+    private navProductCategory: NavPage = async (params: any) => {
+        let id = params.id;
+        if (id) id = Number(id);
+        await this.cProductCategory.showCategoryPage(id);
+    }
 
-	private navAbout:NavPage = async (params:any) => {
-		this.cMe.openAbout();
-	}
+    private navPointShop: NavPage = async (params: any) => {
+        this.cPointProduct.openMyPoint();
+    }
 
-	private navMe:NavPage = async (params:any) => {
-		this.cMe.start();
-	}
+    private navAbout: NavPage = async (params: any) => {
+        this.cMe.openAbout();
+    }
 
-	protected onNavRoutes() {
-		let routes: { [route: string]: NavPage } = {
-			'/app': this.navHome,
-			'/index': this.navHome,
-			'/home': this.navHome,
-			'/search/:key': this.navSearch,
-			'/product/:id': this.navProduct,
-			'/cart': this.navCart,
-			'/productCategory/:id': this.navProductCategory,
-			'/pointshop': this.navPointShop,
-			'/about': this.navAbout,
-			'/me': this.navMe,
-		};
-		nav.onNavRoutes(routes);
-		nav.onNavRoute(this.navHome);
-	}
+    private navMe: NavPage = async (params: any) => {
+        this.cMe.start();
+    }
 
-	/*
+    protected onNavRoutes() {
+        let routes: { [route: string]: NavPage } = {
+            '/app': this.navHome,
+            '/index': this.navHome,
+            '/home': this.navHome,
+            '/search/:key': this.navSearch,
+            '/product/:id': this.navProduct,
+            '/cart': this.navCart,
+            '/productCategory/:id': this.navProductCategory,
+            '/pointshop': this.navPointShop,
+            '/about': this.navAbout,
+            '/me': this.navMe,
+        };
+        nav.onNavRoutes(routes);
+        nav.onNavRoute(this.navHome);
+    }
+
+    /*
     private showLogin = (element: HTMLElement) => {
         ReactDOM.render(this.cMe.renderLoginState_Web(), element);
     }
@@ -371,27 +371,27 @@ export class CApp extends CUqApp {
             ReactDOM.render(this.cCart.tab(), element);
         }
     }
-	*/
+    */
 
-	async assureLogin(): Promise<void> {
+    async assureLogin(): Promise<void> {
         if (this.isLogined) return;
-		return new Promise<void>((resolve, reject) => {
-			let loginCallback = async (user: User) => {
-				if (user) {
-					await this.currentUser.setUser(user);
-					await this.loginCallBack(user);
-				}
-				if (this.isWebNav) {
-					window.history.back();
-				}
-				else {
-					this.closePage(1);
-				}
-				resolve();
-			};
-			nav.showLogin(loginCallback, true);
-		});
-	}
+        return new Promise<void>((resolve, reject) => {
+            let loginCallback = async (user: User) => {
+                if (user) {
+                    await this.currentUser.setUser(user);
+                    await this.loginCallBack(user);
+                }
+                if (this.isWebNav) {
+                    window.history.back();
+                }
+                else {
+                    this.closePage(1);
+                }
+                resolve();
+            };
+            nav.showLogin(loginCallback, true);
+        });
+    }
 
     async loginCallBack(user: User) {
         /*
@@ -404,15 +404,15 @@ export class CApp extends CUqApp {
         }
         */
     }
-	/*
+    /*
     renderHeader = () => {
         return this.renderView(NavHeaderView);
     }
 
     renderFooter = () => {
         return this.renderView(NavFooterView);
-	}
-	*/
+    }
+    */
 
     protected onDispose() {
         this.cart.dispose();

@@ -8,34 +8,34 @@ import { VMainWebNav } from './webNav';
 
 export class CWeb extends CApp {
 
-	//protected abstract async onPageStart(params:any):Promise<void>;
+    //protected abstract async onPageStart(params:any):Promise<void>;
 
-	get webNav(): WebNav<any> {
-		return { 
-			VNavRawHeader: NavHeaderView,
-			VNavRawFooter: NavFooterView,
-		}
-	}
+    get webNav(): WebNav<any> {
+        return {
+            VNavRawHeader: NavHeaderView,
+            VNavRawFooter: NavFooterView,
+        }
+    }
 
-	protected beforeInit() {
-		nav.setIsWebNav();
-	}
+    protected beforeInit() {
+        nav.setIsWebNav();
+    }
 
-	protected afterInit() {
-		if (!nav.isMobile) {
-			nav.pageWebNav = this.pageWebNav;
-		}
-	}
-	
-	protected async afterStart():Promise<void> {
-		await super.afterStart();
+    protected afterInit() {
+        if (!nav.isMobile) {
+            nav.pageWebNav = this.pageWebNav;
+        }
+    }
+
+    protected async afterStart(): Promise<void> {
+        await super.afterStart();
         this.topKey = nav.topKey();
-		nav.resolveRoute();
-	}
+        nav.resolveRoute();
+    }
 
     protected async internalStart(params: any) {
         //await super.init();
-		/*
+        /*
         this.cart = new Cart(this);
         await this.cart.init();
 
@@ -52,8 +52,8 @@ export class CWeb extends CApp {
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
-		*/
-		/*
+        */
+        /*
         await this.cHome.getSlideShow();
 
         let promises: PromiseLike<void>[] = [];
@@ -122,35 +122,37 @@ export class CWeb extends CApp {
         } else {
             this.showMain();
             //this.openVPage(Entrance);
-		}*/
-		//let n = nav;
-		//this.topKey = nav.topKey();
-		//await this.onPageStart(params);
-		nav.resolveRoute();
-	}
+        }*/
+        //let n = nav;
+        //this.topKey = nav.topKey();
+        //await this.onPageStart(params);
+        // nav.resolveRoute();
+    }
 
-	showMain() {
+    showMain() {
         this.openVPage(VMainWebNav);
-	}
+    }
 }
 
+/*
 export function renderDom(div: any) {
-	ReactDOM.render(
-		<React.StrictMode>
-			{div}
-		</React.StrictMode>,
-		document.getElementById('root')
-	);
+    ReactDOM.render(
+        <React.StrictMode>
+            {div}
+        </React.StrictMode>,
+        document.getElementById('root')
+    );
 }
 
 export function renderCApp(AppClass : new() => CAppBase, param?: any, ...params: any[]) {
-	const App: React.FC = () => {
-		const onLogined = async () => {
-			let cApp = new AppClass();
-			cApp.init();
-			await cApp.start(param, params);
-		}
-		return <NavView onLogined={onLogined} notLogined={onLogined} />;
-	}
-	renderDom(<App />);
+    const App: React.FC = () => {
+        const onLogined = async () => {
+            let cApp = new AppClass();
+            cApp.init();
+            await cApp.start(param, params);
+        }
+        return <NavView onLogined={onLogined} notLogined={onLogined} />;
+    }
+    renderDom(<App />);
 }
+*/

@@ -32,8 +32,8 @@ export class VHome extends VPage<CHome> {
     header() {
         let header = <></>;
         if (!browser.versions.html5Plus && browser.versions.android) {
-			header = <div className="bg-warning d-flex align-items-center"
-				onClick={this.downloadApp}>
+            header = <div className="bg-warning d-flex align-items-center"
+                onClick={this.downloadApp}>
                 <span className="small text-danger ml-3">
                     APP购物更方便
                 </span>
