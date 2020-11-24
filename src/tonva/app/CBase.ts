@@ -62,7 +62,7 @@ export abstract class CSub<T extends CBase> extends CBase {
     protected get owner(): CBase {return this._owner}
 	
 	getWebNav(): WebNav<any> {
-		let wn = this._cApp?.getWebNave();
+		let wn = this._cApp?.getWebNav();
 		if (wn === undefined) return;
 		let ownerWNs:WebNav<any>[] = [];
 		for (let p = this.owner; p!==undefined; p = (p as any)?.owner) {

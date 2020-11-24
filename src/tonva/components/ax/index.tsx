@@ -22,14 +22,25 @@ export const Ax = (axProps: AxProps) => {
 		if (!href) return <span className="text-danger">Error: href not defined in Ax</span>;
 		let onAxClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
 			evt.preventDefault();
-			onClick? onClick(evt) : nav.navigate(href);
+			let ret:boolean;
+			if (onClick) {
+				ret = onClick(evt) as unknown as boolean;
+			}
+			else {
+				nav.navigate(href);
+				ret = false;
+			}
+			return ret;
 		}
 		return <a className={classNames(className, aClassName)} onClick={onAxClick} {...axProps}>{children}</a>;
 	}
 	else {
 		let {onClick, naClassName} = axProps;
 		if (!onClick) {
-			onClick = () => nav.navigate(href);
+			onClick = () => {
+				nav.navigate(href);
+				return false;
+			}
 		}
 		return <span className={classNames(className, 'cursor-pointer', naClassName)} onClick={onClick}>{children}</span>;
 	}
@@ -47,6 +58,7 @@ export const A = (props: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTML
 	let onClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
 		evt.preventDefault();
 		nav.navigate(href);
+		return false;
 	}
 	return <a {...props} href={href} onClick={onClick}>{children}</a>;
 }
