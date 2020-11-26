@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "./static/css/main.e43f3ca5.chunk.css",
-    "main.js": "./static/js/main.f39605a2.chunk.js",
-    "main.js.map": "./static/js/main.f39605a2.chunk.js.map",
+    "main.js": "./static/js/main.406dd183.chunk.js",
+    "main.js.map": "./static/js/main.406dd183.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.1d823dcf.js",
     "runtime-main.js.map": "./static/js/runtime-main.1d823dcf.js.map",
     "static/css/2.5a6bf5c1.chunk.css": "./static/css/2.5a6bf5c1.chunk.css",
-    "static/js/2.6b6519db.chunk.js": "./static/js/2.6b6519db.chunk.js",
-    "static/js/2.6b6519db.chunk.js.map": "./static/js/2.6b6519db.chunk.js.map",
+    "static/js/2.d0e2d138.chunk.js": "./static/js/2.d0e2d138.chunk.js",
+    "static/js/2.d0e2d138.chunk.js.map": "./static/js/2.d0e2d138.chunk.js.map",
     "static/js/3.d9b4cbc5.chunk.js": "./static/js/3.d9b4cbc5.chunk.js",
     "static/js/3.d9b4cbc5.chunk.js.map": "./static/js/3.d9b4cbc5.chunk.js.map",
     "static/js/4.853ad0d7.chunk.js": "./static/js/4.853ad0d7.chunk.js",
     "static/js/4.853ad0d7.chunk.js.map": "./static/js/4.853ad0d7.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.9ff43ba6f204cccfd56a04837832d7e7.js": "./precache-manifest.9ff43ba6f204cccfd56a04837832d7e7.js",
+    "precache-manifest.d087d14a72677fb25651eb69fa95bcc4.js": "./precache-manifest.d087d14a72677fb25651eb69fa95bcc4.js",
     "service-worker.js": "./service-worker.js",
     "static/css/2.5a6bf5c1.chunk.css.map": "./static/css/2.5a6bf5c1.chunk.css.map",
     "static/css/main.e43f3ca5.chunk.css.map": "./static/css/main.e43f3ca5.chunk.css.map",
-    "static/js/2.6b6519db.chunk.js.LICENSE.txt": "./static/js/2.6b6519db.chunk.js.LICENSE.txt",
+    "static/js/2.d0e2d138.chunk.js.LICENSE.txt": "./static/js/2.d0e2d138.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/Homemadelogo.png": "./static/media/Homemadelogo.06f15feb.png",
     "static/media/LabSupplies.png": "./static/media/LabSupplies.3f6ce00f.png",
@@ -38,15 +38,14 @@
     "static/media/signTopicMap.png": "./static/media/signTopicMap.928fc4cf.png",
     "static/media/signViceMap.png": "./static/media/signViceMap.6387bb88.png",
     "static/media/slick-theme.css": "./static/media/slick.f97e3bbf.svg",
-    "static/media/unionpaylogo.png": "./static/media/unionpaylogo.e2ac85ec.png",
     "static/media/wxpaylogo.png": "./static/media/wxpaylogo.0980c80b.png",
     "static/media/已签到.png": "./static/media/已签到.244fa3d6.png"
   },
   "entrypoints": [
     "static/js/runtime-main.1d823dcf.js",
     "static/css/2.5a6bf5c1.chunk.css",
-    "static/js/2.6b6519db.chunk.js",
+    "static/js/2.d0e2d138.chunk.js",
     "static/css/main.e43f3ca5.chunk.css",
-    "static/js/main.f39605a2.chunk.js"
+    "static/js/main.406dd183.chunk.js"
   ]
 }
