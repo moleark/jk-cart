@@ -42,10 +42,10 @@ export class CProductCategory extends CUqBase {
         if (result2)
             this.categories2 = result2.ret;
         */
-	}
-	
-	async loadRoot() {
-		if (this.rootCategories) return;
+    }
+
+    async loadRoot() {
+        if (this.rootCategories) return;
         this.uqs.product.ProductCategory.stopCache();
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
@@ -55,26 +55,41 @@ export class CProductCategory extends CUqBase {
         });
         let { first, secend, third } = results;
         (first as any[]).forEach(v => {
-            v.children = this.buildChildren(v.productCategory.id, secend, third);
-		});
-		this.rootCategories = first;
-	}
+            v.productCategory = v.productCategory.id;
+            v.children = this.buildChildren(v.productCategory, secend, third);
+        });
+        this.rootCategories = first;
+    }
 
-	async load(id:number) {
-		if (this.current && this.current.productCategory === id) return;
-		await this.loadRoot();
-		let promises = [this.getCategoryChildren(id), this.getCategoryInstruction(id)];
-		let [{first, secend}, instruction] = await Promise.all(promises);
-		//let results = await this.getCategoryChildren(id);
-		this.instruction = instruction;
-		this.current = {
-			productCategory: id,
-			parent: undefined,
-			name: undefined,
-			total: undefined,
-			children: this.buildChildren(id, first, secend),
-		}
-	}
+    async load(id: number) {
+        if (this.current && this.current.productCategory === id) return;
+
+        let { uqs, currentLanguage } = this.cApp;
+        let { product } = uqs;
+        let { ProductCategory } = product;
+        let promises = [
+            ProductCategory.load(id),
+            this.getCategoryChildren(id),
+            this.getCategoryInstruction(id)
+        ];
+        let [pcTuid, { first, secend }, instruction] = await Promise.all(promises);
+        this.instruction = instruction;
+        this.current = {
+            productCategory: id,
+            parent: undefined,
+            name: undefined,
+            total: undefined,
+            children: [],
+        }
+
+        if (pcTuid) {
+            let { parent, productcategorylanguage } = pcTuid;
+            let pcCurrentLanguage = productcategorylanguage.find((v: any) => Tuid.equ(currentLanguage, v.language));
+            this.current.parent = parent;
+            this.current.name = pcCurrentLanguage && pcCurrentLanguage.name;
+            this.current.children = this.buildChildren(id, first, secend);
+        }
+    }
 
     renderRootList = () => {
         return this.renderView(VRootCategory);
@@ -112,21 +127,33 @@ export class CProductCategory extends CUqBase {
         });
     }
 
+    /**
+     * 为productCategory装配子节点/孙节点 
+     * @param id 
+     * @param subCategories 
+     * @param secendSubCategory 
+     */
     private buildChildren(id: number, subCategories: ProductCategory[], secendSubCategory: ProductCategory[]): ProductCategory[] {
         let children: ProductCategory[] = [];
-        for (let f of subCategories) {
-            if (!Tuid.equ(id, f.parent)) continue;
-            let len = secendSubCategory.length;
-            let secendSub: any[] = [];
-            for (let j = 0; j < len; j++) {
-                // eslint-disable-next-line
-                let { name, parent } = secendSubCategory[j];
-                if (!Tuid.equ(parent, f.productCategory)) continue;
-
-                secendSub.push(secendSubCategory[j]);
-            }
-            f.children = secendSub;
-            children.push(f);
+        for (let sub of subCategories) {
+            let { productCategory: subProductCategory, parent: subParent, name: subName, total: subTotal } = sub;
+            if (!Tuid.equ(id, subParent)) continue;
+            children.push({
+                productCategory: (subProductCategory as any).id,
+                parent: (subParent as any).id,
+                name: subName,
+                total: subTotal,
+                children: secendSubCategory
+                    .filter(v => Tuid.equ(v.parent, subProductCategory))
+                    .map(v => {
+                        return {
+                            productCategory: (v.productCategory as any).id,
+                            parent: (v.parent as any).id,
+                            name: v.name,
+                            total: v.total
+                        }
+                    })
+            });
         }
         return children;
     }
@@ -158,15 +185,18 @@ export class CProductCategory extends CUqBase {
     async showCategoryPage(categoryId: number) {
         if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
 
-		await this.load(categoryId);
-		let VP:new (c:CProductCategory) => VPage<any>;
-		// 如果想要web跟app方式的产品分类页面不一样，可以这么处理
-		if (this.isWebNav) {
-			VP = VCategoryPage;
-		}
-		else {
-			VP = VCategory;
-		}
+        await this.load(categoryId);
+        let VP: new (c: CProductCategory) => VPage<any>;
+        VP = VCategoryPage;
+        /*
+        // 如果想要web跟app方式的产品分类页面不一样，可以这么处理
+        if (this.isWebNav) {
+            VP = VCategoryPage;
+        }
+        else {
+            VP = VCategory;
+        }
+        */
         if (this.current) {
             let { children } = this.current;
             if (children && children.length > 0) {
@@ -190,6 +220,6 @@ export class CProductCategory extends CUqBase {
         return <Ax key={pcId}
             href={'/productCategory/' + pcId}
             className={className}
-            onClick={() => this.onClickCategory(pc)}>{content || name}</Ax>
+        >{content || name}</Ax>
     }
 }

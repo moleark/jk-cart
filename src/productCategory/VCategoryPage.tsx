@@ -5,41 +5,6 @@ import { CProductCategory, ProductCategory } from './CProductCategory';
 import $ from 'jquery';
 
 export class VCategoryPage extends VPage<CProductCategory> {
-	/*
-    instruction: string;
-    async open(categoryWapper: any) {
-
-        this.instruction = categoryWapper.instruction;
-       xs ? this.openPage(this.page, categoryWapper) : this.openPage(this.lpage, categoryWapper);;
-        // let { getCategoryInstruction } = this.controller;
-        // this.instruction = await getCategoryInstruction(0);
-	}
-	*/
-
-    /*
-    private renderChild = (childWapper: any) => {
-        return <div className="py-2"><FA name="hand-o-right mr-2"></FA>{childWapper.name}</div>
-    }*/
-
-    /*
-    private breadCrumb = (item: any, parent: any) => {
-        return <nav arial-babel="breadcrumb">
-            <ol className="breadcrumb">
-                {tv(item, this.breadCrumbItem)}
-            </ol>
-        </nav>
-
-    }*/
-
-    /*
-    private breadCrumbItem = (values: any, parent: any) => {
-        if (values === undefined || values.productCategory === undefined)
-            return <></>;
-        return <>
-            {tv(values.productCategory.parent, this.breadCrumbItem)}
-            <li className="breadcrumb-item" onClick={() => this.categoryClick(values, undefined, "")}>{values.name}</li>
-        </>
-    }*/
 
     private renderCategory(/*item: any, parent: any, labelColor: string*/) {
         let { instruction, current } = this.controller;
@@ -86,37 +51,27 @@ export class VCategoryPage extends VPage<CProductCategory> {
                 {
                     children.slice(0, 3).map(v => {
                         return this.controller.renderCategoryItem(v, 'mr-3');
-						/*
-						return <div key={v.name}
-							onClick={() => this.categoryClick(v, item, labelColor)}>
-							<p>{v.name}</p>
-						</div>;
-						*/
-					})
-				}
-				<p className="text-right">
-					{
-						this.controller.renderCategoryItem(
-							item, 
-							undefined, 
-							<>更多 <i className="fa fa-angle-right" aria-hidden="true"></i></>)
-					}
-				</p>
-			</>
-			:
-			<div>{total > 1000 ? '>1000' : total}个产品</div>;
+                    })
+                }
+                <p className="text-right">
+                    {
+                        this.controller.renderCategoryItem(
+                            item,
+                            undefined,
+                            <>更多 <i className="fa fa-angle-right" aria-hidden="true"></i></>)
+                    }
+                </p>
+            </>
+            :
+            <div>{total > 1000 ? '>1000' : total}个产品</div>;
 
-		return <div
-			key={name} 
-			className="col-lg-4 each-product"
-			onClick={()=>{if(!hasChildren){this.controller.onClickCategory(item)}}}
-		>
-			{this.controller.renderCategoryItem(
-				item, 
-				undefined, 
-				<h2 className="purple-bg">{name}</h2>
-			)}
-			<div className="background-grey">{vItem}</div>
+        return <div key={name} className="col-lg-4 each-product">
+            {this.controller.renderCategoryItem(
+                item,
+                undefined,
+                <h2 className="purple-bg">{name}</h2>
+            )}
+            <div className="background-grey">{vItem}</div>
         </div>
     }
 
