@@ -3263,7 +3263,7 @@ tr.order-total {
 		margin-bottom: 0;
 	}
 	.product-introduct h1 {
-		font-size: 24px;
+		font-size: 24px !important;
 	}
 	.product-introduct .img-wrap {
 		width: 100%;

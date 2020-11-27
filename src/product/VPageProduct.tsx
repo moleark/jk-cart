@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
     tv, VPage, Page, Form, ItemSchema, NumSchema, UiSchema,
-    ObjectSchema, RowContext, UiCustom, FormField, List
+    ObjectSchema, RowContext, UiCustom, FormField, List, Ax
 } from 'tonva';
 import { CProduct } from './CProduct';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
@@ -12,6 +12,7 @@ import { renderPropItem, renderBrand } from './renders';
 import { xs } from 'tools/browser';
 import { pdfIcon } from 'tools/images';
 import { VFavorite, VPrice } from './views';
+import classNames from 'classnames';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -40,27 +41,34 @@ export class VPageProduct extends VPage<CProduct> {
         //let { getProductSpecFile, getProductMSDSFile } = this.controller;
 		//let page = xs ? this.page : this.lpage;
         this.openPage(() => {
-			let { cApp, product } = this.controller;
+			let { cApp, product, openMaterial } = this.controller;
 			let { MSDSFiles, specFiles, data } = product;
 			/* let CurrentUA = browser.versions.mobile;
 			let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
-	
-			let header:any, cartLabel:any, material:any;
-			if (!xs) {
+            let header: any, cartLabel: any, material: any;
+            
+			if (xs) {
 			 	header = cApp.cHome.renderSearchHeader();
 				cartLabel = cApp.cCart.renderCartLabel();
 				material = <div className="col-lg-9 mt-lg-2 display-mobile mb-lg-2">
 					{this.renderProductMaterial()}
 				</div>;
-			}
+            }
+            material = <div className="left-below display-mobile">{/* display-desktop*/}
+                            <div  className="mint" onClick={()=>openMaterial('MSDS')}>化学品安全技术说明书（MSDS）</div>
+                            <div  className="mint" onClick={()=>openMaterial('SPEC')}>技术规格说明书（Specifications）</div>
+                            <div  className="mint" onClick={()=>openMaterial('COA')}>质检报告（COA）</div>
+                            {/* <div><a href="#" className="mint">化学品安全技术说明书（SDS）</a></div>
+                            <div><a href="#" className="mint">技术规格说明书(Specifications)</a></div> */}
+						</div>
 			/* let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
 			viewProduct.model = product; */
 
 			return <Page header={header} right={cartLabel} className="bg-white">
 				<section className="container mt-lg-2 product-sigle-page">
-					<div className="row">
+                    <div className="row">
 						{this.renderProduct(product)}
-						{material}
+						{/* {material} */}
 					</div>
 				</section>
 				
@@ -114,16 +122,63 @@ export class VPageProduct extends VPage<CProduct> {
 
         return <this.page />;
 	}
-	*/
+    */
+    
+    private material = (id:any) => {
+        let { openMaterial } = this.controller;
+        let Materials = [
+            { id: 1, name: "化学品安全技术说明书（MSDS）", type: "MSDS" },
+            { id: 2, name: "技术规格说明书（Specifications）", type: "SPEC" },
+            { id: 3, name: "质检报告（COA）", type: "COA" },
+        ];
+        return <div className={classNames('left-below', !xs ? 'd-none d-sm-block' : 'display-mobile')}>{/* display-desktop*/}
+            {
+                Materials.map((v: any) => {
+                      return <Ax key={v.name} href={'/product/'+ id +'/MSCU/' + v.type} onClick={() => openMaterial(v.type)}>
+                        <div  className="mint" >{v.name}</div></Ax>
+                })
+            }
+        </div>
+    }
 
     private renderProduct = (product: Product) => {
+        let { openMaterial } = this.controller;
 		let { id, brand, props } = product;
 		let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
 		let eName = <div className="py-2"><strong>{description}</strong></div>;
 		let cName:any;
 		if (descriptionC !== description) {
 			cName = <div>{descriptionC}</div>;
-		}
+        }
+
+        return <>
+            <div className="col-lg-4 product-left-card ">
+                <div className="preview">
+                    <ProductImage chemicalId={imageUrl} className="w-100"/>
+                    {this.material(id)}
+                    {/* <div className="left-below display-desktop mt-1">
+                        {this.renderProductMaterial()}
+                    </div> */}
+                </div>
+            </div>
+            <div className="col-lg-8">
+                <div className="details">
+                    {eName}
+                    {cName}
+                    <div className="row mx-3">
+                        {renderPropItem('产品编号', origin, "font-weight-bold")}
+                        {renderPropItem('CAS', CAS, "font-weight-bold")}
+                        {renderPropItem('纯度', purity)}
+                        {renderPropItem('分子式', molecularFomula)}
+                        {renderPropItem('分子量', molecularWeight)}
+                        {renderBrand(brand)}
+                    </div>
+                </div>
+                {this.renderVm(VFavorite, product)}
+			    {this.renderVm(VPrice, product)}
+            </div>
+		</>
+
         return <div className="mb-3 px-2">
             {eName}
             {cName}

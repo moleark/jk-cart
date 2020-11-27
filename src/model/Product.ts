@@ -11,14 +11,14 @@ export interface InventoryAllocation {
 }
 
 export interface PackRow {
-    pack: BoxId;
-    quantity: number;
+	pack: BoxId;
+	quantity: number;
 }
 
 export interface ProductPackRow extends PackRow {
-    retail: number;
-    vipPrice?: number;
-    promotionPrice?: number;
+	retail: number;
+	vipPrice?: number;
+	promotionPrice?: number;
 	currency: BoxId;
 	inventoryAllocation: InventoryAllocation[];
 }
@@ -41,10 +41,10 @@ export interface ProductProps {
 
 export class Product {
 	private cApp: CApp;
-	
+
 	id: number;
 	@observable.ref props: ProductProps;
-	
+
 	@observable.ref brand: MainBrand;
 	@observable.ref chemical: Chemical;
 	@observable favorite: boolean;
@@ -56,12 +56,14 @@ export class Product {
 	@observable data: any;
 	@observable discount: any;
 
-	constructor(cApp: CApp, id:number|BoxId) {
+	constructor(cApp: CApp, id: number | BoxId) {
 		this.cApp = cApp;
-		this.id = typeof id === 'object'? id.id : id;
+		this.id = typeof id === 'object' ? id.id : id;
 	}
 
-	getInventoryAllocation(packId:number): InventoryAllocation[] {
+	getInventoryAllocation(packId: number): InventoryAllocation[] {
+		console.log(this.props);
+
 		if (this.packs === undefined) return undefined;
 		let pack = this.packs.find(v => v.pack.id === packId);
 		return pack.inventoryAllocation;
@@ -70,20 +72,21 @@ export class Product {
 	async loadDetail() {
 		this.discount = 0;
 		await this.loadBase();
-		let promises:PromiseLike<any>[] = [
+		let promises: PromiseLike<any>[] = [
 			this.loadBrand(),
 			this.loadChemical(),
 			this.loadFavorite(),
 			this.loadPrices(),
-			this.loadMSDSFile(), 
-			this.loadSpecFile()
+			this.loadMSDSFile(),
+			this.loadSpecFile(),
+			this.loadPackss()
 		];
 		await Promise.all(promises);
 	}
 
 	async loadListItem() {
 		await this.loadBase();
-		let promises:PromiseLike<any>[] = [
+		let promises: PromiseLike<any>[] = [
 			this.loadBrand(),
 			this.loadChemical(),
 			this.loadFavorite(),
@@ -94,13 +97,13 @@ export class Product {
 	private async loadBase() {
 		if (this.props) return;
 		let ret = await this.cApp.uqs.product.ProductX.load(this.id);
-        this.props = ret;
+		this.props = ret;
 	}
 
 	private async loadBrand() {
 		if (this.brand) return;
 		let ret = await this.cApp.uqs.product.Brand.load(this.props.brand);
-        this.brand = ret;
+		this.brand = ret;
 	}
 
 	private async loadChemical() {
@@ -109,146 +112,160 @@ export class Product {
 		this.chemical = ret;
 	}
 
-    async loadFavorite() {
+	async loadFavorite() {
 		if (this.favorite !== undefined) return;
 		let ret = await this.cApp.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id });
 		this.favorite = (ret !== undefined);
-    }
-	
-    /**
-     * 获取产品MSDS文件
-     */
-    private async loadMSDSFile() {
+	}
+
+	private async loadPackss() {
+		console.log(this.prices);
+	}
+
+	/**
+	 * 获取产品MSDS文件
+	 */
+	private async loadMSDSFile() {
 		if (this.MSDSFiles) return;
-        let productMSDSFiles = await this.cApp.uqs.product.ProductMSDSFile.table({ product:11 });
-        this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
-    }
+		let productMSDSFiles = await this.cApp.uqs.product.ProductMSDSFile.table({ product: 11 });
+		this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
+	}
 
-    /**
-     * 获取产品Spec文件
-     */
-    private async loadSpecFile() {
+	/**
+	 * 获取产品Spec文件
+	 */
+	private async loadSpecFile() {
 		if (this.specFiles) return;
-        this.specFiles = await this.cApp.uqs.product.ProductSpecFile.table({ product:11 });
-    }
+		this.specFiles = await this.cApp.uqs.product.ProductSpecFile.table({ product: 11 });
+	}
 
-    private async loadPrices() {
-        let { customerDiscount, product, promotion } = this.cApp.uqs;
-        let discount = 0;
-        let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
-        //线上客户是否是线下客户 协议折扣  discount
-        if (currentUser.hasCustomer) {
-            let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand, customer: currentUser.currentCustomer });
-            if (discountSetting && discountSetting.discount)
-                discount = discountSetting.discount;
-        }
+	private async loadPrices() {
+		let { customerDiscount, product, promotion, warehouse } = this.cApp.uqs;
+		let discount = 0;
+		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
+		//线上客户是否是线下客户 协议折扣  discount
+		if (currentUser.hasCustomer) {
+			let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand, customer: currentUser.currentCustomer });
+			if (discountSetting && discountSetting.discount)
+				discount = discountSetting.discount;
+		}
 
-        // 协议客户与vip客户不同存
-        if (currentUser.webUserVIPCard !== undefined) {
-            let brandDiscounts = currentUser.VIPDiscount;
-            let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand.id);
-            // 协议与vip折扣比较 取其大值  (两者不可同存)
-            if (brandDiscount && brandDiscount.discount > discount)
-                discount = brandDiscount && brandDiscount.discount;
-        }
+		// 协议客户与vip客户不同存
+		if (currentUser.webUserVIPCard !== undefined) {
+			let brandDiscounts = currentUser.VIPDiscount;
+			if (!this.brand) await this.loadBrand();
+			let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand.id);
+			// 协议与vip折扣比较 取其大值  (两者不可同存)
+			if (brandDiscount && brandDiscount.discount > discount)
+				discount = brandDiscount && brandDiscount.discount;
+		}
 
-        let { id: currentSalesRegionId } = currentSalesRegion;
-        let prices = await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
-        this.prices = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
-            let ret: any = {};
-            ret.pack = element.pack;
-            ret.retail = element.retail;
-            if (discount !== 0)
-                ret.vipPrice = Math.round(element.retail * (1 - discount));
-            ret.currency = currentSalesRegion.currency;
-            if (cart) {
-                ret.quantity = cart.getQuantity(this.id, element.pack.id)
-            }
-            return ret;
-        });
+		let { id: currentSalesRegionId } = currentSalesRegion;
+		let prices = await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
 
-        let promises: PromiseLike<any>[] = [];
-        this.prices.forEach(v => {
-            promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
-        })
-        let results = await Promise.all(promises);
+		this.prices = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
+			let ret: any = {};
+			ret.pack = element.pack;
+			ret.retail = element.retail;
+			if (discount !== 0)
+				ret.vipPrice = Math.round(element.retail * (1 - discount));
+			ret.currency = currentSalesRegion.currency;
+			/* if (cart) {
+				ret.quantity = cart.getQuantity(this.id, element.pack.id)
+			} */
+			return ret;
+		});
+		let aaaaa = await this.cApp.uqs.warehouse.GetInventoryAllocation.table({ product: 1671, pack: 4714, salesRegion: this.cApp.currentSalesRegion });
+		console.log('aaaaa', aaaaa);
 
-        for (let i = 0; i < this.prices.length; i++) {
+		let promises: PromiseLike<any>[] = [];
+		let promises1: PromiseLike<any>[] = [];
+		this.prices.forEach(v => {
+			console.log(v);
+
+			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
+			promises.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
+		})
+		let results = await Promise.all(promises);
+		let results2 = await Promise.all(promises1);
+		console.log(1, results2);
+
+		for (let i = 0; i < this.prices.length; i++) {
 			let price = this.prices[i];
-            let promotion = results[i];
-            let discount = promotion && promotion.discount;
-            if (discount)
-                price.promotionPrice = Math.round((1 - discount) * price.retail);
-        }
-    }
+			let promotion = results[i];
+			let discount = promotion && promotion.discount;
+			if (discount)
+				price.promotionPrice = Math.round((1 - discount) * price.retail);
+		}
+	}
 
-    private async addProductFavorites() {
-        let { currentUser } = this.cApp;
-        let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
-        await this.cApp.uqs.webuser.myFavorites.add({ webUser: currentUser, product: this.id, arr1: [{ pack: 0, date: createDate }] });
+	private async addProductFavorites() {
+		let { currentUser } = this.cApp;
+		let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
+		await this.cApp.uqs.webuser.myFavorites.add({ webUser: currentUser, product: this.id, arr1: [{ pack: 0, date: createDate }] });
 		this.favorite = true;
-    }
+	}
 
-    private async delProductFavorites() {
-        let { currentUser } = this.cApp;
-        await this.cApp.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
+	private async delProductFavorites() {
+		let { currentUser } = this.cApp;
+		await this.cApp.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
 		this.favorite = false;
 	}
-	
+
 	favoriteOrCancel = async () => {
 		await this.cApp.assureLogin();
 		await this.loadFavorite();
-        if (this.favorite === true) {
+		if (this.favorite === true) {
 			await this.delProductFavorites();
 		}
 		else {
 			await this.addProductFavorites();
 		}
-    }
+	}
 
-    getProductAndDiscount = async (productId: BoxId) => {
-        let product = await this.cApp.uqs.product.ProductX.load(productId);
-        let discount = 0;
-        let { currentUser } = this.cApp;
-        if (currentUser.hasCustomer) {
-            let discountSetting = await this.cApp.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
-            discount = discountSetting && discountSetting.discount;
-        }
-        return { product: product, discount: discount };
-    }
+	getProductAndDiscount = async (productId: BoxId) => {
+		let product = await this.cApp.uqs.product.ProductX.load(productId);
+		let discount = 0;
+		let { currentUser } = this.cApp;
+		if (currentUser.hasCustomer) {
+			let discountSetting = await this.cApp.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
+			discount = discountSetting && discountSetting.discount;
+		}
+		return { product: product, discount: discount };
+	}
 
-    /**
-     * 获取PDF文件流
-     */
-    getPDFFileUrl = async (captcha: string) => {
+	/**
+	 * 获取PDF文件流
+	 */
+	getPDFFileUrl = async (captcha: string) => {
 		debugger;
 		/*
-        let lang = this.currentLanguage ? this.currentLanguage.id : undefined;
-        let productId = this.currentProduct ? this.currentProduct.id : undefined;
-        // let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${32}/${7084}`);
-        let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${lang}/${productId}`);
-        if (res.status === 200) {
-            let content = await res.arrayBuffer();
-            return content;
-        } else {
-            return {
-                status: res.status,
-                msg: res.status !== 412 ? res.statusText : '验证码错误!'
-            }
+		let lang = this.currentLanguage ? this.currentLanguage.id : undefined;
+		let productId = this.currentProduct ? this.currentProduct.id : undefined;
+		// let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${32}/${7084}`);
+		let res = await window.fetch(GLOABLE.CONTENTSITE + `/partial/productpdffile/${captcha}/${lang}/${productId}`);
+		if (res.status === 200) {
+			let content = await res.arrayBuffer();
+			return content;
+		} else {
+			return {
+				status: res.status,
+				msg: res.status !== 412 ? res.statusText : '验证码错误!'
+			}
 		}
 		*/
-    }
+	}
 
-    /**
-     * 获取验证码
-     */
-    getVerifyCode = async () => {
+	/**
+	 * 获取验证码
+	 */
+	getVerifyCode = async () => {
 		debugger;
 		/*
-        let timer = (new Date()).getTime()
+		let timer = (new Date()).getTime()
 		this.verifyCode = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
 		*/
-    }
+	}
 
 	/*
 	getChemicalInfo(product: number|BoxId):any {
@@ -285,13 +302,13 @@ export class Product {
 		if (futureDeliveryTimeDescription === null) return null;
 		if (futureDeliveryTimeDescription === '') return null;
 		p.futureDeliveryTimeDescription = '';
-    	this.uqs.product.GetFutureDeliveryTime.table({ product, salesRegion: this.cApp.currentSalesRegion.id}).then(futureDeliveryTime => {
+		this.uqs.product.GetFutureDeliveryTime.table({ product, salesRegion: this.cApp.currentSalesRegion.id}).then(futureDeliveryTime => {
 			let value: string;
-            if (futureDeliveryTime.length > 0) {
-                let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
-                value = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
-            } else {
-                value = null;
+			if (futureDeliveryTime.length > 0) {
+				let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
+				value = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
+			} else {
+				value = null;
 			}
 			p.futureDeliveryTimeDescription = value;
 		});
@@ -336,22 +353,22 @@ export class Product {
 	*/
 
 	/*
-    getInventoryAllocation = async (productId: number, packId: number, salesRegionId: number) => {
-        return await this.uqs.warehouse.GetInventoryAllocation.table({ product: productId, pack: packId, salesRegion: this.cApp.currentSalesRegion });
-    }
+	getInventoryAllocation = async (productId: number, packId: number, salesRegionId: number) => {
+		return await this.uqs.warehouse.GetInventoryAllocation.table({ product: productId, pack: packId, salesRegion: this.cApp.currentSalesRegion });
+	}
 
-    getFutureDeliveryTimeDescription = async (productId: number, salesRegionId: number) => {
-        let cacheId = productId + '_' + salesRegionId;
-        if (this.futureDeliveryTimeDescriptionContainer[cacheId] === undefined) {
-            let futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: productId, salesRegion: salesRegionId });
-            if (futureDeliveryTime.length > 0) {
-                let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
-                this.futureDeliveryTimeDescriptionContainer[cacheId] = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
-            } else {
-                this.futureDeliveryTimeDescriptionContainer[cacheId] = null;
-            }
-        }
-        return this.futureDeliveryTimeDescriptionContainer[cacheId];
+	getFutureDeliveryTimeDescription = async (productId: number, salesRegionId: number) => {
+		let cacheId = productId + '_' + salesRegionId;
+		if (this.futureDeliveryTimeDescriptionContainer[cacheId] === undefined) {
+			let futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: productId, salesRegion: salesRegionId });
+			if (futureDeliveryTime.length > 0) {
+				let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
+				this.futureDeliveryTimeDescriptionContainer[cacheId] = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
+			} else {
+				this.futureDeliveryTimeDescriptionContainer[cacheId] = null;
+			}
+		}
+		return this.futureDeliveryTimeDescriptionContainer[cacheId];
 	}
 	*/
 

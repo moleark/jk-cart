@@ -34,6 +34,8 @@ serviceWorker.unregister();
 	let onLogined: () => Promise<void>;
 
 	if (nav.isMobile || window.location.pathname.endsWith('/app')) {
+		require('style-loader!./css/style.css');
+		require('style-loader!./css/rst.css');
 		onLogined = async () => {
 			await start(CApp, appConfig);
 		}

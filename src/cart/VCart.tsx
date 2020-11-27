@@ -4,6 +4,7 @@ import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormF
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
 import { CartPackRow, CartItem } from './Cart';
+import { xs } from 'tools/browser';
 
 const cartSchema = [
     {
@@ -163,13 +164,13 @@ export class VCart extends VPage<CCart> {
             {content}
         </Page>;
 	})
-	*/
+    */
 
-	header() {return '购物车'}
+	header() {return <div className="navheader">购物车</div>}
 	footer() {
         let { cart } = this.controller.cApp;
         let footer: any;
-        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+        if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
             footer = undefined;
         }
         else {
@@ -181,7 +182,7 @@ export class VCart extends VPage<CCart> {
 	content() {
         let { cart } = this.controller.cApp;
         let content: any;
-        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+        if (cart.count.get() === 0 && cart.cartItems  &&  cart.cartItems.length === 0) {
             content = this.empty();
         }
         else {
