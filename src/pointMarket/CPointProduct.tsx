@@ -28,6 +28,13 @@ export const OrderSource = {
     PRIZEORDER: '奖品订单',
 }
 
+export const PointIntervals: { [state: string]: any } = {
+    'below':{ startPoint: 0, endPoint: 10000 },
+    'firstLevel':{ startPoint: 10000, endPoint: 50000 },
+    'twoLevel':{ startPoint: 50000, endPoint: 150000 },
+    'above':{ startPoint: 150000, endPoint: Infinity },
+}
+
 export const PointProductDetailLevel = {
     DIRECT: 3,
     INDIRECT:4,
@@ -120,10 +127,9 @@ export class CPointProduct extends CUqBase {
         this.navCloseByOrderSuccess = DetailLevel; 
         this.pointProductsDetail = pointProduct;
         if (this.pointProductsSelected.length) {
-            for (let i of this.pointProductsSelected) {
-                if (pointProduct.product.id === i.product.id)
-                    this.pointProductsDetail.quantity = i.quantity;
-            }
+            let findP = this.pointProductsSelected.find((v: any) => pointProduct.product.id === v.product.id);
+            if (findP && findP.quantity !== 0) this.pointProductsDetail.quantity = findP.quantity;
+            else this.pointProductsDetail.quantity = 0;
         } else
             this.pointProductsDetail.quantity = 0;
         let fm = 'YYYY-MM-DD HH:mm:ss';
@@ -316,22 +322,7 @@ export class CPointProduct extends CUqBase {
      * 获取积分区间的积分产品
      */
     getPointsIntervalProducts = async (state: any) => {
-        switch (state) {
-            case 'below':
-                this.pointInterval = { startPoint: 0, endPoint: 10000 };
-                break;
-            case 'firstLevel':
-                this.pointInterval = { startPoint: 10000, endPoint: 50000 };
-                break;
-            case 'twoLevel':
-                this.pointInterval = { startPoint: 50000, endPoint: 150000 };
-                break;
-            case 'above':
-                this.pointInterval = { startPoint: 150000, endPoint: Infinity };
-                break;
-            default:
-                break;
-        }
+        this.pointInterval = PointIntervals[state];
         this.pointProducts = await this.getPointsProducts();
         // this.initPointProducts();
         return this.pointProducts;
@@ -355,10 +346,9 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
-        /* let availablePoints = this.myEffectivePoints - this.pointToExchanging;
-        if (availablePoints <= 0) return;    */ 
         // 当前产品详情的数量
-        this.pointProductsDetail.quantity = value;
+        if (data.product.id===this.pointProductsDetail.product.id)
+            this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
         this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
         this.pointProductsSelected.forEach(element => {
@@ -415,9 +405,6 @@ export class CPointProduct extends CUqBase {
         }
 
         //兑换后清空选择的积分产品
-        /* this.orderData.exchangeItems = undefined;
-        this.pointProductsSelected.length = 0;
-        this.pointToExchanging = 0; */
         this.clearSelectedPointsProducts();
 
         // 打开下单成功显示界面
