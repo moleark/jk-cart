@@ -7,6 +7,7 @@ import './cat.css';
 import { Ax, BoxId, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';
 import { VCategory } from './VCategory';
+import classNames from 'classnames';
 
 export interface ProductCategory {
     productCategory: number; //ID ProductCategory,
@@ -81,6 +82,16 @@ export class CProductCategory extends CUqBase {
             total: undefined,
             children: [],
         }
+
+        let parentS = async function (params: any) {
+            let isM = true;
+            while (isM) {
+                let ProductCategoryLoad: any = await ProductCategory.load(params);
+                if (ProductCategoryLoad.parent) params = ProductCategoryLoad.parent.id;
+                else isM = false;
+            }
+        };
+        await parentS(id);
 
         if (pcTuid) {
             let { parent, productcategorylanguage } = pcTuid;
@@ -219,7 +230,7 @@ export class CProductCategory extends CUqBase {
         let pcId = typeof productCategory === 'object' ? (productCategory as any).id : productCategory;
         return <Ax key={pcId}
             href={'/productCategory/' + pcId}
-            className={className}
+            className={classNames(className,'d-block text-truncate')}
         >{content || name}</Ax>
     }
 }

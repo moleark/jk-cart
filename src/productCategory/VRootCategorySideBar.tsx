@@ -15,7 +15,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
                 <ul className="list-unstyled components">
                     {this.controller.rootCategories.map(v => {
 						let {productCategory, name, children} = v;
-						let pcId = (productCategory as any).id;
+						let pcId = productCategory; //(productCategory as any).id;
 						let menuId = "Submenu" + pcId;
 						return <li className="active" key={pcId}>
 							<a href={'#' + menuId} data-toggle="collapse" aria-expanded="false">{name}</a>

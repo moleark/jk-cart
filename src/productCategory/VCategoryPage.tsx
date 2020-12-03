@@ -1,16 +1,17 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage } from 'tonva';
+import { Tuid, VPage } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 import $ from 'jquery';
+import { tv } from '../tonva/uq/tuid/reactBoxId';
 
 export class VCategoryPage extends VPage<CProductCategory> {
 
     private renderCategory(/*item: any, parent: any, labelColor: string*/) {
-        let { instruction, current } = this.controller;
-        let main;
+        let { instruction, current, rootCategories ,cApp} = this.controller;
+        let main,breadcrumbs;
         if (current) {
-            let { productCategory, name, children } = current;
+            let { productCategory, name, children, parent } = current;
             let instructionUi;
             if (instruction) {
                 let instr: JQuery<Element> = $(instruction);
@@ -25,6 +26,27 @@ export class VCategoryPage extends VPage<CProductCategory> {
                     {children.map(v => this.renderSubcategory(v))}
                 </div>
             </div>
+            breadcrumbs= <div className="breadcrumbs mb-4" style={{lineHeight:1.5}}>
+                            <a href="#">首页</a>
+                            <a href="#">产品</a>
+                            {tv(parent, (v: any) => {
+                                if(v.parent) 
+                                    return <>{tv(v.parent, (j: any) => {
+                                        let jL = j.productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
+                                        let vL = v.productcategorylanguage.find((vl: any) => cApp.currentLanguage.id === vl.language.id);
+                                        return <>
+                                            <a href="#">{jL.name}</a>
+                                            <a href="#">{vL.name}</a>
+                                        </>
+                                    })}</>
+                                else {
+                                    let findRootParent = rootCategories.find((vs: any) => vs.productCategory === v.id);
+                                    if (findRootParent) return <a href="#">{findRootParent.name}</a>;
+                                    return null;
+                                }
+                            })}
+                            <span>{name}</span>
+                        </div>
         } else {
             main = <div>
                 无
@@ -32,6 +54,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         }
 
         return <section className="container mt-lg-2">
+            {breadcrumbs}
             <div className="row">
                 <div className="col-lg-3 product-side d-none d-lg-block">
                     {this.controller.renderRootSideBar()}
@@ -75,7 +98,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         </div>
     }
 
-    header() { return this.controller.cApp.cHome.renderSearchHeader(); }
-    right() { return this.controller.cApp.cCart.renderCartLabel(); }
+    /* header() { return this.controller.cApp.cHome.renderSearchHeader(); }
+    right() { return this.controller.cApp.cCart.renderCartLabel(); } */
     content() { return this.renderCategory(); }
 }
