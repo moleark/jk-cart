@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv } from 'tonva';
+import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv, Ax } from 'tonva';
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
 import { CartPackRow, CartItem } from './Cart';
@@ -51,7 +51,7 @@ export class VCart extends VPage<CCart> {
             </div>;
         } else {
             return <div className="d-flex justify-content-center">
-                <button className="btn btn-success w-75 mx-5" style={{ background: '#28a745' }}
+                <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
                     type="button"
                     onClick={checkOut} disabled={amount <= 0}>
                     {content}
@@ -68,33 +68,38 @@ export class VCart extends VPage<CCart> {
         let { product } = item;
         let { controller } = this;
         let { onItemClick, renderCartProduct } = controller;
-        return <div className="pr-1">
-            <div className="row">
-                <div className="col-lg-6 pb-3" onClick={() => onItemClick(item)}>
-                    {renderCartProduct(product)}
-                </div>
-                <div className="col-lg-6"><FormField name="packs" /></div>
+        return <div className="row justify-content-between">
+                    <div className="col-lg-5 px-0" >{/* onClick={() => onItemClick(item)} */}
+                        <Ax href={'/product/' + product.id}>
+                            {renderCartProduct(product)}
+                        </Ax>
+                    </div>
+                <div className="col-lg-6 px-0 mt-2"><FormField name="packs" /></div>
             </div>
-        </div>;
     }
 
     private packsRow = (item: CartPackRow) => {
         let { pack, price } = item;
-
-        return <div className="px-2">
+        return <div className="px-2 d-flex align-items-center">
+            <div className="col-4 px-0"><b>{tv(pack)}</b></div>
+            <div className="col-4 px-0"><span className="text-danger h5">¥{price}</span></div>
+            <div className="col-4 px-0"><FormField name="quantity" /></div>
+            {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
+        </div>;
+        /* return <div className="px-2">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-6c mr-4 text-right"><span className="text-danger h5">¥{price}</span></div>
                 <FormField name="quantity" />
             </div>
             <div>{this.controller.renderDeliveryTime(pack)}</div>
-        </div>;
+        </div>; */
     }
 
     private uiSchema: UiSchema = {
         selectable: true,
         deletable: true,
-        restorable: true,
+        restorable: false,
         items: {
             list: {
                 widget: 'arr',
@@ -126,9 +131,22 @@ export class VCart extends VPage<CCart> {
 
     protected cartForm = observer(() => {
         let { cart } = this.controller.cApp;
-		let { cartItems } = cart;
+        let { cartItems } = cart;
 		let data = {list: cartItems};
-        return <Form className="bg-white flex-fill overflow-auto" schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
+        return <>
+            {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">购物车</h1></div> :null }
+            <div className="d-none d-lg-block">
+                <div className="w-100 border-bottom ">
+                    <div className="col-lg-6 d-flex ml-auto mr-0 mb-2 px-2 font-weight-bolder h6">
+                        <div className="col-4">包装</div>
+                        <div className="col-4">单价</div>
+                        <div className="col-4 text-left pl-0" style={{textIndent:'2em'}}>数量</div>
+                    </div>
+                </div>
+            </div>
+           
+            <Form className="bg-white flex-fill overflow-auto reset-z-fieldset" schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
+        </>
     });
 
     private empty() {
@@ -166,7 +184,11 @@ export class VCart extends VPage<CCart> {
 	})
     */
 
-	header() {return <div className="navheader">购物车</div>}
+	// header() {return <div className="navheader">购物车</div>}
+    header() {
+        if (!xs) return '';
+        return <div className="navheader">购物车</div>;
+    }
 	footer() {
         let { cart } = this.controller.cApp;
         let footer: any;

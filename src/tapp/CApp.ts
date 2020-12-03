@@ -284,6 +284,7 @@ export class CApp extends CUqApp {
     }
 
     private navProduct: NavPage = async (params: any) => {
+        await this.cart.buildItems();
         this.cProduct.showProductDetail(params?.id);
     }
 

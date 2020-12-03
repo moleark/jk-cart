@@ -18,26 +18,42 @@ export class VInCart extends View<CProduct> {
 		let cName:any;
 		if (descriptionC !== description) {
 			cName = <div className="pb-2"><strong>{descriptionC}</strong></div>;
-		}
-        return <div className="row d-flex mb-3 px-2">
-            <div className="col-12">
-                <div className="py-2">
-                    <strong>{description}</strong>
-                </div>
-				{cName}
-                <div className="row">
-                    <div className="col-3">
-                        <ProductImage chemicalId={imageUrl} className="w-4c h-4c" />
+        }
+        return <div className="row mx-0">
+                    <div className="col-lg-3">
+                        <ProductImage chemicalId={imageUrl} className="w-5c h-5c" />
                     </div>
-                    <div className="col-9">
+                    <div className="col-lg-9">
+                        <div className="py-2 text-truncate">
+                            <strong>{description}</strong>
+                        </div>
+                        {cName}
                         <div className="row">
                             {renderPropItem('编号', origin)}
-                            {this.renderVm(VChemicalInfoInCart, product) /*this.controller.renderChemicalInfoInCart(product)*/}
                             {renderBrand(brand)}
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+
+        // return <div className="row d-flex mb-3 px-2">
+        //     <div className="col-12">
+        //         <div className="py-2">
+        //             <strong>{description}</strong>
+        //         </div>
+		// 		{cName}
+        //         <div className="row">
+        //             <div className="col-3">
+        //                 <ProductImage chemicalId={imageUrl} className="w-4c h-4c" />
+        //             </div>
+        //             <div className="col-9">
+        //                 <div className="row">
+        //                     {renderPropItem('编号', origin)}
+        //                     {this.renderVm(VChemicalInfoInCart, product) /*this.controller.renderChemicalInfoInCart(product)*/}
+        //                     {renderBrand(brand)}
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        // </div>
     };
 }

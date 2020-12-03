@@ -32,15 +32,15 @@ export interface CartPackRow extends PackRow {
 
 export class Cart {
     private cApp: CApp;
-	private cartData: any;
+    private cartData: any;
     private cartStore: CartStore;
     private disposer: IReactionDisposer;
 
-	/*
+    /*
     @observable data: any = {
         list: observable<CartItem>([]),
-	};
-	*/
+    };
+    */
     @observable cartItems: CartItem[];
     count = observable.box<number>(0);
     amount = observable.box<number>(0);
@@ -56,7 +56,7 @@ export class Cart {
     }
 
     private calcSum = () => {
-		if (!this.cartItems) return;
+        if (!this.cartItems) return;
         let count = 0, amount = 0;
         for (let cp of this.cartItems) {
             let { $isSelected, $isDeleted, packs } = cp;
@@ -78,20 +78,20 @@ export class Cart {
             this.cartStore = new CartRemote(this.cApp);
         else
             this.cartStore = new CartLocal(this.cApp);
-		let cartData = await this.cartStore.load();
-		this.cartData = cartData;
-		let count = 0;
-		for (let cd of cartData) { 
-			let {quantity} = cd as any;
-			count += quantity;
-		}
-		this.count.set(count);
-	}
+        let cartData = await this.cartStore.load();
+        this.cartData = cartData;
+        let count = 0;
+        for (let cd of cartData) {
+            let { quantity } = cd as any;
+            count += quantity;
+        }
+        this.count.set(count);
+    }
 
-	async buildItems() {
-		if (this.cartItems) return;
+    async buildItems() {
+        if (this.cartItems) return;
         let { uqs, currentSalesRegion } = this.cApp;
-		let cartData = this.cartData;
+        let cartData = this.cartData;
         // 初始化购物车中产品的目录价
         let { product } = uqs;
         let { PriceX } = product;
@@ -109,26 +109,26 @@ export class Cart {
             }
         }
 
-		let cartDataGrouped = groupByProduct(cartData);
-		let productPromises: Promise<any>[] = [];
-		let cartItems: CartItem[] = [];
-        if (cartDataGrouped && cartDataGrouped.length > 0) {
-            for (let i = 0; i < cartDataGrouped.length; i++) {
-				let { product: productId, packs, createdate } = cartDataGrouped[i];
-				let product = this.cApp.getProduct(productId);
-				productPromises.push(product.loadListItem());
+        let cartDataGrouped = groupByProduct(cartData);
+        let productPromises: Promise<any>[] = [];
+        let cartItems: CartItem[] = [];
+        if (cartData && cartData.length) {
+            for (let key of cartData) {
+                let { product: productId, pack, quantity, price, retail, currency, createdate } = key;
+                let product = this.cApp.getProduct(productId);
+                productPromises.push(product.loadListItem());
                 cartItems.push({
                     product: product,
-                    packs: packs,
+                    packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency && currency.id }],
                     $isSelected: true,
                     $isDeleted: false,
                     createdate: createdate,
-                })
-			}
-		}
-		await Promise.all(productPromises);
-		this.cartItems = cartItems;
-		delete this.cartData;
+                });
+            };
+        };
+        await Promise.all(productPromises);
+        this.cartItems = cartItems;
+        delete this.cartData;
     }
 
     /*
@@ -156,10 +156,13 @@ export class Cart {
     */
 
     getQuantity(productId: number, packId: number): number {
-        let cp = this.cartItems.find(v => v.$isDeleted !== true && Tuid.equ(v.product, productId));
-        if (!cp) return 0;
+        let cps = this.cartItems.filter(v => v.$isDeleted !== true && Tuid.equ(v.product, productId));
+        if (!cps.length) return 0;
+        let cpp = cps.find((v => v.packs[0].pack.id === packId));
+        return cpp === undefined ? 0 : cpp.packs[0].quantity;
+        /* if (!cp) return 0;
         let cpp = cp.packs.find(v => v.pack.id === packId);
-        return cpp === undefined ? 0 : cpp.quantity;
+        return cpp === undefined ? 0 : cpp.quantity; */
     }
 
     isDeleted(productId: number): boolean {
@@ -178,7 +181,7 @@ export class Cart {
      *
      */
     add = async (product: Product/*BoxId*/, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
-        let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
+        let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product) && Tuid.equ(e.packs[0].pack, pack));
         if (!cartItemExists) {
             this.cartItems.push({
                 product: product,
@@ -190,28 +193,13 @@ export class Cart {
         }
         else {
             let { $isDeleted, packs } = cartItemExists;
-            if ($isDeleted === true)
-                packs.splice(0);
+            if ($isDeleted === true) packs.splice(0);
 
             let packExists: CartPackRow = packs.find(e => Tuid.equ(e.pack, pack));
-            if (packExists === undefined) {
-                let added = false;
-                for (let index = packs.length - 1; index >= 0; index--) {
-                    if (packs[index].price < price) {
-                        packs.splice(index + 1, 0, { pack: pack, quantity: quantity, price: price, retail: retail, currency: currency });
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added)
-                    packs.unshift({ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency })
-                // packs.push();
-            }
-            else {
-                packExists.quantity = quantity;
-                packExists.price = price;
-                packExists.currency = currency;
-            }
+            packExists.quantity = quantity;
+            packExists.price = price;
+            packExists.currency = currency;
+
             cartItemExists.$isSelected = true;
             cartItemExists.$isDeleted = false;
             cartItemExists.createdate = Date.now();
@@ -235,7 +223,7 @@ export class Cart {
     async removeItem(rows: [{ productId: number, packId: number }]) {
         if (rows && rows.length > 0) {
             rows.forEach(pe => {
-                let cartItemIndex = this.cartItems.findIndex(e => e.product.id === pe.productId);
+                let cartItemIndex = this.cartItems.findIndex(e => Tuid.equ(e.product, pe.productId) && Tuid.equ(e.packs[0].pack, pe.packId));
                 if (cartItemIndex >= 0) {
                     let cartItem = this.cartItems[cartItemIndex];
                     let i = cartItem.packs.findIndex(e => e.pack.id === pe.packId)
