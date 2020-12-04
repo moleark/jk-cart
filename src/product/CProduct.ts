@@ -34,11 +34,12 @@ export class CProduct extends CUqBase {
     //@observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     //@observable chemicalInfoContainer: { [productId: number]: any } = {};
 
-    @observable verifyCode: any;
+    @observable captcha: any;
     @observable materialType: string;
     @observable currentFileName: any;
     @observable currentLanguage: any;
     @observable currentProduct: any;
+    @observable productMsdsVersions: any[] = [];
 
     //@observable productData: any;
     //@observable product: any;
@@ -208,27 +209,57 @@ export class CProduct extends CUqBase {
     }
 
     /**
+     * 获取PDF文件流
+     */
+    getPDFFileUrl = async (row: any) => {
+        // await this.cApp.assureLogin();
+        let { origin, captcha, lang, lot } = row;
+        if (this.materialType === 'MSDS')
+            return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
+        if (this.materialType === 'SPEC')
+            return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
+        if (this.materialType === 'COA') { };
+    }
+
+    fetchPdf = async (url: string) => {
+        let res = await window.fetch(GLOABLE.CONTENTSITE + url);
+        if (res.status === 200) {
+            let content = await res.arrayBuffer();
+            return content;
+        } else {
+            return {
+                status: res.status,
+                msg: res.status !== 400 ? res.statusText : '验证码错误!'
+            }
+        }
+    }
+
+    /**
      * 获取验证码
      */
-    getVerifyCode = async () => {
-        let timer = (new Date()).getTime()
-        this.verifyCode = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
+    getCaptcha = async () => {
+        let timer = (new Date()).getTime();
+        this.captcha = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
     }
 
     /**
      * 产品资料页面
      */
-    openMaterial = async (MaterialType?: string) => {
-        if (MaterialType === 'MSDS' || MaterialType === 'SPEC')
-            await this.getVerifyCode();
-        this.materialType = MaterialType;
-        this.openVPage(VPageVerifyCode);
-    }
-
-    /**
-     * PDF文件预览页面
-     */
-    openPDFView = async (fileUrl: any) => {
-        this.openVPage(VPagePDF, fileUrl);
+    openMaterial = async (Type?: string, id?: string) => {
+        if (Type === 'MSDS' || Type === 'SPEC') await this.getCaptcha();
+        this.materialType = Type;
+        let origin: any;
+        if (!isNaN(Number(id))) this.product = this.cApp.getProduct(Number(id));
+        if (this.product && this.product.props) {
+            origin = this.product.props.origin;
+            if (origin && Type === 'MSDS') {
+                let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productMsdsVersion/' + origin);
+                if (result.ok) {
+                    this.productMsdsVersions = await result.json();
+                }
+                else this.productMsdsVersions = [];
+            }
+        }
+        this.openVPage(VPageVerifyCode, origin);
     }
 }

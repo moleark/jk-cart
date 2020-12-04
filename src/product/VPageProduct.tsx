@@ -13,6 +13,7 @@ import { xs } from 'tools/browser';
 import { pdfIcon } from 'tools/images';
 import { VFavorite, VPrice } from './views';
 import classNames from 'classnames';
+import { TopicDivision } from 'pointMarket/VPointProduct';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -25,10 +26,10 @@ const schema: ItemSchema[] = [
     { name: 'futureDeliveryTimeDescription', type: 'string' }
 ];
 
-const languageCaptions:{[language:string]:string} = {
+export const languageCaptions:{[language:string]:string} = {
 	'DE': '德文',
 	'EN': '英文',
-	'EN-US': '英美',
+	'EN-US': '美式英文',
 	'CN': '中文',
 }
 
@@ -42,7 +43,7 @@ export class VPageProduct extends VPage<CProduct> {
 		//let page = xs ? this.page : this.lpage;
         this.openPage(() => {
 			let { cApp, product, openMaterial } = this.controller;
-			let { MSDSFiles, specFiles, data } = product;
+            let { MSDSFiles, specFiles, data, id } = product;
 			/* let CurrentUA = browser.versions.mobile;
 			let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
             let header: any, cartLabel: any, material: any;
@@ -54,20 +55,17 @@ export class VPageProduct extends VPage<CProduct> {
 					{this.renderProductMaterial()}
 				</div>;
             }
-            material = <div className="left-below display-mobile">{/* display-desktop*/}
-                            <div  className="mint" onClick={()=>openMaterial('MSDS')}>化学品安全技术说明书（MSDS）</div>
-                            <div  className="mint" onClick={()=>openMaterial('SPEC')}>技术规格说明书（Specifications）</div>
-                            <div  className="mint" onClick={()=>openMaterial('COA')}>质检报告（COA）</div>
-                            {/* <div><a href="#" className="mint">化学品安全技术说明书（SDS）</a></div>
-                            <div><a href="#" className="mint">技术规格说明书(Specifications)</a></div> */}
-						</div>
 			/* let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
 			viewProduct.model = product; */
 
 			return <Page header={header} right={cartLabel} className="bg-white">
 				<section className="container mt-lg-2 product-sigle-page">
                     <div className="row">
-						{this.renderProduct(product)}
+                        {this.renderProduct(product)}
+                        <div className="display-mobile px-2 ml-2 my-3 w-100" style={{lineHeight:1.8}}>
+                            {TopicDivision('产品资料')}
+                            {this.material(id)}
+                        </div>
 						{/* {material} */}
 					</div>
 				</section>
@@ -134,7 +132,7 @@ export class VPageProduct extends VPage<CProduct> {
         return <div className={classNames('left-below', !xs ? 'd-none d-sm-block' : 'display-mobile')}>{/* display-desktop*/}
             {
                 Materials.map((v: any) => {
-                      return <Ax key={v.name} href={'/product/'+ id +'/MSCU/' + v.type} onClick={() => openMaterial(v.type)}>
+                      return <Ax key={v.name} href={'/product/mscu/' + v.type +'/'+ id} >{/* onClick={() => openMaterial(v.type)} */}
                         <div  className="mint" >{v.name}</div></Ax>
                 })
             }
@@ -143,7 +141,7 @@ export class VPageProduct extends VPage<CProduct> {
 
     private renderProduct = (product: Product) => {
         let { openMaterial } = this.controller;
-		let { id, brand, props } = product;
+		let { id, brand, props, chemical } = product;
 		let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
 		let eName = <div className="py-2"><strong>{description}</strong></div>;
 		let cName:any;
@@ -155,7 +153,7 @@ export class VPageProduct extends VPage<CProduct> {
             <div className="col-lg-4 product-left-card ">
                 <div className="preview">
                     <ProductImage chemicalId={imageUrl} className="w-100"/>
-                    {this.material(id)}
+                    <div className="d-none d-sm-block">{this.material(id)}</div>
                     {/* <div className="left-below display-desktop mt-1">
                         {this.renderProductMaterial()}
                     </div> */}
@@ -167,10 +165,10 @@ export class VPageProduct extends VPage<CProduct> {
                     {cName}
                     <div className="row mx-3">
                         {renderPropItem('产品编号', origin, "font-weight-bold")}
-                        {renderPropItem('CAS', CAS, "font-weight-bold")}
-                        {renderPropItem('纯度', purity)}
-                        {renderPropItem('分子式', molecularFomula)}
-                        {renderPropItem('分子量', molecularWeight)}
+                        {renderPropItem('CAS', CAS || chemical.CAS, "font-weight-bold")}
+                        {renderPropItem('纯度', purity || chemical.purity)}
+                        {renderPropItem('分子式', molecularFomula || chemical.molecularFomula)}
+                        {renderPropItem('分子量', molecularWeight || chemical.molecularWeight)}
                         {renderBrand(brand)}
                     </div>
                 </div>

@@ -67,6 +67,7 @@ export class CApp extends CUqApp {
         this.cache = new Map();
         this.cart = new Cart(this);
         await this.cart.init();
+        await this.cart.buildItems();
 
         this.cHome = this.newC(CHome);
         this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
@@ -289,7 +290,8 @@ export class CApp extends CUqApp {
     }
 
     private navProductMSCU: NavPage = async (params: any) => {
-        this.cProduct.openMaterial(params?.type);
+        await this.assureLogin();
+        this.cProduct.openMaterial(params?.type, params?.id);
     }
 
     private navCart: NavPage = async (params: any) => {
@@ -322,7 +324,7 @@ export class CApp extends CUqApp {
             '/home': this.navHome,
             '/search/:key': this.navSearch,
             '/product/:id': this.navProduct,
-            '/product/:id/MSCU/:type': this.navProductMSCU,
+            '/product/mscu/:type/:id': this.navProductMSCU,
             '/cart': this.navCart,
             '/productCategory/:id': this.navProductCategory,
             '/pointshop': this.navPointShop,

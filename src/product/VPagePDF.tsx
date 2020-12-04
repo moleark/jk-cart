@@ -39,7 +39,8 @@ export class VPagePDF extends VPage<CProduct> {
         let right = <></>;// <div className="mr-2" onClick={() => this.isShowActionSheet = true}><FA name='ellipsis-h' /></div>;
         //setTimeout(() => {this.ParsRenderPDF()}, 50);
         
-        return <Page header={header} right={right} >
+        // return <Page header={header} right={right} >
+        return <Page >
             {/* <div className="position-fixed d-flex flex-column justify-content-end" style={{ top: 0, left: 0, bottom: 0, right: 0, background: 'rgba(0, 0, 0, .3)' }}>
                 <div className="">
                     <div>
@@ -52,7 +53,7 @@ export class VPagePDF extends VPage<CProduct> {
             </div> */}
             {
                 this.isFoundFile 
-                    ? <div id="PDFVIEW" className="w-100" style={{ height: '91vh' }}></div>
+                    ? <div id="PDFVIEW" className="w-100 my-2" style={{ height: '100vh',overflowY:'auto' }}></div>
                     : <div className="text-center py-5">{this.fileUrl.msg}</div>
             }
         </Page>
