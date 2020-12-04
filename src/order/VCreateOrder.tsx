@@ -49,8 +49,7 @@ export class VCreateOrder extends VPage<COrder> {
     private renderOrderItem = (orderItem: OrderItem) => {
         let { product, packs } = orderItem;
         let { controller, packsRow } = this;
-        return <div>
-            <div className="row">
+        return <div className="row">
                 <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
                 <div className="col-lg-6">{
                     packs.map((p, index) => {
@@ -58,11 +57,12 @@ export class VCreateOrder extends VPage<COrder> {
                     })
                 }</div>
             </div>
-        </div>;
     }
 
     private orderItemKey = (orderItem: OrderItem) => {
-        return orderItem.product.id;
+        let pack = orderItem.packs[0].pack;
+        let packID = pack ? String(pack.id) : '';
+        return orderItem.product.id + packID;
     }
 
     private renderCoupon = observer((param: any) => {
@@ -216,7 +216,7 @@ export class VCreateOrder extends VPage<COrder> {
 			</>;
 		};
 		let renderPrice = (price:number, className?:string) => {
-			return <span className={classNames('text-right', className)}><small>¥</small>{price}</span>;
+			return <div className={classNames('text-right', className)}><small>¥</small>{price}</div>;
 		}
 
         let invoiceContactUI = <div className="row py-3 bg-white mb-1">
