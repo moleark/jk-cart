@@ -63,8 +63,16 @@ export class VPageList extends VPage<CProduct> {
         let { productsPager, searchKey } = this.controller;
         let none = <div className="p-3 text-warning">[无]</div>;
 		return <>
-			<div className="bg-white py-2 px-3 mb-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
-			<List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+            <div className="bg-white py-2 px-3 my-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
+            <div className="row mx-0 bg-light">
+                <div className="col-lg-3 product-side d-none d-lg-block">
+                    {this.controller.cApp.cProductCategory.renderRootSideBar()}
+                </div>
+                <div className="col-lg-9 product-introduct px-0">
+                    <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+                    <div className="text-center mt-3 mb-5 border">分页器</div>
+                </div>
+            </div>
 		</>;
 	}
 
