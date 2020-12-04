@@ -80,12 +80,14 @@ export class VCart extends VPage<CCart> {
 
     private packsRow = (item: CartPackRow) => {
         let { pack, price } = item;
-        return <div className="px-2 d-flex align-items-center">
-            <div className="col-4 px-0"><b>{tv(pack)}</b></div>
-            <div className="col-4 px-0"><span className="text-danger h5">¥{price}</span></div>
-            <div className="col-4 px-0"><FormField name="quantity" /></div>
+        return <>
+            <div className="px-2 d-flex align-items-center">
+                <div className="col-4 px-0"><b>{tv(pack)}</b></div>
+                <div className="col-4 px-0"><span className="text-danger h5">¥{price}</span></div>
+                <div className="col-4 px-0"><FormField name="quantity" /></div>
+            </div>
             {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
-        </div>;
+        </>
         /* return <div className="px-2">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>

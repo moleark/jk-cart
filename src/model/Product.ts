@@ -62,10 +62,10 @@ export class Product {
 	}
 
 	getInventoryAllocation(packId: number): InventoryAllocation[] {
-		console.log(this.props);
-
+		return undefined;
 		if (this.packs === undefined) return undefined;
 		let pack = this.packs.find(v => v.pack.id === packId);
+		if (!pack) return undefined;
 		return pack.inventoryAllocation;
 	}
 
@@ -79,7 +79,7 @@ export class Product {
 			this.loadPrices(),
 			this.loadMSDSFile(),
 			this.loadSpecFile(),
-			this.loadPackss()
+			this.loadFDTimeDescription()
 		];
 		await Promise.all(promises);
 	}
@@ -116,10 +116,6 @@ export class Product {
 		if (this.favorite !== undefined) return;
 		let ret = await this.cApp.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id });
 		this.favorite = (ret !== undefined);
-	}
-
-	private async loadPackss() {
-		console.log(this.prices);
 	}
 
 	/**
@@ -170,33 +166,43 @@ export class Product {
 			if (discount !== 0)
 				ret.vipPrice = Math.round(element.retail * (1 - discount));
 			ret.currency = currentSalesRegion.currency;
-			/* if (cart) {
+			if (cart) {
 				ret.quantity = cart.getQuantity(this.id, element.pack.id)
-			} */
+			}
 			return ret;
 		});
-		let aaaaa = await this.cApp.uqs.warehouse.GetInventoryAllocation.table({ product: 1671, pack: 4714, salesRegion: this.cApp.currentSalesRegion });
-		console.log('aaaaa', aaaaa);
 
 		let promises: PromiseLike<any>[] = [];
 		let promises1: PromiseLike<any>[] = [];
 		this.prices.forEach(v => {
-			console.log(v);
-
 			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
-			promises.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
-		})
+			promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
+		});
 		let results = await Promise.all(promises);
 		let results2 = await Promise.all(promises1);
-		console.log(1, results2);
 
+		let newPacks = [];
 		for (let i = 0; i < this.prices.length; i++) {
+			let inventoryAllocation = results2.find((v: any[]) => {
+				let res = v.filter((j: any) => j.pack.id === this.prices[i].pack.id);
+				return res.length;
+			});
+			newPacks.push({ ...this.prices[i], inventoryAllocation: inventoryAllocation })
+
 			let price = this.prices[i];
 			let promotion = results[i];
 			let discount = promotion && promotion.discount;
 			if (discount)
 				price.promotionPrice = Math.round((1 - discount) * price.retail);
 		}
+		this.packs = newPacks;
+	}
+
+	async loadPacks(param: any) {
+		let { currentSalesRegion, uqs } = this.cApp;
+		let { pack, quantity, retail, currency } = param;
+		let inventoryAllocation = await uqs.warehouse.GetInventoryAllocation.table({ product: this.id, pack: pack, salesRegion: currentSalesRegion });
+		this.packs = [{ pack, quantity, retail, currency, inventoryAllocation }];
 	}
 
 	private async addProductFavorites() {
@@ -265,6 +271,17 @@ export class Product {
 		let timer = (new Date()).getTime()
 		this.verifyCode = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
 		*/
+	}
+
+	private async loadFDTimeDescription() {
+		let { currentSalesRegion, uqs } = this.cApp;
+		let futureDeliveryTime = await uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		if (futureDeliveryTime.length > 0) {
+			let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
+			this.futureDeliveryTimeDescription = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
+		} else {
+			this.futureDeliveryTimeDescription = '';
+		}
 	}
 
 	/*
