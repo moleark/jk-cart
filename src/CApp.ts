@@ -21,6 +21,8 @@ import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
+import { CWebUser } from 'webuser/CWebUser';
+import { COrderDraft } from 'orderdraft/COrderDraft';
 
 export class CApp extends CUqApp {
     //get uqs(): UQs { return this._uqs as UQs };
@@ -47,6 +49,8 @@ export class CApp extends CUqApp {
     cYncProjects: CYncProjects;
     cLottery: CLottery;
     cSignIn: CSignIn;
+    cWebUser: CWebUser;
+    cOrderDraft: COrderDraft;
 
     /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
@@ -91,6 +95,8 @@ export class CApp extends CUqApp {
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
+        this.cWebUser = this.newC(CWebUser);
+        this.cOrderDraft = this.newC(COrderDraft);
 
         await this.cHome.getSlideShow();
 
@@ -136,6 +142,12 @@ export class CApp extends CUqApp {
                     this.showMain();
                     if (query.vipcard)
                         await this.cCoupon.showSharedVIPCard(query);
+                    break;
+
+                /* 分享过来的订单 */
+                case 'orderdraft':
+                    this.showMain();
+                    this.cOrderDraft.showSharedOrder(query)
                     break;
                 case "login":
                     if (!this.isLogined)

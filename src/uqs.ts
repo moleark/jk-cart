@@ -128,7 +128,9 @@ export interface UqWebBuilder {
     GetSlideShow: Query;
 }
 
-
+export interface UqOrderDraft {
+    OrderDraft: Sheet;
+}
 export interface UQs {
     order: UqOrder;
     product: UqProduct;
@@ -142,4 +144,5 @@ export interface UQs {
     member: UqMember;
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
+    orderDraft: UqOrderDraft;
 }
