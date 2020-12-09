@@ -72,8 +72,8 @@ export class Product {
 	async loadDetail() {
 		this.discount = 0;
 		await this.loadBase();
+		await this.loadBrand();
 		let promises: PromiseLike<any>[] = [
-			this.loadBrand(),
 			this.loadChemical(),
 			this.loadFavorite(),
 			this.loadPrices(),
@@ -86,10 +86,11 @@ export class Product {
 
 	async loadListItem() {
 		await this.loadBase();
+		await this.loadBrand();
 		let promises: PromiseLike<any>[] = [
-			this.loadBrand(),
 			this.loadChemical(),
 			this.loadFavorite(),
+			this.loadPrices(),
 		];
 		await Promise.all(promises);
 	}
@@ -141,7 +142,7 @@ export class Product {
 		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
 		//线上客户是否是线下客户 协议折扣  discount
 		if (currentUser.hasCustomer) {
-			let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand, customer: currentUser.currentCustomer });
+			let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand.id, customer: currentUser.currentCustomer });
 			if (discountSetting && discountSetting.discount)
 				discount = discountSetting.discount;
 		}
@@ -149,7 +150,6 @@ export class Product {
 		// 协议客户与vip客户不同存
 		if (currentUser.webUserVIPCard !== undefined) {
 			let brandDiscounts = currentUser.VIPDiscount;
-			if (!this.brand) await this.loadBrand();
 			let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand.id);
 			// 协议与vip折扣比较 取其大值  (两者不可同存)
 			if (brandDiscount && brandDiscount.discount > discount)
@@ -174,12 +174,15 @@ export class Product {
 
 		let promises: PromiseLike<any>[] = [];
 		let promises1: PromiseLike<any>[] = [];
+		// let promises2: PromiseLike<any>[] = [];/* 收藏夹 暂时不做 */
 		this.prices.forEach(v => {
 			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
 			promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
+			// promises2.push(this.cApp.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id, pack: v.pack.id }));
 		});
 		let results = await Promise.all(promises);
 		let results2 = await Promise.all(promises1);
+		// let resultsFavorite = await Promise.all(promises2);
 
 		let newPacks = [];
 		for (let i = 0; i < this.prices.length; i++) {
@@ -205,20 +208,20 @@ export class Product {
 		this.packs = [{ pack, quantity, retail, currency, inventoryAllocation }];
 	}
 
-	private async addProductFavorites() {
+	private async addProductFavorites(pack?: any) {
 		let { currentUser } = this.cApp;
 		let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
 		await this.cApp.uqs.webuser.myFavorites.add({ webUser: currentUser, product: this.id, arr1: [{ pack: 0, date: createDate }] });
 		this.favorite = true;
 	}
 
-	private async delProductFavorites() {
+	private async delProductFavorites(pack?: any) {
 		let { currentUser } = this.cApp;
 		await this.cApp.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
 		this.favorite = false;
 	}
 
-	favoriteOrCancel = async () => {
+	favoriteOrCancel = async (pack?: any) => {
 		await this.cApp.assureLogin();
 		await this.loadFavorite();
 		if (this.favorite === true) {

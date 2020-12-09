@@ -8,6 +8,7 @@ import './index.css';
 import { NavView, start, nav, startPage } from 'tonva';
 import { appConfig } from 'configuration';
 import './App.css';
+import 'antd/dist/antd.css';
 import { CApp, CWeb } from './tapp';
 //import logo from './logo.svg';
 

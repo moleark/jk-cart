@@ -36,10 +36,10 @@ export class VFavorite extends View<CProduct> {
             this.isProductFarirates = await this.isMyFarirates(id);
     }
 	*/
-    render(product: Product): JSX.Element {
+    render(param: any): JSX.Element {
+        let { product, curPack } = param;
     	return React.createElement(observer(() => {
-			let {favorite, favoriteOrCancel} = product;
-			
+            let { favorite, favoriteOrCancel } = product as Product;
 			//let { currentUser } = this.controller.cApp;
 			//if (currentUser)
 			//    this.initInventoryAllocation(productId);

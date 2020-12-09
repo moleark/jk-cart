@@ -156,6 +156,7 @@ export class Cart {
     */
 
     getQuantity(productId: number, packId: number): number {
+        if (!this.cartItems) return 0;
         let cps = this.cartItems.filter(v => v.$isDeleted !== true && Tuid.equ(v.product, productId));
         if (!cps.length) return 0;
         let cpp = cps.find((v => v.packs[0].pack.id === packId));

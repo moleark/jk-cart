@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BoxId, View } from 'tonva';
+import { BoxId, tv, View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
@@ -7,25 +7,15 @@ import { observer } from 'mobx-react';
 import {renderBrand, renderPropItem, renderUnsold} from '../renders';
 import { Product } from '../../model';
 import { VFavorite } from './VFavorite';
+import { VPrice, VPriceWithTr } from './VPrice';
 
 export class VProuductView2 extends View<CProduct> {
     // @observable product: any;
     // @observable discount: number;
-	
-	Detail = async (productId: BoxId | number | string) => {
-        if (!productId) return;
-        if (typeof productId === 'string') {
-            productId = Number(productId);
-        }
-        let product = this.controller.cApp.getProduct(productId);
-        await product.loadDetail();
-		console.log('product',product);
-    }
-
-    render(product: Product): JSX.Element {
+    render(product: any): JSX.Element {
 		return React.createElement(observer(() => {
 			let { brand, chemical, props } = product;
-			let { description, descriptionC, origin, imageUrl } = props;
+			let { description, descriptionC, origin, imageUrl, id } = props;
 			let discountinued = 0;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
 			let eName = <div className="mr-3"><strong>{description}</strong></div>;
@@ -33,46 +23,45 @@ export class VProuductView2 extends View<CProduct> {
 			if (descriptionC !== description) {
 				cName = <div>{descriptionC}</div>;
 			}
+			imageUrl = imageUrl || props.chemical.toString();
 			return <div className="row mx-0 my-3 bg-white">
-					<div className="col-lg-4 product-left-card">
-						<ProductImage chemicalId={imageUrl} className="w-100" />
-					</div>
-					<div className="col-lg-8 each-product">
-						<div className="details">
-							{eName}
-							{cName}
-							<div>{this.renderVm(VFavorite, product)}</div>
-							<div className="row p-0">
-								{renderPropItem('产品编号', origin)}
-								{renderPropItem('CAS', CAS)}
-								{renderPropItem('纯度', purity)}
-								{renderPropItem('分子式', molecularFomula)}
-								{renderPropItem('分子量', molecularWeight)}
-								{renderBrand(brand)}
-							</div>
-						</div>
-						{/* <a className="button ahover display-desktop"
-							onClick={(event: any) => { event.stopPropagation();this.Detail(product.id)}}
-						>详情</a> */}
+				<div className="col-lg-4 product-left-card">
+					<ProductImage chemicalId={imageUrl} className="w-100" />
 				</div>
-				{/* <div className="col-lg-12">
-					<div className="stable mt-lg-2">
-						<div className="table-responsive-vertical shadow-z-1">
-							<table id="table" className="table article-product-table">
-								<thead>
-									<tr className="article-product-list">
-										<th>包装</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr className="article-product-list">
-										<td data-title="包装" className="text-right red">25ML</td>
-									</tr>
-								</tbody>
-							</table>
+				<div className="col-lg-8 each-product">
+					<div className="details">
+						{eName}
+						{cName}
+						<div>{this.renderVm(VFavorite, {product})}</div>
+						<div className="row p-0">
+							{renderPropItem('产品编号', origin)}
+							{renderPropItem('CAS', CAS ||  props.CAS)}
+							{renderPropItem('纯度',purity || props.purity)}
+							{renderPropItem('分子式',molecularFomula || props.molecularFomula)}
+							{renderPropItem('分子量',molecularWeight || props.molecularWeight)}
+							{renderBrand(brand)}
 						</div>
 					</div>
-				</div> */}
+					<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+						onClick={(event: React.MouseEvent) => { event.stopPropagation();}}>详情
+					</a>
+				</div>
+				<div className="container collapse col-lg-12 pt-2 px-0 border-top-0"
+					onClick={(event: React.MouseEvent) => { event.stopPropagation();}} id={`description${id}`}>
+					<table id="table" className="table article-product-table table-striped">
+						<thead>
+							<tr className="article-product-list">
+								<th>包装</th>
+								<th>价格</th>
+								<th>数量</th>
+								{/* <th>收藏夹</th> */}
+							</tr>
+						</thead>
+						<tbody>
+							<>{ this.renderVm(VPriceWithTr,product)}</>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			
 			// return <div className="d-block mb-4 px-3 bg-white">

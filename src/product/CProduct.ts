@@ -8,6 +8,8 @@ import { VPageVerifyCode } from './VPageVerifyCode';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../model';
 import { GLOABLE } from 'global';
+import { ElasticSearchPager } from '../tools/elasticSearchPager';
+import { xs } from 'tools/browser';
 
 /**
  *
@@ -29,6 +31,9 @@ interface ProductProps {
 
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
+    @observable esproductsPager: ElasticSearchPager<Product> | any[];
+    @observable esProductsTotal: any;
+    @observable currentPage: number = 1;
     //@observable productSpecFiles: any[] = [];
     //@observable productMSDSFiles: any[] = [];
     //@observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
@@ -63,22 +68,32 @@ export class CProduct extends CUqBase {
     }
     */
 
-    private productConverter = (item: any, queryResults: { [name: string]: any[] }): Product => {
+    private productConverter = (item: any, queryResults?: { [name: string]: any[] }): Product => {
         let product = this.cApp.getProduct(item.id);
         product.props = item;
+        // product.props.imageUrl = item.chemical.toString();
         product.loadListItem();
         return product;
     }
 
-    private searchByKey() {
+    private async searchByKey() {
         let { currentSalesRegion } = this.cApp;
-        this.productsPager = new QueryPager<Product>(this.uqs.product.SearchProduct, 10, 10);
+        if (xs) {
+            this.esproductsPager = new ElasticSearchPager<Product>(GLOABLE.CONTENTSITE + '/api/search', 10, 10);
+            this.esproductsPager.setItemConverter(this.productConverter);
+            this.esproductsPager.first({
+                keyWord: this.searchKey,
+                salesRegion: currentSalesRegion.id
+            });
+        };
+        if (!xs) await this.esProductsPagerMore(this.currentPage);
+
+        /* this.productsPager = new QueryPager<Product>(this.uqs.product.SearchProduct, 10, 10);
         this.productsPager.setItemConverter(this.productConverter);
         this.productsPager.first({
             keyWord: this.searchKey,
             salesRegion: currentSalesRegion.id
-        });
-        console.log(this.productsPager);
+        }); */
     }
 
     searchWebByKey(key: string) {
@@ -89,15 +104,38 @@ export class CProduct extends CUqBase {
     }
 
     async searchByCategory({ productCategory, name }: { productCategory: number; name: string }) {
-        let { currentSalesRegion } = this.cApp;
-        this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
+        this.searchKey = name; this.currentPage = 1;
+        await this.searchByKey();
+
+        /* this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         this.productsPager.setItemConverter(this.productConverter);
         await this.productsPager.first({
             productCategory,
             salesRegion: currentSalesRegion.id
-        });
-        this.searchKey = name;
+        }); */
+
         this.openVPage(VPageList);
+    }
+
+    esProductsPagerMore = async (page: number) => {
+        this.currentPage = page;
+        let url = GLOABLE.CONTENTSITE + '/api/search/key=' + this.searchKey + '/' + page;
+        let resp = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+        let ret = await resp.json();
+        let items = ret.hits;
+        let arr = [];
+        for (let key of items) {
+            let product = this.productConverter(key);
+            arr.push(product);
+        }
+        this.esproductsPager = arr;
+        this.esProductsTotal = ret.total;
     }
 
     /**

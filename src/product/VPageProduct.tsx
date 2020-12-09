@@ -148,7 +148,7 @@ export class VPageProduct extends VPage<CProduct> {
 		if (descriptionC !== description) {
 			cName = <div>{descriptionC}</div>;
         }
-
+        imageUrl = imageUrl || props.chemical.toString();
         return <>
             <div className="col-lg-4 product-left-card ">
                 <div className="preview">
@@ -172,7 +172,7 @@ export class VPageProduct extends VPage<CProduct> {
                         {renderBrand(brand)}
                     </div>
                 </div>
-                {this.renderVm(VFavorite, product)}
+                {this.renderVm(VFavorite, {product})}
 			    {this.renderVm(VPrice, product)}
             </div>
 		</>
@@ -195,7 +195,7 @@ export class VPageProduct extends VPage<CProduct> {
                     </div>
                 </div>
             </div>
-            {this.renderVm(VFavorite, product)/*this.controller.renderFavoritesLabel(product)*/}
+            {this.renderVm(VFavorite, {product})/*this.controller.renderFavoritesLabel(product)*/}
 			{this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
 		</div>;
 		/*

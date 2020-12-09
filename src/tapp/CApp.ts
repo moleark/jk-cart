@@ -281,6 +281,10 @@ export class CApp extends CUqApp {
     }
 
     private navSearch: NavPage = async (params: any) => {
+        let promises: PromiseLike<void>[] = [];
+        promises.push(this.cProductCategory.start());
+        await Promise.all(promises);
+        await this.cart.buildItems();
         this.cProduct.start(params?.key);
     }
 
@@ -302,6 +306,7 @@ export class CApp extends CUqApp {
     private navProductCategory: NavPage = async (params: any) => {
         let id = params.id;
         if (id) id = Number(id);
+        await this.cart.buildItems();
         await this.cProductCategory.showCategoryPage(id);
     }
 

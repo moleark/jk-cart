@@ -26,7 +26,7 @@ export class VProuductView extends View<CProduct> {
 						<div><strong>{description}</strong></div>
 						<div>{descriptionC}</div>
 					</div>
-					<div>{this.renderVm(VFavorite, product)}</div>
+					<div>{this.renderVm(VFavorite, {product})}</div>
 				</div>
 				<div className="row">
 					<div className="col-3">

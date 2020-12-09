@@ -32,7 +32,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 		return <ul className="collapse list-unstyled" id={menuId}>
 			{children.map(e => {
 				let { productCategory } = e;
-				let pcId = (productCategory as any).id;
+				let pcId = (productCategory as any).id || productCategory;
 				return <li key={pcId}>
 					{this.controller.renderCategoryItem(e)}
 				</li>;

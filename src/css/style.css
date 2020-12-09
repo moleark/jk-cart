@@ -536,7 +536,7 @@ button, html input[type=button], input[type=reset], input[type=submit] {
 }
 
 .btn {
-	background-color: unset;
+	/* background-color: unset; */
 }
 
 .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
