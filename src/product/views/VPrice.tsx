@@ -3,13 +3,15 @@ import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, I
 import { CProduct } from '../CProduct';
 import { MinusPlusWidget } from 'tools';
 import { Product } from 'model';
+import { VFavorite } from './VFavorite';
+import { observer } from 'mobx-react';
 
 /**
  * 显示产品包装价格，配合CProduct.renderProductPrice使用
  * 需要的参数product必须是BoxId(或者object?)
  */
 export class VPrice extends View<CProduct> {
-
+    isShowTable: boolean = false;
     private schema: ItemSchema[] = [
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
@@ -27,7 +29,7 @@ export class VPrice extends View<CProduct> {
 	}
 	*/
 
-    private renderPrice(product:Product, item: any) {
+    protected renderPrice(product:Product, item: any) {
 		let onQuantityChanged = async (context: Context, value: any, prev: any):Promise<void> => {
 			let { data } = context;
 			let { pack, retail, vipPrice, promotionPrice, currency } = data;
@@ -77,8 +79,22 @@ export class VPrice extends View<CProduct> {
                     <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
                 </div>
             </div >
+
+            if (this.isShowTable) 
+                right = <>
+                <td className="align-middle">
+                    <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
+                    <span className="text-danger">¥ <span className="h5">{price}</span></span>
+                </td>
+                <td className="align-middle">
+                    <div className="d-flex justify-content-center mt-2">
+                        <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
+                    </div>
+                </td>
+            </ >
         } else {
             right = <small>请询价</small>
+            if (this.isShowTable) right = <><td className="py-3">请询价</td><td></td></>;
         }
         return right;
     }
@@ -148,4 +164,26 @@ export class VPrice extends View<CProduct> {
         </>;
 	})
 	*/
+}
+
+
+export class VPriceWithTr extends VPrice {
+    isShowTable: boolean = true;
+
+    render(product: Product): JSX.Element {
+		let {prices} = product;
+        return React.createElement(observer(() => {
+            return  <>{prices?.map((v: any, index: number) => {
+                let { pack, retail } = v;
+                return <tr className="px-2 text-center" key={pack.id}>
+                    <td className="align-middle"><b>{tv(pack)}</b></td>
+                    {this.renderPrice(product, v)}
+                    {/* {retail
+                        ? <td className="align-middle"><span className="d-flex justify-content-center">{this.renderVm(VFavorite, { product, curPack: v })}</span></td>
+                        : <td></td>
+                    } */}
+                </tr>;
+            })}</>;
+        }))
+    }
 }
