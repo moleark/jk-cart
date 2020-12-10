@@ -33,12 +33,12 @@ export class VMyPoint extends VPage<CPointProduct> {
     }
 
     private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
-        let pointProductImage = (pointProduct: any, index: any) => {            
+        let pointProductImage = (pointProduct: any, index: any) => {
             let { product } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
             return <div className={`d-flex align-items-center ${clm}`}>{tv(product, (v) => {
-                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{width:'91.6%',height:'23vw',border:`2px solid ${randomColor()}`}} />
-                 })
+                return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{ width: '91.6%', height: '23vw', border: `2px solid ${randomColor()}` }} />
+            })
             }</div>
         }
         return <div className="mb-4" style={{ zIndex: 9 }}>
@@ -49,8 +49,8 @@ export class VMyPoint extends VPage<CPointProduct> {
             <List className="d-flex w-100 bg-transparent justify-content-between"
                 items={imgArr.slice(0, 3)}
                 item={{
-                    render:pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
-                    onClick: (v) => toWhere(v,PointProductDetailLevel.DIRECT),
+                    render: pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
+                    onClick: (v) => toWhere(v, PointProductDetailLevel.DIRECT),
                     className: "col-4 p-0 bg-transparent"
                 }}
                 none='暂无产品' />
@@ -59,7 +59,7 @@ export class VMyPoint extends VPage<CPointProduct> {
 
     private page = observer(() => {
         let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
-            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp } = this.controller;
+            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp, showPointDoubt } = this.controller;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
@@ -92,15 +92,18 @@ export class VMyPoint extends VPage<CPointProduct> {
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
 
-        return <Page header="积分管理" right={right} className="h-100 bg-white">
+        return <Page header="积分商城" right={right} className="h-100 bg-white">
             <div>
                 <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
                     <>{nowPointTip}</>
                     <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
-                    < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
+                    <div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between">
                         <div>
                             <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
-                            <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
+                            <div className="mt-2">
+                                {myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}
+                                <span className="small ml-2 d-none" onClick={() => showPointDoubt()}><span className="small">对积分有疑问?</span></span>
+                            </div>
                         </div>
                         <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
                             {this.pointblock("签到", openPointSign, signInIcon)}

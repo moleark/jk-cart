@@ -183,7 +183,7 @@ export class VMe extends VPage<CMe> {
                 },
                 {
                     type: 'component',
-                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
+                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分商城" />,
                     onClick: this.openMyPoint
                 },
                 '',

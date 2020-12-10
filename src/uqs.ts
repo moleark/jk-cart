@@ -55,6 +55,9 @@ export interface UqWebUser {
     getMyUsedCoupon: Query,
     getMyExpiredCoupon: Query,
 
+    getWebUserByCustomer: Query,
+    setCustomerMainWebUser: Action,
+
     RecordLogin: Action,
 }
 
