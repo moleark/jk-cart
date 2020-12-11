@@ -533,13 +533,22 @@ export class CPointProduct extends CUqBase {
     }
 
     showPointDoubt = async () => {
-        let param: any = { webUsers: [] };
         let { currentUser } = this.cApp;
+        let param: any = { currentUser, webUsers: [] };
         if (currentUser.hasCustomer) {
             let { currentCustomer } = currentUser;
+            param.currentCustomer = currentCustomer;
             let otherWebUsers = await currentCustomer.getRelatedWebUser();
             param.webUsers = otherWebUsers;
+        } else {
+            this.applyAuditUser();
         }
         this.openVPage(VPointDoubt, param);
+    }
+
+    applyAuditUser = async () => {
+        let { cApp, uqs } = this;
+        let { currentUser } = cApp;
+        await uqs.webuser.applyAuditUser.submit({ webUser: currentUser });
     }
 }

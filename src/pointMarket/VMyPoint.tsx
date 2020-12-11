@@ -101,8 +101,8 @@ export class VMyPoint extends VPage<CPointProduct> {
                         <div>
                             <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
                             <div className="mt-2">
-                                {myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}
-                                <span className="small ml-2 d-none" onClick={() => showPointDoubt()}><span className="small">对积分有疑问?</span></span>
+                                {myTotalPoints > 0 ? <small className="mr-2">总分: {myTotalPoints}</small> : null}
+                                <span className="small" onClick={() => showPointDoubt()}><span className="small">对积分有疑问?</span></span>
                             </div>
                         </div>
                         <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>

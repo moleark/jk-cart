@@ -57,6 +57,7 @@ export interface UqWebUser {
 
     getWebUserByCustomer: Query,
     setCustomerMainWebUser: Action,
+    applyAuditUser: Action,
 
     RecordLogin: Action,
 }
