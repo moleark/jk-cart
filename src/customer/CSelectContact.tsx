@@ -92,9 +92,15 @@ export abstract class CSelectContact extends CUqBase {
         let cAddress = this.newC(CAddress); // new CAddress(this.cApp, undefined);
         return await cAddress.call<number>();
     }
+
+    getList = async () => {
+        let userContactMaps = await this.cApp.currentUser.getContacts();
+        this.userContacts = userContactMaps.map((v: any) => v.contact);
+    }
 }
 
 export class CSelectShippingContact extends CSelectContact {
+    @observable TIT: boolean = false;
     protected async getIsDefault(userSetting: any, userContactId: number): Promise<boolean> {
         if (userSetting !== undefined) {
             let { shippingContact } = userSetting;

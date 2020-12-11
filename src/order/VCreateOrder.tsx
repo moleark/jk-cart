@@ -7,6 +7,7 @@ import { OrderItem } from './Order';
 import { CartPackRow } from '../cart/Cart';
 import classNames from 'classnames';
 //import { GLOABLE } from 'cartenv';
+import { xs } from '../tools/browser';
 
 export class VCreateOrder extends VPage<COrder> {
 
@@ -17,8 +18,10 @@ export class VCreateOrder extends VPage<COrder> {
 	private shippingAddressTip = observable.box();
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
+    private checkType: string;
 
     async open(param: any) {
+        document.documentElement.scrollIntoView();
         this.openPage(this.page);
     }
 
@@ -169,9 +172,14 @@ export class VCreateOrder extends VPage<COrder> {
         this.controller.submitOrder();
     }
 
+    saveShowModal = (type:string) => {
+        this.controller.modalTitle = 'contactList';
+        this.checkType = type;
+    }
+
     private page = observer(() => {
 
-        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
+        let { cApp, orderData,modalTitleS, editContact,modalTitle, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
 		let { currentUser } = cApp;
 		let { allowOrdering } = currentUser;
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
@@ -184,7 +192,7 @@ export class VCreateOrder extends VPage<COrder> {
             </div>
         </div>;
 
-        let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
+        let chevronRight = xs ? <FA name="chevron-right" className="cursor-pointer" /> : <></>;
 		/*
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写收货地址</div>
@@ -202,7 +210,7 @@ export class VCreateOrder extends VPage<COrder> {
             } else {
                 divInvoiceContact = <div className="col-8 offset-4 offset-sm-2">
                     <button className="btn btn-outline-primary"
-                        onClick={onSelectInvoiceContact}>选择发票地址</button>
+                        onClick={()=>{ xs ? onSelectInvoiceContact() : this.saveShowModal('发票地址')}}>选择发票地址</button>
                     {/*invoiceAddressBlankTip*/}
 					{autoHideTips(this.invoiceAddressTip)}
                 </div>
@@ -251,7 +259,7 @@ export class VCreateOrder extends VPage<COrder> {
 		*/
 
         //let invoiceBlankTip = this.invoiceIsBlank ? <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票信息</div> : null;
-        let invoiceInfoUI = <div className="row py-3 bg-white mb-1" onClick={onInvoiceInfoEdit}>
+        let invoiceInfoUI = <div className="row py-3 bg-white" onClick={onInvoiceInfoEdit}>
             {labeled('发票信息:',
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {tv(orderData.invoiceType, (v) => <>{v.description}</>, undefined, () => <span className="text-primary">填写发票信息</span>)}
@@ -271,7 +279,7 @@ export class VCreateOrder extends VPage<COrder> {
             }
         }
 
-        let couponUI = <div className="row py-3 bg-white mb-1" onClick={onCouponEdit}>
+        let couponUI = <div className="row py-3 bg-white" onClick={onCouponEdit}>
 			{labeled('优惠卡券:', 
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {React.createElement(this.renderCoupon,
@@ -282,10 +290,12 @@ export class VCreateOrder extends VPage<COrder> {
                         })}
                 </LMR>)}
         </div>;
-
-        return <Page header="订单预览" footer={footer}>
+        let header:any;
+        if(xs) header = "订单预览";
+        return <Page header={header} footer={footer}>
+             {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">订单信息</h1></div> :null }
             <div className="px-2">
-                <div className="row py-3 bg-white mb-1" onClick={onSelectShippingContact}>
+                <div className="row py-3 bg-white" onClick={()=>{ xs ? onSelectShippingContact() : this.saveShowModal('收货地址')}}>
 					{labeled('收货地址:',
 						<>
                         <LMR className="w-100 align-items-center" right={chevronRight}>
@@ -306,6 +316,26 @@ export class VCreateOrder extends VPage<COrder> {
                     {freightFeeRemittedUI}
                 </div >
                 {couponUI}
+            </div>
+            <div className='modal modal-dialog-show' style={{ display: modalTitle ?'block':'none',background:"rgba(0,0,0,.3)",}}>
+                <div className="d-flex justify-content-center align-content-center w-100 h-100" >
+                    <div className="border bg-light m-auto rounded pb-4 position-relative" style={{maxWidth:800}}>
+                        <div className="position-absolute cursor-pointer" style={{right:5,top:0}} onClick={()=>{this.controller.modalTitle = '';}}><FA name="times-circle-o" className="text-primary" /></div>
+                        {
+                          modalTitle &&  modalTitle !== 'contactList' &&
+                            <div className="position-absolute cursor-pointer" style={{ left: 8, top: 8 }}
+                                onClick={() => { this.controller.modalTitle = modalTitleS[modalTitle]?.preLevel}}>
+                                <FA name="chevron-left" className="text-break" />
+                            </div>
+                        }
+                        <div className="text-center border-bottom h4 py-2">{modalTitleS[modalTitle]?.title}</div>
+                        {modalTitle === 'contactList' && this.controller.renderContentList(this.checkType)}
+                        {modalTitle === 'contactInfo' && this.controller.onNewContact()}
+                        {modalTitle === 'provinceChoice' && this.controller.pickProvince()}
+                        {modalTitle === 'cityChoice' && this.controller.pickCity()}
+                        {modalTitle === 'countyChoice' && this.controller.pickCounty()}
+                    </div>
+                </div>
             </div>
         </Page>
     })

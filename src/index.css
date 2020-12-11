@@ -64,3 +64,39 @@
 .reset-z-footer-bg{
   background: #f1f1f1 !important;
 }
+
+.modal-dialog-show{
+  animation: modal-dialog-show .35s linear forwards;
+}
+
+@keyframes modal-dialog-show{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+.scroll-S{
+  overflow-x: hidden !important;
+}
+
+.scroll-S::-webkit-scrollbar {
+    width: 6px;/*对垂直流动条有效*/
+    border-radius: 5rem;
+    height: 6px;/*对水平流动条有效*/
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+.scroll-S::-webkit-scrollbar-thumb {
+    border-radius: 5rem;
+    background-color: #bfbfbf;
+}
+
+/*定义滚动条的轨道颜色、内阴影及圆角*/
+.scroll-S::-webkit-scrollbar-track {
+    border-radius: 5rem;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #e5e5e5;
+}

@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId } from 'tonva';
+import { BoxId, Context } from 'tonva';
 import { nav } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCreateOrder } from './VCreateOrder';
@@ -13,6 +13,10 @@ import { groupByProduct } from '../tools/groupByProduct';
 import { CartItem, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
 import { Product } from 'model';
+import { VContactList } from 'customer/VContactList';
+import { VContact } from 'customer/VContact';
+import { VAddress, VCity, VCounty, VProvince } from '../customer/VAddress';
+import { GLOABLE } from 'global';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -23,6 +27,22 @@ export class COrder extends CUqBase {
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
     @observable couponAppliedData: any = {};
+
+    @observable modalTitle: any;
+    @observable modalTitleS: { [desc: string]: any } = {
+        'contactList': { id: 1, title: '地址管理', preLevel: '' },
+        'contactInfo': { id: 2, title: '地址信息', preLevel: 'contactList' },
+        'provinceChoice': { id: 3, title: '所在省市', preLevel: 'contactInfo' },
+        'cityChoice': { id: 3, title: '所在城市', preLevel: 'provinceChoice' },
+        'countyChoice': { id: 3, title: '所在区县', preLevel: 'cityChoice' },
+    };
+
+    @observable editContact: any;
+    @observable provinces:any[]=[];
+    @observable cities:any[]=[];
+    @observable counties: any[] = [];
+    @observable addressId:any;
+
     hasAnyCoupon: boolean;
     /**
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
@@ -409,5 +429,63 @@ export class COrder extends CUqBase {
     renderOrderItemProduct = (product: Product) => {
         let { cProduct } = this.cApp;
         return cProduct.renderCartProduct(product);
+    }
+
+    renderContentList = (type?:string) => {
+        // return this.renderView(VAddress);
+        return this.renderView(VContactList,type);
+    }
+
+    onContactSelected = (row: { contact: any, type: string }) => {
+        let { contact, type} = row;
+        if(type ==='收货地址') this.orderData.shippingContact = contact;
+        if(type ==='发票地址') this.orderData.invoiceContact = contact;
+        this.modalTitle = '';
+    }
+
+    /**
+     * 打开地址编辑界面
+     */
+    onEditContact = async (userContact: BoxId) => {
+        let userContactId = userContact.id;
+        let contact = await this.uqs.customer.Contact.load(userContactId);
+        contact.isDefault = false;
+        this.editContact = contact;
+        this.modalTitle = 'contactInfo';
+    }
+
+    /**
+     * 打开地址新建界面
+     */
+    onNewContact = () => {
+        return this.renderView(VContact,{ contact: this.editContact });
+    }
+
+
+    pickAddress = async (context?: Context, name?: string, value?: number): Promise<number> => {
+        this.provinces = await this.cApp.cAddress.getCountryProvince(GLOABLE.CHINA);
+        this.modalTitle = 'provinceChoice';
+        return this.addressId;
+    }
+
+    pickProvince = () => {
+        return this.renderView(VProvince,{provinces:this.provinces});
+    }
+
+    pickCity = () => {
+        return this.renderView(VCity,{cities:this.cities});
+    }
+
+    pickCounty = () => {
+        return this.renderView(VCounty,{counties:this.counties});
+    }
+
+    saveAddress = async (countryId: number, provinceId: number, cityId?: number, countyId?: number): Promise<any> => {
+        let { Address } = this.uqs.common;
+        let newAddress = await Address.save(undefined, { country: countryId, province: provinceId, city: cityId, county: countyId });
+        let addressId = newAddress && Address.boxId(newAddress.id);
+        this.modalTitle = 'contactInfo';
+        this.addressId = addressId;
+        this.cApp.cSelectShippingContact.TIT = true;
     }
 }

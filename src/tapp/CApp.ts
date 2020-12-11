@@ -21,7 +21,9 @@ import { CSignIn } from 'pointMarket/CSignIn';
 import { Product } from '../model';
 import { WebUser } from 'CurrentUser';
 import { GLOABLE } from 'global';
+import { CSelectShippingContact } from 'customer/CSelectContact';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
+import { CAddress } from '../customer/CAddress';
 
 export class CApp extends CUqApp {
     private cache: Map<number, Product>;
@@ -51,6 +53,8 @@ export class CApp extends CUqApp {
     cYncProjects: CYncProjects;
     cLottery: CLottery;
     cSignIn: CSignIn;
+    cSelectShippingContact: CSelectShippingContact;
+    cAddress: CAddress;
 
     /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
@@ -82,7 +86,9 @@ export class CApp extends CUqApp {
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
-
+        this.cSelectShippingContact = this.newC(CSelectShippingContact);
+        this.cAddress = this.newC(CAddress);
+        await this.cSelectShippingContact.getList();
         await this.cHome.getSlideShow();
         return true;
     }
@@ -300,6 +306,7 @@ export class CApp extends CUqApp {
 
     private navCart: NavPage = async (params: any) => {
         await this.cart.buildItems();
+        await this.cSelectShippingContact.getList();
         await this.cCart.start();
     }
 
