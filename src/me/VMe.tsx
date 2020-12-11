@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { nav, Image, VPage } from 'tonva';
+import { nav, Image, VPage, Ax } from 'tonva';
 import { Prop, IconText, FA, PropGrid, LMR } from 'tonva';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
@@ -8,6 +8,13 @@ import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
 import { observable } from 'mobx';
+import className from 'classnames';
+import setting from 'images/setting.svg';
+import number1 from 'images/number-01.svg';
+import order1 from 'images/order-01.svg';
+import { xs } from 'tools/browser';
+import { A } from '../tonva/components/ax/index';
+import welcome from 'images/welcome.png';
 
 export class VMe extends VPage<CMe> {
 	/*
@@ -52,6 +59,10 @@ export class VMe extends VPage<CMe> {
 
     private openFavorites = async () => {
         this.controller.openFavorites();
+    }
+
+    private openMeInfo = async () => {
+        this.openVPage(EditMeInfo);
     }
 
     private meInfo = observer(() => {
@@ -102,6 +113,7 @@ export class VMe extends VPage<CMe> {
         return <this.page />;
     }
     header() {
+        if (!xs) return '';
         return <this.meInfo />;
 	}
 	footer():JSX.Element {return null;}
@@ -210,9 +222,111 @@ export class VMe extends VPage<CMe> {
             ]
             rows.push(...aboutRows, ...logOutRows);
         }
-        return <>
-			<PropGrid rows={rows} values={{}} />
-		</>;
+
+        if (xs) return <>
+            <PropGrid rows={rows} values={{}} />
+        </>;
+        else {
+            if (user === undefined) {
+                // window.location.href = '/login';
+                return <div className="d-flex justify-content-center" style={{ height: 340 }}>
+                    <div className="my-auto p-5 rounded">
+                        <div className="d-flex">
+                            <img src={welcome} className="m-auto" alt="" />
+                        </div>
+                        您正在以访客身份查看本站内容,请
+                            <Ax href="/login" className="alert-link font-weight-bolder" onClick={() => this.controller.showLogin()}> 登录 </Ax>
+                        或者
+                            <Ax href="/register" className="alert-link font-weight-bolder"> 注册会员</Ax>
+                    </div>
+                </div>
+            };
+            let meLib = [
+                {
+                    id: 1,
+                    type: '帐户设置',
+                    image: setting,
+                    belongs: [
+                        {
+                            id: '1-1',
+                            component: <IconText iconClass="text-info mr-2" icon="key" text="修改密码" />,
+                            onClick: this.changePassword
+                        },{
+                            id:'1-2',
+                            component: <IconText iconClass="text-info mr-2" icon="key" text="账户信息" />,
+                            onClick: this.openMeInfo
+                        },{
+                            id: '1-3',
+                            component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="地址管理" />,
+                            onClick: this.openContactList
+                        },
+                    ]
+                },{
+                    id: 2,
+                    type: '会员管理',
+                    image: number1,
+                    belongs: [
+                        {
+                            id: '2-1',
+                            component: <IconText iconClass="text-info mr-2" icon="heart" text="商品收藏" />,
+                            onClick: this.openFavorites
+                        },{
+                            id:'2-2',
+                            component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
+                            onClick: this.openMyPoint
+                        },{
+                            id: '2-3',
+                            component: <IconText iconClass="text-info mr-2" icon="connectdevelop" text="卡券管理" />,
+                            onClick: this.openCouponManage
+                        },
+                    ]
+                },{
+                    id: 3,
+                    type: '订单管理',
+                    image: order1,
+                    belongs: [
+                        {
+                            id: '3-1',
+                            component: <IconText iconClass="text-info mr-2" icon="key" text="订单查询" />,
+                            onClick: this.controller.openMyOrders
+                        },{
+                            id:'3-2',
+                            component: <IconText iconClass="text-info mr-2" icon="key" text="订单记录" />,
+                            onClick: this.controller.openMyOrders
+                        },{
+                            id: '3-3',
+                            component: <IconText iconClass="text-info mr-2" icon="key" text="发票管理" />,
+                            onClick: this.openInvoice
+                        },
+                    ]
+                },
+                
+            ]
+            return <div className="container mt-lg-2 py-3">
+                <div className="row">
+                    {
+                        meLib.map((v: any) => {
+                            return <div className="col-lg-4 single-product">
+                                <div className="border text-center pt-5">
+                                    <a href="#"><img src={v.image} className="w-50" /></a>
+                                </div>
+                                <h2 className="mint-bg">{v.type}</h2>
+                                <div className="background-grey">
+                                    <ul className="pl-3">
+                                        {
+                                            v.belongs.map((o: any) => {
+                                                return <li className="list-inline"><Ax href="/me" onClick={o.onClick}>{o.component}</Ax></li>
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        })
+                    }
+                </div>
+            </div>
+        
+        }
 		// <button onClick={()=>this.tips.set('ddddd')}>push</button>
 		// {autoHideTips(this.tips, <div className="text-danger">{this.tips.get()}</div>)}
     })

@@ -173,12 +173,15 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             e.required = requiredFields[e.name];
             items[e.name].visible = visibleFields[e.name];
         });
-        return <Form ref={v => this.form = v} className="my-3"
+
+        return React.createElement(observer(() => {
+             return <Form ref={v => this.form = v} className="my-3"
             schema={schema}
             uiSchema={uiSchema}
             formData={this.invoiceInfoData}
             onButtonClick={this.onFormButtonClick}
             fieldLabelSize={3} />
+        }))
     }
 
     private onInvoiceTypeClick = (event: React.ChangeEvent<HTMLInputElement>) => {
