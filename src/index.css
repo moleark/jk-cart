@@ -65,6 +65,10 @@
   background: #f1f1f1 !important;
 }
 
+.reset-z-header-boxS header{
+  box-shadow: none;
+}
+
 .modal-dialog-show{
   animation: modal-dialog-show .35s linear forwards;
 }

@@ -6,6 +6,10 @@ import { CSelectContact } from './CSelectContact';
 import { addressDetailValidation, emailValidation, telephoneValidation, mobileValidation, organizationNameValidation, nameValidation } from 'tools/inputValidations';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { xsOrIpad } from '../tools/browser';
+import { pageHTitle } from 'tools/pageHeaderTitle';
+import classNames from 'classnames';
+import triangle from 'images/triangle.svg';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -24,7 +28,7 @@ export class VContact extends VPage<CSelectContact> {
     private userContactData: any;
     private form: Form;
 
-    @observable uiSchema: UiSchema = {
+    private uiSchema: UiSchema = {
         items: {
             id: { visible: false },
             name: { widget: 'text', label: '姓名', placeholder: '姓名', rules: nameValidation } as UiInputItem,
@@ -67,7 +71,8 @@ export class VContact extends VPage<CSelectContact> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        await this.controller.cApp.cSelectShippingContact.saveContact(context.form.data);
+        await this.controller.saveContact(context.form.data);
+        // await this.controller.cApp.cSelectShippingContact.saveContact(context.form.data);
     }
 
     private onDelContact = async () => {
@@ -80,7 +85,7 @@ export class VContact extends VPage<CSelectContact> {
 
     private page = () => {
         let contactData = _.clone(this.userContactData.contact);
-
+        let titleH:string= `${contactData !== undefined ?  "编辑" :'添加'}地址`;
         let buttonDel: any;
         if (contactData !== undefined) {
             buttonDel = <button className="btn btn-sm btn-info" onClick={this.onDelContact}>删除</button>;
@@ -95,12 +100,24 @@ export class VContact extends VPage<CSelectContact> {
             };
         }
         let { fromOrderCreation } = this.controller;
-        let footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveContact}>{fromOrderCreation ? '保存并使用' : '保存'}</button>;
-        return <Page header="地址信息" footer={footer} right={buttonDel}>
-            <div className="App-container container text-left">
-                <Form ref={v => this.form = v} className="my-3"
+        let footer = <div className={classNames(!xsOrIpad ? 'w-25 mx-auto' : '')}>
+            <button type="button"
+                className="btn btn-primary w-100"
+                onClick={this.onSaveContact}>{fromOrderCreation ? '保存并使用' : '保存'}</button>
+        </div>;
+        let header: any;
+        if (xsOrIpad) {
+            header = titleH;
+        } else {
+            buttonDel = null;
+        }
+        return <Page header={header} footer={footer} right={buttonDel}>
+            <div className="App-container container text-left position-relative">
+                {pageHTitle(titleH)}
+                <div className="postion-img" style={{left:-"-200%",top:200}}>
+                    <img src={triangle} />
+                </div>
+                <Form ref={v => this.form = v} className={classNames("my-3",!xsOrIpad ? 'w-50 mx-auto' :'')}
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={contactData}
@@ -118,13 +135,13 @@ export class VContact extends VPage<CSelectContact> {
         this.userContactData = param;
         let contactData = _.clone(this.userContactData.contact);
         /* 选择后的地址无法渲染  存在问题 后续处理  完成后处理保存问题 */
-        if (this.controller.cApp.cSelectShippingContact.TIT) {
+        /* if (this.controller.cApp.cSelectShippingContact.TIT) {
             let itemsAddress = this.uiSchema.items.address as UiIdItem;
             itemsAddress = {
                 ...itemsAddress,
                 pickId:async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),
             }
-        }
+        } */
         let buttonDel: any;
         if (contactData !== undefined) {
             buttonDel = <button className="btn btn-sm btn-info" onClick={this.onDelContact}>删除</button>;
@@ -156,7 +173,7 @@ export class VContact extends VPage<CSelectContact> {
 	}
 }
 
-class VConfirmDeleteContact extends VPage<CSelectContact> {
+export class VConfirmDeleteContact extends VPage<CSelectContact> {
     async open(contact: any) {
         this.openPage(this.page, contact);
     }

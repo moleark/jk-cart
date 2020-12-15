@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';
 import { RevenueExpenditure } from './basicRefer';
 import { randomColor } from 'tools/randomColor';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { xs } from '../tools/browser';
 
 export class VMyPoint extends VPage<CPointProduct> {
 
@@ -91,8 +93,10 @@ export class VMyPoint extends VPage<CPointProduct> {
         let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
-
-        return <Page header="积分管理" right={right} className="h-100 bg-white">
+        let header = CrPageHeaderTitle('积分商城');
+        if (!xs) right = null;
+        return <Page header={header} right={right} className="h-100 bg-white">
+            {pageHTitle('积分商城')}
             <div>
                 <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
                     <>{nowPointTip}</>

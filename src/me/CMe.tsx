@@ -32,7 +32,7 @@ export class CMe extends CUqBase {
     tab = () => this.renderView(VMe);
     tabPage: VMe = new VMe(this);
 
-    openMyOrders = async (state='all') => {
+    openMyOrders = async (state:string) => {
         let { cOrder } = this.cApp;
         await cOrder.openMyOrders(state);
     }

@@ -7,6 +7,7 @@ import phone from '../images/Phone.svg';
 import magnifier from '../images/magnifier.svg';
 import qrcode from '../images/qrcode.png';
 import { CApp } from './CApp';
+import { observer } from 'mobx-react';
 
 export class VMainWebNav extends VPage<CApp> {
 	content() {
@@ -36,8 +37,8 @@ export class NavHeaderView extends View<CApp> {
 			}
 			return <span className="small">{v}</span>;
 		});
-		let vCartLabel = React.createElement(() => {
-			let {cart} = this.controller;
+		let vCartLabel = React.createElement(observer(() => {
+            let {cart} = this.controller;
 			if (!cart) return null;
 			let count = cart.count.get(); 
 			let vCount:any;
@@ -46,7 +47,8 @@ export class NavHeaderView extends View<CApp> {
 			return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
 				<FA name="shopping-cart" />{vCount}
 			</Ax>;
-		});
+		}));
+        
         return <header>
             <div className="top-header">
                 <div className="container">

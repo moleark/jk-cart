@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips } from 'tonva';
 import { Schema } from 'tonva';
 import { CInvoiceInfo } from './CInvoiceInfo';
+import { xs } from 'tools/browser';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -196,9 +197,14 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
             {this.saveTip}
 		</div>) : null;
-		*/
-        return <Page header="发票">
-            <div className="px-3">
+        */
+        let header: any;
+        if (xs) {
+            header = "发票";
+        }
+        return <Page header={header}>
+            { !xs && <div className="text-center mt-5"><h1>发票</h1></div>}
+            <div className="px-3 mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
                 <div className="form-group row py-3 mb-1 bg-white">
                     <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
                     <div className="col-12 col-sm-9">
@@ -215,7 +221,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                     </div>
                 </div>
             </div>
-            <div className="p-3 bg-white">
+            <div className="p-3 bg-white mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
                 {frm}
                 <button type="button"
                     className="btn btn-primary w-100"

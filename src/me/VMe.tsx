@@ -12,7 +12,7 @@ import className from 'classnames';
 import setting from 'images/setting.svg';
 import number1 from 'images/number-01.svg';
 import order1 from 'images/order-01.svg';
-import { xs } from 'tools/browser';
+import { browser, xs } from 'tools/browser';
 import { A } from '../tonva/components/ax/index';
 import welcome from 'images/welcome.png';
 
@@ -59,6 +59,10 @@ export class VMe extends VPage<CMe> {
 
     private openFavorites = async () => {
         this.controller.openFavorites();
+    }
+
+    private openMyOrders = async () => {
+        this.controller.openMyOrders('all');
     }
 
     private openMeInfo = async () => {
@@ -113,8 +117,8 @@ export class VMe extends VPage<CMe> {
         return <this.page />;
     }
     header() {
-        if (!xs) return '';
-        return <this.meInfo />;
+        if (xs || browser.versions.iPad) return <this.meInfo />;
+        return '';
 	}
 	footer():JSX.Element {return null;}
 
@@ -223,7 +227,7 @@ export class VMe extends VPage<CMe> {
             rows.push(...aboutRows, ...logOutRows);
         }
 
-        if (xs) return <>
+        if (xs || browser.versions.iPad) return <>
             <PropGrid rows={rows} values={{}} />
         </>;
         else {
@@ -288,11 +292,11 @@ export class VMe extends VPage<CMe> {
                         {
                             id: '3-1',
                             component: <IconText iconClass="text-info mr-2" icon="key" text="订单查询" />,
-                            onClick: this.controller.openMyOrders
+                            onClick: this.openMyOrders
                         },{
                             id:'3-2',
                             component: <IconText iconClass="text-info mr-2" icon="key" text="订单记录" />,
-                            onClick: this.controller.openMyOrders
+                            onClick: this.openMyOrders
                         },{
                             id: '3-3',
                             component: <IconText iconClass="text-info mr-2" icon="key" text="发票管理" />,
@@ -305,8 +309,8 @@ export class VMe extends VPage<CMe> {
             return <div className="container mt-lg-2 py-3">
                 <div className="row">
                     {
-                        meLib.map((v: any) => {
-                            return <div className="col-lg-4 single-product">
+                        meLib.map((v: any,index:number) => {
+                            return <div className="col-lg-4 single-product" key={index}>
                                 <div className="border text-center pt-5">
                                     <a href="#"><img src={v.image} className="w-50" /></a>
                                 </div>
@@ -314,8 +318,8 @@ export class VMe extends VPage<CMe> {
                                 <div className="background-grey">
                                     <ul className="pl-3">
                                         {
-                                            v.belongs.map((o: any) => {
-                                                return <li className="list-inline"><Ax href="/me" onClick={o.onClick}>{o.component}</Ax></li>
+                                            v.belongs.map((o: any,index:number) => {
+                                                return <li className="list-inline" key={index}><Ax href="/me" onClick={o.onClick}>{o.component}</Ax></li>
                                             })
                                         }
                                     </ul>

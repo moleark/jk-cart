@@ -20,7 +20,7 @@ export abstract class CSelectContact extends CUqBase {
         }
     }
 
-    protected abstract async getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
+     protected abstract getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
 
     /**
      * 打开地址新建界面
@@ -43,6 +43,10 @@ export abstract class CSelectContact extends CUqBase {
 
     delContact = async (contact: any) => {
         let { id } = contact;
+        if (contact.isDefault === undefined) {
+            let userSetting = await this.cApp.currentUser.getSetting();
+            contact.isDefault = await this.getIsDefault(userSetting, id);
+        }
         let { currentUser } = this.cApp;
         await currentUser.delContact(id);
         if (contact.isDefault) {
@@ -79,7 +83,7 @@ export abstract class CSelectContact extends CUqBase {
         }
     }
 
-    protected abstract async setDefaultContact(contactId: BoxId): Promise<any>;
+    protected abstract setDefaultContact(contactId: BoxId): Promise<any>;
 
     onContactSelected = (contact: BoxId) => {
         if (this.fromOrderCreation) {

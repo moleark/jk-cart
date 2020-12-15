@@ -5,6 +5,8 @@ import { FA } from 'tonva';
 import { CAddress } from './CAddress';
 import { GLOABLE } from 'global';
 import { observer } from 'mobx-react';
+import { xsOrIpad } from '../tools/browser';
+import { pageHTitle } from 'tools/pageHeaderTitle';
 
 export class VAddress extends VPage<CAddress> {
     protected provinceId: number;
@@ -19,11 +21,20 @@ export class VAddress extends VPage<CAddress> {
 
     private page = (param: any) => {
         this.backLevel++;
-        return <Page header="选择所在省市">
-            <div className="row no-gutters">
-                {param.provinces.map((v: any) => this.renderPCC(v.province, this.onProvinceClick))}
-            </div>
+        let header = this.titleHeader('选择所在省市');
+        return <Page header={header}>
+            <>
+                {pageHTitle('选择所在省市')}
+                <div className="row no-gutters pb-5">
+                    {param.provinces.map((v: any) => this.renderPCC(v.province, this.onProvinceClick))}
+                </div>
+            </>
         </Page>
+    }
+
+    titleHeader = (title:string) => {
+        if (xsOrIpad) return title;
+        return '';
     }
 
     renderPCC = (pcc: BoxId, onClick: any) => {
@@ -46,7 +57,7 @@ export class VAddress extends VPage<CAddress> {
 
     onProvinceClick = async (provinceId: any) => {
         this.provinceId = provinceId;
-        let cities = await this.controller.cApp.cAddress.getProvinceCities(provinceId);
+        let cities = await this.controller.getProvinceCities(provinceId);
         if (cities) {
             let len = cities.length;
             if (len === 1) {
@@ -55,10 +66,14 @@ export class VAddress extends VPage<CAddress> {
             }
             if (len > 1) {
                 this.backLevel++;
-                this.openPageElement(<Page header="选择所在城市">
-                    <div className="row no-gutters">
-                        {cities.map(v => this.renderPCC(v.city, this.onCityClick))}
-                    </div>
+                let header = this.titleHeader('选择所在城市');
+                this.openPageElement(<Page header={header}>
+                    <>
+                        {pageHTitle('选择所在城市')}
+                        <div className="row no-gutters pb-5">
+                            {cities.map(v => this.renderPCC(v.city, this.onCityClick))}
+                        </div>
+                    </>
                 </Page>);
                 return;
             }
@@ -70,13 +85,17 @@ export class VAddress extends VPage<CAddress> {
 
     onCityClick = async (cityId: any) => {
         this.cityId = cityId;
-        let counties = await this.controller.cApp.cAddress.getCityCounties(cityId);
+        let counties = await this.controller.getCityCounties(cityId);
         if (counties && counties.length > 0) {
             this.backLevel++;
-            this.openPageElement(<Page header="选择所在区县">
-                <div className="row no-gutters">
-                    {counties.map(v => this.renderPCC(v.county, this.onCountyClick))}
-                </div>
+            let header = this.titleHeader('选择所在区县');
+            this.openPageElement(<Page header={header}>
+                <>
+                    {pageHTitle('选择所在区县')}
+                    <div className="row no-gutters pb-5">
+                        {counties.map(v => this.renderPCC(v.county, this.onCountyClick))}
+                    </div>
+                </>
             </Page>);
         } else {
             this.closePage(this.backLevel);
@@ -91,7 +110,8 @@ export class VAddress extends VPage<CAddress> {
     }
 
     saveAddress = async () => {
-        await this.controller.cApp.cAddress.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
+        await this.controller.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
+        // await this.controller.cApp.cAddress.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
     }
 }
 
