@@ -11,10 +11,11 @@ export class VInCart extends View<CProduct> {
         return <>{tv(param, this.renderCartProduct)}</>;
     }
 
-    private renderCartProduct = (product: Product) => {
-		let { props, brand } = product;
-		if (!props) return;
-		let { description, descriptionC, origin, imageUrl } = props;
+    private renderCartProduct = (product: any) => {
+        let { props, brand } = product;
+		// if (!props) return;
+        let { description, descriptionC, origin, imageUrl } = props || product;
+        if (!brand.name) brand = brand.obj;
 		let cName:any;
 		if (descriptionC !== description) {
 			cName = <div className="pb-2"><strong>{descriptionC}</strong></div>;

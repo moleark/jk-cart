@@ -1,6 +1,7 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../tapp/CBase';
 import { QueryPager } from 'tonva';
+import { Product } from 'model';
 //import { VProductFavorateLabel } from './VProductFavorateLabel';
 
 export class CFavorites extends CUqBase {
@@ -11,9 +12,18 @@ export class CFavorites extends CUqBase {
         this.openVPage(VFavorites);
     }
 
+    private productConverter = (item: any, queryResults?: { [name: string]: any[] }): Product => {
+        let product = this.cApp.getProduct(item.id);
+        product.props = item;
+        // product.props.imageUrl = item.chemical.toString();
+        product.loadListItem();
+        return product;
+    }
+
     async searchByFavorites() {
         let { currentUser, currentSalesRegion } = this.cApp;
         this.productsFavorites = new QueryPager<any>(this.uqs.webuser.getMyFavirates, 10, 10);
+        this.productsFavorites.setItemConverter(this.productConverter);
         await this.productsFavorites.first({ webUser: currentUser, salesRegion: currentSalesRegion });
     }
 

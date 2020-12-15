@@ -45,6 +45,7 @@ export class CProduct extends CUqBase {
     @observable currentLanguage: any;
     @observable currentProduct: any;
     @observable productMsdsVersions: any[] = [];
+    @observable showFavorites: Boolean = false;
 
     //@observable productData: any;
     //@observable product: any;

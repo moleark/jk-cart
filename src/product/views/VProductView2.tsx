@@ -42,9 +42,11 @@ export class VProuductView2 extends View<CProduct> {
 							{renderBrand(brand)}
 						</div>
 					</div>
-					<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
-						onClick={(event: React.MouseEvent) => { event.stopPropagation();}}>详情
-					</a>
+					{  !this.controller.showFavorites &&
+						<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+							onClick={(event: React.MouseEvent) => { event.stopPropagation();}}>详情
+						</a>
+					}
 				</div>
 				<div className="container collapse col-lg-12 pt-2 px-0 border-top-0"
 					onClick={(event: React.MouseEvent) => { event.stopPropagation();}} id={`description${id}`}>
