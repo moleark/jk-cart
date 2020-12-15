@@ -31,3 +31,5 @@ export let xs = (function () {
     }
     return getViewportSize().w < 576;
 })();
+
+export let xsOrIpad = xs || browser.versions.iPad;

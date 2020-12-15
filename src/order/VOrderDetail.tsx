@@ -6,6 +6,8 @@ import { tv } from 'tonva';
 import { List } from 'tonva';
 import { OrderItem } from './Order';
 import { CartItem } from 'cart/Cart';
+import { xs } from '../tools/browser';
+import classNames from 'classnames';
 
 export class VOrderDetail extends VPage<COrder> {
 
@@ -18,7 +20,7 @@ export class VOrderDetail extends VPage<COrder> {
     private packsRow = (item: any, index: number) => {
         let { pack, quantity, price, currency } = item;
 
-        return <div key={index} className="px-2 py-2 border-top">
+        return <div key={index} className={classNames('px-2 py-2',index !== 0 ? 'border-top' :'')}>
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
@@ -32,8 +34,7 @@ export class VOrderDetail extends VPage<COrder> {
     private renderOrderItem = (orderItem: OrderItem) => {
         let { product, packs } = orderItem;
         let { controller, packsRow } = this;
-        return <div>
-            <div className="row p-1 my-1">
+        return <div className="row my-1 w-100 mx-0">
                 <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
                 <div className="col-lg-6">{
                     packs.map((p, index) => {
@@ -41,7 +42,6 @@ export class VOrderDetail extends VPage<COrder> {
                     })
                 }</div>
             </div>
-        </div>;
 	}
 	
     private page = (order: any) => {
@@ -89,8 +89,10 @@ export class VOrderDetail extends VPage<COrder> {
             <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button>
         </div>
 
-        let header = <>订单详情: {no}</>            //orderAgainUI
+        let header: any
+        if(xs) header = <>订单详情: {no}</>            //orderAgainUI
         return <Page header={header} footer={<></>}>
+            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a></div>}
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>

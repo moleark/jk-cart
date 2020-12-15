@@ -3,6 +3,7 @@ import { CCoupon, COUPONBASE } from './CCoupon';
 import { View, FA, LMR } from 'tonva';
 import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
 import moment from 'moment';
+import { xs } from '../tools/browser';
 
 function getTips(result: number, types: string, code: string) {
     let invalidTip = `${COUPONBASE[types]['name']}【${code}】无效，请与您的专属销售人员联系。`;
@@ -117,7 +118,11 @@ export class VCoupon extends View<CCoupon> {
                 if (discount)
                     tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
                 else
-                    tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+                    tipUI = <small className="text-success" onClick={(event) => {
+                        event.stopPropagation();
+                        if (xs) this.showDiscountSetting(this.coupon, event);
+                        else this.controller.CardDiscount = true;
+                    }}>查看适用品牌及折扣</small>
             }
             let newDate = getEasyDate(validitydate);
 

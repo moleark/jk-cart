@@ -29,6 +29,7 @@ export class CCoupon extends CUqBase {
     isOpenMyCouponManage: boolean = false;
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
+    @observable CardDiscount:boolean = false;
     couponPager: QueryPager<any>;
 
     applyCoupon = async (coupon: string) => {
@@ -443,5 +444,9 @@ export class CCoupon extends CUqBase {
     renderProduct = (product: any) => {
         let { cProduct } = this.cApp;
         return cProduct.renderProductWithPrice(product);
+    }
+
+    renderCardDiscount = (vipCard: any) => {
+        return this.renderView(VVIPCardDiscount,vipCard);
     }
 }

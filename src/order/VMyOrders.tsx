@@ -3,6 +3,8 @@ import { VPage, Page, Tabs, TabCaptionComponent, TabProp } from 'tonva';
 import { COrder } from './COrder';
 import { List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
+import { xs } from 'tools/browser';
+import { Ax } from '../tonva/components/ax/index';
 
 export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -33,6 +35,11 @@ export class VMyOrders extends VPage<COrder> {
 			{ caption: '待发货', state: 'completed', icon: 'truck' },
 			{ caption: '所有订单', state: 'all', icon: 'file-text-o' },
 		];
+		let TabCaptionComponent = (label:string, icon:string, color:string) => <div 
+			className={'d-flex justify-content-center align-items-center flex-column cursor-pointer ' + color}>
+			<div><i className={'fa fa-lg fa-' + icon} /></div>
+			<small>{label}</small>
+		</div>;
 		this.tabs = oss.map(v => {
 			let { caption, state, icon } = v;
 			return {
@@ -53,18 +60,24 @@ export class VMyOrders extends VPage<COrder> {
 	private renderOrder = (order: any, index: number) => {
 		let { openOrderDetail } = this.controller;
 		let { id, no, date } = order;
-		return <div className="m-3 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
+		return <Ax href="/me" className='w-100 m-3' target='_blank'>
+			<div className="d-flex w-100 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
 			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
 			<div className="small text-muted"><EasyDate date={date} /></div>
-		</div>;
+		</div></Ax>;
 	}
 
 	header() {
+		if (!xs) return '';
 		return '我的订单';
 	}
 
 	content(): JSX.Element {
-		return <Tabs tabs={this.tabs} tabPosition="top" />;
+		let title = !xs ? <div className="text-center mt-5"><h1>订单管理</h1></div> : null; 
+		return <>
+			{title}
+			<div className="mb-5 reset-z-header-boxS"><Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs?'bg-light':''} /></div>
+		</>;
 	}
 
 	private page = () => {

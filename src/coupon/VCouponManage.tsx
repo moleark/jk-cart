@@ -5,11 +5,15 @@ import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
 import { observable } from 'mobx';
 import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
+import { xs } from '../tools/browser';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { Modal } from 'antd';
 
 export class VCouponManage extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
     @observable private coupons: QueryPager<any>;
+    @observable curCardDiscount: any;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -28,12 +32,12 @@ export class VCouponManage extends VPage<CCoupon> {
         let { getCoupons } = this.controller;
         this.tabs = this.oss.map((v: any) => {
             let { caption, state, icon, toolTip } = v;
-            let none = <div className="mt-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
+            let none = <div className="my-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={this.coupons} item={{ render: this.renderCoupon }} none={none} />
+                    return <List items={this.coupons} item={{render: this.renderCoupon, className:'col-sm-6 border rounded px-0'}} className='row mx-0 bg-light' none={none} />
                 },
                 isSelected: this.currentStatus === state,
                 load: async () => {
@@ -105,8 +109,17 @@ export class VCouponManage extends VPage<CCoupon> {
     private CouponViewOrUse = (coupon: any) => {
         let { showDiscountSetting } = this.controller;
         let { result, types } = coupon;
-        if (result === 1 && types !== 'credits')
-            showDiscountSetting(coupon);
+        if (result === 1 && types !== 'credits') {
+            if (xs) showDiscountSetting(coupon);
+            else this.showModelCardDiscount(coupon);
+        }  
+    }
+
+    showModelCardDiscount = async (vipCard: any) => {
+        let { types, id } = vipCard;
+        vipCard.discountSetting = await this.controller.getValidDiscounts(types, id);
+        this.curCardDiscount = vipCard;
+        this.controller.CardDiscount = true;
     }
 
     private tipsUI = observer(() => {
@@ -127,18 +140,28 @@ export class VCouponManage extends VPage<CCoupon> {
 
     private page = observer(() => {
         this.getTabs();
-        let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
-        return <Page header="卡券管理">
-            <div className="px-2 py-3">
+        let right = <button className="btn btn-primary w-4c" onClick={this.receiveCoupon}>领取</button>
+        let header = CrPageHeaderTitle('卡券管理');
+        return <Page header={header}>
+            <div className="px-2 py-3 mb-5 mx-auto" style={{maxWidth:990}}>
+                {pageHTitle('卡券管理')}
                 <LMR right={right}>
                     <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
                 </LMR>
 				{/*React.createElement(this.tipsUI)*/}
 				{autoHideTips(this.tips)}
-                <div className="mt-2">
+                <div className="mt-2 reset-z-header-boxS">
                     <Tabs tabs={this.tabs} tabPosition="top" />
                 </div>
             </div >
+            <Modal
+                title="折扣明细"
+                visible={this.controller.CardDiscount}
+                onCancel={() => this.controller.CardDiscount = false}
+                style={{top:'35%'}}
+                footer={null}>
+                {this.controller.renderCardDiscount(this.curCardDiscount)}
+            </Modal>
         </Page>
     })
 }
