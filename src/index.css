@@ -73,6 +73,14 @@
   animation: modal-dialog-show .35s linear forwards;
 }
 
+.article-product-list td:first-child{
+  width: auto !important;
+}
+
+.table td{
+  vertical-align: middle;
+}
+
 @keyframes modal-dialog-show{
   0%{
     opacity: 0;

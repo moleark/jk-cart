@@ -272,9 +272,6 @@ export class VMe extends VPage<CMe> {
                     image: order1,
                     belongs: [
                         {
-                            component: <IconText iconClass="text-info mr-2" icon="file-text" text="订单查询" />,
-                            href:'/myOrders',
-                        },{
                             component: <IconText iconClass="text-info mr-2" icon="file-text" text="订单记录" />,
                             href:'/myOrders',
                         },{

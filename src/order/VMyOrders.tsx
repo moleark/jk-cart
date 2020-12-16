@@ -35,18 +35,19 @@ export class VMyOrders extends VPage<COrder> {
 			{ caption: '待发货', state: 'completed', icon: 'truck' },
 			{ caption: '所有订单', state: 'all', icon: 'file-text-o' },
 		];
-		let TabCaptionComponent = (label:string, icon:string, color:string) => <div 
+		/* let TabCaptionComponent = (label:string, icon:string, color:string) => <div 
 			className={'d-flex justify-content-center align-items-center flex-column cursor-pointer ' + color}>
 			<div><i className={'fa fa-lg fa-' + icon} /></div>
 			<small>{label}</small>
-		</div>;
+		</div>; */
 		this.tabs = oss.map(v => {
 			let { caption, state, icon } = v;
 			return {
 				name: caption,
 				caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
 				content: () => {
-					return <List items={this.list} item={{ render: this.renderOrder }} none="[无]" />
+					if (xs) return <List items={this.list} item={{ render: this.renderOrder }} none="[无]" />;
+					return this.orderListTable(state);
 				},
 				isSelected: this.currentState === state,
 				load: async () => {
@@ -57,11 +58,52 @@ export class VMyOrders extends VPage<COrder> {
 		});
 	}
 
+	private orderListTable = (state:string): JSX.Element => {
+		if (!this.list.length) return <div className="w-100 text-center py-3">无</div>;
+		let os: { [state: string]: string } = {
+			'processing': '待审核',
+			'completed': '待发货',
+		};
+		return <div className="tab-pane fade show active mt-3" id="nav-order-1" role="tabpanel">
+				<div className="table-responsive-vertical shadow-z-1">
+					<table id="table" className="table article-product-table order-wrap">
+						<thead style={{background:'#D8D8D8'}}>
+							<tr>
+								<th className="py-2">订单编号</th>
+								<th className="py-2">日期</th>
+								<th className="py-2">订单状态</th>
+								<th className="py-2">详情</th>
+							</tr>
+						</thead>
+						<tbody>
+							{
+								this.list.map((v: any) => {
+									let { id, no, date, OState } = v;
+									return <tr className="article-product-list order-wrap-list" key={id}>
+										<td data-title="订单编号" className="mint">{no}</td>
+										<td data-title="日期"><EasyDate date={date} /></td>
+										<td data-title="订单状态">
+											{os[state !=='all'? state : OState]}
+										</td>
+										<td data-title="详情">
+											<Ax href={"/orderDetail/" + id} className='w-100 m-3'>
+												<button type='button' className="btn-primary w-4c">详情</button>
+											</Ax>
+										</td>
+									</tr>
+								})
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>    
+	}
+
 	private renderOrder = (order: any, index: number) => {
 		let { openOrderDetail } = this.controller;
 		let { id, no, date } = order;
-		return <Ax href="/me" className='w-100 m-3' target='_blank'>
-			<div className="d-flex w-100 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
+		return <Ax href={"/orderDetail/" + id } className='w-100 m-3' target='_blank'>
+			<div className="d-flex w-100 justify-content-between cursor-pointer" /* onClick={() => openOrderDetail(id)} */>
 			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
 			<div className="small text-muted"><EasyDate date={date} /></div>
 		</div></Ax>;
@@ -76,7 +118,9 @@ export class VMyOrders extends VPage<COrder> {
 		let title = !xs ? <div className="text-center mt-5"><h1>订单管理</h1></div> : null; 
 		return <>
 			{title}
-			<div className="mb-5 reset-z-header-boxS"><Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs?'bg-light':''} /></div>
+			<div className="mb-5 reset-z-header-boxS">
+				<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
+			</div>
 		</>;
 	}
 
