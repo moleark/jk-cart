@@ -121,7 +121,7 @@ export class VCoupon extends View<CCoupon> {
                     tipUI = <small className="text-success" onClick={(event) => {
                         event.stopPropagation();
                         if (xs) this.showDiscountSetting(this.coupon, event);
-                        else this.controller.CardDiscount = true;
+                        else this.controller.showModelCardDiscount(this.coupon)
                     }}>查看适用品牌及折扣</small>
             }
             let newDate = getEasyDate(validitydate);
@@ -141,7 +141,7 @@ export class VCoupon extends View<CCoupon> {
                 {this.renderCardDescription()}
             </div>;
 
-            couponUi = <div className="bg-white py-3 px-2 mb-1">
+            couponUi = <div className="bg-white py-3 px-2 mb-1 reset-z-header-boxS">
                 <LMR left={left} right={this.renderRight()}>
                     {content}
                 </LMR>

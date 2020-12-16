@@ -8,12 +8,12 @@ import { CCoupon } from './CCoupon';
 import { xs } from '../tools/browser';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
 import { Modal } from 'antd';
+import { VModelCardDiscount } from './VModelCardDiscount';
 
 export class VCouponManage extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
     @observable private coupons: QueryPager<any>;
-    @observable curCardDiscount: any;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -107,19 +107,12 @@ export class VCouponManage extends VPage<CCoupon> {
      * 折扣明细或使用记录
      */
     private CouponViewOrUse = (coupon: any) => {
-        let { showDiscountSetting } = this.controller;
+        let { showDiscountSetting,showModelCardDiscount } = this.controller;
         let { result, types } = coupon;
         if (result === 1 && types !== 'credits') {
             if (xs) showDiscountSetting(coupon);
-            else this.showModelCardDiscount(coupon);
-        }  
-    }
-
-    showModelCardDiscount = async (vipCard: any) => {
-        let { types, id } = vipCard;
-        vipCard.discountSetting = await this.controller.getValidDiscounts(types, id);
-        this.curCardDiscount = vipCard;
-        this.controller.CardDiscount = true;
+            else showModelCardDiscount(coupon);
+        }
     }
 
     private tipsUI = observer(() => {
@@ -154,14 +147,15 @@ export class VCouponManage extends VPage<CCoupon> {
                     <Tabs tabs={this.tabs} tabPosition="top" />
                 </div>
             </div >
-            <Modal
+            {this.renderVm(VModelCardDiscount,{content:this.controller.renderCardDiscount()})}
+            {/* <Modal
                 title="折扣明细"
                 visible={this.controller.CardDiscount}
                 onCancel={() => this.controller.CardDiscount = false}
                 style={{top:'35%'}}
                 footer={null}>
                 {this.controller.renderCardDiscount(this.curCardDiscount)}
-            </Modal>
+            </Modal> */}
         </Page>
     })
 }

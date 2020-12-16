@@ -80,7 +80,12 @@ export class NavHeaderView extends View<CApp> {
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
-                                <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder="Search" />
+                                <form onSubmit={(e: any) => {
+                                    e.preventDefault();
+                                    let url = "/search/" + this.searchKey.value;
+                                    this.navigate(url); }}>
+                                    <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder="Search" />
+                                </form>
                                 <span className="input-group-btn" onClick={() => {
                                     let url = "/search/" + this.searchKey.value;
                                     this.navigate(url);

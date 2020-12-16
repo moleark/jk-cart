@@ -3,6 +3,8 @@ import { VPage, Page, List, FA, LMR, autoHideTips } from 'tonva';
 import { CCoupon } from './CCoupon';
 import { observable } from 'mobx';
 import { VVIPCard, VCoupon, VCredits } from './VVIPCard';
+import { VModelCardDiscount } from './VModelCardDiscount';
+import { observer } from 'mobx-react';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
 
@@ -67,7 +69,7 @@ export class VCoupleAvailable extends VPage<CCoupon> {
 	})
 	*/
 
-    private page = () => {
+    private page = observer(() => {
 
         let vipCardUI;
         if (this.vipCardForWebUser) {
@@ -79,7 +81,7 @@ export class VCoupleAvailable extends VPage<CCoupon> {
         let right = <button className="btn btn-primary w-100" onClick={this.applyCoupon}>使用</button>
 
         return <Page header="可用优惠"> 
-            <div className="px-2 py-3">
+            <div className="px-2 py-3 reset-z-header-boxS">
                 <LMR left={left} right={right}>
                     <input ref={v => this.couponInput = v} type="number" className="form-control"></input>
                 </LMR>
@@ -95,8 +97,9 @@ export class VCoupleAvailable extends VPage<CCoupon> {
                 {vipCardUI}
             </div>
             <List items={this.coupons} item={{ render: this.renderCoupon }} none={null}></List>
+            {this.renderVm(VModelCardDiscount,{content:this.controller.renderCardDiscount()})}
         </Page >
-    }
+    })
 }
 
 /*

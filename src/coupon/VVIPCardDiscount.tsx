@@ -36,7 +36,7 @@ export class VVIPCardDiscount extends VPage<CCoupon>{
     }
 
     render(param?: any): JSX.Element{
-        this.vipCard = param;
+        this.vipCard = param.vipCard;
         return React.createElement(observer(() => {
             return <List items={this.vipCard?.discountSetting} item={{ render: this.renderVIPCardDiscountSetting, className: "px-3 py-2" }}></List>
         }));

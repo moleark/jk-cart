@@ -30,6 +30,7 @@ export class CCoupon extends CUqBase {
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
     @observable CardDiscount:boolean = false;
+    @observable curCardDiscount:any;
     couponPager: QueryPager<any>;
 
     applyCoupon = async (coupon: string) => {
@@ -274,6 +275,13 @@ export class CCoupon extends CUqBase {
         vipCard.discountSetting = await this.getCouponDiscountSetting(types, id);
         this.openVPage(VVIPCardDiscount, vipCard);
     }
+
+    showModelCardDiscount = async (vipCard: any) => {
+        let { types, id } = vipCard;
+        vipCard.discountSetting = await this.getCouponDiscountSetting(types, id);
+        this.curCardDiscount = vipCard;
+        this.CardDiscount = true;
+    }
     /**
      * 获取卡券的有效折扣  
      */
@@ -446,7 +454,7 @@ export class CCoupon extends CUqBase {
         return cProduct.renderProductWithPrice(product);
     }
 
-    renderCardDiscount = (vipCard: any) => {
-        return this.renderView(VVIPCardDiscount,vipCard);
+    renderCardDiscount = () => {
+        return this.renderView(VVIPCardDiscount,{vipCard:this.curCardDiscount});
     }
 }

@@ -329,6 +329,42 @@ export class CApp extends CUqApp {
         this.cMe.start();
     }
 
+    private navContactList: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openContactList();
+    }
+
+    private navInvoice: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openInvoice();
+    }
+
+    private navMyOrders: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openMyOrders('all');
+    }
+
+    private navCouponManage: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openCouponManage();
+    }
+
+    private navFavorites: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openFavorites();
+    }
+
+    private navPassword: NavPage = async (params: any) => {
+        await this.assureLogin();
+        await nav.changePassword();
+    }
+
+    private navMeInfo: NavPage = async (params: any) => {
+        await this.assureLogin();
+        this.cMe.openMeInfo();
+    }
+
+
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
             '/app': this.navHome,
@@ -342,6 +378,14 @@ export class CApp extends CUqApp {
             '/pointshop': this.navPointShop,
             '/about': this.navAbout,
             '/me': this.navMe,
+
+            '/contact': this.navContactList,
+            '/invoice': this.navInvoice,
+            '/myOrders': this.navMyOrders,
+            '/couponManage': this.navCouponManage,
+            '/favorites': this.navFavorites,
+            '/password': this.navPassword,
+            '/meInfo': this.navMeInfo,
         };
         nav.onNavRoutes(routes);
         nav.onNavRoute(this.navHome);

@@ -12,6 +12,7 @@ import { CFavorites } from '../customer/CFavorites';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VAbout } from './about';
+import { EditMeInfo } from './EditMeInfo';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -35,6 +36,10 @@ export class CMe extends CUqBase {
     openMyOrders = async (state:string) => {
         let { cOrder } = this.cApp;
         await cOrder.openMyOrders(state);
+    }
+
+    openMeInfo = async () => {
+        this.openVPage(EditMeInfo);
     }
 
     openContactList = async () => {
