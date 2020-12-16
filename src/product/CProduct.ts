@@ -120,7 +120,7 @@ export class CProduct extends CUqBase {
 
     esProductsPagerMore = async (page: number) => {
         this.currentPage = page;
-        let url = GLOABLE.CONTENTSITE + '/api/search/key=' + this.searchKey + '/' + page;
+        let url = GLOABLE.CONTENTSITE + '/api/search/' + this.searchKey + '/' + page;
         let resp = await fetch(url, {
             method: 'GET',
             headers: {

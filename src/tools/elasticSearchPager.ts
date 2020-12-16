@@ -26,7 +26,7 @@ export class ElasticSearchPager<T extends any> extends PageItems<T>{
 
     protected async loadResults(param: any, pageStart: number, pageSize: number): Promise<{ [name: string]: any[] }> {
         let { keyWord, salesregion } = param;
-        let url = this.searchUrl + '/key=' + keyWord;
+        let url = this.searchUrl + '/' + keyWord;
         if (this.pageNumber > 1) {
             url += "/" + this.pageNumber;
         }
