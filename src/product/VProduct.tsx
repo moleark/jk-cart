@@ -109,7 +109,7 @@ export class VProduct extends VPage<CProduct> {
         let { cApp } = this.controller;
         let { cart } = cApp;
         if (value > 0)
-            await cart.add(this.productBox, pack, value, price, retail, currency);
+            await cart.add(this.productBox, pack, value, price, retail, currency, '');
         else
             await cart.removeFromCart([{ productId: this.productBox.id, packId: pack.id }]);
     }
@@ -139,7 +139,7 @@ export class VProduct extends VPage<CProduct> {
     }
 
     private dealWithPDF = (fileName: string) => {
-        let shiftArr =fileName ? fileName.replace(/\.pdf/ig, '').split('_'):[];
+        let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
         switch (shiftArr[1]) {
             case 'DE':
                 return '德文';
@@ -155,10 +155,10 @@ export class VProduct extends VPage<CProduct> {
     }
 
     private renderPDF = (content: any) => {
-        let { fileName } = content;      
+        let { fileName } = content;
         let language = this.dealWithPDF(fileName);
         let { ToVerifyPdf } = this.controller;
-        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({content,product: this.productBox}) }}>
+        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product: this.productBox }) }}>
             <img src={pdfIcon} alt="" style={{ width: 24 }} />
             <div className="small">{language}</div>
         </div>

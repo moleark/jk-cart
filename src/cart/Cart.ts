@@ -35,6 +35,7 @@ export class Cart {
 
     private cartStore: CartStore;
     private disposer: IReactionDisposer;
+    private newquantity: number;
 
     @observable data: any = {
         list: observable<CartItem2>([]),
@@ -155,7 +156,7 @@ export class Cart {
     /**
      *
      */
-    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
+    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any, source: any) => {
         let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
         if (!cartItemExists) {
             cartItemExists = {
@@ -187,7 +188,12 @@ export class Cart {
                 // packs.push();
             }
             else {
-                packExists.quantity = quantity;
+                if (source === 0) {
+                    packExists.quantity = packExists.quantity + quantity;
+                    this.newquantity = packExists.quantity;
+                } else {
+                    packExists.quantity = quantity
+                }
                 packExists.price = price;
                 packExists.currency = currency;
             }
@@ -195,8 +201,11 @@ export class Cart {
             cartItemExists.$isDeleted = false;
             cartItemExists.createdate = Date.now();
         }
-
-        await this.cartStore.storeCart(product, pack, quantity, price, currency);
+        if (source === 0) {
+            await this.cartStore.storeCart(product, pack, this.newquantity, price, currency);
+        } else {
+            await this.cartStore.storeCart(product, pack, quantity, price, currency);
+        }
     }
     removeStrike = async (data: any) => {
         console.log(data);
@@ -236,7 +245,7 @@ export class Cart {
         if (cp !== undefined)
             cp.$isDeleted = true;
     }
-
+ 
     async removeDeletedItem() {
         let rows: { product: number, packItem: CartPackRow }[] = [];
         for (let cp of this.items) {
@@ -247,7 +256,7 @@ export class Cart {
         }
         if (rows.length === 0) return;
         await this.cartStore.removeFromCart(rows);
-
+ 
         // 下面是从本地数据结构中删除
         for (let cp of this.items) {
             let { packs } = cp;
@@ -258,7 +267,7 @@ export class Cart {
             }
             for (let i = packIndexes.length - 1; i >= 0; i--) packs.splice(packIndexes[i], 1);
         }
-
+ 
         let itemIndexes: number[] = [];
         let len = this.items.length;
         for (let i = 0; i < len; i++) {
@@ -267,7 +276,7 @@ export class Cart {
         }
         for (let i = itemIndexes.length - 1; i >= 0; i--) this.items.splice(itemIndexes[i], 1);
     }
-
+ 
     async clear() {
         this.items.forEach(v => v.$isDeleted = true);
         await this.removeDeletedItem();

@@ -32,7 +32,7 @@ export class CCart extends CUqBase {
         let { pack, price, retail, currency } = data as CartPackRow;
         let { cart } = this.cApp;
         if (value > 0)
-            await cart.add(product, pack, value, price, retail, currency);
+            await cart.add(product, pack, value, price, retail, currency, '');
         else
             await cart.removeFromCart([{ productId: product.id, packId: pack.id }]);
     }
