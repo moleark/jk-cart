@@ -5,7 +5,6 @@ import { tv } from 'tonva';
 import { CSelectContact } from './CSelectContact';
 import { addressDetailValidation, emailValidation, telephoneValidation, mobileValidation, organizationNameValidation, nameValidation } from 'tools/inputValidations';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 import { xsOrIpad } from '../tools/browser';
 import { pageHTitle } from 'tools/pageHeaderTitle';
 import classNames from 'classnames';

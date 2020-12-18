@@ -5,6 +5,7 @@ import { List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
 import { xs } from 'tools/browser';
 import { Ax } from '../tonva/components/ax/index';
+import { ListTable } from 'tools/listTable';
 
 export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -64,43 +65,25 @@ export class VMyOrders extends VPage<COrder> {
 			'processing': '待审核',
 			'completed': '待发货',
 		};
-		return <div className="tab-pane fade show active mt-3" id="nav-order-1" role="tabpanel">
-				<div className="table-responsive-vertical shadow-z-1">
-					<table id="table" className="table article-product-table order-wrap">
-						<thead style={{background:'#D8D8D8'}}>
-							<tr>
-								<th className="py-2">订单编号</th>
-								<th className="py-2">日期</th>
-								<th className="py-2">订单状态</th>
-								<th className="py-2">详情</th>
-							</tr>
-						</thead>
-						<tbody>
-							{
-								this.list.map((v: any) => {
-									let { id, no, date, OState } = v;
-									return <tr className="article-product-list order-wrap-list" key={id}>
-										<td data-title="订单编号" className="mint">{no}</td>
-										<td data-title="日期"><EasyDate date={date} /></td>
-										<td data-title="订单状态">
-											{os[state !=='all'? state : OState]}
-										</td>
-										<td data-title="详情">
-											<Ax href={"/orderDetail/" + id} className='w-100 m-3'>
-												<button type='button' className="btn-primary w-4c">详情</button>
-											</Ax>
-										</td>
-									</tr>
-								})
-							}
-						</tbody>
-					</table>
-				</div>
-			</div>    
+        let columns = [{ id: 1, name: '订单编号' },{ id: 2, name: '日期' },{ id: 3, name: '订单状态' },{ id: 4, name: '详情' }];
+        let content = <>{ this.list.map((v: any) => {
+			let { id, no, date, OState } = v;
+			return <tr className="article-product-list order-wrap-list" key={id}>
+				<td data-title={columns[0].name} className="mint">{no}</td>
+				<td data-title={columns[1].name}><EasyDate date={date} /></td>
+				<td data-title={columns[2].name}>{os[state !=='all'? state : OState]}</td>
+				<td data-title={columns[3].name}>
+					<Ax href={"/orderDetail/" + id} className='w-100 m-3'>
+						<button type='button' className="btn-primary w-4c">详情</button>
+					</Ax>
+				</td>
+			</tr>
+		})}</>;
+		return <ListTable columns={columns} content={content} ></ListTable>;
 	}
 
 	private renderOrder = (order: any, index: number) => {
-		let { openOrderDetail } = this.controller;
+		// let { openOrderDetail } = this.controller;
 		let { id, no, date } = order;
 		return <Ax href={"/orderDetail/" + id } className='w-100 m-3' target='_blank'>
 			<div className="d-flex w-100 justify-content-between cursor-pointer" /* onClick={() => openOrderDetail(id)} */>
