@@ -7,6 +7,7 @@ export class Order {
     webUser: any;
     organization: BoxId;
     customer: any;
+    orderMaker: any;
 
     @observable shippingContact: BoxId;
     @observable invoiceContact: BoxId;
@@ -43,7 +44,7 @@ export class Order {
     @computed get productAmount() {
         return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subListAmount, 0).toFixed(2));
     };
-    currency: BoxId;
+    @observable currency: BoxId;
     @observable coupon: BoxId;
     @observable couponOffsetAmount: number;
     @observable couponRemitted: number;
@@ -63,6 +64,7 @@ export class Order {
             })
         });
         return {
+            orderMaker: this.orderMaker,
             webUser: this.webUser,
             organization: this.organization,
             customer: this.customer,

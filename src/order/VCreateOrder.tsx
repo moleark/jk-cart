@@ -14,9 +14,11 @@ export class VCreateOrder extends VPage<COrder> {
     @observable private shippingAddressIsBlank: boolean = false;
     @observable private invoiceAddressIsBlank: boolean = false;
     @observable private invoiceIsBlank: boolean = false;
+    @observable orderDraft: any;
 
     async open(param: any) {
-        this.openPage(this.page);
+        this.orderDraft = param.orderDraft
+        this.openPage(this.page, param);
     }
 
     private nullContact = () => {
@@ -39,7 +41,7 @@ export class VCreateOrder extends VPage<COrder> {
                     <small className="text-muted">(¥{parseFloat(price.toFixed(2))} × {quantity})</small>
                 </div>
             </div>
-            <div>{this.controller.renderDeliveryTime(pack)}</div>
+            <div>{this.controller.cApp.cProduct.renderDeliveryTime(pack)}</div>
         </div>;
     }
 
@@ -108,31 +110,6 @@ export class VCreateOrder extends VPage<COrder> {
         }
     });
 
-    private onBuyerAccountChanged = () => {
-
-    }
-
-    private renderBuyerAccount = (item: any) => {
-        let { buyerAccount } = item;
-        return <div>{tv(buyerAccount, (v) => {
-            let { id, description, organization } = v;
-            return <>{description}{tv(organization, (o) => {
-                return <>{o.name}</>
-            }, undefined, () => null)}</>
-        })}</div>
-    }
-
-    private renderBuyerAccounts = observer(() => {
-        let { buyerAccounts } = this.controller;
-        if (!buyerAccounts || buyerAccounts.length === 0) return null;
-        return <div className="row py-3 bg-white mb-1">
-            <div className="col-4 col-sm-2 pb-2 text-muted">订单账号:</div>
-            <div className="col-8 col-sm-10">
-                <List items={buyerAccounts} item={{ render: this.renderBuyerAccount, onSelect: this.onBuyerAccountChanged }}></List>
-            </div>
-        </div>
-    })
-
     private onSubmit = async () => {
         let { orderData } = this.controller;
         // 必填项验证
@@ -144,7 +121,7 @@ export class VCreateOrder extends VPage<COrder> {
         }
         if (!invoiceContact) {
             if (this.useShippingAddress) {
-                orderData.invoiceContact = shippingContact; //contactBox;
+                orderData.invoiceContact = shippingContact;
                 this.invoiceAddressIsBlank = false;
             } else {
                 this.invoiceAddressIsBlank = true;
@@ -161,19 +138,31 @@ export class VCreateOrder extends VPage<COrder> {
         this.controller.submitOrder();
     }
 
-    private page = observer(() => {
-
+    private page = observer((param: any) => {
+        let { orderDraft } = param
         let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
-        let { currentUser } = cApp;
-        let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
-            <div className="d-flex justify-content-left">
-                <div className="text-danger flex-grow-1" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
-                <button type="button"
-                    className={classNames('btn', 'w-30', { 'btn-danger': currentUser.allowOrdering, 'btn-secondary': !currentUser.allowOrdering })}
-                    onClick={this.onSubmit} disabled={!currentUser.allowOrdering}>提交订单
-                </button>
+        let { currentUser, cOrderDraft } = cApp;
+
+        let footer: any;
+        if (orderDraft === 1) {
+            footer = <div className="w-100 d-flex justify-content-center py-2" >
+                <button type="button" className="btn btn-primary mx-1 my-1 px-3"
+                    onClick={this.onSubmit} >确认</button>
+                <button type="button" className="btn btn-primary mx-1 my-1 px-3"
+                    onClick={cOrderDraft.toCartPage}>添加到购物车</button>
+                <button type="button" className="btn btn-primary mx-1 my-1 px-3"
+                    onClick={cOrderDraft.onCancel}>取消</button>
             </div>
-        </div>;
+        } else
+            footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
+                <div className="d-flex justify-content-left">
+                    <div className="text-danger flex-grow-1" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
+                    <button type="button"
+                        className={classNames('btn', 'w-30', { 'btn-danger': currentUser.allowOrdering, 'btn-secondary': !currentUser.allowOrdering })}
+                        onClick={this.onSubmit} disabled={!currentUser.allowOrdering}>提交订单
+                </button>
+                </div>
+            </div>;
 
         let chevronRight = <FA name="chevron-right" className="cursor-pointer" />
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
@@ -281,6 +270,10 @@ export class VCreateOrder extends VPage<COrder> {
                 </div >
                 {couponUI}
             </div>
+            {orderDraft === 1 ? <div className="bg-white p-3 my-1 d-flex justify-content-between">
+                <div className="pb-2 text-success">制单人:{cApp.cWebUser.renderWebuserName(orderData.orderMaker.id)}</div>
+                <div className="text-danger">总金额:<small className="px-1">¥</small>{orderData.amount}</div>
+            </div> : null}
         </Page>
     })
 }

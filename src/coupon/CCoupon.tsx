@@ -302,7 +302,7 @@ export class CCoupon extends CUqBase {
         this.openVPage(VSharedCoupon, { products });
     }
 
-    private autoDrawCouponBase = async (couponBaseCode: string) => {
+    autoDrawCouponBase = async (couponBaseCode: string) => {
 
         this.couponDrawed = false;
         this.sharedCouponValidationResult = await this.getCouponValidationResult(couponBaseCode);

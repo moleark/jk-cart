@@ -125,7 +125,6 @@ export class VCouponManage extends VPage<CCoupon> {
 
     private page = observer(() => {
         this.getTabs();
-        let { cOrderDraft } = this.controller.cApp;
         let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
         return <Page header="卡券管理">
             <div className="px-2 py-3">
@@ -137,7 +136,6 @@ export class VCouponManage extends VPage<CCoupon> {
                     <Tabs tabs={this.tabs} tabPosition="top" />
                 </div>
             </div >
-            <button onClick={() => cOrderDraft.showSharedOrder({ customerId: 68765, orderdraftid: 6 })}> ssss</button>
         </Page >
     })
 }
