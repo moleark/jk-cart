@@ -221,13 +221,13 @@ export class COrderDraft extends CUqBase {
         await order.Order.action(orderId, flow, state, "submit");
 
         // 保存订单确认状态
-        // let { id } = this.brief;
-        // let orderData = await uqs.orderDraft.OrderDraft.getSheet(id);
-        let { id: draftorderId, flow: draftFlow, state: draftState } = this.brief;
+        let { id } = this.brief;
+        let orderData = await uqs.orderDraft.OrderDraft.getSheet(id);
+        let { id: draftorderId, flow: draftFlow, state: draftState } = orderData.brief;
         await orderDraft.OrderDraft.action(draftorderId, draftFlow, draftState, "Pass");
         // 如果使用了coupon/credits，需要将其标记为已使用
         console.log('00', draftorderId)
-        let { id: couponId, code, types } = this.couponAppliedData;
+        let { id: couponId, types } = this.couponAppliedData;
         if (couponId) {
             let nowDate = new Date();
             let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
@@ -248,7 +248,7 @@ export class COrderDraft extends CUqBase {
         // 打开下单成功显示界面
         this.closePage()
         nav.popTo(this.cApp.topKey);
-        // this.openVPage(OrderSuccess, result);
+        this.openVPage(OrderSuccess, result);
     }
 
     /**
