@@ -4,6 +4,7 @@ import { CPointProduct } from './CPointProduct';
 import { tv, List } from 'tonva';
 import { OrderItem } from './pointOrder';
 import { PointProductImage } from 'tools/productImage';
+import { xs } from 'tools/browser';
 
 export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
@@ -17,7 +18,7 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" style={{maxHeight:"23vw"}} /></div>
+                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100"  /></div>
                     <div className="col-8 small">
                         <div><label>{v.descriptionC}</label></div>
                         <div className="d-flex justify-content-between my-3">
@@ -38,8 +39,10 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         let { no, date } = brief;
         let { exchangeItems, shippingContact, amount } = data;
 
-        let header = <>订单详情: {no}</>
+        let header:any = <>订单详情: {no}</>
+        if (!xs) header = '';
         return <Page header={header}>
+            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a></div>}
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>

@@ -39,7 +39,8 @@ export class VMyPoint extends VPage<CPointProduct> {
             let { product } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
             return <div className={`d-flex align-items-center ${clm}`}>{tv(product, (v) => {
-                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{width:'91.6%',height:'23vw',border:`2px solid ${randomColor()}`}} />
+                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0 z-height-more" style={{width:'91.6%',border:`2px solid ${randomColor()}`}} />
+                    // return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{width:'91.6%',height:'23vw',border:`2px solid ${randomColor()}`}} />
                  })
             }</div>
         }
@@ -48,7 +49,9 @@ export class VMyPoint extends VPage<CPointProduct> {
                 <small className={classNames(theme ? theme : '', 'align-self-end')} style={{ color: theme ? theme : '' }}>{name}</small>
                 <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
             </h6>
-            <List className="d-flex w-100 bg-transparent justify-content-between"
+            <List
+                className="row mx-0 bg-transparent justify-content-between"
+                // className="d-flex w-100 bg-transparent justify-content-between"
                 items={imgArr.slice(0, 3)}
                 item={{
                     render:pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
@@ -97,8 +100,9 @@ export class VMyPoint extends VPage<CPointProduct> {
         if (!xs) right = null;
         return <Page header={header} right={right} className="h-100 bg-white">
             {pageHTitle('积分商城')}
+            {renderDropdownActions(actions)}
             <div>
-                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
+                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: 'cover' }}>{/* cover contain */}
                     <>{nowPointTip}</>
                     <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
                     < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
@@ -132,6 +136,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                     {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                 </div>
             </div>
+            <div className="d-none d-lg-block py-md-5 my-md-5"></div>
         </Page >;
     });
 
@@ -161,5 +166,17 @@ export function renderPointRecord(item: any) {
         <div className="d-table h-100">
             <div className="font-weight-bolder h-100 d-table-cell align-middle text-danger">{point >= 0 ? '+' : ''}{point}</div>
         </div>
+    </div>
+}
+
+export function renderDropdownActions(actions: any) {
+    if (xs) return null;
+    return <div className="row mx-0 justify-content-end mb-2">
+        {actions.map((v: any,index:number) => {
+            return <div className='m-1 cursor-pointer' key={index} onClick={v.action}>
+                <FA name={v.icon} className="text-info"></FA>
+                <span> {v.caption}</span>
+            </div>
+        })}
     </div>
 }

@@ -22,10 +22,11 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     protected renderPointProduct = (pointProduct: any) => {
         let { product, quantity } = pointProduct;
 		if (quantity <= 0) return;
-		let style:React.CSSProperties = { height: '35vw',border:`2px solid ${randomColor()}` };
+		let style:React.CSSProperties = { border:`2px solid ${randomColor()}` };
+		// let style:React.CSSProperties = { height: '35vw',border:`2px solid ${randomColor()}` };
 		return tv(product, (v) => {
 			return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
-				<div title={v.description} className="w-100" style={style} >
+				<div title={v.description} className="w-100 z-height" style={style} >
 					<PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" />
 				</div>
 				<div className="small w-100">
@@ -108,8 +109,13 @@ export class VExchangeOrder extends VPage<CPointProduct> {
 
         return <Page header={header} right={<></>} footer={footer}>
             {this.renderContact()}
-            <List items={pointProductsSelected} item={{ render: this.renderPointProduct, className: 'w-50 px-3' }}
-                className="d-flex flex-wrap bg-transparent mt-2"
+            <List items={pointProductsSelected} item={{
+                render: this.renderPointProduct,
+                className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'
+                // className: 'w-50 px-3'
+            }}
+                className="row mx-0 mt-2 bg-transparent"
+                // className="d-flex flex-wrap bg-transparent mt-2"
             ></List>
         </Page>
     })

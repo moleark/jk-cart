@@ -40,15 +40,17 @@ export class VPointProductDetail extends VPage<CPointProduct> {
     protected renderPointProduct = (pointProduct: any) => {
         let { product, OffShelf } = pointProduct;
         let OffShelfTip: any = undefined;
-        if(OffShelf) OffShelfTip = <div className="position-absolute" style={{top:0,left:0}}>
-            <img src={已下架} alt="" style={{width:'18vw'}} />
+        if(OffShelf) OffShelfTip = <div className="position-absolute w-25" style={{top:0,left:15}}>
+            <img src={已下架} alt="" className="w-100" />
         </div>
         return <>
             {tv(product, (v) => {
-                return <div className="w-100 px-4 position-relative">
-                    {OffShelfTip}
-                    <div title={v.description}><PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" style={{}} /></div>
-                    <div className="small">
+                return <div className="w-100 row mx-0">
+                    <div title={v.description} className="col-12 col-sm-6 position-relative">
+                        <PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" style={{}} />
+                        {OffShelfTip}
+                    </div>
+                    <div className="small col-12 col-sm-6 pt-sm-4">
                         <div className="mt-2">{v.descriptionC}</div>
                         <div className="my-2">{v.grade}</div>
                         <div className="row m-0 p-0">

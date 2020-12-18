@@ -83,8 +83,14 @@ export class VPointProduct extends VPage<CPointProduct> {
     protected renderList = (isToDetail?: boolean) => {
         let { pointProducts, openPointProductDetail } = this.controller;
         return <div style={{ background: `url(${triangleShadingO}) no-repeat 99% 230px,url(${triangleShadingO}) no-repeat 1% 480px`, backgroundSize: '2.5%' }}>
-            <List items={pointProducts} item={{ render: this.renderPointProduct, onClick: (v) => { openPointProductDetail(v, PointProductDetailLevel.INDIRECT) }, className: 'w-50 px-3 bg-transparent' }} none={this.none}
-                className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
+            <List items={pointProducts} item={{
+                render: this.renderPointProduct,
+                onClick: (v) => { openPointProductDetail(v, PointProductDetailLevel.INDIRECT) },
+                className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'
+                // className: 'w-50 px-3 bg-transparent'
+            }} none={this.none}
+                // className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
+                className={`${pointProducts.length !== 0 ? 'row mx-0 mt-2 bg-transparent' :''}`}
             ></List>
         </div>
     }
@@ -110,7 +116,8 @@ export class VPointProduct extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="w-100 d-flex flex-column mb-4">{/* height: 20vh  */}
-                    <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} /></div>
+                    <div title={v.description} className="w-100 z-height"><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} /></div>
+                    {/* <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} /></div> */}
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>
                         <>
@@ -213,9 +220,14 @@ export class VSelectedPointProduct extends VPointProduct {
         return <Page header='已选择兑换产品' right={<></>} footer={footer} >
             <List
                 items={pointProductsSelected}
-                item={{ render: this.renderPointProduct, className: "w-50 px-3" }}
+                item={{
+                    render: this.renderPointProduct,
+                     className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'
+                    // className: "w-50 px-3"
+                }}
                 none={this.none}
-                className="d-flex flex-wrap bg-transparent mt-2"
+                className='row mx-0 mt-2 bg-transparent'
+                // className="d-flex flex-wrap bg-transparent mt-2"
             />
         </Page >
     })

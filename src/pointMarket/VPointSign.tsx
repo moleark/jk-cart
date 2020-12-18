@@ -8,6 +8,9 @@ import { RevenueExpenditure } from './basicRefer';
 import moment from 'moment';
 import 积分图标P from 'images/积分图标P.png'
 import 已签到 from 'images/已签到.png'
+import { xs } from 'tools/browser';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { renderDropdownActions } from './VMyPoint';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
@@ -55,8 +58,11 @@ export class VPointSign extends VPage<CSignIn> {
             }
         ];
         let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
-
-        return <Page header='签到' right={right}>
+        let header = CrPageHeaderTitle('签到');
+        if (!xs) right = null;
+        return <Page header={header} right={right}>
+            {pageHTitle('签到')}
+            {renderDropdownActions(actions)}
             <div className="text-center text-light px-5 pt-5"
                 style={{ background: `url(${signTopicMap}) no-repeat`, backgroundSize: "100% 100%" }}>
                 {/* <div className="rounded-circle mx-auto"

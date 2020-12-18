@@ -37,7 +37,7 @@ export class VCouponManage extends VPage<CCoupon> {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={this.coupons} item={{render: this.renderCoupon, className:'col-sm-6 border rounded px-0'}} className='row mx-0 bg-light' none={none} />
+                    return <List items={this.coupons} item={{render: this.renderCoupon, className: 'col-lg-6 border rounded px-0'}} className='row mx-0 bg-light mt-2' none={none} />
                 },
                 isSelected: this.currentStatus === state,
                 load: async () => {
@@ -144,7 +144,7 @@ export class VCouponManage extends VPage<CCoupon> {
 				{/*React.createElement(this.tipsUI)*/}
 				{autoHideTips(this.tips)}
                 <div className="mt-2 reset-z-header-boxS">
-                    <Tabs tabs={this.tabs} tabPosition="top" />
+                    <Tabs tabs={this.tabs} tabPosition="top" tabBg='bg-light' />
                 </div>
             </div >
             {this.renderVm(VModelCardDiscount,{content:this.controller.renderCardDiscount()})}

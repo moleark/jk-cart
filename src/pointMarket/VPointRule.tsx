@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { Page } from 'tonva';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { xs } from '../tools/browser';
 
 export class VPointRule extends React.Component {
 
     render() {
-        return <Page header="积分规则">
-            <div className='bg-white p-2'>
+         let header = CrPageHeaderTitle('积分规则');
+        return <Page header={header}>
+            {pageHTitle('积分规则')}
+            <div className='bg-white p-2 mx-auto' style={{maxWidth: !xs ? 800 :'none'}}>
                 {/* <ol className="mb-3">
                     <li>订购产品满1元积1分（活动期间积分按活动规则执行），积分按消费额累计；付款后，积分变为有效积分，可以使用；</li>
                     <li>特价产品、产业型产品等不产生积分；</li>
