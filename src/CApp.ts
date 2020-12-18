@@ -200,11 +200,13 @@ export class CApp extends CUqApp {
             carts: this.carts,
         }
 
+        /*
         this.hookElements(elements);
 
         window.onfocus = () => {
             this.hookElements(elements);
         }
+        */
         return;
     }
 

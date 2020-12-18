@@ -5,6 +5,13 @@ import { tv, List } from 'tonva';
 import { OrderItem } from './pointOrder';
 import { PointProductImage } from 'tools/productImage';
 
+const OrderState: { [state: string]: string } = {
+    '$':'$',
+    'matching':'matching',
+    'shipping':'配送中',
+    'canceled':'此订单已取消',
+}
+
 export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
     async open(order: any) {
@@ -35,9 +42,9 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
     private page = (order: any) => {
         let { brief, data } = order;
-        let { no, date } = brief;
+        let { no, date,state } = brief;
         let { exchangeItems, shippingContact, amount } = data;
-
+        let orderState: string = state === 'canceled' ? '此订单已取消' : ''; // OrderState[state || '$'];
         let header = <>订单详情: {no}</>
         return <Page header={header}>
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
@@ -49,7 +56,8 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
                 <div className="col-3 text-muted">下单时间:</div>
                 <div className="col-9 text-right"><EasyDate date={date} /></div>
             </div>
-            <div className="bg-white p-3 my-1 text-right">
+            <div className="bg-white p-3 my-1 d-flex justify-content-between">
+                <strong>{ orderState }</strong>
                 <span className="text-danger font-weight-bold">总积分: {amount}</span>
             </div>
         </Page>

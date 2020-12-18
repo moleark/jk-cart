@@ -16,6 +16,7 @@ import { VSelectedLable } from './VSelectedLable';
 import { GLOABLE } from 'cartenv';
 import { VDefaultPost } from './VDefaultPost';
 import moment from 'moment';
+import { VPointDoubt } from './VPointDoubt';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -29,15 +30,15 @@ export const OrderSource = {
 }
 
 export const PointIntervals: { [state: string]: any } = {
-    'below':{ startPoint: 0, endPoint: 10000 },
-    'firstLevel':{ startPoint: 10000, endPoint: 50000 },
-    'twoLevel':{ startPoint: 50000, endPoint: 150000 },
-    'above':{ startPoint: 150000, endPoint: Infinity },
+    'below': { startPoint: 0, endPoint: 10000 },
+    'firstLevel': { startPoint: 10000, endPoint: 50000 },
+    'twoLevel': { startPoint: 50000, endPoint: 150000 },
+    'above': { startPoint: 150000, endPoint: Infinity },
 }
 
 export const PointProductDetailLevel = {
     DIRECT: 3,
-    INDIRECT:4,
+    INDIRECT: 4,
 }
 
 export class CPointProduct extends CUqBase {
@@ -123,8 +124,8 @@ export class CPointProduct extends CUqBase {
     /**
      * 可兑换产品的详情(可生成浏览量)
      */
-    openPointProductDetail = async (pointProduct: any,DetailLevel: number) => {
-        this.navCloseByOrderSuccess = DetailLevel; 
+    openPointProductDetail = async (pointProduct: any, DetailLevel: number) => {
+        this.navCloseByOrderSuccess = DetailLevel;
         this.pointProductsDetail = pointProduct;
         if (this.pointProductsSelected.length) {
             let findP = this.pointProductsSelected.find((v: any) => pointProduct.product.id === v.product.id);
@@ -139,7 +140,7 @@ export class CPointProduct extends CUqBase {
             this.pointProductsDetail.OffShelf = true;
         // this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
-        this.openVPage(VPointProductDetail,DetailLevel);
+        this.openVPage(VPointProductDetail, DetailLevel);
     }
 
     /**
@@ -195,7 +196,7 @@ export class CPointProduct extends CUqBase {
      * 已选择的可兑换产品页面
      */
     openSelectedPointProduct = async (DetailLevel: number) => {
-        this.navCloseByOrderSuccess = DetailLevel;        
+        this.navCloseByOrderSuccess = DetailLevel;
         this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
         this.openVPage(VSelectedPointProduct);
     }
@@ -215,7 +216,7 @@ export class CPointProduct extends CUqBase {
      * 已选择的可兑换产品图标
      */
     renderSelectedLable(DetailLevel: number) {
-        return this.renderView(VSelectedLable,DetailLevel);
+        return this.renderView(VSelectedLable, DetailLevel);
     }
 
     /**
@@ -307,7 +308,7 @@ export class CPointProduct extends CUqBase {
      */
     getNewPointProducts = async () => {
         let result = await this.uqs.积分商城.GetNewPointProducts.table({});
-        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
     }
 
     /**
@@ -315,7 +316,7 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
-        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
     }
 
     /**
@@ -347,7 +348,7 @@ export class CPointProduct extends CUqBase {
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
         // 当前产品详情的数量
-        if (data.product.id===this.pointProductsDetail.product.id)
+        if (data.product.id === this.pointProductsDetail.product.id)
             this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
         this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
@@ -529,5 +530,25 @@ export class CPointProduct extends CUqBase {
 
     onSelectShippingContact = async () => {
         this.orderData.shippingContact = await this.selectContact()
+    }
+
+    showPointDoubt = async () => {
+        let { currentUser } = this.cApp;
+        let param: any = { currentUser, webUsers: [] };
+        if (currentUser.hasCustomer) {
+            let { currentCustomer } = currentUser;
+            param.currentCustomer = currentCustomer;
+            let otherWebUsers = await currentCustomer.getRelatedWebUser();
+            param.webUsers = otherWebUsers;
+        } else {
+            this.applyAuditUser();
+        }
+        this.openVPage(VPointDoubt, param);
+    }
+
+    applyAuditUser = async () => {
+        let { cApp, uqs } = this;
+        let { currentUser } = cApp;
+        await uqs.webuser.applyAuditUser.submit({ webUser: currentUser });
     }
 }

@@ -320,4 +320,15 @@ export class Customer {
         await this.uqs.customer.CustomerSetting.add(this.customerSettings);
     }
 
+    /**
+     * 获取Customer关联的web User，一个Customer可能会关联多个web User 
+     */
+    async getRelatedWebUser() {
+        let result = await this.uqs.webuser.getWebUserByCustomer.table({ customer: this.id });
+        return result;
+    }
+
+    async setMainWebUser(webUser: number) {
+        await this.uqs.webuser.setCustomerMainWebUser.submit({ customer: this.id, webUser: webUser })
+    }
 }
