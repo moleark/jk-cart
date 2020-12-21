@@ -17,6 +17,8 @@ import { VContactList } from 'customer/VContactList';
 import { VContact } from 'customer/VContact';
 import { VAddress, VCity, VCounty, VProvince } from '../customer/VAddress';
 import { GLOABLE } from 'global';
+import { CAddress } from 'customer/CAddress';
+import { VInvoiceInfo } from 'customer/VInvoiceInfo';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -27,14 +29,16 @@ export class COrder extends CUqBase {
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
     @observable couponAppliedData: any = {};
-
+    
+    @observable replyToContactType: string;
     @observable modalTitle: any;
     @observable modalTitleS: { [desc: string]: any } = {
         'contactList': { id: 1, title: '地址管理', preLevel: '' },
         'contactInfo': { id: 2, title: '地址信息', preLevel: 'contactList' },
         'provinceChoice': { id: 3, title: '所在省市', preLevel: 'contactInfo' },
-        'cityChoice': { id: 3, title: '所在城市', preLevel: 'provinceChoice' },
-        'countyChoice': { id: 3, title: '所在区县', preLevel: 'cityChoice' },
+        'cityChoice': { id: 4, title: '所在城市', preLevel: 'provinceChoice' },
+        'countyChoice': { id: 5, title: '所在区县', preLevel: 'cityChoice' },
+        'invoiceInfo': { id: 6, title: '发票信息', preLevel: '' },
     };
 
     @observable editContact: any;
@@ -434,15 +438,9 @@ export class COrder extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
-    renderContentList = (type?:string) => {
-        // return this.renderView(VAddress);
-        return this.renderView(VContactList,type);
-    }
-
-    onContactSelected = (row: { contact: any, type: string }) => {
-        let { contact, type} = row;
-        if(type ==='收货地址') this.orderData.shippingContact = contact;
-        if(type ==='发票地址') this.orderData.invoiceContact = contact;
+    onContactSelected = (contact: BoxId) => {
+        if(this.replyToContactType ==='收货地址') this.orderData.shippingContact = contact;
+        if(this.replyToContactType ==='发票地址') this.orderData.invoiceContact = contact;
         this.modalTitle = '';
     }
 
@@ -457,6 +455,28 @@ export class COrder extends CUqBase {
         this.modalTitle = 'contactInfo';
     }
 
+    renderModelContent = (param?: any) => {
+        if(this.modalTitle === 'contactList')  return this.renderContentList();
+        if(this.modalTitle === 'contactInfo')  return this.onNewContact();
+        if(this.modalTitle === 'provinceChoice')  return this.pickProvince();
+        if(this.modalTitle === 'cityChoice' ) return this.pickCity();
+        if(this.modalTitle === 'countyChoice')  return this.pickCounty();
+        if(this.modalTitle === 'invoiceInfo')  return this.renderInvoice();
+    }
+
+    renderContentList = () => {
+        return this.renderView(VContactList);
+    }
+
+    renderInvoice = () => {
+        let { invoiceType, invoiceInfo } = this.orderData;
+        let origInvoice = {
+            invoiceType: invoiceType,
+            invoiceInfo: invoiceInfo,
+        };
+        return this.renderView(VInvoiceInfo,{origInvoice:origInvoice});
+    }
+
     /**
      * 打开地址新建界面
      */
@@ -464,10 +484,11 @@ export class COrder extends CUqBase {
         return this.renderView(VContact,{ contact: this.editContact });
     }
 
-
     pickAddress = async (context?: Context, name?: string, value?: number): Promise<number> => {
         this.provinces = await this.cApp.cAddress.getCountryProvince(GLOABLE.CHINA);
         this.modalTitle = 'provinceChoice';
+        //  let cAddress = this.newC(CAddress); // new CAddress(this.cApp, undefined);
+        // return await cAddress.call<number>();
         return this.addressId;
     }
 

@@ -8,6 +8,7 @@ import { CartPackRow } from '../cart/Cart';
 import classNames from 'classnames';
 //import { GLOABLE } from 'cartenv';
 import { xs } from '../tools/browser';
+import { VModelC } from './VModelC';
 
 export class VCreateOrder extends VPage<COrder> {
 
@@ -18,7 +19,6 @@ export class VCreateOrder extends VPage<COrder> {
 	private shippingAddressTip = observable.box();
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
-    private checkType: string;
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
@@ -63,7 +63,7 @@ export class VCreateOrder extends VPage<COrder> {
     }
 
     private orderItemKey = (orderItem: OrderItem) => {
-        let pack = orderItem.packs[0].pack;
+        let pack = orderItem.packs[0]?.pack;
         let packID = pack ? String(pack.id) : '';
         return orderItem.product.id + packID;
     }
@@ -174,12 +174,12 @@ export class VCreateOrder extends VPage<COrder> {
 
     saveShowModal = (type:string) => {
         this.controller.modalTitle = 'contactList';
-        this.checkType = type;
+        this.controller.replyToContactType = type;
     }
 
     private page = observer(() => {
 
-        let { cApp, orderData,modalTitleS, editContact,modalTitle, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
+        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
 		let { currentUser } = cApp;
 		let { allowOrdering } = currentUser;
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
@@ -259,7 +259,7 @@ export class VCreateOrder extends VPage<COrder> {
 		*/
 
         //let invoiceBlankTip = this.invoiceIsBlank ? <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票信息</div> : null;
-        let invoiceInfoUI = <div className="row py-3 bg-white" onClick={onInvoiceInfoEdit}>
+        let invoiceInfoUI = <div className="row py-3 bg-white" onClick={()=>{xs ? onInvoiceInfoEdit(): this.controller.modalTitle='invoiceInfo'}}>
             {labeled('发票信息:',
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {tv(orderData.invoiceType, (v) => <>{v.description}</>, undefined, () => <span className="text-primary">填写发票信息</span>)}
@@ -317,26 +317,7 @@ export class VCreateOrder extends VPage<COrder> {
                 </div >
                 {couponUI}
             </div>
-            <div className='modal modal-dialog-show' style={{ display: modalTitle ?'block':'none',background:"rgba(0,0,0,.3)",}}>
-                <div className="d-flex justify-content-center align-content-center w-100 h-100" >
-                    <div className="border bg-light m-auto rounded pb-4 position-relative" style={{maxWidth:800}}>
-                        <div className="position-absolute cursor-pointer" style={{right:5,top:0}} onClick={()=>{this.controller.modalTitle = '';}}><FA name="times-circle-o" className="text-primary" /></div>
-                        {
-                          modalTitle &&  modalTitle !== 'contactList' &&
-                            <div className="position-absolute cursor-pointer" style={{ left: 8, top: 8 }}
-                                onClick={() => { this.controller.modalTitle = modalTitleS[modalTitle]?.preLevel}}>
-                                <FA name="chevron-left" className="text-break" />
-                            </div>
-                        }
-                        <div className="text-center border-bottom h4 py-2">{modalTitleS[modalTitle]?.title}</div>
-                        {modalTitle === 'contactList' && this.controller.renderContentList(this.checkType)}
-                        {modalTitle === 'contactInfo' && this.controller.onNewContact()}
-                        {modalTitle === 'provinceChoice' && this.controller.pickProvince()}
-                        {modalTitle === 'cityChoice' && this.controller.pickCity()}
-                        {modalTitle === 'countyChoice' && this.controller.pickCounty()}
-                    </div>
-                </div>
-            </div>
+            {this.renderVm(VModelC)}
         </Page>
     })
 }

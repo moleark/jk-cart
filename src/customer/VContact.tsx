@@ -126,14 +126,10 @@ export class VContact extends VPage<CSelectContact> {
         </Page>
     }
 
-    getsss = () => {
-        return this.controller.cApp.cOrder.addressId;
-    }
-
     render(param?: any): JSX.Element {
         this.userContactData = param;
         let contactData = _.clone(this.userContactData.contact);
-        /* 选择后的地址无法渲染  存在问题 后续处理  完成后处理保存问题 */
+    /* 选择后的地址无法渲染  存在问题 后续处理  完成后处理保存问题 */
         /* if (this.controller.cApp.cSelectShippingContact.TIT) {
             let itemsAddress = this.uiSchema.items.address as UiIdItem;
             itemsAddress = {

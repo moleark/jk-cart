@@ -13,8 +13,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { confirm } = Modal;
 
 export class VContactList extends VPage<CSelectContact> {
-    @observable isCurColl:string;
-    @observable isSh:boolean=false;
     async open() {
 
         this.openPage(this.page);
@@ -25,16 +23,15 @@ export class VContactList extends VPage<CSelectContact> {
         let right = <>
             {
                 !xsOrIpad && <div className="p-2 cursor-pointer text-info" onClick={() => this.onDelContact(contact)}>
-                <FA name="trash-o" />
-            </div>
+                    <FA name="trash-o" />
+                </div>
             }
             <div className="p-2 cursor-pointer text-info" onClick={() => onEditContact(contact)}>
                 <FA name="edit" />
             </div>
-        </>
-        let param = this.isCurColl === undefined ? contact : { contact, type: this.isCurColl };
+        </>;
         return <LMR right={right} className="px-3 py-2">
-            <div onClick={() => onContactSelected(param)}>
+            <div onClick={() => onContactSelected(contact)}>
                 {tv(contact)}
             </div>
         </LMR>
@@ -78,7 +75,6 @@ export class VContactList extends VPage<CSelectContact> {
 
 
     render(param?: any): JSX.Element {
-        this.isCurColl = param;
         let { onNewContact, userContacts } = this.controller.cApp.cSelectShippingContact;
         let footer = <button className="btn btn-primary mt-2 mx-auto w-50"
             onClick={() => {
