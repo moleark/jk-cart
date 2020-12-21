@@ -21,7 +21,7 @@ import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
-import { CWebUser } from 'webuser/CWebUser';
+import { COrderMaker } from 'ordermakeruser/COrderMaker';
 import { COrderDraft } from 'orderdraft/COrderDraft';
 
 export class CApp extends CUqApp {
@@ -49,7 +49,7 @@ export class CApp extends CUqApp {
     cYncProjects: CYncProjects;
     cLottery: CLottery;
     cSignIn: CSignIn;
-    cWebUser: CWebUser;
+    cOrderMaker: COrderMaker;
     cOrderDraft: COrderDraft;
 
     /*
@@ -95,7 +95,7 @@ export class CApp extends CUqApp {
         this.cYncProjects = this.newC(CYncProjects);
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
-        this.cWebUser = this.newC(CWebUser);
+        this.cOrderMaker = this.newC(COrderMaker);
         this.cOrderDraft = this.newC(COrderDraft);
 
         await this.cHome.getSlideShow();

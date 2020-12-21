@@ -14,10 +14,12 @@ export class VCreateOrder extends VPage<COrder> {
     @observable private shippingAddressIsBlank: boolean = false;
     @observable private invoiceAddressIsBlank: boolean = false;
     @observable private invoiceIsBlank: boolean = false;
-    @observable orderDraft: any;
+    @observable fromOrderParam: any;
+    @observable orderDraftId: any;
 
     async open(param: any) {
-        this.orderDraft = param.orderDraft
+        this.fromOrderParam = param.fromOrderParam;
+        this.orderDraftId = param.orderDraftId;
         this.openPage(this.page, param);
     }
 
@@ -134,24 +136,22 @@ export class VCreateOrder extends VPage<COrder> {
             setTimeout(() => this.invoiceIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
         }
-
-        this.controller.submitOrder();
+        this.controller.submitOrder(this.orderDraftId);
     }
 
     private page = observer((param: any) => {
-        let { orderDraft } = param
-        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
-        let { currentUser, cOrderDraft } = cApp;
+        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit, toCartPage, onCancel } = this.controller;
+        let { currentUser } = cApp;
 
         let footer: any;
-        if (orderDraft === 1) {
+        if (this.fromOrderParam === 1) {
             footer = <div className="w-100 d-flex justify-content-center py-2" >
                 <button type="button" className="btn btn-primary mx-1 my-1 px-3"
                     onClick={this.onSubmit} >确认</button>
                 <button type="button" className="btn btn-primary mx-1 my-1 px-3"
-                    onClick={cOrderDraft.toCartPage}>添加到购物车</button>
+                    onClick={toCartPage}>添加到购物车</button>
                 <button type="button" className="btn btn-primary mx-1 my-1 px-3"
-                    onClick={cOrderDraft.onCancel}>取消</button>
+                    onClick={() => onCancel(this.orderDraftId)}>取消</button>
             </div>
         } else
             footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
@@ -270,8 +270,8 @@ export class VCreateOrder extends VPage<COrder> {
                 </div >
                 {couponUI}
             </div>
-            {orderDraft === 1 ? <div className="bg-white p-3 my-1 d-flex justify-content-between">
-                <div className="pb-2 text-success">制单人:{cApp.cWebUser.renderWebuserName(orderData.orderMaker.id)}</div>
+            {this.fromOrderParam === 1 ? <div className="bg-white p-3 my-1 d-flex justify-content-between">
+                <div className="pb-2 text-success">制单人:{cApp.cOrderMaker.renderOrderMaker(orderData.orderMaker.id)}</div>
                 <div className="text-danger">总金额:<small className="px-1">¥</small>{orderData.amount}</div>
             </div> : null}
         </Page>

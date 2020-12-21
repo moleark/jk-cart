@@ -31,6 +31,23 @@ export class COrder extends CUqBase {
     protected async internalStart(param: any) {
     }
 
+    renderOrderDraft = async (param: any) => {
+        let { orderData, orderDraftId } = param
+        let { cCoupon } = this.cApp;
+        this.orderData = orderData;
+        let { sharedCouponValidationResult } = cCoupon;
+        if (sharedCouponValidationResult) {
+            let { result, types, id } = sharedCouponValidationResult;
+            if (result === 1) {
+                if (types === "vipcard" || types === "coupon") {
+                    sharedCouponValidationResult.discountSetting = await cCoupon.getValidDiscounts(types, id);
+                }
+                this.applyCoupon(sharedCouponValidationResult);
+            }
+        }
+        this.openVPage(VCreateOrder, { fromOrderParam: 1, orderDraftId });
+    }
+
     createOrderFromCart = async (cartItems: CartItem2[]) => {
         let { cApp, uqs } = this;
         let { currentUser, currentSalesRegion, cCoupon } = cApp;
@@ -109,7 +126,7 @@ export class COrder extends CUqBase {
                 this.applyCoupon(coupon);
             }
         }
-        this.openVPage(VCreateOrder);
+        this.openVPage(VCreateOrder, { fromOrderParam: 0 });
     }
 
     private defaultSetting: any;
@@ -155,14 +172,15 @@ export class COrder extends CUqBase {
     /**
      * 提交订单
      */
-    submitOrder = async () => {
+    submitOrder = async (orderDraftId: any) => {
         let { uqs, cart, currentUser } = this.cApp;
-        let { order, webuser, 积分商城 } = uqs;
+        let { order, webuser, 积分商城, orderDraft } = uqs;
         let { orderItems } = this.orderData;
 
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
         let { id: orderId, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
+
         // 如果使用了coupon/credits，需要将其标记为已使用
         let { id: couponId, code, types } = this.couponAppliedData;
         if (couponId) {
@@ -182,14 +200,22 @@ export class COrder extends CUqBase {
             }
         }
 
-        let param: [{ productId: number, packId: number }] = [] as any;
-        orderItems.forEach(e => {
-            e.packs.forEach(v => {
-                param.push({ productId: e.product.id, packId: v.pack.id })
-            })
-        });
-        cart.removeFromCart(param);
-
+        // 保存订单确认状态
+        if (orderDraftId) {
+            let { id } = orderDraftId;
+            let orderDraftData = await uqs.orderDraft.OrderDraft.getSheet(id);
+            let { id: draftorderId, flow: draftFlow, state: draftState } = orderDraftData.brief;
+            await orderDraft.OrderDraft.action(draftorderId, draftFlow, draftState, "Pass");
+            this.closePage();
+        } else {
+            let param: [{ productId: number, packId: number }] = [] as any;
+            orderItems.forEach(e => {
+                e.packs.forEach(v => {
+                    param.push({ productId: e.product.id, packId: v.pack.id })
+                })
+            });
+            cart.removeFromCart(param);
+        }
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(OrderSuccess, result);
@@ -391,5 +417,38 @@ export class COrder extends CUqBase {
     renderOrderItemProduct = (product: BoxId) => {
         let { cProduct } = this.cApp;
         return cProduct.renderCartProduct(product);
+    }
+    /**
+   * 取消
+   */
+    onCancel = async (orderDraftId: any) => {
+        let { uqs } = this.cApp;
+        let { orderDraft } = uqs;
+        // 保存订单状态
+        let { id } = orderDraftId;
+        let orderDraftData = await uqs.orderDraft.OrderDraft.getSheet(id);
+        let { id: orderId, flow, state } = orderDraftData.brief;
+        await orderDraft.OrderDraft.action(orderId, flow, state, "Cancel");
+        this.closePage()
+    }
+
+    /**
+     * 添加到购物车，修改产品信息
+     */
+    toCartPage = async () => {
+        let { cApp, orderData, removeCoupon } = this;
+        let { cart } = cApp;
+        removeCoupon();
+        orderData.orderItems.forEach(async (v) => {
+            v.packs.map(async (e) => {
+                let source = 0;
+                let { quantity, retail, price, pack, currency } = e;
+                let { id } = currency;
+                let currencyId = id
+                await cart.add(v.product, pack, quantity, price, retail, currencyId, source);
+            })
+        })
+        this.closePage()
+        this.cApp.cCart.start();
     }
 }
