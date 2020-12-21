@@ -234,4 +234,53 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             </div>
         </Page>
     });
+    @observable index1:number = 0;
+    render(param?: any): JSX.Element{
+        /* 点击不更改状态 */
+        if (this.index1 === 0) {
+            let { invoiceType, invoiceInfo } = param.origInvoice;
+            this.invoiceType = (invoiceType && invoiceType.id) || 1;
+            if (invoiceInfo) {
+                invoiceInfo.assure();
+                this.invoiceInfoData = { ...invoiceInfo.obj };
+            } else {
+                this.invoiceInfoData = { 'title': this.controller.cApp.currentUser.defaultOrganizationName };
+            };
+            this.index1 += 1;
+        };
+        let frm = this.buildForm();
+        
+        return React.createElement(observer(() => {
+            return <>
+                <div className="px-3 mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
+                    <div className="form-group row py-3 mb-1 bg-white">
+                        <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
+                        <div className="col-12 col-sm-9">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="invoiceType" id="common" value="1"
+                                    onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 1}></input>
+                                <label className="form-check-label" htmlFor="common">增值税普通发票</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="invoiceType" id="valueAdded" value="2"
+                                    onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 2}></input>
+                                <label className="form-check-label" htmlFor="valueAdded">增值税专用发票</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-3 bg-white mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
+                    {frm}
+                    <button type="button"
+                        className="btn btn-primary w-100"
+                        onClick={this.onSaveInvoice}>确定</button>
+                    {/*tipUI*/}
+                    {autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
+                        <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                        {this.saveTip}
+                    </div>)}
+                </div>
+            </>
+        }));
+    }
 }
