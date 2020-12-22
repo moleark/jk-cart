@@ -13,7 +13,7 @@ export class VNotYOrder extends VPage<COrderDraft> {
     private page = observer(() => {
 
         return <Page back="close">
-            <h5 className='px-4 pt-3 text-warning'>该订单不是您的，不能查看该订单</h5>
+            <h5 className='pl-3 pt-3 text-warning'>这不是给您制作的订单，该订单信息您不能查看</h5>
         </Page>
     })
 }
