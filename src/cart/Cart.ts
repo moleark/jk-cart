@@ -154,9 +154,15 @@ export class Cart {
     }
 
     /**
-     *
+     * 向购物车中添加产品 
+     * @param product 要添加的产品
+     * @param pack 要添加的包装
+     * @param quantity 加入到购物车中产品的最终数量
+     * @param price 添加时的产品优惠价 
+     * @param retail 添加时的产品目录价 
+     * @param currency 价格币种 
      */
-    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any, source: any) => {
+    add = async (product: BoxId, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
         let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
         if (!cartItemExists) {
             cartItemExists = {
@@ -185,15 +191,9 @@ export class Cart {
                 }
                 if (!added)
                     packs.unshift({ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency })
-                // packs.push();
             }
             else {
-                if (source === 0) {
-                    packExists.quantity = packExists.quantity + quantity;
-                    this.newquantity = packExists.quantity;
-                } else {
-                    packExists.quantity = quantity
-                }
+                packExists.quantity = quantity
                 packExists.price = price;
                 packExists.currency = currency;
             }
@@ -201,12 +201,31 @@ export class Cart {
             cartItemExists.$isDeleted = false;
             cartItemExists.createdate = Date.now();
         }
-        if (source === 0) {
-            await this.cartStore.storeCart(product, pack, this.newquantity, price, currency);
-        } else {
-            await this.cartStore.storeCart(product, pack, quantity, price, currency);
-        }
+        await this.cartStore.storeCart(product, pack, quantity, price, currency);
     }
+
+    /**
+     * 向购物车中添加产品 
+     * @param product 要添加的产品
+     * @param pack 要添加的包装
+     * @param incremental 加入到购物车中产品的增量
+     * @param price 添加时的产品优惠价 
+     * @param retail 添加时的产品目录价 
+     * @param currency 价格币种 
+     */
+    addIncremental = async (product: BoxId, pack: BoxId, incremental: number, price: number, retail: number, currency: any) => {
+        let quantity = incremental;
+        let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product));
+        if (cartItemExists) {
+            let { packs } = cartItemExists;
+            let packExists: CartPackRow = packs.find(e => Tuid.equ(e.pack, pack));
+            if (packExists) {
+                quantity += packExists.quantity;
+            }
+        }
+        await this.add(product, pack, quantity, price, retail, currency);
+    }
+
     removeStrike = async (data: any) => {
         console.log(data);
         // data.forEach((el: CartItem2) => {

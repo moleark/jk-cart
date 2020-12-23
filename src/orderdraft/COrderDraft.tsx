@@ -12,7 +12,7 @@ export class COrderDraft extends CUqBase {
     @observable buyerAccounts: any[] = [];
     @observable couponAppliedData: any = {};
     @observable hasAnyCoupon: boolean;
-    @observable brief: any;
+
     protected async internalStart() { }
 
     showSharedOrder = async (param: any) => {
@@ -21,7 +21,6 @@ export class COrderDraft extends CUqBase {
         let orderDraft = await uqs.orderDraft.OrderDraft.getSheet(orderdraftid);
 
         let { brief, data } = orderDraft;
-        this.brief = brief;
         if (data.webUser.id === currentUser.id) {
             // 自动领取积分券
             cCoupon.autoDrawCouponBase(coupon)
@@ -93,12 +92,11 @@ export class COrderDraft extends CUqBase {
                     this.orderData.freightFeeRemitted = 0;
             }
             let orderData = this.orderData;
-            let orderDraftId = brief;
-            this.cApp.cOrder.renderOrderDraft({ orderData, orderDraftId });
+            this.cApp.cOrder.renderOrderDraft({ orderData, orderDraftBrief: brief });
 
             // this.openVPage(VCreateOrder, { orderDraft: 1 });
         }
         else
-            this.openVPage(VNotYOrder)
+            this.openVPage(VNotYOrder, brief)
     }
 }

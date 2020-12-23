@@ -14,5 +14,4 @@ export class COrderMaker extends CUqBase {
     renderOrderMaker = (param: any) => {
         return this.renderView(VOrderMaker, param);
     }
-
 }

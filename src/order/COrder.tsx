@@ -32,7 +32,7 @@ export class COrder extends CUqBase {
     }
 
     renderOrderDraft = async (param: any) => {
-        let { orderData, orderDraftId } = param
+        let { orderData, orderDraftBrief } = param
         let { cCoupon } = this.cApp;
         this.orderData = orderData;
         let { sharedCouponValidationResult } = cCoupon;
@@ -45,7 +45,7 @@ export class COrder extends CUqBase {
                 this.applyCoupon(sharedCouponValidationResult);
             }
         }
-        this.openVPage(VCreateOrder, { fromOrderParam: 1, orderDraftId });
+        this.openVPage(VCreateOrder, { fromOrderParam: "fromOrderDraft", orderDraftBrief });
     }
 
     createOrderFromCart = async (cartItems: CartItem2[]) => {
@@ -126,7 +126,7 @@ export class COrder extends CUqBase {
                 this.applyCoupon(coupon);
             }
         }
-        this.openVPage(VCreateOrder, { fromOrderParam: 0 });
+        this.openVPage(VCreateOrder, { fromOrderParam: "fromCart" });
     }
 
     private defaultSetting: any;
@@ -418,9 +418,11 @@ export class COrder extends CUqBase {
         let { cProduct } = this.cApp;
         return cProduct.renderCartProduct(product);
     }
+
     /**
-   * 取消
-   */
+     * 取消订单草案
+     * @param orderDraftId 
+     */
     onCancel = async (orderDraftId: any) => {
         let { uqs } = this.cApp;
         let { orderDraft } = uqs;
@@ -435,17 +437,15 @@ export class COrder extends CUqBase {
     /**
      * 添加到购物车，修改产品信息
      */
-    toCartPage = async () => {
+    addToCart = async () => {
         let { cApp, orderData, removeCoupon } = this;
         let { cart } = cApp;
         removeCoupon();
         orderData.orderItems.forEach(async (v) => {
             v.packs.map(async (e) => {
-                let source = 0;
                 let { quantity, retail, price, pack, currency } = e;
-                let { id } = currency;
-                let currencyId = id
-                await cart.add(v.product, pack, quantity, price, retail, currencyId, source);
+                let { id: currencyId } = currency;
+                await cart.addIncremental(v.product, pack, quantity, price, retail, currencyId);
             })
         })
         this.closePage()
