@@ -65,7 +65,6 @@ export class VCoupleAvailable extends VPage<CCoupon> {
     })
 
     private page = () => {
-
         let vipCardUI;
         if (this.vipCardForWebUser) {
             let { coupon } = this.vipCardForWebUser;

@@ -147,7 +147,7 @@ export class CApp extends CUqApp {
                 /* 分享过来的订单 */
                 case 'orderdraft':
                     this.showMain();
-                    this.cOrderDraft.showSharedOrder(query)
+                    this.cOrderDraft.showSharedOrder(query.orderdraftid)
                     break;
                 case "login":
                     if (!this.isLogined)

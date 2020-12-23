@@ -4,26 +4,38 @@ import { VNotYOrder } from './VNotYOrder';
 import { groupByProduct } from 'tools/groupByProduct';
 import { Order, OrderItem } from 'order/Order';
 import { LoaderProductChemicalWithPrices } from 'product/itemLoader';
-
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 export class COrderDraft extends CUqBase {
     @observable orderData: Order = new Order();
     @observable buyerAccounts: any[] = [];
-    @observable couponAppliedData: any = {};
     @observable hasAnyCoupon: boolean;
-
+    @observable orderDraft: any;
     protected async internalStart() { }
 
     showSharedOrder = async (param: any) => {
-        let { coupon, orderdraftid } = param
-        let { currentUser, uqs, cCoupon, currentSalesRegion } = this.cApp;
-        let orderDraft = await uqs.orderDraft.OrderDraft.getSheet(orderdraftid);
+        let orderdraftid = param;
+        let { uqs, cMe } = this.cApp;
+        this.orderDraft = await uqs.orderDraft.OrderDraft.getSheet(orderdraftid);
+        if (!this.isLogined) {
+            cMe.showLogin();
+            if (this.isLogined)
+                this.renderOrderDraft()
+        } else {
+            this.renderOrderDraft()
+        }
+    }
 
-        let { brief, data } = orderDraft;
+    renderOrderDraft = async () => {
+        let { brief, data } = this.orderDraft;
+        let { currentUser, uqs, cCoupon, currentSalesRegion } = this.cApp;
         if (data.webUser.id === currentUser.id) {
+            let { coupon } = data;
+            let { id: couponId } = coupon;
+            let result = await uqs.salesTask.Coupon.load(couponId);
+            let { code: couponCode } = result;
             // 自动领取积分券
-            cCoupon.autoDrawCouponBase(coupon)
+            cCoupon.autoDrawCouponBase(couponCode)
             let { orderItems } = data;
             let orderItemsGrouped = groupByProduct(orderItems);
             data.orderItems = orderItemsGrouped;
@@ -91,6 +103,7 @@ export class COrderDraft extends CUqBase {
                 else
                     this.orderData.freightFeeRemitted = 0;
             }
+
             let orderData = this.orderData;
             this.cApp.cOrder.renderOrderDraft({ orderData, orderDraftBrief: brief });
 
