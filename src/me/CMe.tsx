@@ -13,6 +13,7 @@ import { CPointProduct } from 'pointMarket/CPointProduct';
 import { VLoginState } from './VLoginState';
 import { VAbout } from './about';
 import { EditMeInfo } from './EditMeInfo';
+import { VMeSideBar } from './VMeSideBar';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -137,6 +138,11 @@ export class CMe extends CUqBase {
         let { cCart } = this.cApp;
         return cCart.renderCartLabel();
     }
+
+    renderMeSideBar = () => {
+        return this.renderView(VMeSideBar);
+    }
+
 	/*
     renderLoginState_Web() {
         return this.renderView(VLoginState_Web);

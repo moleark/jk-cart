@@ -5,16 +5,16 @@ import { CCoupon } from './CCoupon';
 import { Modal } from 'antd';
 
 export class VModelCardDiscount extends View<CCoupon> {
-    render(param: any): JSX.Element {
-        let { content } = param;
+
+    render(param?: any): JSX.Element {
     	return React.createElement(observer(() => {
 			return <Modal
                 title="折扣明细"
                 visible={this.controller.CardDiscount}
-                onCancel={() => this.controller.CardDiscount = false}
+                onCancel={() => {this.controller.CardDiscount = false;}}
                 style={{top:'35%'}}
                 footer={null}>
-                {content}
+                {this.controller.renderCardDiscount()}
             </Modal>
 		}));
 	}

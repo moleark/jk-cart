@@ -99,44 +99,51 @@ export class VMyPoint extends VPage<CPointProduct> {
         let header = CrPageHeaderTitle('积分商城');
         if (!xs) right = null;
         return <Page header={header} right={right} className="h-100 bg-white">
-            {pageHTitle('积分商城')}
-            {renderDropdownActions(actions)}
-            <div>
-                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: 'cover' }}>{/* cover contain */}
-                    <>{nowPointTip}</>
-                    <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
-                    < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
-                        <div>
-                            <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
-                            <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
-                        </div>
-                        <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
-                            {this.pointblock("签到", openPointSign, signInIcon)}
-                            {this.pointblock("兑换", openPointProduct, exChangeIcon)}
+            <div className="row mx-0 mt-1">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-1">
+                    {pageHTitle(<div className="text-left">积分商城</div>)}
+                    {renderDropdownActions(actions)}
+                    <div>
+                        <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: 'cover' }}>{/* cover contain */}
+                            <>{nowPointTip}</>
+                            <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
+                            < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
+                                <div>
+                                    <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
+                                    <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
+                                </div>
+                                <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
+                                    {this.pointblock("签到", openPointSign, signInIcon)}
+                                    {this.pointblock("兑换", openPointProduct, exChangeIcon)}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="pt-3">
-                {/* 产品类别 */}
-                {
-                    pointProductGenre.length
-                        ? <div>
-                            {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
-                            <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
-                                items={pointProductGenre}
-                                item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
-                            <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
+                    <div className="pt-3">
+                        {/* 产品类别 */}
+                        {
+                            pointProductGenre.length
+                                ? <div>
+                                    {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
+                                    <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
+                                        items={pointProductGenre}
+                                        item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
+                                    <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
+                                </div>
+                                : null
+                        }
+                        {/* 新品推荐 热门产品 */}
+                        <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
+                            {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
+                            {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                         </div>
-                        : null
-                }
-                {/* 新品推荐 热门产品 */}
-                <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
-                    {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
-                    {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
+                    </div>
+                    <div className="d-none d-lg-block py-md-5 my-md-5"></div>
                 </div>
             </div>
-            <div className="d-none d-lg-block py-md-5 my-md-5"></div>
         </Page >;
     });
 

@@ -6,11 +6,11 @@ import { COrder } from './COrder';
 import { FA } from 'tonva';
 
 
-export class VModelC extends View<COrder>{
+export class VModelByCreateOrder extends View<COrder>{
 
     render() {
         let { modalTitle, modalTitleS, renderModelContent } = this.controller;
-        let showBack = modalTitle && modalTitle !== 'contactList' && modalTitle !== 'invoiceInfo';
+        let showBack = modalTitle && modalTitleS[modalTitle].preLevel;
         return <div className='modal modal-dialog-show' style={{ display: modalTitle ? 'block' : 'none', background: "rgba(0,0,0,.3)", }}>
             <div className="d-flex justify-content-center align-content-center w-100 h-100" >
                 <div className="border bg-light m-auto rounded pb-4 position-relative" style={{ maxWidth: 800 }}>
@@ -23,7 +23,7 @@ export class VModelC extends View<COrder>{
                         </div>
                     }
                     <div className="text-center border-bottom h4 py-2">{modalTitleS[modalTitle]?.title}</div>
-                    {renderModelContent()}
+                    <div className="h-max-30c overflow-auto scroll-S" style={{overflowX:"hidden"}}>{renderModelContent()}</div>
                 </div>
             </div>
         </div>;

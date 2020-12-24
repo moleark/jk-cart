@@ -31,7 +31,11 @@ export class NavHeaderView extends View<CApp> {
 			else {
 				let { name, nick } = user;
 				v = <>
-					<A className="mr-2" href="/me" target="_self">{nick || name}</A>
+                    <A className="mr-2 nav-item dropdown" href="/me" target="_self">
+                        <FA name="user" size="lg" className="text-primary" />
+                        <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
+                    </A>
+					{/* <A className="mr-2" href="/me" target="_self">{nick || name}</A> */}
 					<A className="mr-2" href="/logout" target="_self">退出</A>
 				</>;
 			}

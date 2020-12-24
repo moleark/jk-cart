@@ -6,6 +6,7 @@ import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 import { VCouponManage } from './VCouponManage';
+import { VModelCardDiscount } from './VModelCardDiscount';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -454,6 +455,10 @@ export class CCoupon extends CUqBase {
         return cProduct.renderProductWithPrice(product);
     }
 
+    renderModelCardDiscount = () => {
+        return this.renderView(VModelCardDiscount);
+    }
+    
     renderCardDiscount = () => {
         return this.renderView(VVIPCardDiscount,{vipCard:this.curCardDiscount});
     }

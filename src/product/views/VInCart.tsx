@@ -29,7 +29,7 @@ export class VInCart extends View<CProduct> {
                             <strong>{description}</strong>
                         </div>
                         {cName}
-                        <div className="row">
+                        <div className="row mx-0">
                             {renderPropItem('编号', origin)}
                             {renderBrand(brand)}
                         </div>

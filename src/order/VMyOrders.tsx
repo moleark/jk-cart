@@ -73,7 +73,7 @@ export class VMyOrders extends VPage<COrder> {
 				<td data-title={columns[1].name}><EasyDate date={date} /></td>
 				<td data-title={columns[2].name}>{os[state !=='all'? state : OState]}</td>
 				<td data-title={columns[3].name}>
-					<Ax href={"/orderDetail/" + id} className='w-100 m-3'>
+					<Ax href={"/orderDetail/" + id} className='w-100 m-3' target="_blank">
 						<button type='button' className="btn-primary w-4c">详情</button>
 					</Ax>
 				</td>
@@ -83,13 +83,18 @@ export class VMyOrders extends VPage<COrder> {
 	}
 
 	private renderOrder = (order: any, index: number) => {
-		// let { openOrderDetail } = this.controller;
+		let { openOrderDetail } = this.controller;
 		let { id, no, date } = order;
-		return <Ax href={"/orderDetail/" + id } className='w-100 m-3' target='_blank'>
-			<div className="d-flex w-100 justify-content-between cursor-pointer" /* onClick={() => openOrderDetail(id)} */>
+		return <div className="m-3">
+			<div className="d-flex w-100 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
 			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
 			<div className="small text-muted"><EasyDate date={date} /></div>
-		</div></Ax>;
+		</div></div>;
+		/* return <Ax href={"/orderDetail/" + id } className='w-100 m-3' target='_blank'>
+			<div className="d-flex w-100 justify-content-between cursor-pointer">
+			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
+			<div className="small text-muted"><EasyDate date={date} /></div>
+		</div></Ax>; */
 	}
 
 	header() {
@@ -98,13 +103,18 @@ export class VMyOrders extends VPage<COrder> {
 	}
 
 	content(): JSX.Element {
-		let title = !xs ? <div className="text-center mt-5"><h1>订单管理</h1></div> : null; 
-		return <>
-			{title}
-			<div className="mb-5 reset-z-header-boxS">
-				<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
+		let title = !xs ? <div className="text-left mt-5"><h1>订单管理</h1></div> : null;
+		return 	<div className="row mx-0 bg-light my-1">
+				<div className="col-lg-3 d-none d-lg-block">
+					{this.controller.cApp.cMe.renderMeSideBar()}
+				</div>
+				<div className={`col-lg-9 px-0 mx-auto ${!xs ? 'px-2' :''}`} style={{maxWidth:!xs ? 800 :'none'}}>
+					{title}
+					<div className="mb-5 reset-z-header-boxS">
+						<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
+					</div>
+				</div>
 			</div>
-		</>;
 	}
 
 	private page = () => {

@@ -136,26 +136,25 @@ export class VCouponManage extends VPage<CCoupon> {
         let right = <button className="btn btn-primary w-4c" onClick={this.receiveCoupon}>领取</button>
         let header = CrPageHeaderTitle('卡券管理');
         return <Page header={header}>
-            <div className="px-2 py-3 mb-5 mx-auto" style={{maxWidth:990}}>
-                {pageHTitle('卡券管理')}
-                <LMR right={right}>
-                    <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
-                </LMR>
-				{/*React.createElement(this.tipsUI)*/}
-				{autoHideTips(this.tips)}
-                <div className="mt-2 reset-z-header-boxS">
-                    <Tabs tabs={this.tabs} tabPosition="top" tabBg='bg-light' />
+            <div className="row mx-0">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
-            </div >
-            {this.renderVm(VModelCardDiscount,{content:this.controller.renderCardDiscount()})}
-            {/* <Modal
-                title="折扣明细"
-                visible={this.controller.CardDiscount}
-                onCancel={() => this.controller.CardDiscount = false}
-                style={{top:'35%'}}
-                footer={null}>
-                {this.controller.renderCardDiscount(this.curCardDiscount)}
-            </Modal> */}
+                <div className="col-lg-9 px-0 mx-auto" style={{ maxWidth: !xs ? 800 : 'none' }}>
+                    {pageHTitle(<div className="text-left px-2">卡券管理</div>)}
+                    <div className="px-2 py-3 mb-5 mx-auto" style={{maxWidth:990}}>
+                        <LMR right={right}>
+                            <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
+                        </LMR>
+                        {/*React.createElement(this.tipsUI)*/}
+                        {autoHideTips(this.tips)}
+                        <div className="mt-2 reset-z-header-boxS">
+                            <Tabs tabs={this.tabs} tabPosition="top" tabBg='bg-light' />
+                        </div>
+                    </div >
+                    {this.controller.renderModelCardDiscount()}
+                </div>
+            </div>
         </Page>
     })
 }

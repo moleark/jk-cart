@@ -24,6 +24,7 @@ import { GLOABLE } from 'global';
 import { CSelectShippingContact } from 'customer/CSelectContact';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
 import { CAddress } from '../customer/CAddress';
+import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 
 export class CApp extends CUqApp {
     private cache: Map<number, Product>;
@@ -55,6 +56,7 @@ export class CApp extends CUqApp {
     cSignIn: CSignIn;
     cSelectShippingContact: CSelectShippingContact;
     cAddress: CAddress;
+    cInvoiceInfo: CInvoiceInfo;
 
     /*
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
@@ -88,6 +90,7 @@ export class CApp extends CUqApp {
         this.cSignIn = this.newC(CSignIn);
         this.cSelectShippingContact = this.newC(CSelectShippingContact);
         this.cAddress = this.newC(CAddress);
+        this.cInvoiceInfo = this.newC(CInvoiceInfo);
         await this.cSelectShippingContact.getList();
         await this.cHome.getSlideShow();
         return true;

@@ -35,8 +35,15 @@ export class VFavorites extends VPage<CFavorites> {
         };
         let none = <div className="p-3 text-warning mt-4 d-flex justify-content-center">[无收藏]</div>
         return <Page header={header} onScrollBottom={this.onScrollBottom}>
-            {pageHTitle('商品收藏')}
-            <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+            <div className="row mx-0 bg-light my-1">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0">
+                    {pageHTitle(<div className="text-left pl-3">商品收藏</div>)}
+                    <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+                </div>
+            </div>
         </Page>
     }
 }

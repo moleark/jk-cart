@@ -61,12 +61,11 @@ export class VContactList extends VPage<CSelectContact> {
         if (xsOrIpad) header = title;
         return <Page footer={footer} header={header}>
             <div className="row mx-0">
-                {/* <div className="col-lg-3 d-none d-lg-block mt-5"></div> */}
-                {/*  <div className="col-lg-3 d-none d-lg-block mt-5">
-                    {cApp.cMe.renderMeSideNav()}
-                </div> */}
-                <div className="col-lg-6 px-0 mx-auto">
-                    {!xsOrIpad && <div className="text-center mt-5"><h1>{title}</h1></div>}
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0 mx-auto" style={{maxWidth: !xs ? 600 :'none'}}>
+                    {!xsOrIpad && <div className="text-left mt-5 px-3"><h1>{title}</h1></div>}
                     {contactList}
                 </div>
             </div>

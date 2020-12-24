@@ -80,6 +80,13 @@
 .table td{
   vertical-align: middle;
 }
+.ant-modal-mask{
+  z-index: 1999 !important;
+}
+
+.ant-modal,.ant-modal-wrap{
+  z-index: 2000 !important;
+}
 
 @media (max-width: 320px) {
   .z-height,.z-height-more{
@@ -115,26 +122,23 @@
 }
 
 @media (min-width: 576px) {
-  .z-height,.z-height-more{
+  .z-height{
     height: calc(1.5em + 10rem + 2px);
+  }
+  .z-height-more{
+    height: calc(1.5em + 8rem + 2px);
   }
 }
 
 @media (min-width: 992px) {
-  .z-height{
+  .z-height,.z-height-more{
     height: calc(1.5em + 11rem + 2px);
-  }
-  .z-height-more{
-    height: calc(1.5em + 14rem + 2px);
   }
 }
 
 @media (min-width: 1200px) {
-  .z-height{
+  .z-height,.z-height-more{
     height: calc(1.5em + 12rem + 2px);
-  }
-  .z-height-more{
-    height: calc(1.5em + 17rem + 2px);
   }
 }
 

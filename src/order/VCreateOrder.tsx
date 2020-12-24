@@ -8,7 +8,7 @@ import { CartPackRow } from '../cart/Cart';
 import classNames from 'classnames';
 //import { GLOABLE } from 'cartenv';
 import { xs } from '../tools/browser';
-import { VModelC } from './VModelC';
+import { VModelByCreateOrder } from './VModelByCreateOrder';
 
 export class VCreateOrder extends VPage<COrder> {
 
@@ -52,7 +52,7 @@ export class VCreateOrder extends VPage<COrder> {
     private renderOrderItem = (orderItem: OrderItem) => {
         let { product, packs } = orderItem;
         let { controller, packsRow } = this;
-        return <div className="row">
+        return <div className="row w-100 mx-0">
                 <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
                 <div className="col-lg-6">{
                     packs.map((p, index) => {
@@ -131,7 +131,7 @@ export class VCreateOrder extends VPage<COrder> {
     private renderBuyerAccounts = observer(() => {
         let { buyerAccounts } = this.controller;
         if (!buyerAccounts || buyerAccounts.length === 0) return null;
-        return <div className="row py-3 bg-white mb-1">
+        return <div className="row mx-0 py-3 bg-white mb-1">
             <div className="col-4 col-sm-2 pb-2 text-muted">订单账号:</div>
             <div className="col-8 col-sm-10">
                 <List items={buyerAccounts} item={{ render: this.renderBuyerAccount, onSelect: this.onBuyerAccountChanged }}></List>
@@ -179,7 +179,7 @@ export class VCreateOrder extends VPage<COrder> {
 
     private page = observer(() => {
 
-        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit } = this.controller;
+        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit, getValidCardForWebUser } = this.controller;
 		let { currentUser } = cApp;
 		let { allowOrdering } = currentUser;
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
@@ -227,7 +227,7 @@ export class VCreateOrder extends VPage<COrder> {
 			return <div className={classNames('text-right', className)}><small>¥</small>{price}</div>;
 		}
 
-        let invoiceContactUI = <div className="row py-3 bg-white mb-1">
+        let invoiceContactUI = <div className="row mx-0 py-3 bg-white mb-1">
 			{labeled('发票地址:', <label className="cursor-pointer">
 				<input type="checkbox"
 					defaultChecked={this.useShippingAddress}
@@ -259,7 +259,7 @@ export class VCreateOrder extends VPage<COrder> {
 		*/
 
         //let invoiceBlankTip = this.invoiceIsBlank ? <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票信息</div> : null;
-        let invoiceInfoUI = <div className="row py-3 bg-white" onClick={()=>{xs ? onInvoiceInfoEdit(): this.controller.modalTitle='invoiceInfo'}}>
+        let invoiceInfoUI = <div className="row mx-0 py-3 bg-white" onClick={()=>{xs ? onInvoiceInfoEdit(): this.controller.modalTitle='invoiceInfo'}}>
             {labeled('发票信息:',
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {tv(orderData.invoiceType, (v) => <>{v.description}</>, undefined, () => <span className="text-primary">填写发票信息</span>)}
@@ -279,7 +279,7 @@ export class VCreateOrder extends VPage<COrder> {
             }
         }
 
-        let couponUI = <div className="row py-3 bg-white" onClick={onCouponEdit}>
+        let couponUI = <div className="row mx-0 py-3 bg-white" onClick={()=>{xs ? onCouponEdit() : getValidCardForWebUser()}}>
 			{labeled('优惠卡券:', 
                 <LMR className="w-100 align-items-center" right={chevronRight}>
                     {React.createElement(this.renderCoupon,
@@ -295,7 +295,7 @@ export class VCreateOrder extends VPage<COrder> {
         return <Page header={header} footer={footer}>
              {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">订单信息</h1></div> :null }
             <div className="px-2">
-                <div className="row py-3 bg-white" onClick={()=>{ xs ? onSelectShippingContact() : this.saveShowModal('收货地址')}}>
+                <div className="row mx-0 py-3 bg-white" onClick={()=>{ xs ? onSelectShippingContact() : this.saveShowModal('收货地址')}}>
 					{labeled('收货地址:',
 						<>
                         <LMR className="w-100 align-items-center" right={chevronRight}>
@@ -308,16 +308,16 @@ export class VCreateOrder extends VPage<COrder> {
                 {invoiceContactUI}
                 {invoiceInfoUI}
             </div>
-            <List items={orderData.orderItems} item={{ render: this.renderOrderItem, key: this.orderItemKey as any }} />
+            <List items={orderData.orderItems} item={{ render: this.renderOrderItem,className:"w-100", key: this.orderItemKey as any }} />
             <div className="px-2">
-                <div className="row py-3 pr-3 bg-white my-1">
+                <div className="row mx-0 py-3 pr-3 bg-white my-1">
 					{labeled('商品总额:', renderPrice(orderData.productAmount))}
                     {freightFeeUI}
                     {freightFeeRemittedUI}
                 </div >
                 {couponUI}
             </div>
-            {this.renderVm(VModelC)}
+            {this.renderVm(VModelByCreateOrder)}
         </Page>
     })
 }

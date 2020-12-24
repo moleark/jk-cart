@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CCoupon, COUPONBASE } from './CCoupon';
+import { CCoupon } from './CCoupon';
 import { View, FA, LMR } from 'tonva';
 import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
 import moment from 'moment';
@@ -116,9 +116,9 @@ export class VCoupon extends View<CCoupon> {
             let tipUI = null;
             if (types !== 'credits') {
                 if (discount)
-                    tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
+                    tipUI = <small className="text-success cursor-pointer">此{COUPONBASE[types]['name']}全场通用</small>
                 else
-                    tipUI = <small className="text-success" onClick={(event) => {
+                    tipUI = <small className="text-success cursor-pointer" onClick={(event) => {
                         event.stopPropagation();
                         if (xs) this.showDiscountSetting(this.coupon, event);
                         else this.controller.showModelCardDiscount(this.coupon)
@@ -254,4 +254,10 @@ export function getEasyDate(validitydate: any) {
     // let date = new Date(validitydate).toLocaleDateString().split('/');
     let year = new Date().getFullYear().toString();
     return `${date[0] === year ? '' : (date[0] + '年')}${date[1]}月${date[2]}日`;
+}
+
+export const COUPONBASE: any = {
+    'coupon': { 'name': '优惠券', 'view': VCoupon },
+    'credits': { 'name': '积分券', 'view': VCredits },
+    'vipcard': { 'name': 'VIP卡', 'view': VVIPCard }
 }

@@ -19,6 +19,7 @@ import { VAddress, VCity, VCounty, VProvince } from '../customer/VAddress';
 import { GLOABLE } from 'global';
 import { CAddress } from 'customer/CAddress';
 import { VInvoiceInfo } from 'customer/VInvoiceInfo';
+import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -39,6 +40,7 @@ export class COrder extends CUqBase {
         'cityChoice': { id: 4, title: '所在城市', preLevel: 'provinceChoice' },
         'countyChoice': { id: 5, title: '所在区县', preLevel: 'cityChoice' },
         'invoiceInfo': { id: 6, title: '发票信息', preLevel: '' },
+        'validCard': { id: 6, title: '可用优惠', preLevel: '' },
     };
 
     @observable editContact: any;
@@ -52,6 +54,7 @@ export class COrder extends CUqBase {
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
      */
     @observable buyerAccounts: any[] = [];
+    @observable validCardForWebUser: any;
 
     protected async internalStart(param: any) {
     }
@@ -462,10 +465,32 @@ export class COrder extends CUqBase {
         if(this.modalTitle === 'cityChoice' ) return this.pickCity();
         if(this.modalTitle === 'countyChoice')  return this.pickCounty();
         if(this.modalTitle === 'invoiceInfo')  return this.renderInvoice();
+        if(this.modalTitle === 'validCard') return this.renderValidCard();
     }
 
     renderContentList = () => {
         return this.renderView(VContactList);
+    }
+
+    getValidCardForWebUser = async () => {
+        let { cCoupon } = this.cApp;
+        this.validCardForWebUser = await cCoupon.getValidCardForWebUser();
+        this.modalTitle = 'validCard';
+    }
+
+    showModelCardDiscount = async (vipCard: any) => {
+        await  this.cApp.cCoupon.showModelCardDiscount(vipCard);
+    }
+    /* 选择发票信息 */
+    saveInvoiceInfo = async (invoice: any) => {
+        let newInvoice: any = await this.cApp.cInvoiceInfo.saveInvoiceInfoData(invoice);
+        this.orderData.invoiceType = newInvoice.invoiceType;
+        this.orderData.invoiceInfo = newInvoice.invoiceInfo;
+        this.modalTitle = '';
+    }
+
+    renderValidCard = () => {
+        return this.renderView(VCoupleAvailable,this.validCardForWebUser);
     }
 
     renderInvoice = () => {

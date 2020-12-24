@@ -6,6 +6,8 @@ import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoH
 import { Schema } from 'tonva';
 import { CInvoiceInfo } from './CInvoiceInfo';
 import { xs } from 'tools/browser';
+import { VMeSideBar } from 'me/VMeSideBar';
+import { CrPageHeaderTitle } from 'tools/pageHeaderTitle';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -127,6 +129,11 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private invoiceInfoData: any;
 
     async open(origInvoice?: any) {
+        this.invoiceInfo(origInvoice);
+        this.openPage(this.page);
+    }
+
+    invoiceInfo = (origInvoice?:any) => {
         let { invoiceType, invoiceInfo } = origInvoice;
         this.invoiceType = (invoiceType && invoiceType.id) || 1;
         if (invoiceInfo) {
@@ -135,7 +142,6 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         } else {
             this.invoiceInfoData = { 'title': this.controller.cApp.currentUser.defaultOrganizationName };
         }
-        this.openPage(this.page);
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
@@ -198,60 +204,35 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             {this.saveTip}
 		</div>) : null;
         */
-        let header: any;
-        if (xs) {
-            header = "发票";
-        }
+        let header = CrPageHeaderTitle('发票');
         return <Page header={header}>
-            { !xs && <div className="text-center mt-5"><h1>发票</h1></div>}
-            <div className="px-3 mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
-                <div className="form-group row py-3 mb-1 bg-white">
-                    <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
-                    <div className="col-12 col-sm-9">
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="invoiceType" id="common" value="1"
-                                onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 1}></input>
-                            <label className="form-check-label" htmlFor="common">增值税普通发票</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="invoiceType" id="valueAdded" value="2"
-                                onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 2}></input>
-                            <label className="form-check-label" htmlFor="valueAdded">增值税专用发票</label>
-                        </div>
-                    </div>
+            <div className="row mx-0 bg-light my-1">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
-            </div>
-            <div className="p-3 bg-white mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
-                {frm}
-                <button type="button"
-                    className="btn btn-primary w-100"
-                    onClick={this.onSaveInvoice}>确定</button>
-                {/*tipUI*/}
-				{autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
-					<FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-					{this.saveTip}
-				</div>)}
+                <div className="col-lg-9 px-0">
+                    { !xs && <div className="text-center mt-5"><h1>发票</h1></div>}
+                    {this.renderInvoiceContent()}
+                </div>
             </div>
         </Page>
     });
-    @observable index1:number = 0;
+
+    @observable InvoiceTypeChecked: boolean;
     render(param?: any): JSX.Element{
-        /* 点击不更改状态 */
-        if (this.index1 === 0) {
-            let { invoiceType, invoiceInfo } = param.origInvoice;
-            this.invoiceType = (invoiceType && invoiceType.id) || 1;
-            if (invoiceInfo) {
-                invoiceInfo.assure();
-                this.invoiceInfoData = { ...invoiceInfo.obj };
-            } else {
-                this.invoiceInfoData = { 'title': this.controller.cApp.currentUser.defaultOrganizationName };
-            };
-            this.index1 += 1;
-        };
-        let frm = this.buildForm();
-        
         return React.createElement(observer(() => {
-            return <>
+            if (!this.InvoiceTypeChecked) {
+                let { origInvoice } = param;
+                this.invoiceInfo(origInvoice);
+                this.InvoiceTypeChecked = true;
+            };
+            return <>{this.renderInvoiceContent()}</>
+        }));
+    }
+
+    renderInvoiceContent = () => {
+        let frm = this.buildForm();
+        return <>
                 <div className="px-3 mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
                     <div className="form-group row py-3 mb-1 bg-white">
                         <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
@@ -281,6 +262,5 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                     </div>)}
                 </div>
             </>
-        }));
     }
 }
