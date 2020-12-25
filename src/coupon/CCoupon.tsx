@@ -47,6 +47,18 @@ export class CCoupon extends CUqBase {
         return rtn;
     }
 
+    applyCoupon1 = async (coupon: string) => {
+        let validationResult = await this.getCouponValidationResult(coupon);
+        let { result: rtn, id, types } = validationResult;
+        if (rtn === 1) {
+            if (types === 'vipcard' || types === 'coupon') {
+                validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
+            }
+            return validationResult;
+        }
+        return rtn;
+    }
+
     getCouponValidationResult = async (coupon: string) => {
         let { currentUser } = this.cApp;
         return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });

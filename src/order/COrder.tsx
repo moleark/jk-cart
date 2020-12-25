@@ -488,6 +488,20 @@ export class COrder extends CUqBase {
         this.orderData.invoiceInfo = newInvoice.invoiceInfo;
         this.modalTitle = '';
     }
+    /* 选择优惠券 */
+    applySelectedCoupon = async (coupon: string) => {
+        if (!coupon)
+            return "请输入您的优惠卡/券号";
+        else {
+            let { cCoupon } = this.cApp;
+            let couponRet = await cCoupon.applyCoupon1(coupon);
+            if (couponRet) {
+                await this.applyCoupon(couponRet);
+                this.modalTitle = '';
+            };
+            return cCoupon.applyTip(couponRet);
+        }
+    }
 
     renderValidCard = () => {
         return this.renderView(VCoupleAvailable,this.validCardForWebUser);

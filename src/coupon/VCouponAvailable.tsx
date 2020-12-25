@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { VVIPCard, VCoupon, VCredits } from './VVIPCard';
 import { VModelCardDiscount } from './VModelCardDiscount';
 import { observer } from 'mobx-react';
+import { xs } from 'tools/browser';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
 
@@ -97,7 +98,7 @@ export class VCoupleAvailable extends VPage<CCoupon> {
                 {autoHideTips(this.tips,
                     <div className="alert alert-primary" role="alert">
                         <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                        {this.tips}
+                        {this.tips.get()}
                     </div>
                 )}
             </div >
@@ -120,10 +121,10 @@ export class VCoupleAvailable extends VPage<CCoupon> {
         
         let right = <button className="btn btn-primary w-3c" onClick={this.applyCoupon}>使用</button>
         return React.createElement(observer(() => { 
-            return <>
+            return <div style={{width:!xs ? 500 :'none'}}>
                 {this.renderContent({right:right,vipCardUI:vipCardUI})}
                 {this.controller.cApp.cCoupon.renderModelCardDiscount()}
-            </>
+            </div>
         }))
     }
 }
