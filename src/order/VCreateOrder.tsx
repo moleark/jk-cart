@@ -210,7 +210,7 @@ export class VCreateOrder extends VPage<COrder> {
             } else {
                 divInvoiceContact = <div className="col-8 offset-4 offset-sm-2">
                     <button className="btn btn-outline-primary"
-                        onClick={()=>{ xs ? onSelectInvoiceContact() : this.saveShowModal('发票地址')}}>选择发票地址</button>
+                        onClick={()=>{ xs ? onSelectInvoiceContact() : this.saveShowModal('invoiceContact')}}>选择发票地址</button>
                     {/*invoiceAddressBlankTip*/}
 					{autoHideTips(this.invoiceAddressTip)}
                 </div>
@@ -295,7 +295,7 @@ export class VCreateOrder extends VPage<COrder> {
         return <Page header={header} footer={footer}>
              {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">订单信息</h1></div> :null }
             <div className="px-2">
-                <div className="row mx-0 py-3 bg-white" onClick={()=>{ xs ? onSelectShippingContact() : this.saveShowModal('收货地址')}}>
+                <div className="row mx-0 py-3 bg-white" onClick={()=>{ xs ? onSelectShippingContact() : this.saveShowModal('shippingContact')}}>
 					{labeled('收货地址:',
 						<>
                         <LMR className="w-100 align-items-center" right={chevronRight}>

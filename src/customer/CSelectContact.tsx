@@ -58,7 +58,12 @@ export abstract class CSelectContact extends CUqBase {
     }
 
     saveContact = async (contact: any) => {
-        let { Contact: contactTuid } = this.uqs.customer;
+        let contactBox = await this.saveContactData(contact);
+        this.backPage();
+        if (this.fromOrderCreation) {
+            this.onContactSelected(contactBox);
+        }
+        /* let { Contact: contactTuid } = this.uqs.customer;
         let newContact = await contactTuid.save(undefined, contact);
         let { id: newContactId } = newContact;
         let contactBox = contactTuid.boxId(newContactId);
@@ -80,7 +85,30 @@ export abstract class CSelectContact extends CUqBase {
         this.backPage();
         if (this.fromOrderCreation) {
             this.onContactSelected(contactBox);
-        }
+        } */
+    }
+
+    saveContactData = async (contact: any) => {
+        let { Contact: contactTuid } = this.uqs.customer;
+        let newContact = await contactTuid.save(undefined, contact);
+        let { id: newContactId } = newContact;
+        let contactBox = contactTuid.boxId(newContactId);
+
+        let { currentUser } = this.cApp;
+        await currentUser.addContact(newContactId);
+        this.userContacts.push(contactBox);
+        let { id, isDefault } = contact;
+        if (isDefault === true || this.userContacts.length === 1) {
+            await this.setDefaultContact(contactBox);
+        };
+        // contact.id !== undefined表示是修改了已有的contact(我们只能用“替换”表示“修改”，所以此时需要删除原contact)
+        if (id !== undefined) {
+            await currentUser.delContact(id);
+            let index = this.userContacts.findIndex(v => v.id === id);
+            if (index > -1)
+                this.userContacts.splice(index, 1);
+        };
+        return contactBox;
     }
 
     protected abstract setDefaultContact(contactId: BoxId): Promise<any>;

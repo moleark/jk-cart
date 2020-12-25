@@ -52,7 +52,7 @@ export class VContactList extends VPage<CSelectContact> {
     }
 
     private page = observer(() => {
-        let { onNewContact, userContacts,cApp } = this.controller;
+        let { onNewContact, userContacts } = this.controller;
         let footer = <div className="d-flex justify-content-center">
             <button type="button" className={classNames("btn btn-primary", !xs ? 'w-25' : ' w-100')} onClick={() => onNewContact()} >新增地址</button>
         </div>;
@@ -74,7 +74,7 @@ export class VContactList extends VPage<CSelectContact> {
 
 
     render(param?: any): JSX.Element {
-        let { onNewContact, userContacts } = this.controller.cApp.cSelectShippingContact;
+        let { userContacts } = this.controller.cApp.cSelectShippingContact;
         let footer = <button className="btn btn-primary mt-2 mx-auto w-50"
             onClick={() => {
                 this.controller.cApp.cOrder.modalTitle = 'contactInfo';

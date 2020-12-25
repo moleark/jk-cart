@@ -442,8 +442,8 @@ export class COrder extends CUqBase {
     }
 
     onContactSelected = (contact: BoxId) => {
-        if(this.replyToContactType ==='收货地址') this.orderData.shippingContact = contact;
-        if(this.replyToContactType ==='发票地址') this.orderData.invoiceContact = contact;
+        if(this.replyToContactType ==='shippingContact') this.orderData.shippingContact = contact;
+        if (this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
         this.modalTitle = '';
     }
 
@@ -526,8 +526,6 @@ export class COrder extends CUqBase {
     pickAddress = async (context?: Context, name?: string, value?: number): Promise<number> => {
         this.provinces = await this.cApp.cAddress.getCountryProvince(GLOABLE.CHINA);
         this.modalTitle = 'provinceChoice';
-        //  let cAddress = this.newC(CAddress); // new CAddress(this.cApp, undefined);
-        // return await cAddress.call<number>();
         return this.addressId;
     }
 
@@ -550,5 +548,11 @@ export class COrder extends CUqBase {
         this.modalTitle = 'contactInfo';
         this.addressId = addressId;
         this.cApp.cSelectShippingContact.TIT = true;
+    }
+
+    saveContact = async (contact: any) => {
+        let { cSelectShippingContact } = this.cApp;
+        let contactBox = await cSelectShippingContact.saveContactData(contact);
+        this.onContactSelected(contactBox);
     }
 }
