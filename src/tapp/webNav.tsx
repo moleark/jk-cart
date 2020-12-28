@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Ax, FA, View, A } from 'tonva';
+import { VPage, Ax, FA, View, A, Image } from 'tonva';
 import logo from '../images/logo.svg';
 import footer_logo from '../images/footer-logo.svg';
 import phone from '../images/Phone.svg';
@@ -29,10 +29,12 @@ export class NavHeaderView extends View<CApp> {
 				</>;
 			}
 			else {
-				let { name, nick } = user;
+                let { name, nick, icon } = user;
+                let Avatar:JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> :  <Image className="w-1c h-1c" src={icon} />
 				v = <>
                     <A className="mr-2 nav-item dropdown" href="/me" target="_self">
-                        <FA name="user" size="lg" className="text-primary" />
+                        {Avatar}
+                        {/* <FA name="user" size="lg" className="text-primary" /> */}
                         <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
                     </A>
 					{/* <A className="mr-2" href="/me" target="_self">{nick || name}</A> */}
@@ -84,7 +86,7 @@ export class NavHeaderView extends View<CApp> {
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
-                                <form onSubmit={(e: any) => {
+                                <form className="w-100" onSubmit={(e: any) => {
                                     e.preventDefault();
                                     let url = "/search/" + this.searchKey.value;
                                     this.navigate(url); }}>

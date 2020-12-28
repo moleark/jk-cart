@@ -139,7 +139,8 @@ export class VPageVerifyCode extends VPage<CProduct> {
 
 		if (!productOrigin || !productLot || !currtCaptcha) return;
 		let {  getPDFFileUrl } = this.controller;
-		let content: any = await getPDFFileUrl({ origin: productOrigin ,captcha: currtCaptcha, lang: this.selectVal.value, lot: productLot });
+		let content: any = await getPDFFileUrl({ origin: productOrigin ,captcha: currtCaptcha, lang: this.selectVal ? this.selectVal.value : undefined, lot: productLot });
+		if (content === undefined) return;
 		if (content.status) {
 			if (content.status === 400) this.captchaTip.set(content.msg);
 			 else alert(content.msg);

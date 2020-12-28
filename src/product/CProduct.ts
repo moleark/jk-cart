@@ -257,7 +257,9 @@ export class CProduct extends CUqBase {
             return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
         if (this.materialType === 'SPEC')
             return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
-        if (this.materialType === 'COA') { };
+        if (this.materialType === 'COA') {
+            return undefined;
+        };
     }
 
     fetchPdf = async (url: string) => {
