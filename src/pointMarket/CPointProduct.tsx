@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
@@ -533,17 +534,25 @@ export class CPointProduct extends CUqBase {
     }
 
     showPointDoubt = async () => {
-        let { currentUser } = this.cApp;
+        let { cMe, currentUser } = this.cApp;
         let param: any = { currentUser, webUsers: [] };
         if (currentUser.hasCustomer) {
             let { currentCustomer } = currentUser;
             param.currentCustomer = currentCustomer;
             let otherWebUsers = await currentCustomer.getRelatedWebUser();
             param.webUsers = otherWebUsers;
+            this.openVPage(VPointDoubt, param);
         } else {
-            this.applyAuditUser();
+            if (!currentUser.allowOrdering) {
+                let note = <>
+                    我们需要审核您的账号信息。账号审核是为了将您的账号和您之前的积分关联起来。
+                    为此，需要您提供以下信息（带有 <span className="text-danger">*</span> 的信息为必填项），感谢您的配合。
+                </>;
+                cMe.toPersonalAccountInfo(async () => { this.openVPage(VPointDoubt) }, note);
+            } else {
+                this.openVPage(VPointDoubt, param);
+            }
         }
-        this.openVPage(VPointDoubt, param);
     }
 
     applyAuditUser = async () => {

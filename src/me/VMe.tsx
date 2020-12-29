@@ -139,7 +139,7 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     component: <button className="btn btn-success w-100 my-2" onClick={() => showLogin()}>
-                        <FA name="sign-out" size="lg" /> 请登录
+                        <FA name="sign-out" size="lg" /> 登录/注册
                     </button>
                 },
             );
@@ -158,13 +158,13 @@ export class VMe extends VPage<CMe> {
             ];
 
             rows = [
-				/*
+                /*
                 '',
                 {
                     type: 'component',
                     component: <this.meInfo />
-				},
-				*/
+                },
+                */
                 '',
                 {
                     type: 'component',
