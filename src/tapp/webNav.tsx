@@ -81,8 +81,8 @@ export class NavHeaderView extends View<CApp> {
                             <li><a href="#">特惠活动</a> </li>
                             <li><a href="#">结构检索</a> </li>
                             <li><a href="#">订单查询</a> </li>
-                            <li><a href="/product/mscu/COA/D">COA</a> </li>
-                            <li><a href="/product/mscu/MSDS/D">SDS</a> </li>
+                            <li><a href="/product/mscu/COA/D" target="_blank">COA</a> </li>
+                            <li><a href="/product/mscu/MSDS/D" target="_blank">SDS</a> </li>
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
@@ -237,14 +237,14 @@ export class NavFooterView extends View<CApp> {
                         <ul>
                             <li><a href="/about">公司简介</a></li>
                             <li><a href="#">企业承诺</a></li>
-                            <li><a href="https://www.jkchemical.com/brand.aspx?language=ch">合作品牌</a></li>
-                            <li><a href="https://www.jkchemical.com/job.aspx?language=ch">招贤纳士</a></li>
+                            <li><a href="https://www.jkchemical.com/brand.aspx?language=ch" target="_blank">合作品牌</a></li>
+                            <li><a href="https://www.jkchemical.com/job.aspx?language=ch" target="_blank">招贤纳士</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
                         <div className="font-weight-bold">浏览</div>
                         <ul>
-                            <li><a href="https://web.jkchemical.com/information">资讯中心</a></li>
+                            <li><a href="https://web.jkchemical.com/information" target="_blank">资讯中心</a></li>
                             <li><a href="#">质量证书(COA)</a></li>
                             <li><a href="#">安全说明书(SDS)</a></li>
                             <li><a href="#">大包装与定制生产</a></li>
@@ -276,7 +276,7 @@ export class NavFooterView extends View<CApp> {
                     </div>
                 </div>
             </div>
-            <div className="footer-bottom mt-2">
+            <div className="footer-bottom mt-2 py-1">
                 <div className="container">
                     <div className="row text-center">
                         <div className="col-sm">© 2020 - Copyright <a href="#">J&K Scientific Ltd., All Rights Reserved</a></div>
