@@ -81,6 +81,27 @@ export class VContact extends VPage<CSelectContact> {
             this.closePage();
         };
     }
+    
+    ContactDataP = () => {
+        let { defaultOrganizationName, defaultName, defaultMobile, address, addressString } = this.controller.cApp.currentUser;
+        return {
+            'organizationName': defaultOrganizationName,
+            'name': defaultName,
+            'mobile': defaultMobile,
+            'address': address,
+            'addressString': addressString
+        };
+    }
+    saveButton = (isSave?: boolean) => {
+        let btnContent: string;
+        if (isSave === undefined || !isSave) {
+            let { fromOrderCreation } = this.controller;
+            btnContent = fromOrderCreation ? '保存并使用' : '保存';
+        } else {
+            btnContent = '保存并使用';
+        };
+        return <button type="button" className="btn btn-primary w-100" onClick={this.onSaveContact}>{btnContent}</button>
+    }
 
     private page = () => {
         let contactData = _.clone(this.userContactData.contact);
@@ -89,20 +110,10 @@ export class VContact extends VPage<CSelectContact> {
         if (contactData !== undefined) {
             buttonDel = <button className="btn btn-sm btn-info" onClick={this.onDelContact}>删除</button>;
         } else {
-            let { defaultOrganizationName, defaultName, defaultMobile, address, addressString } = this.controller.cApp.currentUser;
-            contactData = {
-                'organizationName': defaultOrganizationName,
-                'name': defaultName,
-                'mobile': defaultMobile,
-                'address': address,
-                'addressString': addressString
-            };
-        }
-        let { fromOrderCreation } = this.controller;
+            contactData = this.ContactDataP();
+        };
         let footer = <div className={classNames(!xsOrIpad ? 'w-25 mx-auto' : '')}>
-            <button type="button"
-                className="btn btn-primary w-100"
-                onClick={this.onSaveContact}>{fromOrderCreation ? '保存并使用' : '保存'}</button>
+            {this.saveButton()}
         </div>;
         let header: any;
         if (xsOrIpad) {
@@ -129,7 +140,9 @@ export class VContact extends VPage<CSelectContact> {
     render(param?: any): JSX.Element {
         this.userContactData = param;
         let contactData = _.clone(this.userContactData.contact);
-    /* 选择后的地址无法渲染  存在问题 后续处理  完成后处理保存问题 */
+        if (contactData === undefined) contactData = this.ContactDataP();
+        let footer = this.saveButton(true);
+        /* 选择后的地址无法渲染  存在问题 后续处理  完成后处理保存问题 */
         /* if (this.controller.cApp.cSelectShippingContact.TIT) {
             let itemsAddress = this.uiSchema.items.address as UiIdItem;
             itemsAddress = {
@@ -137,23 +150,6 @@ export class VContact extends VPage<CSelectContact> {
                 pickId:async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),
             }
         } */
-        let buttonDel: any;
-        if (contactData !== undefined) {
-            buttonDel = <button className="btn btn-sm btn-info" onClick={this.onDelContact}>删除</button>;
-        } else {
-            let { defaultOrganizationName, defaultName, defaultMobile, address, addressString } = this.controller.cApp.currentUser;
-            contactData = {
-                'organizationName': defaultOrganizationName,
-                'name': defaultName,
-                'mobile': defaultMobile,
-                'address': address,
-                'addressString': addressString
-            };
-        }
-        let { fromOrderCreation } = this.controller;
-        let footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={() => { this.onSaveContact()}}>{fromOrderCreation ? '保存并使用' : '保存'}</button>;
         return React.createElement(observer(() => {
             return <div className="App-container container text-left" >
                 <Form ref={v => this.form = v} className="my-3 w-min-30c h-max-20c overflow-auto scroll-S"

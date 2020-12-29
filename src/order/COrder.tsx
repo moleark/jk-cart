@@ -40,7 +40,7 @@ export class COrder extends CUqBase {
         'cityChoice': { id: 4, title: '所在城市', preLevel: 'provinceChoice' },
         'countyChoice': { id: 5, title: '所在区县', preLevel: 'cityChoice' },
         'invoiceInfo': { id: 6, title: '发票信息', preLevel: '' },
-        'validCard': { id: 6, title: '可用优惠', preLevel: '' },
+        'validCard': { id: 7, title: '可用优惠', preLevel: '' },
     };
 
     @observable editContact: any;
@@ -443,7 +443,7 @@ export class COrder extends CUqBase {
 
     onContactSelected = (contact: BoxId) => {
         if(this.replyToContactType ==='shippingContact') this.orderData.shippingContact = contact;
-        if (this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
+        if(this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
         this.modalTitle = '';
     }
 
@@ -551,8 +551,12 @@ export class COrder extends CUqBase {
     }
 
     saveContact = async (contact: any) => {
-        let { cSelectShippingContact } = this.cApp;
-        let contactBox = await cSelectShippingContact.saveContactData(contact);
+        let { cSelectShippingContact, cSelectInvoiceContact } = this.cApp;
+        let contactBox: any;
+        if (this.replyToContactType === 'shippingContact')
+            contactBox = await cSelectShippingContact.saveContactData(contact);
+        if (this.replyToContactType === 'invoiceContact')
+            contactBox = await cSelectInvoiceContact.saveContactData(contact);
         this.onContactSelected(contactBox);
     }
 }

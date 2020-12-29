@@ -21,7 +21,7 @@ import { CSignIn } from 'pointMarket/CSignIn';
 import { Product } from '../model';
 import { WebUser } from 'CurrentUser';
 import { GLOABLE } from 'global';
-import { CSelectShippingContact } from 'customer/CSelectContact';
+import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectContact';
 //import { NavHeaderView, NavFooterView } from 'tapp/header';
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
@@ -55,6 +55,7 @@ export class CApp extends CUqApp {
     cLottery: CLottery;
     cSignIn: CSignIn;
     cSelectShippingContact: CSelectShippingContact;
+    cSelectInvoiceContact: CSelectInvoiceContact;
     cAddress: CAddress;
     cInvoiceInfo: CInvoiceInfo;
 
@@ -89,9 +90,10 @@ export class CApp extends CUqApp {
         this.cLottery = this.newC(CLottery);
         this.cSignIn = this.newC(CSignIn);
         this.cSelectShippingContact = this.newC(CSelectShippingContact);
+        this.cSelectInvoiceContact = this.newC(CSelectInvoiceContact);
         this.cAddress = this.newC(CAddress);
         this.cInvoiceInfo = this.newC(CInvoiceInfo);
-        await this.cSelectShippingContact.getList();
+        await this.cSelectShippingContact.getContactList();
         await this.cHome.getSlideShow();
         return true;
     }
@@ -309,7 +311,7 @@ export class CApp extends CUqApp {
 
     private navCart: NavPage = async (params: any) => {
         await this.cart.buildItems();
-        await this.cSelectShippingContact.getList();
+        await this.cSelectShippingContact.getContactList();
         await this.cCart.start();
     }
 

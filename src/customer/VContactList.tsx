@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { VPage, Page, View } from 'tonva';
-import { CSelectContact, CSelectShippingContact } from './CSelectContact';
+import { VPage, Page } from 'tonva';
+import { CSelectContact } from './CSelectContact';
 import { List, LMR, FA } from 'tonva';
 import { tv } from 'tonva';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 import { xs, xsOrIpad } from '../tools/browser';
 import classNames from 'classnames';
-import { VConfirmDeleteContact } from './VContact';
-import { Modal, Button, Space } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal } from 'antd';
 const { confirm } = Modal;
 
 export class VContactList extends VPage<CSelectContact> {

@@ -125,7 +125,7 @@ export abstract class CSelectContact extends CUqBase {
         return await cAddress.call<number>();
     }
 
-    getList = async () => {
+    getContactList = async () => {
         let userContactMaps = await this.cApp.currentUser.getContacts();
         this.userContacts = userContactMaps.map((v: any) => v.contact);
     }
