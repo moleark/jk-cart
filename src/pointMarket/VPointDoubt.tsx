@@ -1,5 +1,5 @@
 import React from 'react';
-import { VPage, Page, FA, Form, ItemSchema, UiSchema, ArrSchema, ObjectSchema, UiArr, UiTextItem, tv, NumSchema, UiRadio, Context } from 'tonva';
+import { VPage, Page, FA, Form, ItemSchema, UiSchema, Context, StringSchema, UiTextAreaItem, ButtonSchema, UiButton } from 'tonva';
 import { CPointProduct } from "./CPointProduct";
 import { observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
@@ -14,16 +14,23 @@ export class VPointDoubt extends VPage<CPointProduct> {
     }
 
     private schema: ItemSchema[] = [
-        { name: 'main', type: 'number' } as NumSchema
+        { name: 'question', type: 'string' } as StringSchema,
     ];
     private uiSchema: UiSchema = {
         items: {
-            main: { widget: 'radio', label: '设置常用账户', list: [], className: "" } as UiRadio
+            question: {
+                widget: 'textarea', label: '请在此描述您遇到的积分问题：', rules: (value: string) => {
+                    if (!value) return "请填写您的问题描述！";
+                }
+            } as UiTextAreaItem,
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary w-50" } as UiButton
         }
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
         console.log(context.data);
+        this.tip = "感谢您提交问题，我们将尽快为您处理！";
+        setTimeout(() => { this.tip = undefined; this.closePage() }, GLOABLE.TIPDISPLAYTIME);
     }
 
     private saveMainAccount = async () => {
@@ -34,7 +41,7 @@ export class VPointDoubt extends VPage<CPointProduct> {
     private applyAuditUser = async () => {
         await this.controller.applyAuditUser();
         this.tip = "催促成功，我们将尽快为您处理！";
-        setTimeout(() => this.tip = undefined, GLOABLE.TIPDISPLAYTIME);
+        setTimeout(() => { this.tip = undefined; this.closePage() }, GLOABLE.TIPDISPLAYTIME);
     }
 
     private tipsUI = observer(() => {
@@ -52,11 +59,11 @@ export class VPointDoubt extends VPage<CPointProduct> {
         let content = undefined;
         let { currentUser, currentCustomer, webUsers } = param;
         if (!currentCustomer) {
-            content = <div className=" bg-white p-3">
-                <div className=" alert alert-primary Card" role="alert">
+            content = <>
+                <div className="alert alert-primary Card" role="alert">
                     <h5><FA name="question-circle" className="mr-3"></FA>账户审核中</h5>
                     <div className="card-body">
-                        <p>系统检测到您的账号正在审核中，审核通过后，积分方可正确显示，请您耐心等待！</p>
+                        <p>您的账号正在审核中，审核通过后，积分方可正确显示，请您耐心等待！</p>
                         <p>您也可以点击以下按钮催促审核：</p>
                         <div className="d-flex flex-column align-items-center">
                             <button className="btn btn-primary w-50 mb-2" onClick={this.applyAuditUser}>催促审核</button>
@@ -64,15 +71,29 @@ export class VPointDoubt extends VPage<CPointProduct> {
                         </div>
                     </div>
                 </div>
-            </div>
+            </>
         } else {
             switch (webUsers.length) {
                 case 0:
                     break;
                 case 1:
+                    content = <>
+                        <div className="alert alert-primary Card" role="alert">
+                            <h5><FA name="question-circle" className="mr-3"></FA>问题提交</h5>
+                            <div className="card-body">
+                                <p>您可以在这里提交遇到的积分问题，我们将尽快为您解决！</p>
+                            </div>
+                        </div>
+                        <Form ref={v => this.form = v} schema={this.schema} uiSchema={this.uiSchema} formData={{}}
+                            onButtonClick={this.onFormButtonClick}></Form>
+                        <div className="d-flex flex-column align-items-center">
+                            <button type="button" className="btn btn-primary w-50 mb-2" onClick={this.saveMainAccount}>提交</button>
+                            {React.createElement(this.tipsUI)}
+                        </div>
+                    </>
                     break;
                 default:
-                    content = <div className="bg-white p-3">
+                    content = <>
                         <div className="alert alert-primary Card" role="alert">
                             <h5><FA name="question-circle" className="mr-3"></FA>多账户冲突</h5>
                             <div className="card-body">
@@ -90,12 +111,14 @@ export class VPointDoubt extends VPage<CPointProduct> {
                                 </li>
                             })}
                         </ul>
-                    </div>
+                    </>
                     break;
             }
         }
         return <Page header="积分问题解决">
-            {content}
+            <div className="bg-white p-3">
+                {content}
+            </div>
         </Page>
     }
 }

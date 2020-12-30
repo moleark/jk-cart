@@ -74,8 +74,8 @@ export class VMyPoint extends VPage<CPointProduct> {
 
         let nowPoint = myPointTobeExpired;
         let nowPointTip = nowPoint > 0 ?
-            <div className="alert alert-warning py-0 w-100 small rounded-0 m-0" role="alert">
-                <span className="text-muted">友情提示: 将有{nowPoint}积分于{dateYear}-12-31过期</span>
+            <div className="alert alert-warning py-1 w-100 small rounded-0 m-0" role="alert">
+                <span className="text-muted">友情提示: 将有 {nowPoint} 积分于 {dateYear}-12-31 过期</span>
             </div>
             : null;
 
@@ -110,12 +110,9 @@ export class VMyPoint extends VPage<CPointProduct> {
                         </div>
 
         return <>
-            {/* return <Page header="积分商城" right={right} className="h-100 bg-white"> */}
-            <>{nowPointTip}</>
             <div className="position-relative">
                 <div className="position-absolute" style={{top:12,right:0}}>{ right }</div>
                 <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
-                    {/* <>{nowPointTip}</> */}
                     <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
                     <div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between">
                         {pointShowUI}
@@ -126,6 +123,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                     </div>
                 </div>
             </div>
+            <>{nowPointTip}</>
             <div className="pt-3">
                 {/* 产品类别 */}
                 {

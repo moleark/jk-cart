@@ -90,19 +90,11 @@ export class CCart extends CUqBase {
     private doFirstOrderChecking = async () => {
         let { cMe, currentUser } = this.cApp;
         if (!currentUser.allowOrdering) {
-            cMe.toPersonalAccountInfo(this.doCheckOut);
-            // cMe.openMeInfoFirstOrder({
-            //     onlyRequired: false,
-            //     caption: "请补充账户信息",
-            //     note: <>
-            //         化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
-            //     为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
-            //     </>,
-            //     actionButton: {
-            //         value: "下一步",
-            //         action: this.doCheckOut
-            //     }
-            // });
+            let note = <>
+                化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
+                为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
+            </>;
+            cMe.toPersonalAccountInfo(this.doCheckOut, note);
         } else {
             await this.doCheckOut();
         }
