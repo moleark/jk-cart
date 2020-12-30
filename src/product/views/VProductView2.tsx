@@ -25,8 +25,9 @@ export class VProuductView2 extends View<CProduct> {
 			}
 			imageUrl = imageUrl || props.chemical.toString();
 			return <div className="row mx-0 my-3 bg-white">
-				<div className="col-lg-4 product-left-card">
-					<ProductImage chemicalId={imageUrl} className="w-100" />
+				<div className="col-lg-4 product-left-card d-flex">
+					<ProductImage chemicalId={imageUrl} className="mx-auto" style={{maxHeight:192}} />
+					{/* <ProductImage chemicalId={imageUrl} className="w-100" /> */}
 				</div>
 				<div className="col-lg-8 each-product">
 					<div className="details">

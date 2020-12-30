@@ -4,6 +4,7 @@ import { Tuid, VPage } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 import $ from 'jquery';
 import { tv } from '../tonva/uq/tuid/reactBoxId';
+import { xs } from '../tools/browser';
 
 export class VCategoryPage extends VPage<CProductCategory> {
 
@@ -98,7 +99,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         </div>
     }
 
-    /* header() { return this.controller.cApp.cHome.renderSearchHeader(); }
-    right() { return this.controller.cApp.cCart.renderCartLabel(); } */
+    header() { if (!xs) return ''; return this.controller.cApp.cHome.renderSearchHeader(); }
+    right() { if (!xs) return null; return this.controller.cApp.cCart.renderCartLabel(); }
     content() { return this.renderCategory(); }
 }
