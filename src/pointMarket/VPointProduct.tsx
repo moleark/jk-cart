@@ -35,7 +35,6 @@ export class VPointProduct extends VPage<CPointProduct> {
     @observable protected productIsNull: boolean = false;
     @observable protected pointIsEnough: boolean = false;
     private currentInterval: string;
-    private themeName: string = '积分商城';
     private tabs: TabProp[];
     protected none: JSX.Element = <div className="my-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
@@ -45,10 +44,6 @@ export class VPointProduct extends VPage<CPointProduct> {
         { caption: '15万以上', state: 'above', icon: 'superpowers', borderC: '#0e2c8c' },
     ];
     async open(param?: any) {
-        if (param) {
-            this.themeName = param.name ? param.name : param;
-            await this.controller.getPointProductByDifferentPlot(param);
-        }
         this.openPage(this.page);
     }
     private getTabs = async () => {
@@ -173,9 +168,11 @@ export class VPointProduct extends VPage<CPointProduct> {
     protected page = observer(() => {
         this.getTabs();
         let right = this.controller.renderSelectedLable(PointProductDetailLevel.DIRECT);
-        return <Page header={this.themeName} right={right}>
+        let {themeName: ThemeName } = this.controller;
+        let themeName = ThemeName === '积分商城' ? ThemeName : (ThemeName.name ? ThemeName.name : ThemeName);
+        return <Page header={themeName} right={right}>
             {
-                this.themeName === '积分商城'
+                themeName === '积分商城'
                     ? <Tabs tabs={this.tabs} tabPosition="top" size="lg" />
                     : <>
                         {/* {TopicDivision(this.themeName)} */}

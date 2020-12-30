@@ -50,7 +50,7 @@ export class CPointProduct extends CUqBase {
     @observable myPointTobeExpired: number = 0;        /* 我的快过期积分 */
 
     @observable navCloseByOrderSuccess: number = 0;    /* 兑换成功后关闭页面层数 */
-
+    @observable themeName: any = '积分商城';
     @observable pointProducts: any[] = [];             /* 可兑产品列表 */
     @observable newPointProducts: any[] = [];          /* 新品推荐 */
     @observable hotPointProducts: any[] = [];          /* 热门产品 */
@@ -150,8 +150,12 @@ export class CPointProduct extends CUqBase {
      * 可兑换产品页面
      */
     openPointProduct = async (name?: any) => {
+        if (name) {
+            this.themeName = name;
+            await this.getPointProductByDifferentPlot(this.themeName);
+        } else this.themeName = '积分商城';
         // this.initPointProducts();
-        this.openVPage(VPointProduct, name);
+        this.openVPage(VPointProduct);
     }
 
     /**
@@ -389,6 +393,7 @@ export class CPointProduct extends CUqBase {
         if (!this.isLogined) {
             let callBack = async () => {
                 await this.showMainPoint();
+                if (this.navCloseByOrderSuccess === 4) await this.openPointProduct(this.themeName);
                 this.openPointProductDetail(data, this.navCloseByOrderSuccess);
             };
             await this.cApp.cPointProduct.loginMonitor(callBack);
