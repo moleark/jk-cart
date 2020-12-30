@@ -18,11 +18,15 @@ export class CSignIn extends CUqBase {
      * 签到   ------------------ 需调用连续签到天数 uq:this.getSigninConsecutiveDays --------------------
      */
     openPointSign = async () => {
-        await this.isSignined();
-        if (this.IsSignin)
-            await this.addSigninSheet(47, this.signinval);
-        await this.getSigninConsecutiveDays();
-        this.openVPage(VPointSign);
+        if (!this.isLogined)
+            await this.cApp.cPointProduct.loginMonitor();
+        else {
+            await this.isSignined();
+            if (this.IsSignin)
+                await this.addSigninSheet(47, this.signinval);
+            await this.getSigninConsecutiveDays();
+            this.openVPage(VPointSign);
+        }
     }
 
     /**

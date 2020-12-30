@@ -8,11 +8,13 @@ const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-
 
 export class VMain extends VPage<CApp> {
     async open(param?: any) {
-        this.openPage(this.render);
+        this.openPage(this.render,{tabName:param});
     }
 
     render = (param?: any): JSX.Element => {
-        let { cHome, cCart, cMe, cart } = this.controller;
+        let { tabName } = param;
+        if (!tabName) tabName = 'home';
+        let { cHome, cCart, cMe, cart,cPointProduct } = this.controller;
         let faceTabs = [
             { name: 'home', label: '首页', icon: 'home', page: cHome.tab, notify: undefined/*store.homeCount*/ },
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
@@ -23,6 +25,12 @@ export class VMain extends VPage<CApp> {
                 //content: cCart.tab, 
                 page: cCart.tabPage,
                 notify: cart.count
+            },
+            {
+                name: 'pointMarket',
+                label: '积分商城',
+                icon: 'gift',
+                page: cPointProduct.tabPage,
             },
             {
                 name: 'me',
@@ -38,6 +46,7 @@ export class VMain extends VPage<CApp> {
                 caption: (selected: boolean) => TabCaptionComponent(label, icon, color(selected)),
                 page: page,
                 notify: notify,
+                isSelected: tabName === name ? true : false
             }
         });
 

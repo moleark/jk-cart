@@ -102,15 +102,47 @@ export class CPointProduct extends CUqBase {
         this.pointToExchanging = 0;
     }
 
+    loginMonitor = async (callBack?:any): Promise<void> => {
+        if (!this.isLogined) {
+            let loginCallback = async (user: User): Promise<void> => {
+                let { cApp } = this;
+                await cApp.currentUser.setUser(user);
+                await cApp.loginCallBack(user);
+                this.closePage(1);
+                if (callBack !== undefined) callBack();
+                else await this.showMainPoint();
+            };
+            nav.showLogin(loginCallback, true);
+        }
+    };
+
+    
+    tabPage: VMyPoint = new VMyPoint(this);
+
+    initPointAllData = async () => {
+        if(this.user !==undefined)
+            await this.refreshMypoint();        /* 刷新积分 */
+        await this.getPointProductGenre();  /* 获取产品类型 */
+        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+    }
+
+    showMainPoint = async () => {
+        await this.refreshMypoint(); 
+        this.cApp.showMain('pointMarket');
+    }
+
     /**
      * 积分管理页面
      */
     openMyPoint = async (param?: any) => {
-        await this.refreshMypoint();        /* 刷新积分 */
-        await this.getPointProductGenre();  /* 获取产品类型 */
-        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
-        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+        await this.initPointAllData();
         this.openVPage(VMyPoint);
+        // await this.refreshMypoint();        /* 刷新积分 */
+        // await this.getPointProductGenre();  /* 获取产品类型 */
+        // this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        // this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
+        // this.openVPage(VMyPoint);
     }
 
     /**
@@ -168,20 +200,28 @@ export class CPointProduct extends CUqBase {
      * 积分收支明细页面
      */
     openRevenueExpenditure = async (topic?: any) => {
-        await this.getPointHistory();
-        this.openVPage(VRevenueExpenditure, topic)
+        if (!this.isLogined)
+            await this.cApp.cPointProduct.loginMonitor();
+        else { 
+            await this.getPointHistory();
+            this.openVPage(VRevenueExpenditure, topic)
+        }
     }
 
     /**
      * 积分兑换记录页面
      */
     openExchangeHistory = async () => {
-        let promises: PromiseLike<any>[] = [];
-        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10));
-        promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100));
-        let presult = await Promise.all(promises);
-        let exchangeHistory = presult[0].concat(presult[1]);
-        this.openVPage(VExchangeHistory, exchangeHistory);
+        if (!this.isLogined)
+            await this.cApp.cPointProduct.loginMonitor();
+        else {
+            let promises: PromiseLike<any>[] = [];
+            promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10));
+            promises.push(this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100));
+            let presult = await Promise.all(promises);
+            let exchangeHistory = presult[0].concat(presult[1]);
+            this.openVPage(VExchangeHistory, exchangeHistory);
+        }
     }
 
     /**
@@ -345,22 +385,30 @@ export class CPointProduct extends CUqBase {
 
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
         let { data } = context;
-        let IsContain = 0;
-        let nowQuantity = value - (prev ? prev : 0);
-        // 当前产品详情的数量
-        if (data.product.id === this.pointProductsDetail.product.id)
-            this.pointProductsDetail.quantity = value;
-        // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
-        this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
-        this.pointProductsSelected.forEach(element => {
-            if (element.product.id === data.product.id) {
-                element.quantity = element.quantity + nowQuantity;
-                IsContain = IsContain + 1;
+        if (!this.isLogined) {
+            let callBack = async () => {
+                await this.showMainPoint();
+                this.openPointProductDetail(data, this.navCloseByOrderSuccess);
+            };
+            await this.cApp.cPointProduct.loginMonitor(callBack);
+        }else {
+            let IsContain = 0;
+            let nowQuantity = value - (prev ? prev : 0);
+            // 当前产品详情的数量
+            if (data.product.id === this.pointProductsDetail.product.id)
+                this.pointProductsDetail.quantity = value;
+            // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
+            this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
+            this.pointProductsSelected.forEach(element => {
+                if (element.product.id === data.product.id) {
+                    element.quantity = element.quantity + nowQuantity;
+                    IsContain = IsContain + 1;
+                }
+            });
+            if (IsContain === 0) {
+                data.point = data.product.obj.point;
+                this.pointProductsSelected.push(data);
             }
-        });
-        if (IsContain === 0) {
-            data.point = data.product.obj.point;
-            this.pointProductsSelected.push(data);
         }
     }
 
@@ -533,17 +581,21 @@ export class CPointProduct extends CUqBase {
     }
 
     showPointDoubt = async () => {
-        let { currentUser } = this.cApp;
-        let param: any = { currentUser, webUsers: [] };
-        if (currentUser.hasCustomer) {
-            let { currentCustomer } = currentUser;
-            param.currentCustomer = currentCustomer;
-            let otherWebUsers = await currentCustomer.getRelatedWebUser();
-            param.webUsers = otherWebUsers;
-        } else {
-            this.applyAuditUser();
-        }
-        this.openVPage(VPointDoubt, param);
+        if (!this.isLogined)
+            await this.cApp.cPointProduct.loginMonitor();
+        else {
+            let { currentUser } = this.cApp;
+            let param: any = { currentUser, webUsers: [] };
+            if (currentUser.hasCustomer) {
+                let { currentCustomer } = currentUser;
+                param.currentCustomer = currentCustomer;
+                let otherWebUsers = await currentCustomer.getRelatedWebUser();
+                param.webUsers = otherWebUsers;
+            } else {
+                this.applyAuditUser();
+            }
+            this.openVPage(VPointDoubt, param);
+        } 
     }
 
     applyAuditUser = async () => {

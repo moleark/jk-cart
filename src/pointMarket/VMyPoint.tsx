@@ -15,6 +15,14 @@ export class VMyPoint extends VPage<CPointProduct> {
         this.openPage(this.page);
     }
 
+    content() {
+        return <this.page />;
+    }
+
+    header() {
+        return '';
+    }
+
     /**
      * 积分规则页面
      */
@@ -58,7 +66,7 @@ export class VMyPoint extends VPage<CPointProduct> {
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,isLogined,
             openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp, showPointDoubt } = this.controller;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
@@ -91,20 +99,26 @@ export class VMyPoint extends VPage<CPointProduct> {
         let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
-
-        return <Page header="积分商城" right={right} className="h-100 bg-white">
-            <div>
-                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
-                    <>{nowPointTip}</>
-                    <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
-                    <div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between">
-                        <div>
+        let pointShowUI: any;
+        if (!isLogined) pointShowUI = <div className="align-self-center">您尚未登录</div>;
+        else pointShowUI = <div>
                             <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
                             <div className="mt-2">
                                 {myTotalPoints > 0 ? <small className="mr-2">总分: {myTotalPoints}</small> : null}
                                 <span className="small" onClick={() => showPointDoubt()}><span className="small">对积分有疑问?</span></span>
                             </div>
                         </div>
+
+        return <>
+            {/* return <Page header="积分商城" right={right} className="h-100 bg-white"> */}
+            <>{nowPointTip}</>
+            <div className="position-relative">
+                <div className="position-absolute" style={{top:12,right:0}}>{ right }</div>
+                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
+                    {/* <>{nowPointTip}</> */}
+                    <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
+                    <div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between">
+                        {pointShowUI}
                         <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
                             {this.pointblock("签到", openPointSign, signInIcon)}
                             {this.pointblock("兑换", openPointProduct, exChangeIcon)}
@@ -131,7 +145,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                     {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
                 </div>
             </div>
-        </Page >;
+        </>;
     });
 
     private renderGenreItem = (item: any) => {
