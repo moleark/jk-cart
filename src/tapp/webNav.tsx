@@ -1,73 +1,68 @@
 /* eslint-disable */
 import * as React from 'react';
 import { VPage, Ax, FA, View, A, Image } from 'tonva';
-import logo from '../images/logo.svg';
-import footer_logo from '../images/footer-logo.svg';
-import phone from '../images/Phone.svg';
-import magnifier from '../images/magnifier.svg';
-import qrcode from '../images/qrcode.png';
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
 
 export class VMainWebNav extends VPage<CApp> {
-	content() {
-		let { cHome } = this.controller;
-		return cHome.tab.content();
-	}
+    content() {
+        let { cHome } = this.controller;
+        return cHome.tab.content();
+    }
 }
 
 export class NavHeaderView extends View<CApp> {
     private searchKey: HTMLInputElement;
     render() {
-		let vLogin = React.createElement(() => {
-			let { user } = this.controller;
-			let v:any;
-			if (!user) {
-				v = <>
-					<A className="" href="/register" target="_self">注册</A>/
-					<A className="" href="/login" target="_self">登录</A>
-				</>;
-			}
-			else {
+        let vLogin = React.createElement(() => {
+            let { user } = this.controller;
+            let v: any;
+            if (!user) {
+                v = <>
+                    <A className="" href="/register" target="_self">注册</A>/
+                    <A className="" href="/login" target="_self">登录</A>
+                </>;
+            }
+            else {
                 let { name, nick, icon } = user;
-                let Avatar:JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> :  <Image className="w-1c h-1c" src={icon} />
-				v = <>
+                let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" src={icon} />
+                v = <>
                     <A className="mr-2 nav-item dropdown" href="/me" target="_self">
                         {Avatar}
                         {/* <FA name="user" size="lg" className="text-primary" /> */}
                         <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
                     </A>
-					{/* <A className="mr-2" href="/me" target="_self">{nick || name}</A> */}
-					<A className="mr-2" href="/logout" target="_self">退出</A>
-				</>;
-			}
-			return <span className="small">{v}</span>;
-		});
-		let vCartLabel = React.createElement(observer(() => {
-            let {cart} = this.controller;
-			if (!cart) return null;
-			let count = cart.count.get(); 
-			let vCount:any;
-			if (count) vCount = <u>{count}</u>;
-			//if (!count) count = undefined;
-			return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
-				<FA name="shopping-cart" />{vCount}
-			</Ax>;
-		}));
-        
+                    {/* <A className="mr-2" href="/me" target="_self">{nick || name}</A> */}
+                    <A className="mr-2" href="/logout" target="_self">退出</A>
+                </>;
+            }
+            return <span className="small">{v}</span>;
+        });
+        let vCartLabel = React.createElement(observer(() => {
+            let { cart } = this.controller;
+            if (!cart) return null;
+            let count = cart.count.get();
+            let vCount: any;
+            if (count) vCount = <u>{count}</u>;
+            //if (!count) count = undefined;
+            return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
+                <FA name="shopping-cart" />{vCount}
+            </Ax>;
+        }));
+
         return <header>
             <div className="top-header">
                 <div className="container">
                     <div className="row">
                         <div className="col-auto ml-auto d-flex align-items-center">
                             <div className="phone mr-2 small">
-                                <img src={phone} /> 400-666-7788
+                                <img src="/images/Phone.svg" /> 400-666-7788
                             </div>
-							<a className="small mr-2" data-toggle="modal" data-target="#choosecountry">
-								中国
+                            <a className="small mr-2" data-toggle="modal" data-target="#choosecountry">
+                                中国
 							</a>
-							{vCartLabel}
-							{vLogin}
+                            {vCartLabel}
+                            {vLogin}
                         </div>
                     </div>
                 </div>
@@ -75,7 +70,7 @@ export class NavHeaderView extends View<CApp> {
 
             <nav className="navbar navbar-expand-lg">
                 <div className="container">
-                    <A href="/home" className="header-logo"><img src={logo} alt="logo" className="img-fluid" /></A>
+                    <A href="/home" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></A>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="#">特惠活动</a> </li>
@@ -89,7 +84,8 @@ export class NavHeaderView extends View<CApp> {
                                 <form className="w-100" onSubmit={(e: any) => {
                                     e.preventDefault();
                                     let url = "/search/" + this.searchKey.value;
-                                    this.navigate(url); }}>
+                                    this.navigate(url);
+                                }}>
                                     <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder="Search" />
                                 </form>
                                 <span className="input-group-btn" onClick={() => {
@@ -97,14 +93,14 @@ export class NavHeaderView extends View<CApp> {
                                     this.navigate(url);
                                 }}>
                                     <button className="btn" type="button">
-                                        <img src={magnifier} />
+                                        <img src="/images/magnifier.svg" />
                                     </button>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <a href="#" className="display-mobile-block-login display-mobile">登入</a>
-                   
+
                     <button className="navbar-toggle navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse"
                         data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -227,10 +223,10 @@ export class NavFooterView extends View<CApp> {
             <div className="container reset-z-ul reset-z-ul-a">
                 <div className="row reset-z-footer-title reset-z-contact">
                     <div className="col-lg-3 col-xs-6">
-                        <img src={footer_logo} />
-                        <p className="mt-lg-3" style={{fontSize:12}}>促进科技与工业<br />
+                        <img src="/images/footer-logo.svg" />
+                        <p className="mt-lg-3" style={{ fontSize: 12 }}>促进科技与工业<br />
                                 发展，造福人类</p>
-                        <img src={qrcode} className="w-75 mt-lg-28 qrcode" />
+                        <img src="/images/qrcode.png" className="w-75 mt-lg-28 qrcode" />
                     </div>
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
