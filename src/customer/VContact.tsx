@@ -8,7 +8,6 @@ import { observer } from 'mobx-react';
 import { xsOrIpad } from '../tools/browser';
 import { pageHTitle } from 'tools/pageHeaderTitle';
 import classNames from 'classnames';
-import triangle from 'images/triangle.svg';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -124,8 +123,8 @@ export class VContact extends VPage<CSelectContact> {
         return <Page header={header} footer={footer} right={buttonDel}>
             <div className="App-container container text-left position-relative">
                 {pageHTitle(titleH)}
-                <div className="postion-img" style={{left:-"-200%",top:200}}>
-                    <img src={triangle} />
+                <div className="postion-img" style={{left:"-33%",top:200}}>
+                    <img src='/images/triangle.svg' />
                 </div>
                 <Form ref={v => this.form = v} className={classNames("my-3",!xsOrIpad ? 'w-50 mx-auto' :'')}
                     schema={schema}

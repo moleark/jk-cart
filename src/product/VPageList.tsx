@@ -53,7 +53,7 @@ export class VPageList extends VPage<CProduct> {
 
     private renderProduct = (p: Product) => {
         // console.log(p);
-        return this.controller.cApp.cProduct.renderProduct(p);
+        return this.controller.cApp.cProduct.renderProduct(p,'productList');
     }
 
 	/* header() {

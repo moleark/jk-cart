@@ -8,13 +8,9 @@ import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
 import { observable } from 'mobx';
-import className from 'classnames';
-import setting from 'images/setting.svg';
-import number1 from 'images/number-01.svg';
-import order1 from 'images/order-01.svg';
 import { browser, xs } from 'tools/browser';
-import { A } from '../tonva/components/ax/index';
 import welcome from 'images/welcome.png';
+import { MeLib } from './VMeSideBar';
 
 export class VMe extends VPage<CMe> {
 	/*
@@ -236,51 +232,7 @@ export class VMe extends VPage<CMe> {
                     </div>
                 </div>
             };
-            let meLib = [
-                {
-                    type: '帐户设置',
-                    image: setting,
-                    belongs: [
-                        {
-                            component: <IconText iconClass="text-info mr-2" icon="key" text="修改密码" />,
-                            href:'/password',
-                        },{
-                            component: <IconText iconClass="text-info mr-2" icon="key" text="账户信息" />,
-                            href:'/meInfo',
-                        },{
-                            component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="地址管理" />,
-                            href:'/contact',
-                        },
-                    ]
-                },{
-                    type: '会员管理',
-                    image: number1,
-                    belongs: [
-                        {
-                            component: <IconText iconClass="text-info mr-2" icon="heart" text="商品收藏" />,
-                            href:'/favorites',
-                        },{
-                            component: <IconText iconClass="text-info mr-2" icon="shopping-bag" text="积分管理" />,
-                            href:'/pointshop',
-                        },{
-                            component: <IconText iconClass="text-info mr-2" icon="connectdevelop" text="卡券管理" />,
-                            href:'/couponManage',
-                        },
-                    ]
-                },{
-                    type: '订单管理',
-                    image: order1,
-                    belongs: [
-                        {
-                            component: <IconText iconClass="text-info mr-2" icon="file-text" text="订单记录" />,
-                            href:'/myOrders',
-                        },{
-                            component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="发票管理" />,
-                            href:'/invoice',
-                        },
-                    ]
-                },
-            ]
+            let meLib = MeLib;
             return <div className="container mt-lg-2 py-3">
                 <div className="row">
                     {

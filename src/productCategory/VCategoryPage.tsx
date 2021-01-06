@@ -29,7 +29,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
             </div>
             breadcrumbs= <div className="breadcrumbs mb-4" style={{lineHeight:1.5}}>
                             <a href="#">首页</a>
-                            <a href="#">产品</a>
+                            {/* <a href="#">产品</a> */}
                             {tv(parent, (v: any) => {
                                 if(v.parent) 
                                     return <>{tv(v.parent, (j: any) => {

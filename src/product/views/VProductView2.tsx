@@ -8,12 +8,16 @@ import {renderBrand, renderPropItem, renderUnsold} from '../renders';
 import { Product } from '../../model';
 import { VFavorite } from './VFavorite';
 import { VPrice, VPriceWithTr } from './VPrice';
+import classNames from 'classnames';
+import { xs } from '../../tools/browser';
 
 export class VProuductView2 extends View<CProduct> {
     // @observable product: any;
     // @observable discount: number;
-    render(product: any): JSX.Element {
+    render(param: any): JSX.Element {
 		return React.createElement(observer(() => {
+			let { product, dataSource } = param;
+			let productListSource = dataSource ? true : false;
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
 			let discountinued = 0;
@@ -33,20 +37,30 @@ export class VProuductView2 extends View<CProduct> {
 					<div className="details">
 						{eName}
 						{cName}
-						<div>{this.renderVm(VFavorite, {product})}</div>
-						<div className="row p-0">
-							{renderPropItem('产品编号', origin)}
-							{renderPropItem('CAS', CAS ||  props.CAS)}
-							{renderPropItem('纯度',purity || props.purity)}
-							{renderPropItem('分子式',molecularFomula || props.molecularFomula)}
-							{renderPropItem('分子量',molecularWeight || props.molecularWeight)}
-							{renderBrand(brand)}
-						</div>
+						<div>{this.renderVm(VFavorite, { product })}</div>
+						{
+							!productListSource 
+							? <div className="row p-0 mx-0">
+								{renderPropItem('产品编号', origin)}
+								{renderPropItem('CAS', CAS ||  props.CAS)}
+								{renderPropItem('纯度',purity || props.purity)}
+								{renderPropItem('分子式',molecularFomula || props.molecularFomula)}
+								{renderPropItem('分子量',molecularWeight || props.molecularWeight)}
+								{renderBrand(brand)}
+							</div>
+							: <div className="row p-0 mx-0">
+								{renderPropItemCustom('产品编号', origin,null,false)}
+								{renderPropItemCustom('CAS', CAS ||  props.CAS)}
+								{brand && renderPropItemCustom('品牌', brand.name)}
+							</div>
+						}
 					</div>
-					{  !this.controller.showFavorites &&
-						<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
-							onClick={(event: React.MouseEvent) => { event.stopPropagation();}}>详情
-						</a>
+					{!this.controller.showFavorites &&
+						<div>
+							<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+								onClick={(event: React.MouseEvent) => { event.stopPropagation();}}>详情
+							</a>
+						</div>
 					}
 				</div>
 				<div className="container collapse col-lg-12 pt-2 px-0 border-top-0"
@@ -92,6 +106,20 @@ export class VProuductView2 extends View<CProduct> {
 			// </div>
 		}));
 	}
+}
+
+
+function renderPropItemCustom(caption: string, value: any, captionClass?: string,CutLine?:Boolean) {
+    if (value === null || value === undefined || value === '0') return null;
+    let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
+	let valClass = captionClass ? classNames(captionClass) : "";
+	let cutLine: JSX.Element = <span className="h-1c align-self-center mx-2" style={{ borderRight: '1px solid #333' }}></span>;
+	if (!CutLine && CutLine !== undefined ) cutLine = null;
+	return <div className="col-6 col-lg-4 col-sm-6 px-0">
+		{/* {!xs && cutLine} */}
+        <span className={classNames('small',capClass)}> { caption}： </span>
+		<span className={classNames('small',valClass)}>{value}</span>
+    </div>;
 }
 
 /**

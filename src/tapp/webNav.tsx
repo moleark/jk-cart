@@ -73,7 +73,7 @@ export class NavHeaderView extends View<CApp> {
                 </div>
             </div >
 
-            <nav className="navbar navbar-expand-lg">
+            <nav className="navbar navbar-expand-lg mb-1">
                 <div className="container">
                     <A href="/home" className="header-logo"><img src={logo} alt="logo" className="img-fluid" /></A>
                     <div className="justify-content-center search-wrap">
@@ -245,12 +245,12 @@ export class NavFooterView extends View<CApp> {
                         <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="https://web.jkchemical.com/information" target="_blank">资讯中心</a></li>
-                            <li><a href="#">质量证书(COA)</a></li>
-                            <li><a href="#">安全说明书(SDS)</a></li>
+                            <li><a href="/product/mscu/COA/D" target="_blank">质量证书(COA)</a></li>
+                            <li><a href="/product/mscu/MSDS/D" target="_blank">安全说明书(SDS)</a></li>
                             <li><a href="#">大包装与定制生产</a></li>
                             <li><a href="#">订购指南</a></li>
                             <li><a href="#">产品</a></li>
-                            <ul>
+                            <ul style={{textIndent:'1em'}}>
                                 <li><a href="#">有机化学</a></li>
                                 <li><a href="#">分析化学</a></li>
                                 <li><a href="#">生命科学</a></li>
