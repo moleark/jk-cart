@@ -18,6 +18,8 @@ import { GLOABLE } from 'cartenv';
 import { VDefaultPost } from './VDefaultPost';
 import moment from 'moment';
 import { VPointDoubt } from './VPointDoubt';
+import { VExchangeOrderTrack } from './VExchangeOrderTrack';
+import { FetchPost } from 'tools/wFeatch';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -63,6 +65,8 @@ export class CPointProduct extends CUqBase {
     @observable platformOrder: any[] = [];             /* 平台合同 */
     @observable pagePointHistory: QueryPager<any>;     /* 积分详情 */
     @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
+
+    @observable outWardOrderByJD: any;                 /* 订单中存在京东商品的订单 */
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
@@ -233,9 +237,33 @@ export class CPointProduct extends CUqBase {
      * 历史兑换单详情页面
      */
     openOrderDetail = async (orderId: number) => {
+        await this.getOutWardOrderByJD(orderId);
         let order = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
         this.openVPage(VExchangeHistoryDetail, order);
-    }
+    };
+
+    /* 订单是否是含有JD商品的订单 */
+    getOutWardOrderByJD = async (orderId: number) => {
+        // orderId = 96;
+        this.outWardOrderByJD = await this.uqs.platFormJoint.OutWardOrderMapping.obj({ platform: 1, myOrderId: orderId });
+    };
+
+    /** 获取物流信息 */
+    getOrderTrack = async () => {
+        let param = { jdOrderId: this.outWardOrderByJD.platformOrderId };
+        let res = await FetchPost(GLOABLE.JD + '/orderTrack', JSON.stringify(param));
+        let orderTrackObj: any;
+        if (res.ok) orderTrackObj = await res.json();
+        return orderTrackObj;
+    };
+
+    /**
+     * 历史兑换单物流信息页面
+     */
+    openExchangeOrderTrack = async () => {
+        let OrderTrack = await this.getOrderTrack();
+        this.openVPage(VExchangeOrderTrack, OrderTrack);
+    };
 
     /**
      * 已选择的可兑换产品页面

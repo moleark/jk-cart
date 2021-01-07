@@ -128,6 +128,10 @@ export interface UqPointShop {
     Signin: Action;
 }
 
+export interface UqPlatFormJoint {
+    OutWardOrderMapping: Map;
+}
+
 export interface UqWebBuilder {
     GetSlideShow: Query;
 }
@@ -149,4 +153,5 @@ export interface UQs {
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
     orderDraft: UqOrderDraft;
+    platFormJoint: UqPlatFormJoint;
 }

@@ -41,11 +41,17 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
     }
 
     private page = (order: any) => {
+        let { outWardOrderByJD, openExchangeOrderTrack } = this.controller;
         let { brief, data } = order;
         let { no, date,state } = brief;
         let { exchangeItems, shippingContact, amount } = data;
         let orderState: string = state === 'canceled' ? '此订单已取消' : ''; // OrderState[state || '$'];
-        let header = <>订单详情: {no}</>
+        let header = <>订单详情: {no}</>;
+        let OrderTrackBtn: any;
+        if (outWardOrderByJD)
+            OrderTrackBtn = <div className="bg-white p-3 my-1 d-flex justify-content-end">
+                <button className="btn btn-primary" onClick={openExchangeOrderTrack}>查看物流</button>
+            </div>;
         return <Page header={header}>
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
@@ -60,6 +66,7 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
                 <strong>{ orderState }</strong>
                 <span className="text-danger font-weight-bold">总积分: {amount}</span>
             </div>
+            {OrderTrackBtn}
         </Page>
     }
 }

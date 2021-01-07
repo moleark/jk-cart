@@ -73,3 +73,15 @@
     -webkit-line-clamp: 1;  
     -webkit-box-orient: vertical; */
 }
+
+.status-list li:before {
+    content: '';
+    background-color: #d9d9d9;
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    position: relative;
+    top: -7px;
+    left: -3px;
+}
