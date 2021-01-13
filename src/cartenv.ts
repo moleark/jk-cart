@@ -38,8 +38,8 @@ const GLOABLE_PRODUCTION = {
     PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
     CONTENTSITE: "https://web.jkchemical.com",
     // CONTENTSITE: "http://localhost:6061",
-    JD: 'http://localhost:3016/jd',
-    // JD: 'https://joint.jkchemical.com/jd',
+    // JD: 'http://localhost:3016/jd',
+    JD: 'https://joint.jkchemical.com/jd',
 
 }
 
@@ -75,8 +75,8 @@ const GLOABLE_TEST = {
     PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
     CONTENTSITE: "https://c.jkchemical.com/jk-web",
     // CONTENTSITE: "http://localhost:6061",
-    JD: 'http://localhost:3016/jd',
-    // JD: 'https://c.jkchemical.com/joint/jd',
+    // JD: 'http://localhost:3016/jd',
+    JD: 'https://c.jkchemical.com/joint/jd',
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, nav, Page, LMR, FA, tv, List } from 'tonva';
+import { VPage, nav, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
@@ -7,10 +7,12 @@ import { PointProductImage } from 'tools/productImage';
 import { GLOABLE } from 'cartenv';
 import { randomColor } from 'tools/randomColor';
 import { pointIcon } from 'tools/images';
+import noStock from 'images/noStock.png';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
     @observable protected shippingAddressIsBlank: boolean = false;
     protected pageDesc: string = OrderSource.EXCHANGEORDER;
+    private noStockTip = observable.box();
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -20,12 +22,19 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product, point, quantity } = pointProduct;
+        let { product, point, quantity, newStockRes } = pointProduct;
+        let noStockUI: JSX.Element = undefined;
+        if (newStockRes) noStockUI = <div className="position-absolute w-100 h-100 d-flex" style={{ top: 0, left: 0, background: "rgba(0,0,0,.3)" }}>
+            <img src={noStock} alt="" className='w-50 m-auto' />
+        </div>;
         if (quantity > 0) {
             return <>
                 {tv(product, (v) => {
                     return <div className="w-100 d-flex flex-column mb-4">{/* 20vh  */}
-                        <div title={v.description} className="w-100" style={{ height: '35vw',border:`2px solid ${randomColor()}` }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" /></div>
+                        <div title={v.description} className="w-100 position-relative" style={{ height: '35vw', border: `2px solid ${randomColor()}` }} >
+                            <PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" />
+                            {noStockUI}
+                        </div>
                         <div className="small w-100">
                             <div className="text-truncate w-100 my-1">{v.descriptionC}</div>
                             <div className="d-flex justify-content-between">
@@ -52,7 +61,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected onSubmit = async () => {
-        let { orderData, cApp } = this.controller;
+        let { orderData, cApp, createOrderStocks } = this.controller;
         let { cLottery } = cApp;
         // 必填项验证
         let { shippingContact } = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData : cLottery.prizeOrderData;
@@ -60,8 +69,14 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             this.shippingAddressIsBlank = true;
             setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
-        }
+        };
+        await createOrderStocks();
+        if (this.controller.noJDStock) {this.setNoStockTip(); return;};
         await this.onSubmitOwn();
+    }
+
+    private setNoStockTip = () => {
+        this.noStockTip.set(<div className="text-center bg-light py-2 text-danger">部分兑换商品已无货，不可兑换。</div>);
     }
 
     protected renderTipsUI = () => {
@@ -91,14 +106,16 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected page = observer(() => {
-        let { pointProductsSelected, pointToExchanging: pointsSum } = this.controller;
+        let { pointProductsSelected, pointToExchanging: pointsSum, noJDStock } = this.controller;
         let header = <div className="w-100 text-center">兑换确认</div>;
         let footer = <div className="d-block">
+            {autoHideTips(this.noStockTip)}
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
                 <button type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认兑换</button>
             </div>
         </div>;
+        if (noJDStock) this.setNoStockTip();
 
         return <Page header={header} right={<></>} footer={footer}>
             {this.renderContact()}

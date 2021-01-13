@@ -67,6 +67,7 @@ export class CPointProduct extends CUqBase {
     @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
 
     @observable outWardOrderByJD: any;                 /* 订单中存在京东商品的订单 */
+    @observable noJDStock: boolean=false;            
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
 
@@ -165,15 +166,34 @@ export class CPointProduct extends CUqBase {
     /**
      * 可兑换产品的详情(可生成浏览量)
      */
-    openPointProductDetail = async (pointProduct: any, DetailLevel: number) => {
+    openPointProductDetail = async (pointProduct: any, DetailLevel: number) => { 
         this.navCloseByOrderSuccess = DetailLevel;
+        let { product } = pointProduct;
+        let findP = this.pointProductsSelected.find((v: any) => pointProduct.product.id === v.product.id);
+        let subVar: any;
+        if (findP) {//找到当前
+            pointProduct.quantity = findP.quantity;
+            subVar = findP;
+        } else {//未找到当前
+            pointProduct.quantity = 0;
+            subVar = pointProduct;
+        };
+        if (!subVar.pointProductSource) {//无来源 获取来源
+            pointProduct.pointProductSource = await this.getProductSources(product);
+        } else {
+            pointProduct.pointProductSource = subVar.pointProductSource;
+        };
+        /* if (pointProduct.pointProductSource) {//存在来源
+            if (!subVar.newStockRes) {
+                let StockRes = await this.getStockBySource({ data: [pointProduct], sourceType: pointProduct.pointProductSource.type });
+                pointProduct.newStockRes = StockRes.find((v: any) => v && v.skuId === Number(pointProduct.pointProductSource.sourceId));
+            } else {
+                pointProduct.newStockRes = subVar.newStockRes;
+            };
+        } else {//不存在来源
+            pointProduct.newStockRes = undefined;
+        }; */
         this.pointProductsDetail = pointProduct;
-        if (this.pointProductsSelected.length) {
-            let findP = this.pointProductsSelected.find((v: any) => pointProduct.product.id === v.product.id);
-            if (findP && findP.quantity !== 0) this.pointProductsDetail.quantity = findP.quantity;
-            else this.pointProductsDetail.quantity = 0;
-        } else
-            this.pointProductsDetail.quantity = 0;
         let fm = 'YYYY-MM-DD HH:mm:ss';
         this.pointProductsDetail.OffShelf = false;
         let findProduct = await this.getPointProductLibLoad(pointProduct.product.id);
@@ -183,6 +203,51 @@ export class CPointProduct extends CUqBase {
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
         this.openVPage(VPointProductDetail, DetailLevel);
     }
+
+    /* 获取(检测)积分商品库存 据商品数据源数据 */
+    getStockBySource = async (param: any) => {
+        let { data, sourceType } = param;
+        if (!sourceType) return;
+        if (sourceType === 'jd.com') {
+            let area = await this.getAddressById();
+            if (!area) return;
+            let mapData = data.map((v: any) => {
+                let { pointProductSource, quantity } = v;
+                let { sourceId } = pointProductSource;
+                return { skuId: Number(sourceId), num: quantity === 0 ? 1 : quantity };
+            });
+            let jdSkuNums = JSON.stringify(mapData);
+            let newStockRes = await this.getPointProductStockByJD({ skuNums: jdSkuNums, area: area });
+            return newStockRes;
+        };
+
+        if (sourceType === 'self') {
+            return;
+            // let a = await this.cApp.cProduct.getInventoryAllocation(Number(product.id), Number(sourceId), 1);
+        };
+    };
+
+    /* 获取(检测)JD商品是否有库存 */
+    getPointProductStockByJD = async (param: any) => {
+        let res = await FetchPost(GLOABLE.JD + '/getNewStockById', JSON.stringify(param));
+        if (!res.ok) return;
+        let newStockRes = await res.json();
+        return JSON.parse(newStockRes);
+    };
+
+    /* 获取本司地址 */
+    getAddressById = async () => {
+        if (this.orderData.shippingContact === undefined) {
+            this.orderData.shippingContact = await this.getDefaultShippingContact();
+        };
+        if (!this.orderData.shippingContact) return;
+        let { obj } = this.orderData.shippingContact;
+        let { address, addressString } = obj;
+        let { obj: addressObj } = address;
+        let { city, country, county, province } = addressObj;
+        let myAddress = { city: city.id, country: country.id, county: county.id, province: province.id };
+        return { myAddress, addressString };
+    };
 
     /**
      * 据商品id 获取对应的商品所有信息
@@ -244,7 +309,7 @@ export class CPointProduct extends CUqBase {
 
     /* 订单是否是含有JD商品的订单 */
     getOutWardOrderByJD = async (orderId: number) => {
-        // orderId = 96;
+        // orderId = nav.testing ? 485 : 96; //96  485
         this.outWardOrderByJD = await this.uqs.platFormJoint.OutWardOrderMapping.obj({ platform: 1, myOrderId: orderId });
     };
 
@@ -282,6 +347,8 @@ export class CPointProduct extends CUqBase {
             this.orderData.shippingContact = await this.getDefaultShippingContact();
         }
         this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
+        /* 优化 '京东商品有无货' 时需要调整此处 */
+        this.noJDStock=false;
         this.openVPage(VExchangeOrder);
     }
 
@@ -425,26 +492,30 @@ export class CPointProduct extends CUqBase {
                 this.openPointProductDetail(data, this.navCloseByOrderSuccess);
             };
             await this.cApp.cPointProduct.loginMonitor(callBack);
-        }else {
-            let IsContain = 0;
-            let nowQuantity = value - (prev ? prev : 0);
-            // 当前产品详情的数量
-            if (data.product.id === this.pointProductsDetail.product.id)
-                this.pointProductsDetail.quantity = value;
-            // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
-            this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
-            this.pointProductsSelected.forEach(element => {
-                if (element.product.id === data.product.id) {
-                    element.quantity = element.quantity + nowQuantity;
-                    IsContain = IsContain + 1;
-                }
-            });
-            if (IsContain === 0) {
+        } else {
+            if (data.product.id === this.pointProductsDetail.product.id) this.pointProductsDetail.quantity = value;
+            if (!data.pointProductSource) data.pointProductSource = await this.getProductSources(data.product);
+            /* data.newStockRes = undefined;
+            if (data.pointProductSource) {
+                let newStockRes = await this.getStockBySource({ data: [data], sourceType: data.pointProductSource.type });
+                data.newStockRes = newStockRes.find((v: any) => v.skuId === Number(data.pointProductSource.sourceId));
+            }; */
+            let findCurIndex = this.pointProductsSelected.findIndex((v: any) => v.product.id === data.product.id);
+            if (findCurIndex === -1) {
                 data.point = data.product.obj.point;
                 this.pointProductsSelected.push(data);
-            }
-        }
-    }
+            } else {
+                let nowData = {
+                    quantity: value,
+                    pointProductSource: data.pointProductSource
+                };
+                this.pointProductsSelected[findCurIndex] = { ...this.pointProductsSelected[findCurIndex], ...nowData };
+            };
+            let pointTotal: number = 0;
+            this.pointProductsSelected.forEach((v: any) => { if (v && v.quantity > 0) pointTotal += v.point * v.quantity; });
+            this.pointToExchanging = pointTotal;
+        };
+    };
 
     private createOrderFromCart = async () => {
         let { currentUser, currentSalesRegion } = this.cApp;
@@ -465,7 +536,35 @@ export class CPointProduct extends CUqBase {
                 }
             });
         }
-    }
+    };
+
+    createOrderStocks = async () => {
+        let noSourceList = this.pointProductsSelected.filter((v: any) => v.quantity > 0 && !v.pointProductSource);
+        if (noSourceList.length) {
+            let promises1: PromiseLike<any>[] = [];
+            noSourceList.forEach((v: any) => promises1.push(this.getProductSources(v.product)));
+            let result = await Promise.all(promises1);
+            this.pointProductsSelected.forEach((v: any) => {
+                let findCoincideById = result.find((o: any) => o && v.product.id === o.pointProduct.id);
+                if (findCoincideById) v.pointProductSource = findCoincideById;
+            });
+        };
+
+        let jdProducts = this.pointProductsSelected.filter((v: any) => v.quantity > 0 && v.pointProductSource && v.pointProductSource.type === 'jd.com');
+        this.noJDStock = false;
+        if (!jdProducts.length) return;
+        let newStockRes = await this.getStockBySource({ data: jdProducts, sourceType: 'jd.com' });
+        let noStockList = newStockRes.filter((v: any) => v.stockStateId === 34 || v.stockStateDesc === "无货");
+        if (!noStockList.length) return;
+        this.pointProductsSelected.forEach((v: any) => {
+            let pSource = v.pointProductSource;
+            if (pSource?.type === 'jd.com') {
+                v.newStockRes = noStockList.find((e: any) => e.skuId === Number(pSource.sourceId));
+            };
+        });
+        this.noJDStock = true;
+    };
+
     /**
      * 生成兑换单兑换积分
      */
@@ -611,7 +710,8 @@ export class CPointProduct extends CUqBase {
     }
 
     onSelectShippingContact = async () => {
-        this.orderData.shippingContact = await this.selectContact()
+        this.orderData.shippingContact = await this.selectContact();
+        await this.createOrderStocks();
     }
 
     showPointDoubt = async () => {

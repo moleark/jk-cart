@@ -28,6 +28,8 @@ export const schema = [
     { name: 'quantity', type: 'number' } as NumSchema,
     // { name: 'point', type: 'number' } as NumSchema,
     // { name: 'imageUrl', type: 'string' } as StringSchema,
+    { name: 'newStockRes', type: 'object' } as ObjectSchema,
+    { name: 'pointProductSource', type: 'object' } as ObjectSchema,
 ];
 
 export class VPointProduct extends VPage<CPointProduct> {
@@ -91,6 +93,8 @@ export class VPointProduct extends VPage<CPointProduct> {
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
+            newStockRes: { visible: false },
+            pointProductSource: { visible: false },
             // point: { visible: false },
             // imageUrl: { visible: false },
         }
