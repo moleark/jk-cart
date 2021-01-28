@@ -42,14 +42,14 @@ const sections: Section[] = [
 		phones: [{ number: '+862038889733', caption: '+86 20 3888 9733' }],
 		fax: '+86 20 3888 8285',
 		email: ['jkgz@jkchemical.com', 'jkgz@jk-sci.com'],
-	},
+	}/* ,
 	{
 		caption: 'J&K Scientific Ltd. (成都)',
 		address: '四川省成都市高新区科园南路1号1栋8楼803号',
 		post: '610041',
 		phones: [{ number: '+8602883231067', caption: '+86 028 83231067' }],
 		email: ['jkinfo@jkchemical.com'],
-	},
+	} */,
 	{
 		caption: 'J&K Scientific Ltd. (香港)',
 		address: 'FLAT/RM 1901, 19/F, Lee Garden One,33 Hysan Avenue, Causeway Bay, Hong Kong',
