@@ -25,7 +25,7 @@ export class CProductCategory extends CUqBase {
 
     async internalStart(param: any) {
         await this.loadRoot();
-		/*
+        /*
         this.uqs.product.ProductCategory.stopCache();
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
@@ -36,8 +36,8 @@ export class CProductCategory extends CUqBase {
         let { first, secend, third } = results;
         this.rootCategories = (first as any[]).map(v => {
             return this.buildCategories(v, secend, third);
-		});
-		*/
+        });
+        */
         /*
         let result2 = await this.getRootCategoriesQuery.query({ salesRegion: currentSalesRegion.id, language: currentLanguage.id });
         if (result2)
@@ -118,10 +118,14 @@ export class CProductCategory extends CUqBase {
      * @param categoryId 目录节点id
      */
     private getCategoryInstruction = async (categoryId: number) => {
-        let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
-        if (res.ok) {
-            let content = await res.text();
-            return content;
+        try {
+            let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
+            if (res.ok) {
+                let content = await res.text();
+                return content;
+            }
+        } catch (error) {
+
         }
     };
 
@@ -230,7 +234,7 @@ export class CProductCategory extends CUqBase {
         let pcId = typeof productCategory === 'object' ? (productCategory as any).id : productCategory;
         return <Ax key={pcId}
             href={'/productCategory/' + pcId}
-            className={classNames(className,'d-block text-truncate')}
+            className={classNames(className, 'd-block text-truncate')}
         >{content || name}</Ax>
     }
 }

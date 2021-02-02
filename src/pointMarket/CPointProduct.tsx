@@ -29,7 +29,7 @@ export const OrderSource = {
 
 export const PointProductDetailLevel = {
     DIRECT: 3,
-    INDIRECT:4,
+    INDIRECT: 4,
 }
 
 export class CPointProduct extends CUqBase {
@@ -115,8 +115,8 @@ export class CPointProduct extends CUqBase {
     /**
      * 可兑换产品的详情(可生成浏览量)
      */
-    openPointProductDetail = async (pointProduct: any,DetailLevel: number) => {
-        this.navCloseByOrderSuccess = DetailLevel; 
+    openPointProductDetail = async (pointProduct: any, DetailLevel: number) => {
+        this.navCloseByOrderSuccess = DetailLevel;
         this.pointProductsDetail = pointProduct;
         if (this.pointProductsSelected.length) {
             for (let i of this.pointProductsSelected) {
@@ -132,7 +132,7 @@ export class CPointProduct extends CUqBase {
             this.pointProductsDetail.OffShelf = true;
         // this.pointProductsDetail.htmlFragment = await this.getPointProductDetailFragment(this.pointProductsDetail);
         await this.setPointProductVisits(pointProduct.product.obj);//生成浏览量
-        this.openVPage(VPointProductDetail,DetailLevel);
+        this.openVPage(VPointProductDetail, DetailLevel);
     }
 
     /**
@@ -169,9 +169,9 @@ export class CPointProduct extends CUqBase {
      */
     openExchangeHistory = async () => {
         let promises: PromiseLike<any>[] = [
-			this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10),
-			this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100)
-		];
+            this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10),
+            this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100)
+        ];
         let presult = await Promise.all(promises);
         let exchangeHistory = presult[0].concat(presult[1]);
         this.openVPage(VExchangeHistory, exchangeHistory);
@@ -189,7 +189,7 @@ export class CPointProduct extends CUqBase {
      * 已选择的可兑换产品页面
      */
     openSelectedPointProduct = async (DetailLevel: number) => {
-        this.navCloseByOrderSuccess = DetailLevel;        
+        this.navCloseByOrderSuccess = DetailLevel;
         this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
         this.openVPage(VSelectedPointProduct);
     }
@@ -209,7 +209,7 @@ export class CPointProduct extends CUqBase {
      * 已选择的可兑换产品图标
      */
     renderSelectedLable(DetailLevel: number) {
-        return this.renderView(VSelectedLable,DetailLevel);
+        return this.renderView(VSelectedLable, DetailLevel);
     }
 
     /**
@@ -301,7 +301,7 @@ export class CPointProduct extends CUqBase {
      */
     getNewPointProducts = async () => {
         let result = await this.uqs.积分商城.GetNewPointProducts.table({});
-        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
     }
 
     /**
@@ -309,7 +309,7 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
-        return result.sort((a,b)=>a.point-b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
     }
 
     /**
@@ -356,7 +356,7 @@ export class CPointProduct extends CUqBase {
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
         /* let availablePoints = this.myEffectivePoints - this.pointToExchanging;
-        if (availablePoints <= 0) return;    */ 
+        if (availablePoints <= 0) return;    */
         // 当前产品详情的数量
         this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
@@ -382,13 +382,13 @@ export class CPointProduct extends CUqBase {
         }
         if (this.pointProductsSelected !== undefined && this.pointProductsSelected.length > 0) {
             this.orderData.exchangeItems = this.pointProductsSelected.map(e => {
-				if (e.quantity <= 0) return undefined;
-				var item = new OrderItem();
-				item.product = e.product;
-				// item.pack = e.pack;
-				item.quantity = e.quantity;
-				item.point = e.point;
-				return item;
+                if (e.quantity <= 0) return undefined;
+                var item = new OrderItem();
+                item.product = e.product;
+                // item.pack = e.pack;
+                item.quantity = e.quantity;
+                item.point = e.point;
+                return item;
             });
         }
     }
@@ -475,14 +475,14 @@ export class CPointProduct extends CUqBase {
      * 检查客户信息是否完善（不完善需补充完善后方可领取积分）
      */
     userInfoCompletedChecking = async (options: any): Promise<boolean> => {
-		await this.cApp.assureLogin();
-		let { cMe, currentUser } = this.cApp;
-		if (!currentUser.allowOrdering) {
-			cMe.openMeInfoFirstOrder(options);
-			return false;
-		}
-		return true;
-		/*
+        await this.cApp.assureLogin();
+        let { cMe, currentUser } = this.cApp;
+        if (!currentUser.allowOrdering) {
+            cMe.openMeInfoFirstOrder(options);
+            return false;
+        }
+        return true;
+        /*
         if (!this.isLogined) {
             this.openMeInfoOptions = options;
             nav.showLogin(this.loginCallback, true);
@@ -494,10 +494,10 @@ export class CPointProduct extends CUqBase {
                 return false;
             }
             return true;
-		}
-		*/
+        }
+        */
     }
-	/*
+    /*
     private loginCallback = async (user: User): Promise<void> => {
         let { cApp } = this;
         await cApp.currentUser.setUser(user);
@@ -509,7 +509,7 @@ export class CPointProduct extends CUqBase {
             cMe.openMeInfoFirstOrder(this.openMeInfoOptions);
         }
     };
-	*/
+    */
     /**
      * TODO: delete
      */

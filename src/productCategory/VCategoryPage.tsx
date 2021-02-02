@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { Tuid, VPage } from 'tonva';
+import { Ax, Tuid, VPage } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 import $ from 'jquery';
 import { tv } from '../tonva/uq/tuid/reactBoxId';
@@ -9,8 +9,8 @@ import { xs } from '../tools/browser';
 export class VCategoryPage extends VPage<CProductCategory> {
 
     private renderCategory(/*item: any, parent: any, labelColor: string*/) {
-        let { instruction, current, rootCategories ,cApp} = this.controller;
-        let main,breadcrumbs;
+        let { instruction, current, rootCategories, cApp } = this.controller;
+        let main, breadcrumbs;
         if (current) {
             let { productCategory, name, children, parent } = current;
             let instructionUi;
@@ -27,30 +27,26 @@ export class VCategoryPage extends VPage<CProductCategory> {
                     {children.map(v => this.renderSubcategory(v))}
                 </div>
             </div>
-            breadcrumbs= <div className="breadcrumbs mb-4" style={{lineHeight:1.5}}>
-                            <a href="#">首页</a>
-                            <a href="#">产品</a>
-                            {tv(parent, (v: any) => {
-                                if(v.parent) 
-                                    return <>{tv(v.parent, (j: any) => {
-                                        let jL = j.productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
-                                        let vL = v.productcategorylanguage.find((vl: any) => cApp.currentLanguage.id === vl.language.id);
-                                        return <>
-                                            <a href="#">{jL.name}</a>
-                                            <a href="#">{vL.name}</a>
-                                        </>
-                                    })}</>
-                                else {
-                                    let findRootParent = rootCategories.find((vs: any) => vs.productCategory === v.id);
-                                    if (findRootParent) return <a href="#">{findRootParent.name}</a>;
-                                    return null;
-                                }
-                            })}
-                            <span>{name}</span>
-                        </div>
-        } else {
-            main = <div>
-                无
+            breadcrumbs = <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
+                <Ax href="/">首页</Ax>
+                <Ax href="/">产品</Ax>
+                {tv(parent, (v: any) => {
+                    if (v.parent)
+                        return <>{tv(v.parent, (j: any) => {
+                            let jL = j.productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
+                            let vL = v.productcategorylanguage.find((vl: any) => cApp.currentLanguage.id === vl.language.id);
+                            return <>
+                                <Ax href={"/productCategory/" + j.id}>{jL.name}</Ax>
+                                <Ax href={"productCategory/" + v.id}>{vL.name}</Ax>
+                            </>
+                        })}</>
+                    else {
+                        let findRootParent = rootCategories.find((vs: any) => vs.productCategory === v.id);
+                        if (findRootParent) return <Ax href={"/productCategory/" + findRootParent.productCategory}>{findRootParent.name}</Ax>;
+                        return null;
+                    }
+                })}
+                <Ax href={"/productCategory/" + productCategory}>{name}</Ax>
             </div>
         }
 
@@ -87,7 +83,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
                 </p>
             </>
             :
-            <div>{total > 1000 ? '>1000' : total}个产品</div>;
+            <div>{this.controller.renderCategoryItem(item, undefined, <>{total > 1000 ? '>1000' : total}个产品</>)}</div>;
 
         return <div key={name} className="col-lg-4 each-product">
             {this.controller.renderCategoryItem(

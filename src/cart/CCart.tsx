@@ -20,12 +20,13 @@ export class CCart extends CUqBase {
     renderCartLabel() {
         return this.renderView(VCartLabel);
     }
-	/*
-    renderCartLabel_Web() {
-        return this.renderView(VCartLabel_Web);
-	}
-	*/
 
+    /**
+     * 修改购物车中产品数量 
+     * @param context 
+     * @param value 
+     * @param prev 
+     */
     onQuantityChanged = async (context: RowContext, value: any, prev: any) => {
         let { data, parentData } = context;
         let { product } = parentData;
@@ -37,23 +38,37 @@ export class CCart extends CUqBase {
             await cart.removeItem([{ productId: product.id, packId: pack.id }]);
     }
 
+    /**
+     * 
+     * @param row 
+     */
+    onRemoveCartItem = (row: any) => {
+        let { product, packs } = row;
+        let { cart } = this.cApp;
+        let packsToDeleted: any = [];
+        packs.forEach((each: any) => {
+            packsToDeleted.push({ productId: product.id, packId: each.pack.id });
+        });
+        cart.removeItem(packsToDeleted);
+    }
+
     onRowStateChanged = async (context: RowContext, selected: boolean, deleted: boolean) => {
         alert('onRowStateChanged')
     }
 
-	/*
+    /*
     private loginCallback = async (user: User): Promise<void> => {
         let { cApp } = this;
         await cApp.currentUser.setUser(user);
         await cApp.loginCallBack(user);
         this.closePage(1);
         await this.doFirstOrderChecking();
-	};
-	*/
+    };
+    */
 
     onItemClick = (cartItem: CartItem) => {
-		let { cart, cProduct } = this.cApp;
-		let { product } = cartItem;
+        let { cart, cProduct } = this.cApp;
+        let { product } = cartItem;
         if (!cart.isDeleted(product.id)) {
             cProduct.showProductDetail(product.id);
         }
@@ -82,16 +97,16 @@ export class CCart extends CUqBase {
     checkOut = async () => {
         let { cart } = this.cApp;
         this.selectedCartItems = cart.getSelectedItems();
-		if (this.selectedCartItems === undefined) return;
-		/*
+        if (this.selectedCartItems === undefined) return;
+        /*
         if (!this.isLogined) {
             nav.showLogin(this.loginCallback, true);
         } else {
             await this.doFirstOrderChecking();
-		}
-		*/
-		await this.cApp.assureLogin();
-		await this.doFirstOrderChecking();
+        }
+        */
+        await this.cApp.assureLogin();
+        await this.doFirstOrderChecking();
     }
 
     private doFirstOrderChecking = async () => {

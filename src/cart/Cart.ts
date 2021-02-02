@@ -224,7 +224,8 @@ export class Cart {
     async removeItem(rows: [{ productId: number, packId: number }]) {
         if (rows && rows.length > 0) {
             rows.forEach(pe => {
-                let cartItemIndex = this.cartItems.findIndex(e => Tuid.equ(e.product, pe.productId) && Tuid.equ(e.packs[0].pack, pe.packId));
+                let cartItemIndex = this.cartItems.findIndex(e => Tuid.equ(e.product, pe.productId)
+                    && Tuid.equ(e.packs[0].pack, pe.packId));
                 if (cartItemIndex >= 0) {
                     let cartItem = this.cartItems[cartItemIndex];
                     let i = cartItem.packs.findIndex(e => e.pack.id === pe.packId)
@@ -318,7 +319,7 @@ class CartRemote extends CartStore {
 
     async load(): Promise<CartItem[]> {
         let ret = await this.cApp.uqs.order.GetCart.page(undefined, 0, 100);
-        return ret && ret.$page && ret.$page.filter(v => v.product && v.pack) as any;
+        return ret && ret.$page && ret.$page.filter((v: any) => v.product && v.pack) as any;
     }
 
     /**

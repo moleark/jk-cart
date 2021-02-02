@@ -27,11 +27,11 @@ const cartSchema = [
 ];
 
 export class VCart extends VPage<CCart> {
-	/*
+    /*
     async open() {
         this.openPage(this.page);
-	}
-	*/
+    }
+    */
 
     protected CheckOutButton = observer(() => {
         let { checkOut, strikeOut, cApp } = this.controller;
@@ -69,13 +69,13 @@ export class VCart extends VPage<CCart> {
         let { controller } = this;
         let { onItemClick, renderCartProduct } = controller;
         return <div className="row justify-content-between">
-                    <div className="col-lg-5 px-0" >{/* onClick={() => onItemClick(item)} */}
-                        <Ax href={'/product/' + product.id}>
-                            {renderCartProduct(product)}
-                        </Ax>
-                    </div>
-                <div className="col-lg-6 px-0 mt-2"><FormField name="packs" /></div>
+            <div className="col-lg-5 px-0" >{/* onClick={() => onItemClick(item)} */}
+                <Ax href={'/product/' + product.id}>
+                    {renderCartProduct(product)}
+                </Ax>
             </div>
+            <div className="col-lg-6 px-0 mt-2"><FormField name="packs" /></div>
+        </div>
     }
 
     private packsRow = (item: CartPackRow) => {
@@ -126,7 +126,8 @@ export class VCart extends VPage<CCart> {
                             } as UiCustom
                         },
                     } as UiArr
-                }
+                },
+                onDeleted: this.controller.onRemoveCartItem,
             } as UiArr
         }
     }
@@ -134,20 +135,21 @@ export class VCart extends VPage<CCart> {
     protected cartForm = observer(() => {
         let { cart } = this.controller.cApp;
         let { cartItems } = cart;
-		let data = {list: cartItems};
+        let data = { list: cartItems };
         return <>
-            {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">购物车</h1></div> :null }
+            {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">购物车</h1></div> : null}
             <div className="d-none d-lg-block">
                 <div className="w-100 border-bottom ">
                     <div className="col-lg-6 d-flex ml-auto mr-0 mb-2 px-2 font-weight-bolder h6">
                         <div className="col-4">包装</div>
                         <div className="col-4">单价</div>
-                        <div className="col-4 text-left pl-0" style={{textIndent:'2em'}}>数量</div>
+                        <div className="col-4 text-left pl-0" style={{ textIndent: '2em' }}>数量</div>
                     </div>
                 </div>
             </div>
-           
-            <Form className="bg-white flex-fill overflow-auto reset-z-fieldset" schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
+
+            <Form className="bg-white flex-fill overflow-auto reset-z-fieldset"
+                schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
         </>
     });
 
@@ -163,7 +165,7 @@ export class VCart extends VPage<CCart> {
         // cart.editButton.set(!cart.editButton.get());
     }
 
-	/*
+    /*
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
         let footer: any, content: any;
@@ -183,15 +185,15 @@ export class VCart extends VPage<CCart> {
         return <Page header="购物车" footer={footer}>
             {content}
         </Page>;
-	})
+    })
     */
 
-	// header() {return <div className="navheader">购物车</div>}
+    // header() {return <div className="navheader">购物车</div>}
     header() {
         if (!xs) return '';
         return <div className="navheader">购物车</div>;
     }
-	footer() {
+    footer() {
         let { cart } = this.controller.cApp;
         let footer: any;
         if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
@@ -199,21 +201,21 @@ export class VCart extends VPage<CCart> {
         }
         else {
             footer = React.createElement(this.CheckOutButton);
-		}
-		return footer;
-	}
+        }
+        return footer;
+    }
 
-	content() {
+    content() {
         let { cart } = this.controller.cApp;
         let content: any;
-        if (cart.count.get() === 0 && cart.cartItems  &&  cart.cartItems.length === 0) {
+        if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
             content = this.empty();
         }
         else {
             content = React.createElement(this.cartForm);
-		}
-		return content;
-	}
+        }
+        return content;
+    }
 
     private tab = observer(() => {
         let { cart } = this.controller.cApp;
@@ -235,7 +237,7 @@ export class VCart extends VPage<CCart> {
         </>;
     });
 
-	/*
+    /*
     header() {
         let { cart } = this.controller.cApp;
         let cancel = cart.editButton.get() ? '取消' : '编辑';
@@ -244,16 +246,16 @@ export class VCart extends VPage<CCart> {
             <span>购物车</span>
         </header>;
         return header;
-	}
-	*/
-	/*
-	footer() {
-		return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
-	}
-	*/
-	/*
+    }
+    */
+    /*
+    footer() {
+        return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
+    }
+    */
+    /*
     content() {
         return <this.tab />
-	}
-	*/
+    }
+    */
 }
