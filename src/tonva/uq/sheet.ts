@@ -1,6 +1,7 @@
 import { Entity } from './entity';
 import { PageItems } from '../tool/pageItems';
 import { EntityCaller } from './caller';
+import { ArrFields, Field } from './uqMan';
 
 export interface SheetState {
     name: string;
@@ -16,9 +17,26 @@ export interface StateCount {
     count: number;
 }
 
-export class Sheet extends Entity {
+export interface SheetSaveReturnV<V> {
+	id: number;
+	flow: number;
+	state: string;
+	verify: V[];
+}
+
+export interface SheetSaveReturn extends SheetSaveReturnV<any> {
+}
+
+interface GetSheetReturn<M> {
+	brief: any;
+	data: M;
+	flows: any[];
+}
+
+export class UqSheet<M, V> extends Entity {
     get typeName(): string { return 'sheet';}
-    states: SheetState[];
+	states: SheetState[];
+	verify: {returns: ArrFields[]};
 
     /*
     setStates(states: SheetState[]) {
@@ -28,7 +46,8 @@ export class Sheet extends Entity {
     }*/
     setSchema(schema:any) {
         super.setSchema(schema);
-        this.states = schema.states;
+		this.states = schema.states;
+		this.verify = schema.verify;
     }
     build(obj:any) {
         this.states = [];
@@ -53,43 +72,23 @@ export class Sheet extends Entity {
         }
         return ret;
     }
-    /*
-    private setStateAccess(s:SheetState, s1:SheetState) {
-        if (s === undefined) return;
-        for (let action of s1.actions) {
-            let acn = action.name;
-            let ac = s.actions.find(a=>a.name === acn);
-            if (ac === undefined) continue;
-            s.actions.push(action);
-        }
-    }*/
-    async save(discription:string, data:any):Promise<any> {
-        /*
-        await this.loadSchema();
+    async save(discription:string, data:M):Promise<SheetSaveReturn> {
         let {id} = this.uq;
-        let text = this.pack(data);
-
-        let ret = await this.uqApi.sheetSave(this.name, );
-        return ret;
-        */
-        let {id} = this.uq;
-        //let text = this.pack(data);
         let params = {app: id, discription: discription, data:data};
         return await new SaveCaller(this, params).request();
-        /*
-        let {id, state} = ret;
-        if (id > 0) this.changeStateCount(state, 1);
-        return ret;
-        */
+    }
+    async saveDebugDirect(discription:string, data:M):Promise<SheetSaveReturn> {
+        let {id} = this.uq;
+        let params = {app: id, discription: discription, data:data};
+        return await new SaveDirectCaller(this, params).request();
     }
     async action(id:number, flow:number, state:string, action:string) {
-        /*
-        await this.loadSchema();
-        return await this.uqApi.sheetAction(this.name, {id:id, flow:flow, state:state, action:action});
-        */
         return await new ActionCaller(this, {id:id, flow:flow, state:state, action:action}).request();
     }
-    private unpack(data:any):any {
+    async actionDebugDirect(id:number, flow:number, state:string, action:string) {
+        return await new ActionDirectCaller(this, {id:id, flow:flow, state:state, action:action}).request();
+    }
+    private unpack(data:any):GetSheetReturn<M> {
         //if (this.schema === undefined) await this.loadSchema();
         let ret = data[0];
         let brief = ret[0];
@@ -101,7 +100,7 @@ export class Sheet extends Entity {
             flows: flows,
         }
     }
-    async getSheet(id:number):Promise<any> {
+    async getSheet(id:number):Promise<GetSheetReturn<M>> {
         /*
         await this.loadSchema();
         let ret = await this.uqApi.getSheet(this.name, id);
@@ -110,7 +109,7 @@ export class Sheet extends Entity {
         if (ret[0].length === 0) return await this.getArchive(id);
         return this.unpack(ret);
     }
-    async getArchive(id:number):Promise<any> {
+    async getArchive(id:number):Promise<GetSheetReturn<M>> {
         /*
         await this.loadSchema();
         let ret = await this.uqApi.sheetArchive(this.name, id)
@@ -171,6 +170,8 @@ export class Sheet extends Entity {
     }
 }
 
+export class Sheet extends UqSheet<any, any> {
+}
 
 abstract class SheetCaller<T> extends EntityCaller<T> {
     protected get entity(): Sheet {return this._entity as Sheet;}
@@ -188,12 +189,31 @@ class SaveCaller extends SheetCaller<{app:number; discription:string; data:any}>
             data: this.entity.pack(data)
         };
     }
+    xresult(res:any):any {
+		let {verify} = this.entity;
+		if (verify === undefined) return res;
+		let resVerify = res.verify;
+		if (resVerify === undefined || resVerify.length === 0) {
+			res.verify = undefined;
+			return res;
+		}
+		let {returns} = verify;
+		res.verify = this.entity.unpackReturns(resVerify, returns);
+        return res;
+    }
+}
+
+class SaveDirectCaller extends SaveCaller {
+    get path():string {return `sheet/${this.entity.name}/direct`;}
 }
 
 class ActionCaller extends SheetCaller<{id:number, flow:number, state:string, action:string}> {
     method = 'PUT';
     get path():string {return `sheet/${this.entity.name}`;}
-    //buildParams() {return this.entity.buildParams(this.params);}
+}
+
+class ActionDirectCaller extends ActionCaller {
+    get path():string {return `sheet/${this.entity.name}/direct`;}
 }
 
 class GetSheetCaller extends SheetCaller<number> {

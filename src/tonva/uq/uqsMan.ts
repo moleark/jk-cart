@@ -49,7 +49,6 @@ export class UQsMan {
     private collection: {[uqName: string]: UqMan};
     private readonly tvs: TVs;
 
-    readonly name: string;
     readonly appOwner: string;
     readonly appName: string;
     readonly localMap: LocalMap;
@@ -138,19 +137,15 @@ export class UQsMan {
             //let n = uqMan.name;
             let uqName = uqMan.uqName;
             let l = uqName.toLowerCase();
+			let uqKey:string = uqName.split(/[-._]/).join('').toLowerCase();
             let entities = uqMan.entities;
             let keys = Object.keys(entities);
             for (let key of keys) {
                 let entity = entities[key];
-                let {name} = entity;
-                //if (name !== sName) 
-                //entities[sName] = entity;
-                entities[name.toLowerCase()] = entity;
+				let {name} = entity;
+				entities[name.toLowerCase()] = entity;
             }
-            //uqs[i] = entities;
-            //uqs[uqName] = entities;
-            //if (l !== uqName) 
-            uqs[l] = new Proxy(entities, {
+            let proxy = uqs[l] = new Proxy(entities, {
                 get: function(target, key, receiver) {
                     let lk = (key as string).toLowerCase();
                     let ret = target[lk];
@@ -161,7 +156,8 @@ export class UQsMan {
                     that.showReload('UQ错误：' + err);
                     return undefined;
                 }
-            });
+			})
+			if (uqKey !== l) uqs[uqKey] = proxy;
         }
         //let uqs = this.collection;
         return new Proxy(uqs, {
@@ -181,7 +177,11 @@ export class UQsMan {
                 return undefined;
             },
         });
-    }
+	}
+	
+	getUqCollection() {
+		return this.collection;
+	}
 
     private showReload(msg: string) {
         this.localMap.removeAll();

@@ -81,6 +81,12 @@ export class Page extends React.Component<PageProps> {
 		</>;
 	}
 
+	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+		// You can also log the error to an error reporting service
+		//logErrorToMyService(error, errorInfo);
+		debugger;
+	}
+	
     render() {
 		if (this.tabsView) {
 			return React.createElement(this.tabsView.content);

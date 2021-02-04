@@ -67,6 +67,6 @@ export abstract class CacheIds<T extends Id> {
         }
     }
 
-    protected abstract async _loadIds(ids:number[]):Promise<T[]>;
-    protected abstract async _loadId(id:number):Promise<T>;
+    protected abstract _loadIds(ids:number[]):Promise<T[]>;
+    protected abstract _loadId(id:number):Promise<T>;
 }

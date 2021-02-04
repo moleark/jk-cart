@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import { IObservableValue } from 'mobx/lib/internal';
+import { IObservableValue } from 'mobx';
 
 //export function autoHideTips(visible: IObservableValue<boolean>, tips:string|JSX.Element, timeout?:number):React.FunctionComponentElement<any>;
 //export function autoHideTips(tips: IObservableValue<string>, tips:string|JSX.Element, timeout?:number):React.FunctionComponentElement<any>;

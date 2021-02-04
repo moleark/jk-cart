@@ -37,12 +37,14 @@ export abstract class CAppBase extends Controller {
     constructor(config?: AppConfig) {
 		super(undefined);
 		this.appConfig = config || (nav.navSettings as AppConfig);
-        let {appName, noUnit} = this.appConfig;
-        this.name = appName;
-        if (appName === undefined) {
-            throw new Error('appName like "owner/app" must be defined in MainConfig');
-        }
-		this.noUnit = noUnit;
+		if (this.appConfig) {
+			let {appName, noUnit} = this.appConfig;
+			this.name = appName;
+			if (appName === undefined) {
+				throw new Error('appName like "owner/app" must be defined in MainConfig');
+			}
+			this.noUnit = noUnit;
+		}
     }
 
     get uqs(): any {return this._uqs;}
@@ -84,15 +86,11 @@ export abstract class CAppBase extends Controller {
 	
     protected async beforeStart():Promise<boolean> {
         try {
-			nav.onSysNavRoutes();
 			this.onNavRoutes();
-			//if (nav.isRouting === false) {
-				//await nav.init();
-				let {appName, version, tvs} = this.appConfig;
-				await UQsMan.load(appName, version, tvs);
-			//}
-			this._uqs = UQsMan._uqs;
-		
+			if (!this.appConfig) return true;
+			let {appName, version, tvs} = this.appConfig;
+			await UQsMan.load(appName, version, tvs);
+			this._uqs = UQsMan._uqs;			
             //let retErrors = await this.load();
             //let app = await loadAppUqs(this.appOwner, this.appName);
             // if (isDevelopment === true) {

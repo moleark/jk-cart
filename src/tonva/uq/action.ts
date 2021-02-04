@@ -1,19 +1,22 @@
 import { Entity } from './entity';
 import { ActionCaller } from './caller';
 
-export class Action extends Entity {
+export class UqAction<P, R> extends Entity {
     get typeName(): string { return 'action';}
-    async submit(data:object, waiting: boolean = true) {
+    async submit(data:P, waiting: boolean = true) {
 		let caller = new ActionSubmitCaller(this, data)
 		let ret = await caller.request();
 		return ret;
     }
-    async submitReturns(data:object):Promise<{[ret:string]:any[]}> {
+    async submitReturns(data:P):Promise<R> {
        return await new SubmitReturnsCaller(this, data).request();
     }
-    async submitConvert(data:object) {
+    async submitConvert(data:P) {
         return await new SubmitConvertCaller(this, data).request();
     }
+}
+
+export class Action extends UqAction<any, any> {
 }
 
 export class ActionSubmitCaller extends ActionCaller {
