@@ -176,7 +176,7 @@ export class VCreateOrder extends VPage<COrder> {
             if (orderData.invoiceContact !== undefined) {
                 divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex">
                     {tv(orderData.invoiceContact, undefined, undefined, this.nullContact)}
-                    <div>{chevronRight}</div>
+                    <div onClick={onSelectInvoiceContact}>{chevronRight}</div>
                 </div>
             } else {
                 divInvoiceContact = <div className="col-8 offset-4 offset-sm-2">
