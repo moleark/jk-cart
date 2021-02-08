@@ -12,12 +12,11 @@ export class VCategoryPage extends VPage<CProductCategory> {
         let { instruction, current, rootCategories, cApp } = this.controller;
         let main, breadcrumbs;
         if (current) {
-            let { productCategory, name, children, parent } = current;
+            let { productCategory: productCategoryId, name, children, parent } = current;
             let instructionUi;
             if (instruction) {
                 let instr: JQuery<Element> = $(instruction);
                 $("a[href*='jkchemical.com']", instr).addClass('d-none');
-                // instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
                 instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
             }
             main = <div className="col-lg-9 product-introduct">
@@ -42,11 +41,12 @@ export class VCategoryPage extends VPage<CProductCategory> {
                         })}</>
                     else {
                         let findRootParent = rootCategories.find((vs: any) => vs.productCategory === v.id);
-                        if (findRootParent) return <Ax href={"/productCategory/" + findRootParent.productCategory}>{findRootParent.name}</Ax>;
+                        if (findRootParent)
+                            return <Ax href={"/productCategory/" + findRootParent.productCategory}>{findRootParent.name}</Ax>;
                         return null;
                     }
-                })}
-                <Ax href={"/productCategory/" + productCategory}>{name}</Ax>
+                }, undefined, () => null)}
+                <Ax href={"/productCategory/" + productCategoryId}>{name}</Ax>
             </div>
         }
 
@@ -62,8 +62,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
     }
 
     private renderSubcategory(item: ProductCategory/*item: any, parent: any, labelColor: string*/) {
-        //let labelColor = 'text-success';
-        let { name, children, total } = item;
+        let { productCategory: id, name, children, total } = item;
         let hasChildren = children && children.length > 0;
 
         let vItem = hasChildren === true ?
@@ -75,9 +74,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
                 }
                 <p className="text-right">
                     {
-                        this.controller.renderCategoryItem(
-                            item,
-                            undefined,
+                        this.controller.renderCategoryItem(item, undefined,
                             <>更多 <i className="fa fa-angle-right" aria-hidden="true"></i></>)
                     }
                 </p>
@@ -86,11 +83,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
             <div>{this.controller.renderCategoryItem(item, undefined, <>{total > 1000 ? '>1000' : total}个产品</>)}</div>;
 
         return <div key={name} className="col-lg-4 each-product">
-            {this.controller.renderCategoryItem(
-                item,
-                undefined,
-                <h2 className="purple-bg">{name}</h2>
-            )}
+            {this.controller.renderCategoryItem(item, undefined, <h2 className="purple-bg">{name}{id}</h2>)}
             <div className="background-grey">{vItem}</div>
         </div>
     }
