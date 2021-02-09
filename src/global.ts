@@ -22,30 +22,36 @@ const CategoryIds_Test: { [id: number]: EnumCategory } = {
 };
 
 interface CategoryRes {
-	src: string;
+	src: string;		// 所用图片的src
 	labelColor: string;
+	bgClass: string;
 }
 
 const RootCategoryRes: { [key in EnumCategory]: CategoryRes } = {
 	[EnumCategory.OrganicChemistry]: {
 		src: OrganicChemistry,
 		labelColor: 'text-info',
+		bgClass: "mint-bg",
 	},
 	[EnumCategory.AnalyticalChemistry]: {
 		src: AnalyticalChemistry,
 		labelColor: 'text-success',
+		bgClass: "green-bg",
 	},
 	[EnumCategory.LifeScience]: {
 		src: LifeScience,
 		labelColor: 'text-danger',
+		bgClass: "red-bg",
 	},
 	[EnumCategory.MaterialScience]: {
 		src: MaterialScience,
 		labelColor: 'text-warning',
+		bgClass: "purple-bg",
 	},
 	[EnumCategory.LabSupplies]: {
 		src: LabSupplies,
 		labelColor: 'text-primary',
+		bgClass: "blue-bg",
 	},
 };
 

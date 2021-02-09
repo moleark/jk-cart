@@ -14,6 +14,7 @@ export interface ProductCategory {
     name: string; // char(200),
     total: number; // int
     children?: ProductCategory[];
+    allAncestors?: any[];
 };
 
 export class CProductCategory extends CUqBase {
@@ -84,24 +85,31 @@ export class CProductCategory extends CUqBase {
         this.current = {
             productCategory: id,
             parent: undefined,
+            allAncestors: [],
             name: undefined,
             total: undefined,
             children: [],
         }
 
         let getAllAncestors = async function (productCategoryId: number) {
-            let isM = true;
-            while (isM) {
+            let allAncestors: any[] = [];
+            while (true) {
                 let ProductCategoryLoad: any = await ProductCategory.load(productCategoryId);
-                if (ProductCategoryLoad.parent) productCategoryId = ProductCategoryLoad.parent.id;
-                else isM = false;
+                if (!ProductCategoryLoad) break;
+                let { parent } = ProductCategoryLoad;
+                if (!parent) break;
+                productCategoryId = parent.id;
+                allAncestors.unshift(parent);
             }
-        };
-        await getAllAncestors(id);
+            return allAncestors;
+        }
 
         if (pcTuid) {
             let { parent, productcategorylanguage } = pcTuid;
-            this.current.parent = parent;
+            if (parent !== undefined) {
+                this.current.parent = parent;
+                this.current.allAncestors = await getAllAncestors(id);
+            }
             let pcCurrentLanguage = productcategorylanguage.find((v: any) => Tuid.equ(currentLanguage, v.language));
             this.current.name = pcCurrentLanguage && pcCurrentLanguage.name;
             this.current.children = this.buildChildren(id, first, secend);
