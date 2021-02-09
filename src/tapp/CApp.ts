@@ -383,6 +383,7 @@ export class CApp extends CUqApp {
             '/search/:key': this.navSearch,
             '/product/:id': this.navProduct,
             '/product/mscu/:type/:id': this.navProductMSCU,
+            '/product/mscu/:type': this.navProductMSCU,
             '/cart': this.navCart,
             '/productCategory/:id': this.navProductCategory,
             '/pointshop': this.navPointShop,

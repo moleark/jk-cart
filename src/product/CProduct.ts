@@ -3,7 +3,6 @@ import { BoxId, QueryPager } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
-import { VPagePDF } from './VPagePDF';
 import { VPageVerifyCode } from './VPageVerifyCode';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../model';
@@ -253,11 +252,11 @@ export class CProduct extends CUqBase {
     getPDFFileUrl = async (row: any) => {
         // await this.cApp.assureLogin();
         let { origin, captcha, lang, lot } = row;
-        if (this.materialType === 'MSDS')
+        if (this.materialType === 'msds')
             return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
-        if (this.materialType === 'SPEC')
+        if (this.materialType === 'spec')
             return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
-        if (this.materialType === 'COA') {
+        if (this.materialType === 'coa') {
             return undefined;
         };
     }
@@ -288,14 +287,16 @@ export class CProduct extends CUqBase {
     /**
      * 产品资料页面
      */
-    openMaterial = async (Type?: string, id?: string) => {
-        if (Type === 'MSDS' || Type === 'SPEC') await this.getCaptcha();
-        this.materialType = Type;
-        let origin: any;
-        if (!isNaN(Number(id))) this.product = this.cApp.getProduct(Number(id));
+    openMaterial = async (type?: string, id?: string) => {
+        type = type !== undefined ? type.toLowerCase() : type;
+        if (type === 'msds' || type === 'spec') await this.getCaptcha();
+        this.materialType = type;
+        let origin: string;
+        if (!isNaN(Number(id)))
+            this.product = this.cApp.getProduct(Number(id));
         if (this.product && this.product.props) {
             origin = this.product.props.origin;
-            if (origin && Type === 'MSDS') {
+            if (origin && type === 'msds') {
                 let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productMsdsVersion/' + origin);
                 if (result.ok) {
                     this.productMsdsVersions = await result.json();

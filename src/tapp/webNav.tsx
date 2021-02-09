@@ -75,8 +75,8 @@ export class NavHeaderView extends View<CApp> {
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="#">特惠活动</a> </li>
                             <li><a href="/myOrders">订单查询</a> </li>
-                            <li><a href="/product/mscu/COA/D" target="_blank">COA</a> </li>
-                            <li><a href="/product/mscu/MSDS/D" target="_blank">SDS</a> </li>
+                            <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
+                            <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">

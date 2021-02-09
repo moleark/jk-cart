@@ -9,9 +9,9 @@ import { VPagePDF } from './VPagePDF';
 import { languageCaptions } from './VPageProduct';
 
 const materialCaptions: { [type: string]: any } = {
-	'MSDS': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Material Safety Data Sheet (MSDS)' },
-	'SPEC': { type: 'SPEC', CName: "技术规格说明书", EName: 'Specifications (SPEC)' },
-	'COA': { type: 'COA', CName: "质检报告", EName: 'Certificate of Analysis (COA)' },
+	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Material Safety Data Sheet (SDS)' },
+	'spec': { type: 'SPEC', CName: "技术规格说明书", EName: 'Specifications (SPEC)' },
+	'coa': { type: 'COA', CName: "质检报告", EName: 'Certificate of Analysis (COA)' },
 }
 
 const defLangs = [{ language: "CN" }, { language: "EN" }, { language: "DE" }, { language: "EN-US" },];
@@ -29,14 +29,10 @@ export class VPageVerifyCode extends VPage<CProduct> {
 		this.openPage(this.page, { origin: param });
 	}
 
-	/* header() {return <div className="w-100 text-center">产品资料</div>}
-
-	right(){return <></>}
- */
 	page = observer((param?: any) => {
 
 		let { materialType } = this.controller;
-		let assistContent = (materialType === 'MSDS' || materialType === 'SPEC') ? <>{this.captchaUI(materialType)}</> : <>{this.lots()}</>;
+		let assistContent = (materialType === 'msds' || materialType === 'spec') ? <>{this.captchaUI(materialType)}</> : <>{this.lots()}</>;
 		let content = materialCaptions[materialType];
 		let header: any, right: any;
 		if (xs) {
@@ -107,7 +103,7 @@ export class VPageVerifyCode extends VPage<CProduct> {
 		let { captcha, productMsdsVersions, getCaptcha } = this.controller;
 		let langUI: undefined | JSX.Element;
 
-		if (type === 'MSDS') {
+		if (type === 'msds') {
 			let langArr: any[] = productMsdsVersions.length ? productMsdsVersions : defLangs;
 			langUI = <select ref={v => this.selectVal = v} defaultValue='CN' className="p-1 mr-2 mb-2 text-dark">
 				{langArr.map((v: any) => (<option key={v.language} value={v.language}>{languageCaptions[v.language]}</option>))}

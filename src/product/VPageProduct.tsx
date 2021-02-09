@@ -123,11 +123,10 @@ export class VPageProduct extends VPage<CProduct> {
     */
 
     private material = (id: any) => {
-        let { openMaterial } = this.controller;
         let Materials = [
-            { id: 1, name: "化学品安全技术说明书（SDS）", type: "MSDS" },
-            { id: 2, name: "技术规格说明书（Specifications）", type: "SPEC" },
-            { id: 3, name: "质检报告（COA）", type: "COA" },
+            { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
+            { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
+            { id: 3, name: "质检报告（COA）", type: "coa" },
         ];
         return <div className={classNames('left-below', !xs ? 'd-none d-sm-block' : 'display-mobile')}>{/* display-desktop*/}
             {
@@ -140,7 +139,6 @@ export class VPageProduct extends VPage<CProduct> {
     }
 
     private renderProduct = (product: Product) => {
-        let { openMaterial } = this.controller;
         let { id, brand, props, chemical } = product;
         let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
         let eName = <div className="py-2"><strong>{description}</strong></div>;
@@ -346,8 +344,7 @@ export class VPageProduct extends VPage<CProduct> {
         let MaterialArr = [
             { type: '化学品安全技术说明书(SDS)', content: MSDSFiles },
             { type: '技术规格说明书(SPEC)', content: specFiles }
-        ];//COA EUM
-        // let MaterialArr = [{ type: 'MSDS', content: productMSDSFiles }, { type: 'SPEC', content: productSpecFiles }];//COA EUM
+        ];
 
         let renderListItemPDF = (Material: any, index: number) => {
             let { type, content } = Material;
