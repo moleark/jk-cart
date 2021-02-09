@@ -4,7 +4,7 @@ import logo from '../images/logo.svg';
 import footer_logo from '../images/footer-logo.svg';
 import phone from '../images/Phone.svg';
 import magnifier from '../images/magnifier.svg';
-import qrcode from '../images/qrcode.png';
+import qrcode from '../images/qrcode.jpg';
 
 export class ShopPage extends React.Component {
 
@@ -61,7 +61,7 @@ export class NavHeader extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <a href="#" className="display-mobile-block-login display-mobile">登入</a>
+                    <a href="#" className="display-mobile-block-login d-block d-sm-none">登入</a>
                     <a href="#" className="display-mobile-block-shoppingcart shopping-cart">
                         <img src="img/commerce-and-shopping.svg" width="40px" />
                     </a>
