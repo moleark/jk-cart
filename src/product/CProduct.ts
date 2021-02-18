@@ -292,8 +292,10 @@ export class CProduct extends CUqBase {
         if (type === 'msds' || type === 'spec') await this.getCaptcha();
         this.materialType = type;
         let origin: string;
-        if (!isNaN(Number(id)))
+        if (!isNaN(Number(id))) {
             this.product = this.cApp.getProduct(Number(id));
+            await this.product.loadDetail();
+        }
         if (this.product && this.product.props) {
             origin = this.product.props.origin;
             if (origin && type === 'msds') {

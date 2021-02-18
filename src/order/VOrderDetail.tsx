@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyDate } from 'tonva';
+import { VPage, Page, BoxId, EasyDate, Ax } from 'tonva';
 import { COrder } from './COrder';
 import { tv } from 'tonva';
 import { List } from 'tonva';
@@ -32,6 +32,7 @@ export class VOrderDetail extends VPage<COrder> {
 
     private renderOrderItem = (orderItem: OrderItem) => {
         let { product, packs } = orderItem;
+        let { id } = product;
         let { controller, packsRow } = this;
         return <div className="row my-1 w-100 mx-0">
             <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
@@ -40,6 +41,10 @@ export class VOrderDetail extends VPage<COrder> {
                     return packsRow(p, index);
                 })
             }</div>
+            <div className="text-right w-100 px-3">
+                 <Ax className="mx-2" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
+                 <Ax className="mx-2" href={'/product/mscu/COA/' + id}>COA</Ax>
+            </div>
         </div>
     }
 
