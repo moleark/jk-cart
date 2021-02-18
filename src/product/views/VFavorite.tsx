@@ -37,7 +37,7 @@ export class VFavorite extends View<CProduct> {
     }
 	*/
     render(param: any): JSX.Element {
-        let { product, curPack } = param;
+        let { product, curPack, callback } = param;
     	return React.createElement(observer(() => {
             let { favorite, favoriteOrCancel } = product as Product;
 			//let { currentUser } = this.controller.cApp;
@@ -46,7 +46,8 @@ export class VFavorite extends View<CProduct> {
 			let icon = favorite === true ? "heart" : 'heart-o';
 			let onClick = (evt: React.MouseEvent) => {
 				evt.stopPropagation();
-				favoriteOrCancel();
+                favoriteOrCancel();
+                if (callback) callback();
 			}
 
 			return <div className="d-flex justify-content-end">

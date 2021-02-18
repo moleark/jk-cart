@@ -21,9 +21,13 @@ export class VFavorites extends VPage<CFavorites> {
 
     private renderProduct = (p: any) => {
         // console.log(p);
+        let callb = () => {
+            let index = this.controller.productsFavorites.items.findIndex((v: any) => v.id === p.id);
+            if(index !== -1) this.controller.productsFavorites.items.splice(index, 1);
+        }
         if(!this.controller.cApp.cProduct.showFavorites)
             this.controller.cApp.cProduct.showFavorites = true;
-        return this.controller.cApp.cProduct.renderProduct(p);
+        return this.controller.cApp.cProduct.renderProduct(p,null,callb);
     }
 
     private page = (param: any) => {

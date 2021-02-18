@@ -16,7 +16,7 @@ export class VProuductView2 extends View<CProduct> {
     // @observable discount: number;
     render(param: any): JSX.Element {
 		return React.createElement(observer(() => {
-			let { product, dataSource } = param;
+			let { product, dataSource,callback } = param;
 			let productListSource = dataSource ? true : false;
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
@@ -37,9 +37,9 @@ export class VProuductView2 extends View<CProduct> {
 					<div className="details">
 						{eName}
 						{cName}
-						<div>{this.renderVm(VFavorite, { product })}</div>
+						<div>{this.renderVm(VFavorite, { product,callback:callback })}</div>
 						{
-							!productListSource 
+							!productListSource
 							? <div className="row p-0 mx-0">
 								{renderPropItem('产品编号', origin)}
 								{renderPropItem('CAS', CAS ||  props.CAS)}

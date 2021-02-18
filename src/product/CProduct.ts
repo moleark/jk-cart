@@ -216,8 +216,8 @@ export class CProduct extends CUqBase {
     /**
      *
      */
-    renderProduct = (product: Product, dataSource?: string) => {
-        return this.renderView(VProuductView2, { product, dataSource });
+    renderProduct = (product: Product, dataSource?: string, callback?: any) => {
+        return this.renderView(VProuductView2, { product, dataSource, callback });
     }
 
     renderCartProduct = (product: Product) => {
