@@ -263,7 +263,9 @@ export class CProduct extends CUqBase {
     }
 
     fetchPdf = async (url: string) => {
-        let res = await window.fetch(GLOABLE.CONTENTSITE + url);
+        let res = await window.fetch(GLOABLE.CONTENTSITE + url, {
+            credentials: 'include'
+        });
         if (res.status === 200) {
             let content = await res.arrayBuffer();
             return content;
@@ -280,7 +282,7 @@ export class CProduct extends CUqBase {
      */
     getCaptcha = async () => {
         let timer = (new Date()).getTime();
-        this.captcha = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;//'http://dummyimage.com/200x100';
+        this.captcha = GLOABLE.CONTENTSITE + `/partial/captcha/?timer=${timer}`;
     }
 
     /**

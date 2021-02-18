@@ -14,7 +14,9 @@ import { pointIcon, triangleShadingO } from 'tools/images';
 
 export const renderHr = (HRCL?: any, HRST?: any) => {
     let styleObj = HRST ? HRST : { backgroundColor: '#007bff' };
-    return <div className={`flex-fill ${HRCL ? HRCL : 'px-2 text-primary'}`}><hr style={{ height: 1, border: 'none', ...styleObj }} /></div>
+    return <div className={`flex-fill ${HRCL ? HRCL : 'px-2 text-primary'}`}>
+        <hr style={{ height: 1, border: 'none', ...styleObj }} />
+    </div>
 };
 
 export const TopicDivision = (topic: any, CL?: any, ST?: any, HRCL?: any, HRST?: any) => {
@@ -90,7 +92,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                 // className: 'w-50 px-3 bg-transparent'
             }} none={this.none}
                 // className={`${pointProducts.length !== 0 ? 'd-flex flex-wrap bg-transparent mt-2' : ''}`}
-                className={`${pointProducts.length !== 0 ? 'row mx-0 mt-2 bg-transparent' :''}`}
+                className={`${pointProducts.length !== 0 ? 'row mx-0 mt-2 bg-transparent' : ''}`}
             ></List>
         </div>
     }
@@ -164,14 +166,14 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     protected getRelatedUI = () => {
         let { pointToExchanging, myEffectivePoints } = this.controller;
-		/*
+        /*
         let productIsNullTip = this.productIsNull ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>
             : null;
         let pointIsEnoughTip = this.pointIsEnough ?
             <div className="text-danger small m-0 p-0"><FA name="exclamation-circle" />积分不足<br />剩余{myEffectivePoints}分</div>
             : null;
-		*/
+        */
         let footer = <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointToExchanging}</span>分</div>
@@ -222,12 +224,12 @@ export class VSelectedPointProduct extends VPointProduct {
                 items={pointProductsSelected}
                 item={{
                     render: this.renderPointProduct,
-                     className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'
+                    className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'
                     // className: "w-50 px-3"
                 }}
                 none={this.none}
                 className='row mx-0 mt-2 bg-transparent'
-                // className="d-flex flex-wrap bg-transparent mt-2"
+            // className="d-flex flex-wrap bg-transparent mt-2"
             />
         </Page >
     })

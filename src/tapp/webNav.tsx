@@ -74,8 +74,7 @@ export class NavHeaderView extends View<CApp> {
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="#">特惠活动</a> </li>
-                            <li><a href="#">结构检索</a> </li>
-                            <li><a href="#">订单查询</a> </li>
+                            <li><a href="/myOrders">订单查询</a> </li>
                             <li><a href="/product/mscu/COA/D" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS/D" target="_blank">SDS</a> </li>
                         </ul>
@@ -117,8 +116,11 @@ export class NavHeaderView extends View<CApp> {
                                     产品
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                                    <a className="dropdown-item" href="#">1 Column</a>
-                                    <a className="dropdown-item" href="#">2 Column </a>
+                                    <a className="dropdown-item" href="/productCategory/7">有机化学</a>
+                                    <a className="dropdown-item" href="/productCategory/430">分析化学</a>
+                                    <a className="dropdown-item" href="/productCategory/986">生命科学</a>
+                                    <a className="dropdown-item" href="/productCategory/1214">材料科学</a>
+                                    <a className="dropdown-item" href="/productCategory/#">仪器耗材</a>
                                 </div>
                             </li>
                             <li className="nav-item dropdown">
@@ -127,18 +129,8 @@ export class NavHeaderView extends View<CApp> {
                                     服务
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item" href="#">1 Column </a>
-                                    <a className="dropdown-item" href="#">2 Column</a>
-                                </div>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    会员
-                                </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item" href="#">1 Column Portfolio</a>
-                                    <a className="dropdown-item" href="#">2 Column Portfolio</a>
+                                    <a className="dropdown-item" href="/myOrders">订单查询</a>
+                                    <a className="dropdown-item" href="/pointshop">积分查询</a>
                                 </div>
                             </li>
                         </ul>
@@ -217,6 +209,8 @@ export class NavFooter extends React.Component {
     }
 }
 */
+
+
 export class NavFooterView extends View<CApp> {
     render() {
         return <div className="d-none d-sm-block bg-light pt-4 reset-z-footer-bg">
@@ -231,10 +225,10 @@ export class NavFooterView extends View<CApp> {
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
-                            <li><a href="/about">公司简介</a></li>
-                            <li><a href="#">企业承诺</a></li>
+                            <li><a href="https://web.jkchemical.com/ch/about">公司简介</a></li>
+                            <li><a href="https://web.jkchemical.com/ch/promise">企业承诺</a></li>
                             <li><a href="https://www.jkchemical.com/brand.aspx?language=ch" target="_blank">合作品牌</a></li>
-                            <li><a href="https://www.jkchemical.com/job.aspx?language=ch" target="_blank">招贤纳士</a></li>
+                            <li><a href="https://web.jkchemical.com/job" target="_blank">招贤纳士</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
@@ -246,12 +240,12 @@ export class NavFooterView extends View<CApp> {
                             <li><a href="#">大包装与定制生产</a></li>
                             <li><a href="#">订购指南</a></li>
                             <li><a href="#">产品</a></li>
-                            <ul style={{textIndent:'1em'}}>
-                                <li><a href="#">有机化学</a></li>
-                                <li><a href="#">分析化学</a></li>
-                                <li><a href="#">生命科学</a></li>
-                                <li><a href="#">材料科学</a></li>
-                                <li><a href="#">仪器耗材</a></li>
+                            <ul>
+                                <li><a href="/productCategory/7">有机化学</a></li>
+                                <li><a href="/productCategory/430">分析化学</a></li>
+                                <li><a href="/productCategory/986">生命科学</a></li>
+                                <li><a href="/productCategory/1214">材料科学</a></li>
+                                <li><a href="/productCategory/#">仪器耗材</a></li>
                             </ul>
                         </ul>
                     </div>
@@ -265,7 +259,8 @@ export class NavFooterView extends View<CApp> {
                             </div>
                         <div className="contact mb-lg-2">
                             电子邮件：<br />
-                            <a href="mailto:jkinfo@jkchemical.com">jkinfo@jkchemical.com</a><br /><a href="mailto:jkinfo@jk-sci.com">jkinfo@jk-sci.com</a>
+                            <a href="mailto:jkinfo@jkchemical.com">jkinfo@jkchemical.com</a><br />
+                            <a href="mailto:jkinfo@jk-sci.com">jkinfo@jk-sci.com</a>
                         </div>
                         <div className="footer-social">
                         </div>
