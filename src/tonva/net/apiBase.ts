@@ -17,7 +17,7 @@ export abstract class ApiBase {
         this.showWaiting = showWaiting;
     }
 
-    protected abstract async getHttpChannel(): Promise<HttpChannel>;
+    protected abstract getHttpChannel(): Promise<HttpChannel>;
 
     async xcall(caller:Caller<any>):Promise<any> {
         let channel = await this.getHttpChannel();

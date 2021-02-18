@@ -208,7 +208,7 @@ export abstract class HttpChannel {
         };
     }
 
-    protected abstract async innerFetch(url: string, options: any, waiting: boolean): Promise<any>;
+    protected abstract innerFetch(url: string, options: any, waiting: boolean): Promise<any>;
 
     async callFetch(url:string, method:string, body:any):Promise<any> {
         let options = this.buildOptions();

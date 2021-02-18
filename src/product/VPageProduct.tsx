@@ -51,7 +51,7 @@ export class VPageProduct extends VPage<CProduct> {
             if (xs) {
                 header = cApp.cHome.renderSearchHeader();
                 cartLabel = cApp.cCart.renderCartLabel();
-                material = <div className="col-lg-9 mt-lg-2 display-mobile mb-lg-2">
+                material = <div className="col-lg-9 mt-lg-2 mb-lg-2">
                     {this.renderProductMaterial()}
                 </div>;
             }
@@ -62,25 +62,12 @@ export class VPageProduct extends VPage<CProduct> {
                 <section className="container mt-lg-2 product-sigle-page">
                     <div className="row">
                         {this.renderProduct(product)}
-                        <div className="display-mobile px-2 ml-2 my-3 w-100" style={{ lineHeight: 1.8 }}>
+                        <div className="d-block d-sm-none px-2 ml-2 my-3 w-100" style={{ lineHeight: 1.8 }}>
                             {TopicDivision('产品资料')}
                             {this.material(id)}
                         </div>
-                        {/* {material} */}
                     </div>
                 </section>
-
-                {/* 产品信息 */}
-                {/* <div className="px-2 py-2 bg-white mb-3">{viewProduct.render()}</div> */}
-                {/* PDF */}
-                {/* {
-					productPdfM
-						? <div className="py-2 px-3 bg-light">
-							{TopicDivision('产品资料')}
-							<div>{this.renderProductMaterial()}</div>
-						</div>
-						: null
-				} */}
             </Page>;
             //} else {
             /*
@@ -123,24 +110,23 @@ export class VPageProduct extends VPage<CProduct> {
     */
 
     private material = (id: any) => {
-        let { openMaterial } = this.controller;
         let Materials = [
-            { id: 1, name: "化学品安全技术说明书（SDS）", type: "MSDS" },
-            { id: 2, name: "技术规格说明书（Specifications）", type: "SPEC" },
-            { id: 3, name: "质检报告（COA）", type: "COA" },
+            { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
+            { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
+            { id: 3, name: "质检报告（COA）", type: "coa" },
         ];
-        return <div className={classNames('left-below', !xs ? 'd-none d-sm-block' : 'display-mobile')}>{/* display-desktop*/}
+        return <div className={classNames('left-below', !xs ? 'd-none d-sm-block' : 'd-block d-sm-none')}>
             {
                 Materials.map((v: any) => {
-                    return <Ax key={v.name} href={'/product/mscu/' + v.type + '/' + id} >{/* onClick={() => openMaterial(v.type)} */}
-                        <div className="mint" >{v.name}</div></Ax>
+                    return <Ax key={v.name} href={'/product/mscu/' + v.type + '/' + id}>
+                        <div className="mint" >{v.name}</div>
+                    </Ax>
                 })
             }
         </div>
     }
 
     private renderProduct = (product: Product) => {
-        let { openMaterial } = this.controller;
         let { id, brand, props, chemical } = product;
         let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
         let eName = <div className="py-2"><strong>{description}</strong></div>;
@@ -346,8 +332,7 @@ export class VPageProduct extends VPage<CProduct> {
         let MaterialArr = [
             { type: '化学品安全技术说明书(SDS)', content: MSDSFiles },
             { type: '技术规格说明书(SPEC)', content: specFiles }
-        ];//COA EUM
-        // let MaterialArr = [{ type: 'MSDS', content: productMSDSFiles }, { type: 'SPEC', content: productSpecFiles }];//COA EUM
+        ];
 
         let renderListItemPDF = (Material: any, index: number) => {
             let { type, content } = Material;

@@ -28,11 +28,13 @@ interface UqLocal {
     tick?: number;
     isNet?: boolean;
 }
+/*
 interface UqLocals {
     user: number;
     unit: number;
     uqs: {[uq:string]: UqLocal};
 }
+*/
 /*
 const uqLocalEntities = 'uqLocalEntities';
 class CacheUqLocals {
@@ -213,6 +215,10 @@ export class UqApi extends ApiBase {
         return await localUqs.checkAccess(this);
     }
     */
+
+	async allSchemas(): Promise<any> {
+		return await this.get('all-schemas');
+	}
 
     async schema(name:string):Promise<any> {
         return await this.get('schema/' + name);

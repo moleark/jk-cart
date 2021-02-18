@@ -6,7 +6,6 @@ import { GLOABLE } from "global";
 import './cat.css';
 import { Ax, BoxId, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';
-import { VCategory } from './VCategory';
 import classNames from 'classnames';
 
 export interface ProductCategory {
@@ -15,6 +14,7 @@ export interface ProductCategory {
     name: string; // char(200),
     total: number; // int
     children?: ProductCategory[];
+    allAncestors?: any[];
 };
 
 export class CProductCategory extends CUqBase {
@@ -47,10 +47,13 @@ export class CProductCategory extends CUqBase {
 
     async loadRoot() {
         if (this.rootCategories) return;
-        this.uqs.product.ProductCategory.stopCache();
+        let { uqs, cApp } = this;
+        let { product } = uqs;
+        let { ProductCategory, GetRootCategory } = product;
+        ProductCategory.stopCache();
 
-        let { currentSalesRegion, currentLanguage } = this.cApp;
-        let results = await this.uqs.product.GetRootCategory.query({
+        let { currentSalesRegion, currentLanguage } = cApp;
+        let results = await GetRootCategory.query({
             salesRegion: currentSalesRegion, // 去掉.id, 如果传入的是obj参数，会自动取id
             language: currentLanguage, // 去掉.id, 如果传入的是obj参数，会自动取id
         });
@@ -62,6 +65,10 @@ export class CProductCategory extends CUqBase {
         this.rootCategories = first;
     }
 
+    /**
+     * 加载指定目录节点，结果赋值给this.current;
+     * @param id 目录节点id
+     */
     async load(id: number) {
         if (this.current && this.current.productCategory === id) return;
 
@@ -78,25 +85,32 @@ export class CProductCategory extends CUqBase {
         this.current = {
             productCategory: id,
             parent: undefined,
+            allAncestors: [],
             name: undefined,
             total: undefined,
             children: [],
         }
 
-        let parentS = async function (params: any) {
-            let isM = true;
-            while (isM) {
-                let ProductCategoryLoad: any = await ProductCategory.load(params);
-                if (ProductCategoryLoad.parent) params = ProductCategoryLoad.parent.id;
-                else isM = false;
+        let getAllAncestors = async function (productCategoryId: number) {
+            let allAncestors: any[] = [];
+            while (true) {
+                let ProductCategoryLoad: any = await ProductCategory.load(productCategoryId);
+                if (!ProductCategoryLoad) break;
+                let { parent } = ProductCategoryLoad;
+                if (!parent) break;
+                productCategoryId = parent.id;
+                allAncestors.unshift(parent);
             }
-        };
-        await parentS(id);
+            return allAncestors;
+        }
 
         if (pcTuid) {
             let { parent, productcategorylanguage } = pcTuid;
+            if (parent !== undefined) {
+                this.current.parent = parent;
+                this.current.allAncestors = await getAllAncestors(id);
+            }
             let pcCurrentLanguage = productcategorylanguage.find((v: any) => Tuid.equ(currentLanguage, v.language));
-            this.current.parent = parent;
             this.current.name = pcCurrentLanguage && pcCurrentLanguage.name;
             this.current.children = this.buildChildren(id, first, secend);
         }
@@ -195,7 +209,7 @@ export class CProductCategory extends CUqBase {
 
     /**
      * 
-     * @param categoryId 
+     * @param {number} categoryId 目录节点的id 
      */
     async showCategoryPage(categoryId: number) {
         if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
@@ -228,6 +242,12 @@ export class CProductCategory extends CUqBase {
         }
     }
 
+    /**
+     * 
+     * @param {ProductCategory} pc 目录节点
+     * @param className 所使用的class 
+     * @param content 
+     */
     renderCategoryItem(pc: ProductCategory, className?: string, content?: any): JSX.Element {
         if (!pc) debugger;
         let { productCategory, name } = pc;

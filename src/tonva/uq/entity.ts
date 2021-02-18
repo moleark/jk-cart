@@ -81,9 +81,16 @@ export abstract class Entity {
         if (!schema) {
             schema = await this.uq.loadEntitySchema(this.name);
         }
+        //this.setSchema(schema);
+		//this.buildFieldsTuid();
+		this.buildSchema(schema);
+		await this.loadValues();
+	}
+
+	buildSchema(schema: any) {
         this.setSchema(schema);
 		this.buildFieldsTuid();
-		await this.loadValues();
+		//await this.loadValues();
 	}
 	
 	protected async loadValues():Promise<any> {}
@@ -202,7 +209,7 @@ export abstract class Entity {
         let dt: Date;
         switch (typeof val) {
             default: debugger; throw new Error('escape datetime field in pack data error: value=' + val);
-            case 'undefined': return '';
+            case 'undefined': return undefined;
             case 'object': dt = (val as Date); break;
             case 'string':
             case 'number': dt = new Date(val); break;
@@ -351,22 +358,18 @@ export abstract class Entity {
         return ret;
     }
 
-    unpackReturns(data:string):{[name:string]:any[]} {
-        if (data === undefined) debugger;
-        let ret = {} as any;
-        //if (schema === undefined || data === undefined) return;
-        //let fields = schema.fields;
-        let p = 0;
-        //if (fields !== undefined) p = unpackRow(ret, schema.fields, data, p);
-        let arrs = this.returns; //schema['returns'];
-        if (arrs !== undefined) {
-            for (let arr of arrs) {
-                //let creater = this.newRet[arr.name];
-                p = this.unpackArr(ret, arr, data, p);
-            }
-        }
-        return ret;
-    }
+	unpackReturns(data:string, returns?:ArrFields[]):{[name:string]:any[]} {
+		if (data === undefined) debugger;
+		let ret = {} as any;
+		let p = 0;
+		let arrs = returns || this.returns;
+		if (arrs !== undefined) {
+			for (let arr of arrs) {
+				p = this.unpackArr(ret, arr, data, p);
+			}
+		}
+		return ret;
+	}
 
     protected unpackRow(ret:any, fields:Field[], data:string, p:number):number {
         let ch0 = 0, ch = 0, c = p, i = 0, len = data.length, fLen = fields.length;

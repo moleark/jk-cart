@@ -37,6 +37,7 @@ export abstract class VPage<C extends Controller> extends View<C> {
 	protected renderPage():JSX.Element {
 		let header = this.header();
 		if (!header) header = false;
+		let logout = this.logout();
 		return <Page
 			header={header} right={this.right()} footer={this.footer()}
 			onScroll={(e:any)=>this.onPageScroll(e)}
@@ -47,7 +48,7 @@ export abstract class VPage<C extends Controller> extends View<C> {
 			className={this.className}
 			afterBack={()=>this.afterBack()}
 			tabsProps={this.tabsProps}
-			logout={this.logout()}
+			logout={logout}
 			webNav={this.controller.pageWebNav}
 		>
 			{this.content()}

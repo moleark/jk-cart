@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { IVPage } from './page';
-import { IObservableValue } from 'mobx/lib/internal';
+import { IObservableValue } from 'mobx';
 import '../../css/va-tab.css';
 import { ScrollView } from './scrollView';
 
@@ -89,7 +89,7 @@ export const TabCaptionComponent = (label:string, icon:string, color:string) => 
     <small>{label}</small>
 </div>;
 
-export const TabCaption = TabCaptionComponent;
+//export const TabCaption = TabCaptionComponent;
 
 export class TabsView {
 	private props: TabsProps;

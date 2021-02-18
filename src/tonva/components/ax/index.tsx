@@ -35,10 +35,10 @@ export const Ax = (axProps: AxProps) => {
 		return <a {...axProps} className={classNames(className, aClassName)} onClick={onAxClick}>{children}</a>;
 	}
 	else {
-		let {onClick, naClassName} = axProps;
+		let {naClassName} = axProps;
 		if (!onClick) {
 			onClick = () => {
-				nav.navigate(href);
+				nav.openSysPage(href); //.navigate(href);
 				return false;
 			}
 		}

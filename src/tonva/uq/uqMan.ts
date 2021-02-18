@@ -13,6 +13,8 @@ import { LocalMap, LocalCache } from '../tool';
 import { UQsMan } from './uqsMan';
 import { ReactBoxId } from './tuid/reactBoxId';
 import { Tag } from './tag/tag';
+import { UqEnum } from './enum';
+import { Entity } from './entity';
 
 export type FieldType = 'id' | 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'char' | 'text'
     | 'datetime' | 'date' | 'time' | 'timestamp';
@@ -65,6 +67,7 @@ export interface TuidModify {
 }
 
 export class UqMan {
+	private readonly enums: {[name:string]: UqEnum} = {};
     private readonly actions: {[name:string]: Action} = {};
     private readonly sheets: {[name:string]: Sheet} = {};
     private readonly queries: {[name:string]: Query} = {};
@@ -169,6 +172,7 @@ export class UqMan {
 
     readonly tuidArr: Tuid[] = [];
     readonly actionArr: Action[] = [];
+    readonly enumArr: UqEnum[] = [];
     readonly sheetArr: Sheet[] = [];
     readonly queryArr: Query[] = [];
     readonly bookArr: Book[] = [];
@@ -228,6 +232,30 @@ export class UqMan {
         return await this.uqApi.schema(entityName);
     }
 
+	async loadAllSchemas():Promise<void> {
+		let ret = await this.uqApi.allSchemas();
+		let entities: Entity[][] = [
+			this.actionArr, 
+			this.enumArr,
+			this.sheetArr,
+			this.queryArr,
+			this.bookArr,
+			this.mapArr,
+			this.historyArr,
+			this.pendingArr,
+			this.tagArr,
+		];
+		entities.forEach(arr => {
+			arr.forEach(v => {
+				let entity = ret[v.name.toLowerCase()];
+				if (!entity) return;
+				let schema = entity.call;
+				if (!schema) return;
+				v.buildSchema(schema);
+			});
+		});
+	}
+
     getTuid(name:string): Tuid {
         return this.tuids[name];
     }
@@ -246,7 +274,14 @@ export class UqMan {
         this.tuidsCache.cacheTuids(defer);
     }
 
-    newAction(name:string, id:number):Action {
+    newEnum(name:string, id:number):UqEnum {
+        let enm = this.enums[name];
+        if (enm !== undefined) return enm;
+        enm = this.enums[name] = new UqEnum(this, name, id)
+        this.enumArr.push(enm);
+        return enm;
+    }
+	newAction(name:string, id:number):Action {
         let action = this.actions[name];
         if (action !== undefined) return action;
         action = this.actions[name] = new Action(this, name, id)
@@ -332,6 +367,7 @@ export class UqMan {
             case 'sheet':this.newSheet(name, id); break;
 			case 'pending': this.newPending(name, id); break;
 			case 'tag': this.newTag(name, id); break;
+			case 'enum': this.newEnum(name, id); break;
         }
     }
     private fromObj(name:string, obj:any) {

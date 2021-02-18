@@ -111,16 +111,21 @@ export abstract class Controller {
 		}
 	}
 
-    protected async openVPage<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any, afterBack?:(ret:any)=>void):Promise<void> {
-        await (new vp((this as any) as C)).open(param, afterBack);
+    protected async openVPage<C extends Controller, P extends VPage<C>>(vp: new (controller: C)=>P, param?:any, afterBack?:(ret:any)=>void):Promise<P> {
+		let ret = new vp((this as any) as C);
+		await ret.open(param, afterBack);
+		return ret;
     }
 
-    protected async replaceVPage<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any, afterBack?:(ret:any)=>void):Promise<void> {
-        await (new vp((this as any) as C)).replaceOpen(param, afterBack);
+    protected async replaceVPage<C extends Controller, P extends VPage<C>>(vp: new (controller: C)=>P, param?:any, afterBack?:(ret:any)=>void):Promise<P> {
+		let ret = new vp((this as any) as C);
+		await ret.replaceOpen(param, afterBack);
+		return ret;
     }
 
-    protected renderView<C extends Controller>(view: new (controller: C)=>View<C>, param?:any) {
-        return (new view((this as any) as C)).render(param);
+    protected renderView<C extends Controller, V extends View<C>>(view: new (controller: C)=>V, param?:any):JSX.Element {
+		let v = new view((this as any) as C);
+		return v.render(param);
     }
 
     async event(type:string, value:any) {

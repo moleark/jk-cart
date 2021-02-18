@@ -5,7 +5,6 @@ import { COrder } from './COrder';
 import { tv } from 'tonva';
 import { List } from 'tonva';
 import { OrderItem } from './Order';
-import { CartItem } from 'cart/Cart';
 import { xs } from '../tools/browser';
 import classNames from 'classnames';
 
@@ -20,7 +19,7 @@ export class VOrderDetail extends VPage<COrder> {
     private packsRow = (item: any, index: number) => {
         let { pack, quantity, price, currency } = item;
 
-        return <div key={index} className={classNames('px-2 py-2',index !== 0 ? 'border-top' :'')}>
+        return <div key={index} className={classNames('px-2 py-2', index !== 0 ? 'border-top' : '')}>
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
@@ -35,15 +34,15 @@ export class VOrderDetail extends VPage<COrder> {
         let { product, packs } = orderItem;
         let { controller, packsRow } = this;
         return <div className="row my-1 w-100 mx-0">
-                <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
-                <div className="col-lg-6">{
-                    packs.map((p, index) => {
-                        return packsRow(p, index);
-                    })
-                }</div>
-            </div>
-	}
-	
+            <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
+            <div className="col-lg-6">{
+                packs.map((p, index) => {
+                    return packsRow(p, index);
+                })
+            }</div>
+        </div>
+    }
+
     private page = (order: any) => {
 
         let { brief, data } = order;
@@ -90,9 +89,9 @@ export class VOrderDetail extends VPage<COrder> {
         </div>
 
         let header: any
-        if(xs) header = <>订单详情: {no}</>            //orderAgainUI
+        if (xs) header = <>订单详情: {no}</>            //orderAgainUI
         return <Page header={header} footer={<></>}>
-            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a></div>}
+            {!xs && <div className="alert alert-info alert-signin mt-3">订单编号 {no}</div>}
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>

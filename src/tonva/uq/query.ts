@@ -96,7 +96,7 @@ export class QueryPager<T extends any> extends PageItems<T> {
 	}
 }
 
-export class Query extends Entity {
+export class UqQuery<P, R> extends Entity {
     get typeName(): string { return 'query';}
     private pageStart: any;
     private pageSize:number;
@@ -136,7 +136,7 @@ export class Query extends Entity {
             }
         }
 		let ret = await this.page(this.params, pageStart, this.pageSize+1);
-		let page = ret.$page;
+		let page = (ret as any).$page;
         /*
         await this.loadSchema();
         let res = await this.tvApi.page(this.name, pageStart, this.pageSize+1, this.params);
@@ -164,30 +164,33 @@ export class Query extends Entity {
         return new QueryPageCaller(this, params, showWaiting);
     }
 
-    async page(params:any, pageStart:any, pageSize:number, showWaiting: boolean = true):Promise<{[name:string]:any[]}> {
+    async page(params:P, pageStart:any, pageSize:number, showWaiting: boolean = true):Promise<R> {
         let p = {pageStart, pageSize, params};
         let res = await this.pageCaller(p, showWaiting).request();
         return res;
     }
-    protected queryCaller(params: any, showWaiting: boolean = true): QueryQueryCaller {
+    protected queryCaller(params: P, showWaiting: boolean = true): QueryQueryCaller {
         return new QueryQueryCaller(this, params, showWaiting);
     }
-    async query(params:any, showWaiting:boolean = true):Promise<any> {
+    async query(params:P, showWaiting:boolean = true):Promise<R> {
         let res = await this.queryCaller(params, showWaiting).request();
         return res;
     }
-    async table(params:any, showWaiting:boolean = true): Promise<any[]> {
+    async table(params:P, showWaiting:boolean = true): Promise<any[]> {
         let ret = await this.query(params, showWaiting);
         for (let i in ret) {
-            return ret[i];
+            return (ret as any)[i];
         }
     }
-    async obj(params:any, showWaiting:boolean = true):Promise<any> {
+    async obj(params:P, showWaiting:boolean = true):Promise<any> {
         let ret = await this.table(params, showWaiting);
         if (ret.length > 0) return ret[0];
     }
-    async scalar(params:any, showWaiting:boolean = true):Promise<any> {
+    async scalar(params:P, showWaiting:boolean = true):Promise<any> {
         let ret = await this.obj(params, showWaiting);
         for (let i in ret) return ret[i];
     }
+}
+
+export class Query extends UqQuery<any, any> {
 }

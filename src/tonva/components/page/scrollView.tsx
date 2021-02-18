@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { PageHeaderProps } from './pageHeader';
 
 const scrollAfter = 20; // 20ms之后，scroll执行
@@ -49,7 +49,7 @@ abstract class ScrollViewBase<T extends ScrollViewProps> extends React.Component
 
     protected onScroll = async (e:any) => {
         let {onScroll, onScrollTop, onScrollBottom} = this.props;
-        if (onScroll) this.props.onScroll(e);
+        if (onScroll) onScroll(e);
         let el = e.target as HTMLBaseElement;
         let scroller = new Scroller(el);
         if (el.scrollTop < 30) {
