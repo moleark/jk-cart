@@ -42,8 +42,8 @@ export class VOrderDetail extends VPage<COrder> {
                 })
             }</div>
             <div className="text-right w-100 px-3">
-                 <Ax className="mx-2" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
-                 <Ax className="mx-2" href={'/product/mscu/COA/' + id}>COA</Ax>
+                 <Ax className="mx-2 small text-info" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
+                 <Ax className="mx-2 small text-info" href={'/product/mscu/COA/' + id}>COA</Ax>
             </div>
         </div>
     }
