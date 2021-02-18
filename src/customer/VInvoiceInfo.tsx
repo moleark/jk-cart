@@ -258,7 +258,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                     {/*tipUI*/}
                     {autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
                         <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                        {this.saveTip}
+                        {this.saveTip.get()}
                     </div>)}
                 </div>
             </>
