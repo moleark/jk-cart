@@ -322,6 +322,10 @@ export class CApp extends CUqApp {
         await this.cProductCategory.showCategoryPage(id);
     }
 
+    private navProductCategoryHome: NavPage = async (params: any) => {
+        await this.cProductCategory.showCategoryHome();
+    }
+
     private navPointShop: NavPage = async (params: any) => {
         this.cPointProduct.openMyPoint();
     }
@@ -386,6 +390,7 @@ export class CApp extends CUqApp {
             '/product/mscu/:type': this.navProductMSCU,
             '/cart': this.navCart,
             '/productCategory/:id': this.navProductCategory,
+            '/productCategoryHome': this.navProductCategoryHome,
             '/pointshop': this.navPointShop,
             '/about': this.navAbout,
             '/me': this.navMe,

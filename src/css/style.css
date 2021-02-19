@@ -1622,6 +1622,31 @@ ul.categories-list li:before {
 	;
 }
 
+.main-product {
+	position: relative;
+}
+.main-product .img1 {
+	z-index: 1;
+	position: absolute;
+	width: 200px;
+	right: -200px;
+	top: 100px;
+}
+.main-product .img2 {
+	z-index: 1;
+	position: absolute;
+	width: 200px;
+	left: -200px;
+	top: 500px;
+}
+.main-product .img3 {
+	z-index: 1;
+	position: absolute;
+	width: 200px;
+	right: -200px;
+	top: 800px;
+}
+
 .single-product {
 	margin-bottom: 30px;
 }

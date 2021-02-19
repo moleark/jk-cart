@@ -7,6 +7,7 @@ import './cat.css';
 import { Ax, BoxId, Tuid, VPage } from 'tonva';
 import { VCategoryPage } from './VCategoryPage';
 import classNames from 'classnames';
+import { VCategoryHome } from './VCategoryHome';
 
 export interface ProductCategory {
     productCategory: number; //ID ProductCategory,
@@ -256,5 +257,15 @@ export class CProductCategory extends CUqBase {
             href={'/productCategory/' + pcId}
             className={classNames(className, 'd-block text-truncate')}
         >{content || name}</Ax>
+    }
+
+    /**
+     * 
+     */
+    async showCategoryHome() {
+        if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
+        let VP: new (c: CProductCategory) => VPage<any>;
+        VP = VCategoryHome;
+        this.openVPage(VP);
     }
 }

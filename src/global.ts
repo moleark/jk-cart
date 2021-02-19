@@ -3,6 +3,13 @@ import LabSupplies from './images/LabSupplies.png';
 import LifeScience from './images/LifeScience.png';
 import MaterialScience from './images/MaterialScience.png';
 import OrganicChemistry from './images/OrganicChemistry.png';
+
+import AnalyticalChemistry_j from './images/AnalyticalChemistry.jpg';
+import LabSupplies_j from './images/LabSupplies.jpg';
+import LifeScience_j from './images/LifeScience.jpg';
+import MaterialScience_j from './images/MaterialScience.jpg';
+import OrganicChemistry_j from './images/OrganicChemistry.jpg';
+
 import { env } from 'tonva';
 
 enum EnumCategory { OrganicChemistry = 1, AnalyticalChemistry = 2, LifeScience = 3, MaterialScience = 4, LabSupplies = 5 };
@@ -22,7 +29,8 @@ const CategoryIds_Test: { [id: number]: EnumCategory } = {
 };
 
 interface CategoryRes {
-	src: string;		// 所用图片的src
+	src: string;		// 所用图片的src 
+	viceSrc: string;    // 副图片的src 
 	labelColor: string;
 	bgClass: string;
 }
@@ -30,26 +38,31 @@ interface CategoryRes {
 const RootCategoryRes: { [key in EnumCategory]: CategoryRes } = {
 	[EnumCategory.OrganicChemistry]: {
 		src: OrganicChemistry,
+		viceSrc: OrganicChemistry_j,
 		labelColor: 'text-info',
 		bgClass: "mint-bg",
 	},
 	[EnumCategory.AnalyticalChemistry]: {
 		src: AnalyticalChemistry,
+		viceSrc: AnalyticalChemistry_j,
 		labelColor: 'text-success',
 		bgClass: "green-bg",
 	},
 	[EnumCategory.LifeScience]: {
 		src: LifeScience,
+		viceSrc: LifeScience_j,
 		labelColor: 'text-danger',
 		bgClass: "red-bg",
 	},
 	[EnumCategory.MaterialScience]: {
 		src: MaterialScience,
+		viceSrc: MaterialScience_j,
 		labelColor: 'text-warning',
 		bgClass: "purple-bg",
 	},
 	[EnumCategory.LabSupplies]: {
 		src: LabSupplies,
+		viceSrc: LabSupplies_j,
 		labelColor: 'text-primary',
 		bgClass: "blue-bg",
 	},
