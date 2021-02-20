@@ -62,7 +62,7 @@ export class Product {
 	}
 
 	getInventoryAllocation(packId: number): InventoryAllocation[] {
-		return undefined;
+		// return undefined;
 		if (this.packs === undefined) return undefined;
 		let pack = this.packs.find(v => v.pack.id === packId);
 		if (!pack) return undefined;
@@ -91,6 +91,7 @@ export class Product {
 			this.loadChemical(),
 			this.loadFavorite(),
 			this.loadPrices(),
+			this.loadFDTimeDescription()
 		];
 		await Promise.all(promises);
 	}
@@ -124,7 +125,7 @@ export class Product {
 	 */
 	private async loadMSDSFile() {
 		if (this.MSDSFiles) return;
-		let productMSDSFiles = await this.cApp.uqs.product.ProductMSDSFile.table({ product: 11 });
+		let productMSDSFiles = await this.cApp.uqs.product.ProductMSDSFile.table({ product: this.id });
 		this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
 	}
 
@@ -133,7 +134,7 @@ export class Product {
 	 */
 	private async loadSpecFile() {
 		if (this.specFiles) return;
-		this.specFiles = await this.cApp.uqs.product.ProductSpecFile.table({ product: 11 });
+		this.specFiles = await this.cApp.uqs.product.ProductSpecFile.table({ product: this.id });
 	}
 
 	private async loadPrices() {

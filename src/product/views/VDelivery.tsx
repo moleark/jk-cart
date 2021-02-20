@@ -9,11 +9,12 @@ export class VDelivery extends View<CProduct> {
     @observable private futureDeliveryTimeDescription: string;
 	*/
     render(param: any): JSX.Element {
-        let { id: packId } = param;
+        let { id: packId,obj } = param;
         //let { obj: packObj } = param;
 		return React.createElement(observer(() => {
 			//let { packId, productId } = param;
-            let { product } = this.controller;
+            let { product, cApp } = this.controller;
+            product = cApp.getProduct(obj?.owner);
 			if (!product) return;
 			let {futureDeliveryTimeDescription} = product;
             let inventoryAllocation = product.getInventoryAllocation(packId);
