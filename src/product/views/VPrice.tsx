@@ -71,11 +71,11 @@ export class VPrice extends View<CProduct> {
                 price = retail;
             }
             right = <div className="row">
-                <div className="col-sm-6 pb-2 d-flex justify-content-end align-items-center">
+                <div className="col-sm-6 mb-2 d-flex justify-content-end align-items-center">
                     <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
                     <span className="text-danger">¥ <span className="h5">{price}</span></span>
                 </div>
-                <div className="col-sm-6 pb-2 d-flex justify-content-end align-items-center">
+                <div className="col-sm-6 mb-0 d-flex justify-content-end align-items-center">
                     <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
                 </div>
             </div >
@@ -115,11 +115,11 @@ export class VPrice extends View<CProduct> {
 			if (!retail) return <small key={0}>请询价</small>;
 			return <div className="px-2" key={pack.id}>
 				<div className="row">
-					<div className="col-6">
+					<div className="col-5 d-flex flex-column justify-content-center mb-2 pb-1">
 						<div><b>{tv(pack)}</b></div>
 						<div>{renderDeliveryTime(pack)}</div>
 					</div>
-					<div className="col-6">
+					<div className="col-7 mb-0">
 						{this.renderPrice(product, v)}
 					</div>
 				</div>
