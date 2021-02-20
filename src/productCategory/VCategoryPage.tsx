@@ -13,7 +13,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         let { cApp } = this.controller;
         return <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
             <Ax href="/">首页</Ax>
-            <Ax href="/">产品</Ax>
+            <Ax href="/productCategoryHome">产品</Ax>
             {allAncestors.map((parent: any) => {
                 return tv(parent, (e: any) => {
                     let { id, productcategorylanguage } = e;
