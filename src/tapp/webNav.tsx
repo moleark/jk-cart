@@ -133,6 +133,15 @@ export class NavHeaderView extends View<CApp> {
                                     <a className="dropdown-item" href="/pointshop">积分查询</a>
                                 </div>
                             </li>
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    会员
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
+                                    <a className="dropdown-item" href="/password">修改密码</a>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
