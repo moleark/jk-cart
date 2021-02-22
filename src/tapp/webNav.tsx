@@ -1,8 +1,21 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Ax, FA, View, A, Image } from 'tonva';
+import { VPage, Ax, FA, View, A, Image, nav, env } from 'tonva';
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
+
+interface PCategoryId{
+    id:number | string,
+    id_test:number | string
+};
+
+const ProductCategorys: { [name: string]: PCategoryId } = {
+    "有机化学": { id: 47, id_test: 7 },
+    "分析化学": { id: 470, id_test: 430 },
+    "生命科学": { id: 1013, id_test: 986 },
+    "材料科学": { id: 1219, id_test: 1214 },
+    "仪器耗材": { id: 1545, id_test: "#" }
+};
 
 export class VMainWebNav extends VPage<CApp> {
     content() {
@@ -116,11 +129,17 @@ export class NavHeaderView extends View<CApp> {
                                     产品
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                                    <a className="dropdown-item" href="/productCategory/7">有机化学</a>
+                                    {
+                                        Object.keys(ProductCategorys).map((name: string) => {
+                                            let id = env.testing === true ? ProductCategorys[name].id_test : ProductCategorys[name].id;
+                                            return <a key={name} className="dropdown-item" href={`/productCategory/${id}`}>{name}</a>;
+                                        })
+                                    }
+                                    {/* <a className="dropdown-item" href="/productCategory/7">有机化学</a>
                                     <a className="dropdown-item" href="/productCategory/430">分析化学</a>
                                     <a className="dropdown-item" href="/productCategory/986">生命科学</a>
                                     <a className="dropdown-item" href="/productCategory/1214">材料科学</a>
-                                    <a className="dropdown-item" href="/productCategory/#">仪器耗材</a>
+                                    <a className="dropdown-item" href="/productCategory/#">仪器耗材</a> */}
                                 </div>
                             </li>
                             <li className="nav-item dropdown">
