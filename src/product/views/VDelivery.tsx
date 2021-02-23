@@ -15,14 +15,11 @@ export class VDelivery extends View<CProduct> {
 			//let { packId, productId } = param;
             let { product, cApp } = this.controller;
             product = cApp.getProduct(obj?.owner);
-			if (!product) return;
-			let {futureDeliveryTimeDescription} = product;
+            if (!product) return;
+            let { futureDeliveryTimeDescription } = product;
             let inventoryAllocation = product.getInventoryAllocation(packId);
-			if (!inventoryAllocation) return null;
-			if (!futureDeliveryTimeDescription) return null;
-
-            
-			if (inventoryAllocation.length === 0) {
+			if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
+			if (!inventoryAllocation || inventoryAllocation.length === 0) {
 				if (!futureDeliveryTimeDescription) return null;
 				return <div>{'期货: ' + futureDeliveryTimeDescription}</div>;
 			}

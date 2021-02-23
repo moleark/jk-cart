@@ -176,7 +176,8 @@ export class VPriceWithTr extends VPrice {
             return  <>{prices?.map((v: any, index: number) => {
                 let { pack, retail } = v;
                 return <tr className="px-2 text-center" key={pack.id}>
-                    <td className="align-middle"><b>{tv(pack)}</b></td>
+                    <td className="align-middle"><b>{tv(pack)}</b>
+                    <div>{this.controller.renderDeliveryTime(pack)}</div></td>
                     {this.renderPrice(product, v)}
                     {/* {retail
                         ? <td className="align-middle"><span className="d-flex justify-content-center">{this.renderVm(VFavorite, { product, curPack: v })}</span></td>
