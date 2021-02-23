@@ -4,9 +4,9 @@ import { VPage, Ax, FA, View, A, Image, nav, env } from 'tonva';
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
 
-interface PCategoryId{
-    id:number | string,
-    id_test:number | string
+interface PCategoryId {
+    id: number | string,
+    id_test: number | string
 };
 
 const ProductCategorys: { [name: string]: PCategoryId } = {
@@ -83,10 +83,10 @@ export class NavHeaderView extends View<CApp> {
 
             <nav className="navbar navbar-expand-lg mb-1">
                 <div className="container">
-                    <A href="/home" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></A>
+                    <A href="/" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></A>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
-                            <li><a href="https://web.jkchemical.com/subjectpost/18" type="_blank">特惠活动</a> </li>
+                            <li><a href="/subjectpost/18" type="_blank">特惠活动</a> </li>
                             <li><a href="/myOrders">订单查询</a> </li>
                             <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
@@ -183,16 +183,16 @@ export class NavFooterView extends View<CApp> {
                     <div className="col-lg-3 col-xs-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
-                            <li><a href="https://web.jkchemical.com/ch/about" target="_blank">公司简介</a></li>
-                            <li><a href="https://web.jkchemical.com/ch/promise" target="_blank">企业承诺</a></li>
-                            <li><a href="https://web.jkchemical.com/ch/recommended-brand" target="_blank">合作品牌</a></li>
-                            <li><a href="https://web.jkchemical.com/job" target="_blank">招贤纳士</a></li>
+                            <li><a href="/ch/about" target="_blank">公司简介</a></li>
+                            <li><a href="/ch/promise" target="_blank">企业承诺</a></li>
+                            <li><a href="/ch/recommended-brand" target="_blank">合作品牌</a></li>
+                            <li><a href="/job" target="_blank">招贤纳士</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-xs-6">
                         <div className="font-weight-bold">浏览</div>
                         <ul>
-                            <li><a href="https://web.jkchemical.com/information" target="_blank">资讯中心</a></li>
+                            <li><a href="/information" target="_blank">资讯中心</a></li>
                             <li><a href="/product/mscu/coa" target="_blank">质量证书(COA)</a></li>
                             <li><a href="/product/mscu/msds" target="_blank">安全说明书(SDS)</a></li>
                             <li><a href="#">产品</a></li>
@@ -228,7 +228,7 @@ export class NavFooterView extends View<CApp> {
                 <div className="container">
                     <div className="row text-center">
                         <div className="col-sm-5">
-                            严禁在未经同意的情况下使用本网站所有信息 | <a>法律声明</a> | <a href="https://web.jkchemical.com/privacy">隐私政策</a>
+                            严禁在未经同意的情况下使用本网站所有信息 | <a>法律声明</a> | <a href="/privacy">隐私政策</a>
                         </div>
                         <div className="col-sm-7">
                             京公安网备11010502027473 | <a href="https://beian.miit.gov.cn" target="_blank">京ICP备09071033号-3</a>&nbsp;
