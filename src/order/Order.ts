@@ -84,6 +84,42 @@ export class Order {
             salesRegion: this.salesRegion,
         }
     }
+
+    /**
+     * 
+     */
+    getDataForSave2(): any {
+        let orderItems: any[] = [];
+        this.orderItems.forEach(oi => {
+            oi.packs.forEach(pk => {
+                this.currency = pk.currency;
+                orderItems.push({
+                    product: oi.product.id, pack: pk.pack.id, price: pk.price, quantity: pk.quantity
+                    , subAmount: pk.quantity * pk.price, retail: pk.retail
+                })
+            })
+        });
+        return {
+            webUser: this.webUser?.id,
+            organization: this.organization?.id,
+            customer: this.customer?.id,
+            shippingContact: this.shippingContact?.id,
+            invoiceContact: this.invoiceContact?.id,
+            invoiceType: this.invoiceType?.id,
+            invoiceInfo: this.invoiceInfo?.id,
+            amount: this.amount,
+            currency: this.currency,
+            freightFee: this.freightFee,
+            freightFeeRemitted: this.freightFeeRemitted,
+            coupon: this.coupon,
+            couponOffsetAmount: this.couponOffsetAmount,
+            couponRemitted: this.couponRemitted,
+            point: this.point,
+            comments: this.comments,
+            orderitems: orderItems, // 前面的必须是小写的orderitems
+            salesRegion: this.salesRegion?.id,
+        }
+    }
 }
 
 export class OrderItem {
@@ -98,9 +134,9 @@ export class OrderItem {
         return this.packs.reduce((p, c) => {
             return p + c.retail * c.quantity
         }, 0);
-	}
-	
-	constructor(product: Product) {
-		this.product = product;
-	}
+    }
+
+    constructor(product: Product) {
+        this.product = product;
+    }
 }
