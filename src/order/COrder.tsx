@@ -20,6 +20,7 @@ import { GLOABLE } from 'global';
 import { CAddress } from 'customer/CAddress';
 import { VInvoiceInfo } from 'customer/VInvoiceInfo';
 import { VCoupleAvailable } from 'coupon/VCouponAvailable';
+import _ from 'lodash';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -30,7 +31,7 @@ export class COrder extends CUqBase {
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
     @observable couponAppliedData: any = {};
-    
+
     @observable replyToContactType: string;
     @observable modalTitle: any;
     @observable modalTitleS: { [desc: string]: any } = {
@@ -44,10 +45,10 @@ export class COrder extends CUqBase {
     };
 
     @observable editContact: any;
-    @observable provinces:any[]=[];
-    @observable cities:any[]=[];
+    @observable provinces: any[] = [];
+    @observable cities: any[] = [];
     @observable counties: any[] = [];
-    @observable addressId:any;
+    @observable addressId: any;
 
     hasAnyCoupon: boolean;
     /**
@@ -94,7 +95,7 @@ export class COrder extends CUqBase {
         if (cartItems !== undefined && cartItems.length > 0) {
             this.orderData.currency = cartItems[0].packs[0].currency;
             this.orderData.orderItems = cartItems.map(e => {
-				let {product, packs} = e;
+                let { product, packs } = e;
                 var item = new OrderItem(product);
                 item.packs = packs.map((v: any) => { return { ...v } }).filter((v: any) => v.quantity > 0 && v.price);
                 item.packs.forEach(pk => {
@@ -206,8 +207,9 @@ export class COrder extends CUqBase {
         let { orderItems } = this.orderData;
 
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
-        let { id: orderId, flow, state } = result;
+        let { id: orderId, no, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
+
         // 如果使用了coupon/credits，需要将其标记为已使用
         let { id: couponId, types } = this.couponAppliedData;
         if (couponId) {
@@ -234,6 +236,21 @@ export class COrder extends CUqBase {
             })
         });
         cart.removeItem(param);
+
+        /*
+        let o1 = this.orderData.getDataForSave2();
+        o1.id = orderId;
+        o1.no = no;
+        ol.type = 1;
+        let rep = await window.fetch("http://localhost:3016/epec/pushOrder", {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(o1)
+        });
+        if (rep.ok) {
+            window.location.href = await rep.json();
+        }
+        */
 
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
@@ -304,7 +321,7 @@ export class COrder extends CUqBase {
                             promises.push(AgentPrice.table({ product: e.product.id, salesRegion: cApp.currentSalesRegion.id }));
                         });
                         let agentPrices = await Promise.all(promises);
-
+    
                         if (agentPrices && agentPrices.length > 0) {
                             let couponOffsetAmount = 0;
                             for (let i = 0; i < orderItems.length; i++) {
@@ -315,7 +332,7 @@ export class COrder extends CUqBase {
                                     let thisDiscountSetting = discountSetting.find((e: any) => Tuid.equ(e.brand, product.obj.brand));
                                     discount = (thisDiscountSetting && thisDiscountSetting.discount) || discount || 0;
                                 }
-
+    
                                 let eachProductAgentPrice = agentPrices[i];
                                 for (let j = 0; j < packs.length; j++) {
                                     let pk = packs[j];
@@ -325,7 +342,7 @@ export class COrder extends CUqBase {
                                             p.discountinued === 0 &&
                                             p.expireDate > Date.now());
                                     if (!agentPrice) break;
-
+    
                                     // 折扣价格取agentPrice和折扣价格中较高者
                                     let discountPrice = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
                                     // pk.price = Math.round(Math.max(agentPrice.agentPrice, pk.retail * (1 - discount)));
@@ -346,7 +363,7 @@ export class COrder extends CUqBase {
                 if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
                     this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
             }
-
+    
             if (types === "credits") {
                 this.orderData.point = Math.round(this.orderData.productAmount * 2);
             }
@@ -397,9 +414,9 @@ export class COrder extends CUqBase {
                 promises.push(order.Order.mySheets(undefined, 1, -20));
                 promises.push(order.Order.mySheets("#", 1, -20));
                 let presult = await Promise.all(promises);
-                presult[0].forEach((el:any) => {el.OState = 'processing';});
+                presult[0].forEach((el: any) => { el.OState = 'processing'; });
                 presult[1].forEach((el: any) => { el.OState = 'completed'; });
-                
+
                 return presult[0].concat(presult[1]).sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
             default:
                 break;
@@ -442,8 +459,8 @@ export class COrder extends CUqBase {
     }
 
     onContactSelected = (contact: BoxId) => {
-        if(this.replyToContactType ==='shippingContact') this.orderData.shippingContact = contact;
-        if(this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
+        if (this.replyToContactType === 'shippingContact') this.orderData.shippingContact = contact;
+        if (this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
         this.modalTitle = '';
     }
 
@@ -459,13 +476,13 @@ export class COrder extends CUqBase {
     }
 
     renderModelContent = (param?: any) => {
-        if(this.modalTitle === 'contactList')  return this.renderContentList();
-        if(this.modalTitle === 'contactInfo')  return this.onNewContact();
-        if(this.modalTitle === 'provinceChoice')  return this.pickProvince();
-        if(this.modalTitle === 'cityChoice' ) return this.pickCity();
-        if(this.modalTitle === 'countyChoice')  return this.pickCounty();
-        if(this.modalTitle === 'invoiceInfo')  return this.renderInvoice();
-        if(this.modalTitle === 'validCard') return this.renderValidCard();
+        if (this.modalTitle === 'contactList') return this.renderContentList();
+        if (this.modalTitle === 'contactInfo') return this.onNewContact();
+        if (this.modalTitle === 'provinceChoice') return this.pickProvince();
+        if (this.modalTitle === 'cityChoice') return this.pickCity();
+        if (this.modalTitle === 'countyChoice') return this.pickCounty();
+        if (this.modalTitle === 'invoiceInfo') return this.renderInvoice();
+        if (this.modalTitle === 'validCard') return this.renderValidCard();
     }
 
     renderContentList = () => {
@@ -479,7 +496,7 @@ export class COrder extends CUqBase {
     }
 
     showModelCardDiscount = async (vipCard: any) => {
-        await  this.cApp.cCoupon.showModelCardDiscount(vipCard);
+        await this.cApp.cCoupon.showModelCardDiscount(vipCard);
     }
     /* 选择发票信息 */
     saveInvoiceInfo = async (invoice: any) => {
@@ -504,7 +521,7 @@ export class COrder extends CUqBase {
     }
 
     renderValidCard = () => {
-        return this.renderView(VCoupleAvailable,this.validCardForWebUser);
+        return this.renderView(VCoupleAvailable, this.validCardForWebUser);
     }
 
     renderInvoice = () => {
@@ -513,14 +530,14 @@ export class COrder extends CUqBase {
             invoiceType: invoiceType,
             invoiceInfo: invoiceInfo,
         };
-        return this.renderView(VInvoiceInfo,{origInvoice:origInvoice});
+        return this.renderView(VInvoiceInfo, { origInvoice: origInvoice });
     }
 
     /**
      * 打开地址新建界面
      */
     onNewContact = () => {
-        return this.renderView(VContact,{ contact: this.editContact });
+        return this.renderView(VContact, { contact: this.editContact });
     }
 
     pickAddress = async (context?: Context, name?: string, value?: number): Promise<number> => {
@@ -530,15 +547,15 @@ export class COrder extends CUqBase {
     }
 
     pickProvince = () => {
-        return this.renderView(VProvince,{provinces:this.provinces});
+        return this.renderView(VProvince, { provinces: this.provinces });
     }
 
     pickCity = () => {
-        return this.renderView(VCity,{cities:this.cities});
+        return this.renderView(VCity, { cities: this.cities });
     }
 
     pickCounty = () => {
-        return this.renderView(VCounty,{counties:this.counties});
+        return this.renderView(VCounty, { counties: this.counties });
     }
 
     saveAddress = async (countryId: number, provinceId: number, cityId?: number, countyId?: number): Promise<any> => {
