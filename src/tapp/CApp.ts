@@ -374,7 +374,6 @@ export class CApp extends CUqApp {
     }
 
     private navMeInfo: NavPage = async (params: any) => {
-        await this.assureLogin();
         this.cMe.openMeInfo();
     }
 

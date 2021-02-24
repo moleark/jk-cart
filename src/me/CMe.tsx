@@ -40,6 +40,7 @@ export class CMe extends CUqBase {
     }
 
     openMeInfo = async () => {
+        await this.cApp.assureLogin();
         this.openVPage(EditMeInfo);
     }
 
