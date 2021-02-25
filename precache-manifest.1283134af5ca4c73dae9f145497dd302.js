@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0a48794bebde76f3be32a5479f73f92c",
+    "revision": "600323ee63a17d7c10952d60e9be35a9",
     "url": "./index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/css/2.e226fe3a.chunk.css"
   },
   {
-    "revision": "6214da66ee536f6e38ab",
-    "url": "./static/css/main.e1ed2dd6.chunk.css"
+    "revision": "aeb5798dcb669bea6abd",
+    "url": "./static/css/main.3f78cdde.chunk.css"
   },
   {
     "revision": "9f9c89d1ba7e6246cc43",
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/js/2.769583b4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6214da66ee536f6e38ab",
-    "url": "./static/js/main.4f25f483.chunk.js"
+    "revision": "aeb5798dcb669bea6abd",
+    "url": "./static/js/main.74f423fd.chunk.js"
   },
   {
     "revision": "f3bf36e81ba3e4da0e32",
@@ -72,8 +72,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/MaterialScience.f2439aa0.png"
   },
   {
-    "revision": "86a66d1b4fdfdcf1ee68d7fe2d398ae6",
-    "url": "./static/media/Menu.86a66d1b.svg"
+    "revision": "2e58a251fa3d28ceb37ed09c95c1dd5f",
+    "url": "./static/media/Menu.2e58a251.svg"
   },
   {
     "revision": "11e84ba2e7c08c7f20f97066b45b48d8",
@@ -96,16 +96,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/cards.c1307206.png"
   },
   {
-    "revision": "b3f6f904efe5eaa7eab08ca32e4c73fc",
-    "url": "./static/media/chevron-right-hover.b3f6f904.svg"
+    "revision": "00019799eadee6abadc8f54734e78fd9",
+    "url": "./static/media/chevron-right-hover.00019799.svg"
   },
   {
-    "revision": "d59775bb19969d7446b23c8562e51784",
-    "url": "./static/media/commerce-and-shopping-hover.d59775bb.svg"
+    "revision": "5643de9e51735bda32b52fe610c5a4db",
+    "url": "./static/media/commerce-and-shopping-hover.5643de9e.svg"
   },
   {
-    "revision": "0889c62634c30c1dd85896be9daa5312",
-    "url": "./static/media/commerce-and-shopping.0889c626.svg"
+    "revision": "fb7260439e550df7a3035930e783be66",
+    "url": "./static/media/commerce-and-shopping.fb726043.svg"
+  },
+  {
+    "revision": "3c4ef45ab083a69a59b74c4b6e8a5d2b",
+    "url": "./static/media/flags.3c4ef45a.png"
   },
   {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
@@ -128,8 +132,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/fontawesome-webfont.fee66e71.woff"
   },
   {
-    "revision": "2c097c9eaa3df6c406104e770b316d9a",
-    "url": "./static/media/footer-bg.2c097c9e.svg"
+    "revision": "c2c9edc0d1b3923dc925e7404280ba82",
+    "url": "./static/media/footer-bg.c2c9edc0.svg"
   },
   {
     "revision": "015bdb05607e99a055a2ee8d342a3d17",
@@ -144,8 +148,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/infb.ce9e0db2.jpg"
   },
   {
-    "revision": "03c9d58e751d9355a0dcff6ab039601d",
-    "url": "./static/media/left-arrow.03c9d58e.svg"
+    "revision": "eb360cc28d0f3686b967dcaf2b9d9a4d",
+    "url": "./static/media/left-arrow.eb360cc2.svg"
+  },
+  {
+    "revision": "31a5efaa4857156212ddee661bc5068d",
+    "url": "./static/media/logo.31a5efaa.png"
   },
   {
     "revision": "ee7cd8ed2dcec943251eb2763684fc6f",
@@ -156,12 +164,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/logo_pointShop.644af5a6.png"
   },
   {
+    "revision": "5dfc14dd12e6652dc1a291f313cd0fc7",
+    "url": "./static/media/name-reation-bg-left.5dfc14dd.svg"
+  },
+  {
+    "revision": "402a544233824c8adb614ccd7c828ef9",
+    "url": "./static/media/name-reation-bg-right.402a5442.svg"
+  },
+  {
     "revision": "772a31a646cb82c2cf0bdebade5fee51",
     "url": "./static/media/pig.772a31a6.png"
   },
   {
-    "revision": "572250564939cbb2cff1401d8b524779",
-    "url": "./static/media/s-triangle.57225056.svg"
+    "revision": "71e0aaee15a9d4ad29846871a47d7bde",
+    "url": "./static/media/s-triangle.71e0aaee.svg"
   },
   {
     "revision": "928fc4cf4497553c15dd90a78c59670d",
@@ -188,16 +204,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/slick.f97e3bbf.svg"
   },
   {
-    "revision": "9688c417fe87caf816abc72272853b66",
-    "url": "./static/media/under-arrow.9688c417.svg"
+    "revision": "cd60def72bf9d80fb022b37bac886aa5",
+    "url": "./static/media/under-arrow-1hover.cd60def7.svg"
   },
   {
-    "revision": "049214462e3608f66a408ee2c1e239eb",
-    "url": "./static/media/wechat-hover.04921446.svg"
+    "revision": "58976ad5a825e65a670c820b03b42b01",
+    "url": "./static/media/under-arrow-hover.58976ad5.svg"
   },
   {
-    "revision": "39ecdbccfb49534109e9a7f60e4fbb60",
-    "url": "./static/media/wechat.39ecdbcc.svg"
+    "revision": "3b9f39c29162e0d2689612f27c0b2176",
+    "url": "./static/media/under-arrow.3b9f39c2.svg"
   },
   {
     "revision": "21166a383165b8a9faa231bf391802bb",

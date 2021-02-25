@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "./static/css/main.e1ed2dd6.chunk.css",
-    "main.js": "./static/js/main.4f25f483.chunk.js",
-    "main.js.map": "./static/js/main.4f25f483.chunk.js.map",
+    "main.css": "./static/css/main.3f78cdde.chunk.css",
+    "main.js": "./static/js/main.74f423fd.chunk.js",
+    "main.js.map": "./static/js/main.74f423fd.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.605d384a.js",
     "runtime-main.js.map": "./static/js/runtime-main.605d384a.js.map",
     "static/css/2.e226fe3a.chunk.css": "./static/css/2.e226fe3a.chunk.css",
     "static/js/2.769583b4.chunk.js": "./static/js/2.769583b4.chunk.js",
     "static/js/2.769583b4.chunk.js.map": "./static/js/2.769583b4.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.e847478d2347dd3d8f561787e484c076.js": "./precache-manifest.e847478d2347dd3d8f561787e484c076.js",
+    "precache-manifest.1283134af5ca4c73dae9f145497dd302.js": "./precache-manifest.1283134af5ca4c73dae9f145497dd302.js",
     "service-worker.js": "./service-worker.js",
     "static/css/2.e226fe3a.chunk.css.map": "./static/css/2.e226fe3a.chunk.css.map",
-    "static/css/main.e1ed2dd6.chunk.css.map": "./static/css/main.e1ed2dd6.chunk.css.map",
+    "static/css/main.3f78cdde.chunk.css.map": "./static/css/main.3f78cdde.chunk.css.map",
     "static/js/2.769583b4.chunk.js.LICENSE.txt": "./static/js/2.769583b4.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.jpg": "./static/media/AnalyticalChemistry.79b8b498.jpg",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
@@ -25,7 +25,7 @@
     "static/media/LifeScience.jpg": "./static/media/LifeScience.d11aa936.jpg",
     "static/media/MaterialScience.jpg": "./static/media/MaterialScience.efdb4390.jpg",
     "static/media/MaterialScience.png": "./static/media/MaterialScience.f2439aa0.png",
-    "static/media/style.css": "./static/media/wechat.39ecdbcc.svg",
+    "static/media/style.css": "./static/media/under-arrow.3b9f39c2.svg",
     "static/media/OrganicChemistry.jpg": "./static/media/OrganicChemistry.11e84ba2.jpg",
     "static/media/OrganicChemistry.png": "./static/media/OrganicChemistry.6d56971c.png",
     "static/media/TriangleShadingO.png": "./static/media/TriangleShadingO.abe107d7.png",
@@ -34,6 +34,7 @@
     "static/media/giftPlate.png": "./static/media/giftPlate.015bdb05.png",
     "static/media/homeTopicMap.jpg": "./static/media/homeTopicMap.89cdf192.jpg",
     "static/media/infb.jpg": "./static/media/infb.ce9e0db2.jpg",
+    "static/media/logo.png": "./static/media/logo.31a5efaa.png",
     "static/media/logo.svg": "./static/media/logo.ee7cd8ed.svg",
     "static/media/logo_pointShop.png": "./static/media/logo_pointShop.644af5a6.png",
     "static/media/pig.png": "./static/media/pig.772a31a6.png",
@@ -47,7 +48,7 @@
     "static/js/runtime-main.605d384a.js",
     "static/css/2.e226fe3a.chunk.css",
     "static/js/2.769583b4.chunk.js",
-    "static/css/main.e1ed2dd6.chunk.css",
-    "static/js/main.4f25f483.chunk.js"
+    "static/css/main.3f78cdde.chunk.css",
+    "static/js/main.74f423fd.chunk.js"
   ]
 }
