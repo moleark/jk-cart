@@ -187,6 +187,7 @@ export class VCreateOrder extends VPage<COrder> {
                 <div className="text-danger flex-grow-1 align-self-center" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"
                     className={classNames('btn', { 'btn-danger': allowOrdering, 'btn-secondary': !allowOrdering })}
+                    style={{backgroundColor: '#c82333'}}
                     onClick={this.onSubmit} disabled={!allowOrdering}>提交订单
                 </button>
             </div>

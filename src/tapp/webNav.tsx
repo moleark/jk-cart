@@ -126,7 +126,7 @@ export class NavHeaderView extends View<CApp> {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    产品
+                                    产品<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
                                     {
@@ -145,7 +145,7 @@ export class NavHeaderView extends View<CApp> {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    服务
+                                    服务<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item" href="/myOrders">订单查询</a>
@@ -155,7 +155,7 @@ export class NavHeaderView extends View<CApp> {
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    会员
+                                    会员<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item" href="/password">修改密码</a>

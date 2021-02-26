@@ -115,7 +115,7 @@ export class VPageProduct extends VPage<CProduct> {
             { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
             { id: 3, name: "质检报告（COA）", type: "coa" },
         ];
-        return <div className={classNames('left-below', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')}>
+        return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}
             {
                 Materials.map((v: any) => {
                     return <Ax key={v.name} href={'/product/mscu/' + v.type + '/' + id}>
@@ -136,10 +136,10 @@ export class VPageProduct extends VPage<CProduct> {
         }
         imageUrl = imageUrl || props.chemical.toString();
         return <>
-            <div className="col-lg-4 product-left-card ">
-                <div className="preview">
-                    <ProductImage chemicalId={imageUrl} className="w-100" />
-                    <div className="d-none d-sm-block mt-5">{this.material(id)}</div>
+            <div className="col-lg-4 ">
+                <div className="">
+                    <ProductImage chemicalId={imageUrl} className="w-100 mb-2" />
+                    <div className="d-none d-sm-block">{this.material(id)}</div>
                     {/* <div className="left-below display-desktop mt-1">
                         {this.renderProductMaterial()}
                     </div> */}
