@@ -7,7 +7,7 @@ export { CApp } from './CApp';
 
 export const appConfig: AppConfig = {
     appName: '百灵威系统工程部/cart',
-    version: '1.1.138',
+    version: '1.1.139',
     tvs: tvs,
     loginTop: jnkTop,
     oem: '百灵威',
