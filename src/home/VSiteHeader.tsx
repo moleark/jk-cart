@@ -1,9 +1,10 @@
 /* eslint-disable */
 import * as React from 'react';
 import { LMR, FA, View } from 'tonva';
-import logo from '../images/logo.png';
+import logo from '../images/logo_mobi.png';
 import { CHome } from './CHome';
 import 扫一扫 from 'images/扫一扫.png';
+
 export class VSiteHeader extends View<CHome> {
     render() {
         let currentSalesRegion = <FA name="globe" />
