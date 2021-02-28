@@ -38,8 +38,8 @@ export class VPointDetails extends VPage<CPointProduct> {
         </div>
 
         // return <div className="row px-3 py-2 d-flex">
-        //     <div className="col-xs-6 col-md-6"><small><b>{comments}</b></small></div>
-        //     <div className="col-xs-6 col-md-6 w-100 d-flex justify-content-between">
+        //     <div className="col-6 col-md-6"><small><b>{comments}</b></small></div>
+        //     <div className="col-6 col-md-6 w-100 d-flex justify-content-between">
         //         <div className="" ><small>{tv(customer, v => v.name)}</small></div>
         //         <div className="" ><small><EasyDate date={date}></EasyDate></small></div>
         //     </div>

@@ -125,13 +125,13 @@ export class NavFooter extends React.Component {
         return <div className="d-none d-sm-block bg-light pt-3">
             <div className="container">
                 <div className="row">
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <img src={footer_logo} />
                         <p className="mt-lg-3">促进科技与工业<br />
                                 发展，造福人类</p>
                         <img src={qrcode} className="w-100 mt-lg-50 qrcode" />
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
                             <li><a href="/about">公司简介</a></li>
@@ -141,7 +141,7 @@ export class NavFooter extends React.Component {
 
                         </ul>
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="#">资讯中心</a></li>
@@ -159,7 +159,7 @@ export class NavFooter extends React.Component {
                             </ul>
                         </ul>
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="footer-title">联系我们</div>
                         <div className="contact ">
                             电话：<br />400-666-7788<br />+86 10 8284 8833
