@@ -174,13 +174,13 @@ export class NavFooterView extends View<CApp> {
         return <div className="d-none d-sm-block bg-light pt-4 reset-z-footer-bg">
             <div className="container reset-z-ul reset-z-ul-a">
                 <div className="row reset-z-footer-title reset-z-contact">
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <img src="/images/footer-logo.svg" />
                         <p className="mt-lg-3" style={{ fontSize: 12 }}>促进科技与工业<br />
                                 发展，造福人类</p>
                         <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" />
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="footer-title">百灵威集团</div>
                         <ul>
                             <li><a href="/ch/about" target="_blank">公司简介</a></li>
@@ -189,7 +189,7 @@ export class NavFooterView extends View<CApp> {
                             <li><a href="/job" target="_blank">招贤纳士</a></li>
                         </ul>
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="/information" target="_blank">资讯中心</a></li>
@@ -206,7 +206,7 @@ export class NavFooterView extends View<CApp> {
                             <li><a href="/product/mscu/msds" target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
-                    <div className="col-lg-3 col-xs-6">
+                    <div className="col-lg-3 col-6">
                         <div className="footer-title">联系我们</div>
                         <div className="contact">
                             电话：400-666-7788<br />+86 10 8284 8833
