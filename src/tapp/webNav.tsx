@@ -67,9 +67,9 @@ export class NavHeaderView extends View<CApp> {
             <div className="top-header">
                 <div className="container">
                     <div className="row">
-                        <div className="col-auto ml-auto d-flex align-items-center">
-                            <div className="phone mr-2 small">
-                                <img src="/images/Phone.svg" /> 400-666-7788
+                        <div className="col-auto ml-auto d-flex align-items-center float-right">
+                            <div className="phone">
+                                <img src="/images/icon/Phone.svg" /> 客服热线： 400-666-7788
                             </div>
                             <a className="small mr-2" data-toggle="modal" data-target="#choosecountry">
                                 中国
@@ -81,14 +81,13 @@ export class NavHeaderView extends View<CApp> {
                 </div>
             </div >
 
-            <nav className="navbar navbar-expand-lg mb-1">
+            <nav className="navbar navbar-expand-lg navbar-dark pad-tb20">
                 <div className="container">
                     <A href="/" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></A>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="/subjectpost/18" type="_blank">特惠活动</a> </li>
                             <li><a href="/myOrders">订单查询</a> </li>
-                            <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
                         </ul>
                         <div className="custom-search-input">
@@ -111,20 +110,18 @@ export class NavHeaderView extends View<CApp> {
                             </div>
                         </div>
                     </div>
-                    <a href="#" className="display-mobile-block-login d-block d-sm-none">登入</a>
 
                     <button className="navbar-toggle navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse"
                         data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <span className="bar1"></span>
                         <span className="bar2"></span>
-
                         <span className="bar3"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarResponsive">
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                <a className="nav-link dropdown-toggle" href="/product-catalog" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
                                     产品<b className="caret"></b>
                                 </a>
@@ -135,11 +132,6 @@ export class NavHeaderView extends View<CApp> {
                                             return <a key={name} className="dropdown-item" href={`/product-catalog/${id}`}>{name}</a>;
                                         })
                                     }
-                                    {/* <a className="dropdown-item" href="/product-catalog/7">有机化学</a>
-                                    <a className="dropdown-item" href="/product-catalog/430">分析化学</a>
-                                    <a className="dropdown-item" href="/product-catalog/986">生命科学</a>
-                                    <a className="dropdown-item" href="/product-catalog/1214">材料科学</a>
-                                    <a className="dropdown-item" href="/product-catalog/#">仪器耗材</a> */}
                                 </div>
                             </li>
                             <li className="nav-item dropdown">
