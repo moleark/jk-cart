@@ -3,18 +3,18 @@ import { View } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 
 export class VRootCategorySideBar extends View<CProductCategory>{
-	
-    //private categoryClick = async (categoryWapper: ProductCategory/*, parent: any, labelColor: string*/) => {
-    //    await this.controller.openMainPage(categoryWapper/*, parent, labelColor*/);
-    //}
-	
-    render() {
-        return <div className="bg-white">
-            <h2>产品大类</h2>
-            <nav id="sidebar">
-                <ul className="list-unstyled components">
-                    {this.controller.rootCategories.map(v => {
-						let {productCategory, name, children} = v;
+
+	//private categoryClick = async (categoryWapper: Product-catalog/*, parent: any, labelColor: string*/) => {
+	//    await this.controller.openMainPage(categoryWapper/*, parent, labelColor*/);
+	//}
+
+	render() {
+		return <div className="bg-white">
+			<h2>产品大类</h2>
+			<nav id="sidebar">
+				<ul className="list-unstyled components">
+					{this.controller.rootCategories.map(v => {
+						let { productCategory, name, children } = v;
 						let pcId = productCategory; //(productCategory as any).id;
 						let menuId = "Submenu" + pcId;
 						return <li className="active" key={pcId}>
@@ -25,7 +25,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 				</ul>
 			</nav>
 		</div>;
-		//<a href={'/productCategory/'+productCategory} data-toggle="collapse" aria-expanded="false">{name}</a>
+		//<a href={'/product-catalog/'+productCategory} data-toggle="collapse" aria-expanded="false">{name}</a>
 	}
 
 	private renderChildren(children: ProductCategory[], menuId: string) {

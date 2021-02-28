@@ -252,7 +252,7 @@ export class CApp extends CUqApp {
                 '/cart': () => {
                     this.cCart.start();
                 },
-                '/productCategory/:id': (params: any, queryStr: any) => {
+                '/product-catalog/:id': (params: any, queryStr: any) => {
                     this.cProduct.showProductDetail(params.id);
                 },
                 '/pointshop': () => {
@@ -388,8 +388,8 @@ export class CApp extends CUqApp {
             '/product/mscu/:type/:id': this.navProductMSCU,
             '/product/mscu/:type': this.navProductMSCU,
             '/cart': this.navCart,
-            '/productCategory/:id': this.navProductCategory,
-            '/productCategoryHome': this.navProductCategoryHome,
+            '/product-catalog/:id': this.navProductCategory,
+            '/product-catalog': this.navProductCategoryHome,
             '/pointshop': this.navPointShop,
             '/about': this.navAbout,
             '/me': this.navMe,

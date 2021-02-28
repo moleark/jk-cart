@@ -14,12 +14,12 @@ export class VCategoryHome extends VPage<CProductCategory> {
         let { cApp } = this.controller;
         return <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
             <Ax href="/">首页</Ax>
-            <Ax href="/productCategoryHome">产品</Ax>
+            <Ax href="/product-catalog">产品</Ax>
             {allAncestors.map((parent: any) => {
                 return tv(parent, (e: any) => {
                     let { id, productcategorylanguage } = e;
                     let jL = productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
-                    return jL !== undefined ? <Ax href={"/productCategory/" + id}>{jL.name}</Ax> : null;
+                    return jL !== undefined ? <Ax href={"/product-catalog/" + id}>{jL.name}</Ax> : null;
                 })
             })}
         </div>
@@ -33,7 +33,7 @@ export class VCategoryHome extends VPage<CProductCategory> {
                     let pcId = typeof productCategory === 'object' ? (productCategory as any).id : productCategory;
                     let { viceSrc, bgClass } = rootCategroyResFromId(pcId);
                     return <div className="col-lg-4 single-product" key={pcId}>
-                        <Ax key={pcId} href={'/productCategory/' + pcId} className={classNames('d-block text-truncate')}>
+                        <Ax key={pcId} href={'/product-catalog/' + pcId} className={classNames('d-block text-truncate')}>
                             <img src={viceSrc} className="w-100" />
                             <h2 className={bgClass}>{name}</h2>
                         </Ax>
@@ -70,7 +70,7 @@ export class VCategoryHome extends VPage<CProductCategory> {
             <section className="container mt-lg-2 main-product">
                 {main}
             </section>
-           
+
         </div>
     }
 

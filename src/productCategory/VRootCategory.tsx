@@ -38,7 +38,7 @@ export class VRootCategory extends View<CProductCategory> {
         let { src, labelColor } = rootCategroyResFromId(productCategory);
         return <div className="bg-white mb-3" key={name}>
             <Ax className="py-2 px-3 cursor-pointer"
-                href={'/productCategory/' + productCategory}>
+                href={'/product-catalog/' + productCategory}>
                 <img className="mr-4 cat-root-img" src={src} alt={name} />
                 <b>{name}</b>
             </Ax>
@@ -55,7 +55,7 @@ export class VRootCategory extends View<CProductCategory> {
         /*
         return <div key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer">
-            <A onClick={() => this.categoryClick(item, parent, labelColor)} href={"/productCategory/"+ productCategory.id}>
+            <A onClick={() => this.categoryClick(item, parent, labelColor)} href={"/product-catalog/"+ productCategory.id}>
                 <div className="py-2 px-2 cat-sub">
                     <div className="text-truncate">
                         <span className="ml-1 align-middle">
@@ -73,7 +73,7 @@ export class VRootCategory extends View<CProductCategory> {
         // let productCategoryId = item.productCategory.id;
         return <Ax key={name}
             className="col-6 col-md-4 col-lg-3 cursor-pointer"
-            href={'/productCategory/' + productCategory}>
+            href={'/product-catalog/' + productCategory}>
             <div className="py-2 px-2 cat-sub">
                 <div className="text-truncate">
                     <span className="ml-1 align-middle">

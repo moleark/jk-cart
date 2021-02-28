@@ -132,14 +132,14 @@ export class NavHeaderView extends View<CApp> {
                                     {
                                         Object.keys(ProductCategorys).map((name: string) => {
                                             let id = env.testing === true ? ProductCategorys[name].id_test : ProductCategorys[name].id;
-                                            return <a key={name} className="dropdown-item" href={`/productCategory/${id}`}>{name}</a>;
+                                            return <a key={name} className="dropdown-item" href={`/product-catalog/${id}`}>{name}</a>;
                                         })
                                     }
-                                    {/* <a className="dropdown-item" href="/productCategory/7">有机化学</a>
-                                    <a className="dropdown-item" href="/productCategory/430">分析化学</a>
-                                    <a className="dropdown-item" href="/productCategory/986">生命科学</a>
-                                    <a className="dropdown-item" href="/productCategory/1214">材料科学</a>
-                                    <a className="dropdown-item" href="/productCategory/#">仪器耗材</a> */}
+                                    {/* <a className="dropdown-item" href="/product-catalog/7">有机化学</a>
+                                    <a className="dropdown-item" href="/product-catalog/430">分析化学</a>
+                                    <a className="dropdown-item" href="/product-catalog/986">生命科学</a>
+                                    <a className="dropdown-item" href="/product-catalog/1214">材料科学</a>
+                                    <a className="dropdown-item" href="/product-catalog/#">仪器耗材</a> */}
                                 </div>
                             </li>
                             <li className="nav-item dropdown">
@@ -195,13 +195,13 @@ export class NavFooterView extends View<CApp> {
                             <li><a href="/information" target="_blank">资讯中心</a></li>
                             <li><a href="/product/mscu/coa" target="_blank">质量证书(COA)</a></li>
                             <li><a href="/product/mscu/msds" target="_blank">安全说明书(SDS)</a></li>
-                            <li><a href="#">产品</a></li>
+                            <li><a href="/product-catalog">产品</a></li>
                             <ul className="ml-3">
-                                <li><a href="/productCategory/7">有机化学</a></li>
-                                <li><a href="/productCategory/430">分析化学</a></li>
-                                <li><a href="/productCategory/986">生命科学</a></li>
-                                <li><a href="/productCategory/1214">材料科学</a></li>
-                                <li><a href="/productCategory/#">仪器耗材</a></li>
+                                <li><a href="/product-catalog/7">有机化学</a></li>
+                                <li><a href="/product-catalog/430">分析化学</a></li>
+                                <li><a href="/product-catalog/986">生命科学</a></li>
+                                <li><a href="/product-catalog/1214">材料科学</a></li>
+                                <li><a href="/product-catalog/#">仪器耗材</a></li>
                             </ul>
                             <li><a href="/product/mscu/msds" target="_blank">危险品购买提示</a></li>
                         </ul>

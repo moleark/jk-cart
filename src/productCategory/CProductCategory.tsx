@@ -254,7 +254,7 @@ export class CProductCategory extends CUqBase {
         let { productCategory, name } = pc;
         let pcId = typeof productCategory === 'object' ? (productCategory as any).id : productCategory;
         return <Ax key={pcId}
-            href={'/productCategory/' + pcId}
+            href={'/product-catalog/' + pcId}
             className={classNames(className, 'd-block text-truncate')}
         >{content || name}</Ax>
     }
