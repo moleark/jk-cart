@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Page, VPage, nav } from 'tonva';
-import logo from '../images/logo.png';
+import logo from '../images/logo_mobi.png';
 import { appConfig } from 'configuration';
 import { CMe } from './CMe';
 
