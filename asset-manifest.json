@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "./static/css/main.3f78cdde.chunk.css",
-    "main.js": "./static/js/main.47c73ab9.chunk.js",
-    "main.js.map": "./static/js/main.47c73ab9.chunk.js.map",
+    "main.js": "./static/js/main.234aafee.chunk.js",
+    "main.js.map": "./static/js/main.234aafee.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.605d384a.js",
     "runtime-main.js.map": "./static/js/runtime-main.605d384a.js.map",
     "static/css/2.e226fe3a.chunk.css": "./static/css/2.e226fe3a.chunk.css",
-    "static/js/2.e4df27fb.chunk.js": "./static/js/2.e4df27fb.chunk.js",
-    "static/js/2.e4df27fb.chunk.js.map": "./static/js/2.e4df27fb.chunk.js.map",
+    "static/js/2.769583b4.chunk.js": "./static/js/2.769583b4.chunk.js",
+    "static/js/2.769583b4.chunk.js.map": "./static/js/2.769583b4.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.32dd335db76fa43d41c918162e0c9d93.js": "./precache-manifest.32dd335db76fa43d41c918162e0c9d93.js",
+    "precache-manifest.4100c8cf7ce323c0daf8fd2e3c188c6a.js": "./precache-manifest.4100c8cf7ce323c0daf8fd2e3c188c6a.js",
     "service-worker.js": "./service-worker.js",
     "static/css/2.e226fe3a.chunk.css.map": "./static/css/2.e226fe3a.chunk.css.map",
     "static/css/main.3f78cdde.chunk.css.map": "./static/css/main.3f78cdde.chunk.css.map",
-    "static/js/2.e4df27fb.chunk.js.LICENSE.txt": "./static/js/2.e4df27fb.chunk.js.LICENSE.txt",
+    "static/js/2.769583b4.chunk.js.LICENSE.txt": "./static/js/2.769583b4.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.jpg": "./static/media/AnalyticalChemistry.79b8b498.jpg",
     "static/media/AnalyticalChemistry.png": "./static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/Homemadelogo.png": "./static/media/Homemadelogo.06f15feb.png",
@@ -34,7 +34,6 @@
     "static/media/giftPlate.png": "./static/media/giftPlate.015bdb05.png",
     "static/media/homeTopicMap.jpg": "./static/media/homeTopicMap.89cdf192.jpg",
     "static/media/infb.jpg": "./static/media/infb.ce9e0db2.jpg",
-    "static/media/logo.png": "./static/media/logo.31a5efaa.png",
     "static/media/logo.svg": "./static/media/logo.ee7cd8ed.svg",
     "static/media/logo_pointShop.png": "./static/media/logo_pointShop.644af5a6.png",
     "static/media/pig.png": "./static/media/pig.772a31a6.png",
@@ -47,8 +46,8 @@
   "entrypoints": [
     "static/js/runtime-main.605d384a.js",
     "static/css/2.e226fe3a.chunk.css",
-    "static/js/2.e4df27fb.chunk.js",
+    "static/js/2.769583b4.chunk.js",
     "static/css/main.3f78cdde.chunk.css",
-    "static/js/main.47c73ab9.chunk.js"
+    "static/js/main.234aafee.chunk.js"
   ]
 }
