@@ -47,7 +47,6 @@ export class NavHeader extends React.Component {
                             <li><a href="#">特惠活动</a> </li>
                             <li><a href="#">结构检索</a> </li>
                             <li><a href="#">订单查询</a> </li>
-                            <li><a href="#">COA</a> </li>
                             <li><a href="#">SDS</a> </li>
                         </ul>
                         <div className="custom-search-input">

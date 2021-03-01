@@ -185,7 +185,6 @@ export class NavFooterView extends View<CApp> {
                         <div className="font-weight-bold">浏览</div>
                         <ul>
                             <li><a href="/information" target="_blank">资讯中心</a></li>
-                            <li><a href="/product/mscu/coa" target="_blank">质量证书(COA)</a></li>
                             <li><a href="/product/mscu/msds" target="_blank">安全说明书(SDS)</a></li>
                             <li><a href="/product-catalog">产品</a></li>
                             <ul className="ml-3">
