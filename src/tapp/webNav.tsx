@@ -194,7 +194,7 @@ export class NavFooterView extends View<CApp> {
                                 <li><a href="/product-catalog/1214">材料科学</a></li>
                                 <li><a href="/product-catalog/#">仪器耗材</a></li>
                             </ul>
-                            <li><a href="/product/mscu/msds" target="_blank">危险品购买提示</a></li>
+                            <li><a href="images/危险化学品购买提示.png" target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
@@ -219,12 +219,15 @@ export class NavFooterView extends View<CApp> {
                 <div className="container">
                     <div className="row text-center">
                         <div className="col-sm-5">
-                            严禁在未经同意的情况下使用本网站所有信息 | <a>法律声明</a> | <a href="/privacy">隐私政策</a>
+                            严禁在未经同意的情况下使用本网站所有信息
+                            | <a href="/legal" target="_blank">法律声明</a>
+                            | <a href="/privacy-cn" target="_blank">隐私政策</a>
                         </div>
                         <div className="col-sm-7">
                             京公安网备11010502027473 | <a href="https://beian.miit.gov.cn" target="_blank">京ICP备09071033号-3</a>&nbsp;
                             | <a href="http://www.sgs.gov.cn/lz/licenseLink.do?method=licenceView&entyId=20120328090456140" target="_blank">上海工商</a>&nbsp;
-                            | <a target="_blank">危险化学品经营许可证</a> | <a target="_blank"> 营业执照(三证合一)</a>
+                            | <a href="/images/危险化学品经营许可证副本.jpg" target="_blank">危险化学品经营许可证</a>
+                            | <a href="/images/营业执照副本.jpg" target="_blank"> 营业执照(三证合一)</a>
                         </div>
                     </div>
                 </div>
