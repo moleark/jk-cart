@@ -18,7 +18,7 @@ export class VDelivery extends View<CProduct> {
             if (!product) return;
             let { futureDeliveryTimeDescription } = product;
             let inventoryAllocation = product.getInventoryAllocation(packId);
-			if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
+			// if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
 			if (!inventoryAllocation || inventoryAllocation.length === 0) {
 				if (!futureDeliveryTimeDescription) return null;
 				return <div>{'期货: ' + futureDeliveryTimeDescription}</div>;

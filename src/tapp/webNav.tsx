@@ -104,7 +104,7 @@ export class NavHeaderView extends View<CApp> {
                                     this.navigate(url);
                                 }}>
                                     <button className="btn" type="button">
-                                        <img src="/images/magnifier.svg" />
+                                        <img src="/images/icon/magnifier.svg" />
                                     </button>
                                 </span>
                             </div>
@@ -164,10 +164,10 @@ export class NavHeaderView extends View<CApp> {
 export class NavFooterView extends View<CApp> {
     render() {
         return <div className="d-none d-sm-block bg-light pt-4 reset-z-footer-bg">
-            <div className="container reset-z-ul reset-z-ul-a">
+            <div className="container reset-z-ul">
                 <div className="row reset-z-footer-title reset-z-contact">
                     <div className="col-lg-3 col-6">
-                        <img src="/images/footer-logo.svg" />
+                        <img src="/images/icon/footer-logo.svg" />
                         <p className="mt-lg-3" style={{ fontSize: 12 }}>促进科技与工业<br />
                                 发展，造福人类</p>
                         <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" />
@@ -194,7 +194,7 @@ export class NavFooterView extends View<CApp> {
                                 <li><a href="/product-catalog/1214">材料科学</a></li>
                                 <li><a href="/product-catalog/#">仪器耗材</a></li>
                             </ul>
-                            <li><a href="images/危险化学品购买提示.png" target="_blank">危险品购买提示</a></li>
+                            <li><a href="images/危险化学品购买提示.png"  style={{color:'red'}} target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
