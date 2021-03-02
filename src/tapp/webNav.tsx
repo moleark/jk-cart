@@ -129,28 +129,39 @@ export class NavHeaderView extends View<CApp> {
                                     {
                                         Object.keys(ProductCategorys).map((name: string) => {
                                             let id = env.testing === true ? ProductCategorys[name].id_test : ProductCategorys[name].id;
-                                            return <a key={name} className="dropdown-item" href={`/product-catalog/${id}`}>{name}</a>;
+                                            return <a key={name} className="dropdown-item text-center" href={`/product-catalog/${id}`}>{name}</a>;
                                         })
                                     }
                                 </div>
                             </li>
+
+                            {/* 服务菜单 二级菜单开发中
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
                                     服务<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item" href="/myOrders">订单查询</a>
-                                    <a className="dropdown-item" href="/pointshop">积分查询</a>
+                                    <a className="dropdown-item text-center" href="/myOrders">订单查询</a>
+                                    <a className="dropdown-item text-center" href="/pointshop">积分查询</a>
                                 </div>
-                            </li>
+                            </li> */}
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
                                     会员<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                                    <a className="dropdown-item" href="/password">修改密码</a>
+                                    <a className="dropdown-item text-center" href="/password">修改密码</a>
+                                    <a className="dropdown-item text-center" href="/meInfo">账户信息</a>
+                                    <a className="dropdown-item text-center" href="/contact">地址管理</a>
+                                    <hr className="my-1" />
+                                    <a className="dropdown-item text-center" href="/favorites">商品收藏</a>
+                                    <a className="dropdown-item text-center" href="/pointshop">积分管理</a>
+                                    <a className="dropdown-item text-center" href="/couponManage">卡券管理</a>
+                                    <hr className="my-1" />
+                                    <a className="dropdown-item text-center" href="/myOrders">订单记录</a>
+                                    <a className="dropdown-item text-center" href="/invoice">发票管理</a>
                                 </div>
                             </li>
                         </ul>
