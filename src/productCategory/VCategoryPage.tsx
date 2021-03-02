@@ -45,9 +45,10 @@ export class VCategoryPage extends VPage<CProductCategory> {
 
             let instructionUi;
             if (instruction) {
-                let instr: JQuery<Element> = $(instruction);
-                $("a[href*='jkchemical.com']", instr).addClass('d-none');
-                instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+                // let instr: JQuery<Element> = $(instruction);
+                // $("a[href*='jkchemical.com']", instr).addClass('d-none');
+                // instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+                instructionUi = <section dangerouslySetInnerHTML={{ __html: (instruction) }} />;
             }
 
             let bgClass = this.getBgClass(productCategoryId, allAncestors);
