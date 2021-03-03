@@ -205,7 +205,7 @@ export class NavFooterView extends View<CApp> {
                                 <li><a href="/product-catalog/1214">材料科学</a></li>
                                 <li><a href="/product-catalog/#">仪器耗材</a></li>
                             </ul>
-                            <li><a href="/images/危险化学品购买提示.png" style={{ color: 'red' }} target="_blank">危险品购买提示</a></li>
+                            <li><a href="/hazard-purchase" style={{ color: 'red' }} target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">

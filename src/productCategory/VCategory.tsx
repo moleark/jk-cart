@@ -18,11 +18,11 @@ export class VCategory extends VPage<CProductCategory> {
 
     private page = observer(() => {
         let { cHome } = this.controller.cApp;
-		let header: any, cartLabel: any;
-		if (xs) {
-			header = cHome.renderSearchHeader();
-        	cartLabel = this.controller.cApp.cCart.renderCartLabel();
-		}
+        let header: any, cartLabel: any;
+        if (xs) {
+            header = cHome.renderSearchHeader();
+            cartLabel = this.controller.cApp.cCart.renderCartLabel();
+        }
         return <Page header={header} right={cartLabel}>
             {this.renderRootCategory()}
         </Page>
@@ -64,10 +64,10 @@ export class VCategory extends VPage<CProductCategory> {
         //let { productCategory, name, children } = this.controller.rootCategories;
         let instructionUi;
         if (this.instruction) {
-            let instr: JQuery<Element> = $(this.instruction);
-            $("a[href*='jkchemical.com']", instr).addClass('d-none');
-            // instructionUi = <div className="overflow-auto my-3 bg-light" style={{ height: 320 }} dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
-            instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+            // let instr: JQuery<Element> = $(this.instruction);
+            // $("a[href*='jkchemical.com']", instr).addClass('d-none');
+            // instructionUi = <p dangerouslySetInnerHTML={{ __html: (instr[0].innerHTML || "") }} />;
+            instructionUi = <section dangerouslySetInnerHTML={{ __html: (this.instruction) }} />;
         }
 
         return <section className="container mt-lg-2">
