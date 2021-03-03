@@ -262,12 +262,16 @@ export class CProduct extends CUqBase {
     }
 
     fetchPdf = async (url: string) => {
-        let res = await window.fetch(GLOABLE.CONTENTSITE + url, {
+        let fileUrl = GLOABLE.CONTENTSITE + url;
+        let res = await window.fetch(fileUrl, {
             credentials: 'include'
         });
         if (res.status === 200) {
             let content = await res.arrayBuffer();
-            return content;
+            return {
+                content: content,
+                fileUrl: fileUrl,
+            };
         } else {
             return {
                 status: res.status,
