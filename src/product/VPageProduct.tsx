@@ -64,7 +64,7 @@ export class VPageProduct extends VPage<CProduct> {
                         {this.renderProduct(product)}
                         <div className="d-block d-sm-none px-2 ml-2 my-3 w-100" style={{ lineHeight: 1.8 }}>
                             {TopicDivision('产品资料')}
-                            {this.material(id,true)}
+                            {this.material(id, true)}
                         </div>
                     </div>
                 </section>
@@ -109,11 +109,10 @@ export class VPageProduct extends VPage<CProduct> {
     }
     */
 
-    private material = (id: any,showMob?:boolean) => {
+    private material = (id: any, showMob?: boolean) => {
         let Materials = [
             { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
             { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
-            { id: 3, name: "质检报告（COA）", type: "coa" },
         ];
         return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}
             {

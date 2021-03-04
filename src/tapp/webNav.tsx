@@ -32,7 +32,7 @@ export class NavHeaderView extends View<CApp> {
             let v: any;
             if (!user) {
                 v = <>
-                    <A className="" href="/register" target="_self">注册</A>/
+                    <A className="" href="/register" target="_self">注册</A> /&nbsp;
                     <A className="" href="/login" target="_self">登录</A>
                 </>;
             }
@@ -49,18 +49,25 @@ export class NavHeaderView extends View<CApp> {
                     <A className="mr-2" href="/logout" target="_self">退出</A>
                 </>;
             }
-            return <span className="small">{v}</span>;
+            return <div className="login" style={{ fontSize: "14px" }}> {v}</div >;
         });
+
         let vCartLabel = React.createElement(observer(() => {
             let { cart } = this.controller;
             if (!cart) return null;
             let count = cart.count.get();
             let vCount: any;
-            if (count) vCount = <u>{count}</u>;
+            if (count) vCount = <u className="position-absolute d-flex align-items-center justify-content-center text-white text-right text-decoration-none ml-2"
+                style={{ top: "0.2rem", fontSize: "0.6rem", backgroundColor: "red", minWidth: "1rem", padding: "0 3px", height: "1.0rem", borderRadius: '0.6rem' }}>{count}</u>;
             //if (!count) count = undefined;
-            return <Ax className="mr-3 text-primary jk-cart position-relative" href="/cart">
-                <FA name="shopping-cart" />{vCount}
-            </Ax>;
+            return <div className="cart mr-3 pl-1">
+                <Ax className="text-primary position-relative" href="/cart">
+                    <span className="text-primary small">
+                        <FA name="shopping-cart" />
+                    </span>
+                    {vCount}
+                </Ax>
+            </div>
         }));
 
         return <header>
@@ -71,9 +78,11 @@ export class NavHeaderView extends View<CApp> {
                             <div className="phone">
                                 <img src="/images/icon/Phone.svg" /> 客服热线： 400-666-7788
                             </div>
-                            <a className="small mr-2" data-toggle="modal" data-target="#choosecountry">
-                                中国
-							</a>
+                            <div className="area">
+                                <a className="mr-2" data-toggle="modal">
+                                    中国
+                                </a>
+                            </div>
                             {vCartLabel}
                             {vLogin}
                         </div>
@@ -174,13 +183,12 @@ export class NavHeaderView extends View<CApp> {
 
 export class NavFooterView extends View<CApp> {
     render() {
-        return <div className="d-none d-sm-block bg-light pt-4 reset-z-footer-bg">
-            <div className="container reset-z-ul">
-                <div className="row reset-z-footer-title reset-z-contact">
+        return <div className="d-none d-sm-block footer footer-m reset-z-footer-bg">
+            <div className="container">
+                <div className="row">
                     <div className="col-lg-3 col-6">
-                        <img src="/images/icon/footer-logo.svg" />
-                        <p className="mt-lg-3" style={{ fontSize: 12 }}>促进科技与工业<br />
-                                发展，造福人类</p>
+                        <img src="/images/icon/footer-logo.svg" className="footer-logo" />
+                        <p>促进科技与工业发展，造福人类</p>
                         <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" />
                     </div>
                     <div className="col-lg-3 col-6">
@@ -193,7 +201,7 @@ export class NavFooterView extends View<CApp> {
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
-                        <div className="font-weight-bold">浏览</div>
+                        <div className="footer-title">浏览</div>
                         <ul>
                             <li><a href="/information" target="_blank">资讯中心</a></li>
                             <li><a href="/product/mscu/msds" target="_blank">安全说明书(SDS)</a></li>
@@ -205,7 +213,7 @@ export class NavFooterView extends View<CApp> {
                                 <li><a href="/product-catalog/1214">材料科学</a></li>
                                 <li><a href="/product-catalog/#">仪器耗材</a></li>
                             </ul>
-                            <li><a href="/hazard-purchase" style={{ color: 'red' }} target="_blank">危险品购买提示</a></li>
+                            <li><a href="/hazard-purchase" className="text-danger" target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
