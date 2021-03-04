@@ -486,7 +486,8 @@ export class COrder extends CUqBase {
     }
 
     renderContentList = () => {
-        return this.renderView(VContactList);
+        return this.cApp.cSelectInvoiceContact.renderContentList('createOrder');
+        // return this.renderView(VContactList);
     }
 
     getValidCardForWebUser = async () => {
