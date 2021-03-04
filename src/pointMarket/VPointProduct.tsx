@@ -181,7 +181,7 @@ export class VPointProduct extends VPage<CPointProduct> {
                     {/*productIsNullTip*/autoHideTips(this.productIsNull, <div className="text-danger small my-2"><FA name="exclamation-circle" />未选择产品</div>)}
                     {/*pointIsEnoughTip*/autoHideTips(this.pointIsEnough, <div className="text-danger small m-0 p-0"><FA name="exclamation-circle" />积分不足<br />剩余{myEffectivePoints}分</div>)}
                 </div>
-                <button type="button" className="btn btn-danger m-1" onClick={this.openExchangeOrder}>去兑换</button>
+                <button type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.openExchangeOrder}>去兑换</button>
             </div>
         </div>;
         return footer;
