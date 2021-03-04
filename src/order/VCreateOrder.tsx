@@ -172,7 +172,8 @@ export class VCreateOrder extends VPage<COrder> {
         this.controller.submitOrder();
     }
 
-    saveShowModal = (type:string) => {
+    saveShowModal = async (type: string) => {
+        this.controller.cApp.cSelectInvoiceContact.getContactList();
         this.controller.modalTitle = 'contactList';
         this.controller.replyToContactType = type;
     }

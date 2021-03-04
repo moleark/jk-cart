@@ -22,6 +22,10 @@ export abstract class CSelectContact extends CUqBase {
 
      protected abstract getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
 
+    renderContentList = (param?:any) => {
+        return this.renderView(VContactList,param);
+    }
+
     /**
      * 打开地址新建界面
      */
@@ -113,10 +117,13 @@ export abstract class CSelectContact extends CUqBase {
 
     protected abstract setDefaultContact(contactId: BoxId): Promise<any>;
 
-    onContactSelected = (contact: BoxId) => {
+    onContactSelected = async(contact: BoxId,source?:string) => {
         if (this.fromOrderCreation) {
             this.backPage();
             this.returnCall(contact);
+        }
+        if (source === 'createOrder') {
+            await this.cApp.cOrder.onContactSelected(contact);
         }
     }
 

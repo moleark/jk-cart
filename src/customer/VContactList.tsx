@@ -10,6 +10,7 @@ import { Modal } from 'antd';
 const { confirm } = Modal;
 
 export class VContactList extends VPage<CSelectContact> {
+    protected contactSelectSource: string;
     async open() {
 
         this.openPage(this.page);
@@ -28,7 +29,7 @@ export class VContactList extends VPage<CSelectContact> {
             </div>
         </>;
         return <LMR right={right} className="px-3 py-2">
-            <div onClick={() => onContactSelected(contact)}>
+            <div onClick={() => onContactSelected(contact,this.contactSelectSource || undefined)}>
                 {tv(contact)}
             </div>
         </LMR>
@@ -71,7 +72,8 @@ export class VContactList extends VPage<CSelectContact> {
 
 
     render(param?: any): JSX.Element {
-        let { userContacts } = this.controller.cApp.cSelectShippingContact;
+        this.contactSelectSource = param;
+        let { userContacts } = this.controller;
         let footer = <button className="btn btn-primary mt-2 mx-auto w-50"
             onClick={() => {
                 this.controller.cApp.cOrder.modalTitle = 'contactInfo';
