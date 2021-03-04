@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, nav, NavView, WebNav } from 'tonva';
+import { CAppBase, nav, NavPage, NavView, WebNav } from 'tonva';
 import { CApp } from "./CApp";
 import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
@@ -132,27 +132,10 @@ export class CWeb extends CApp {
     showMain() {
         this.openVPage(VMainWebNav);
     }
-}
 
-/*
-export function renderDom(div: any) {
-    ReactDOM.render(
-        <React.StrictMode>
-            {div}
-        </React.StrictMode>,
-        document.getElementById('root')
-    );
-}
-
-export function renderCApp(AppClass : new() => CAppBase, param?: any, ...params: any[]) {
-    const App: React.FC = () => {
-        const onLogined = async () => {
-            let cApp = new AppClass();
-            cApp.init();
-            await cApp.start(param, params);
-        }
-        return <NavView onLogined={onLogined} notLogined={onLogined} />;
+    setHomeRoute() {
+        nav.onNavRoute(async (params: any) => {
+            window.location.href = process.env.REACT_APP_HOME_PATH;
+        });
     }
-    renderDom(<App />);
 }
-*/

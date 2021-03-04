@@ -404,6 +404,10 @@ export class CApp extends CUqApp {
             '/meInfo': this.navMeInfo,
         };
         nav.onNavRoutes(routes);
+        this.setHomeRoute();
+    }
+
+    setHomeRoute() {
         nav.onNavRoute(this.navHome);
     }
 
