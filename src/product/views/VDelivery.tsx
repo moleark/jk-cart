@@ -23,14 +23,21 @@ export class VDelivery extends View<CProduct> {
 				if (!futureDeliveryTimeDescription) return null;
 				return <div>{'期货: ' + futureDeliveryTimeDescription}</div>;
 			}
+            let restrict = inventoryAllocation.some(v=> v?.quantity !== 0) ? 1:  0;
 			return <>{inventoryAllocation.map((v, index) => {
 				let { warehouse, quantity, deliveryTimeDescription } = v;
 				if (quantity > 0) {
+                    restrict += 1;
 					return <div key={index} className="text-success">
 						{tv(warehouse, (values: any) => <span className="small">{values.name}</span>)}: {(quantity > 10 ? '>10' : quantity)}
 						{deliveryTimeDescription}
 					</div>
 				} else {
+                    if (restrict === 0) {
+                        if (!futureDeliveryTimeDescription) return null;
+                        restrict += 1;
+				        return <div key={index}>{'期货: ' + futureDeliveryTimeDescription}</div>;
+                    }
 					return undefined;
 				}
 			})}</>;
