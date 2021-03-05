@@ -103,7 +103,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let footer = <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
-                <button type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认兑换</button>
+                <button type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.onSubmit}>确认兑换</button>
             </div>
         </div>;
 

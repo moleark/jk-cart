@@ -107,7 +107,7 @@ export class VPageList extends VPage<CProduct> {
                         <Pagination onChange={(v) => {
                             document.body.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
                             esProductsPagerMore(v);//scrollTo(0,0);
-                        }} defaultCurrent={currentPage} pageSize={20}
+                        }} defaultCurrent={currentPage} pageSize={20} hideOnSinglePage={true}
                             total={esProductsTotal ? esProductsTotal.value : 0} showSizeChanger={false} />
                     </div>
                 </div>

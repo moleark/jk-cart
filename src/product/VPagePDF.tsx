@@ -56,7 +56,8 @@ export class VPagePDF extends VPage<CProduct> {
         return <Page >
             <div className="text-right mt-1 rounded py-1 pr-3 d-none d-sm-block" style={{background:'#f5f5f5'}}>
                 <a href={this.fileUrl} target="_blank">
-                    <FA name="cloud-download" className="text-primary" size='2x' />
+                    <button className="btn btn-sm btn-success w-3c" style={{backgroundColor: '#218838'}}>下载</button>
+                    {/* <FA name="cloud-download" className="text-primary" size='2x' /> */}
                 </a>
             </div>
             {/* <button onClick={()=>{this.dln()}} className="btn btn-primary">下载</button> */}
