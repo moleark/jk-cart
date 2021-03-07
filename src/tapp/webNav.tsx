@@ -103,13 +103,13 @@ export class NavHeaderView extends View<CApp> {
                             <div className="input-group col-md-12">
                                 <form className="w-100" onSubmit={(e: any) => {
                                     e.preventDefault();
-                                    let url = "/search/" + this.searchKey.value;
+                                    let url = "/search/" + encodeURIComponent(this.searchKey.value);
                                     this.navigate(url);
                                 }}>
                                     <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder="Search" />
                                 </form>
                                 <span className="input-group-btn" onClick={() => {
-                                    let url = "/search/" + this.searchKey.value;
+                                    let url = "/search/" + encodeURIComponent(this.searchKey.value);
                                     this.navigate(url);
                                 }}>
                                     <button className="btn" type="button">
