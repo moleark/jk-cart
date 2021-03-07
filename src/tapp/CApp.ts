@@ -206,11 +206,6 @@ export class CApp extends CUqApp {
 
     showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
-        let divLogin = document.getElementById('login');
-        if (divLogin) {
-            // this.openPage(this.cCart.renderCartLabel());
-            this.openPage(this.cMe.renderLoginState());
-        }
     }
 
 
@@ -268,7 +263,7 @@ export class CApp extends CUqApp {
             // elements定义div元素id与一个函数的对应关系，定义之后，
             // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
             let elements: Elements = {
-                login: this.showLogin,
+                login: this.renderLogin,
                 productlist: this.productList,
                 productdetail: this.productDetail,
                 carts: this.carts,
@@ -412,10 +407,6 @@ export class CApp extends CUqApp {
     }
 
     /*
-    private showLogin = (element: HTMLElement) => {
-        ReactDOM.render(this.cMe.renderLoginState_Web(), element);
-    }
-
     private productList = (element: HTMLElement) => {
         // console.log("productlist");
 
