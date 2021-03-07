@@ -18,8 +18,8 @@ import { VMeSideBar } from './VMeSideBar';
 export class CMe extends CUqBase {
     //    cApp: CApp;
     protected async internalStart(param?: any) {
-		this.openVPage(VMe);
-	}
+        this.openVPage(VMe);
+    }
 
     async changeWebUser(webUser: any) {
         let { currentUser } = this.cApp;
@@ -34,7 +34,7 @@ export class CMe extends CUqBase {
     tab = () => this.renderView(VMe);
     tabPage: VMe = new VMe(this);
 
-    openMyOrders = async (state:string) => {
+    openMyOrders = async (state: string) => {
         let { cOrder } = this.cApp;
         await cOrder.openMyOrders(state);
     }
@@ -94,11 +94,11 @@ export class CMe extends CUqBase {
                 action: fn
             }
         });
-	}
-	
-	openAbout() {
-		this.openVPage(VAbout);
-	}
+    }
+
+    openAbout() {
+        this.openVPage(VAbout);
+    }
 
     openMeInfoFirstOrder = async (options?: any) => {
         await this.openVPage(EditMeInfoFirstOrder, options);
@@ -118,17 +118,20 @@ export class CMe extends CUqBase {
         return await this.uqs.order.CommonText.load(textId);
     }
 
+    /**
+     * 渲染在jk-web中使用的登录状态组件
+     */
     renderLoginState() {
         return this.renderView(VLoginState);
     }
 
     showLogin = (callback?: (user: User) => Promise<void>) => {
-		if (nav.isWebNav) {
-			nav.navigate('/login');
-		}
-		else {
-			nav.showLogin(callback, true);
-		}
+        if (nav.isWebNav) {
+            nav.navigate('/login');
+        }
+        else {
+            nav.showLogin(callback, true);
+        }
     }
 
     showLoginOut = (callback?: () => Promise<void>) => {
@@ -144,15 +147,10 @@ export class CMe extends CUqBase {
         return this.renderView(VMeSideBar);
     }
 
-	/*
-    renderLoginState_Web() {
-        return this.renderView(VLoginState_Web);
-	}
-	*/
-	/*
+    /*
     renderCarLabel_Web() {
         let { cCart } = this.cApp;
         return cCart.renderCartLabel_Web();
-	}
-	*/
+    }
+    */
 }

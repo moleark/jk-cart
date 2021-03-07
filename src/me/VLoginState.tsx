@@ -1,39 +1,38 @@
 /* eslint-disable */
 import * as React from 'react';
-import { View, nav, LMR, Image, FA } from 'tonva';
+import { View, nav, LMR, Image, FA, A } from 'tonva';
 import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 
+
+/**
+ * 在jk-web中使用的登录状态组件
+ */
 export class VLoginState extends View<CMe> {
 
     render() {
-        let { user } = nav;
-        let { showLogin, renderCarLabel } = this.controller;
+        let { user } = this.controller;
+        let v: any;
         if (!user) {
-            return <>
-                <li className="nav-item d-none d-lg-block" onClick={() => showLogin()}>
-                    <a className="nav-link header-login">注册/登录</a>
-                </li>
-                {renderCarLabel()}
+            v = <>
+                <a className="" href="/register" target="_self">注册</a> /&nbsp;
+                <a className="" href="/login" target="_self">登录</a>
             </>;
-            /*
-            return <div className="d-flex align-items-center justify-content-end small text-muted">
-                <a className="px-2" href="./shop?type=signUp">注册</a>
-                <a className="px-2" href="./shop?type=login">登录</a>
-                {this.controller.renderCarLabel()}
-            </div>
-            */
         }
-        let { id, name, nick, icon } = user;
-        return <div className="d-flex align-items-center justify-content-end">
-            <div>
-                {<Image className="w-3c h-3c mr-3" src={icon} />}
-            </div>
-            <div>
-                <div>{userSpan(name, nick)}</div>
-                <div className="small"><span className="text-muted">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
-            </div>
-        </div >;
+        else {
+            let { name, nick, icon } = user;
+            let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" src={icon} />
+            v = <>
+                <a className="mr-2 nav-item dropdown" href="/me" target="_self">
+                    {Avatar}
+                    <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
+                </a>
+                <a className="mr-2" href="/logout" target="_self">退出</a>
+            </>;
+        }
+        return <>
+            {v}
+        </>;
     }
 }
 

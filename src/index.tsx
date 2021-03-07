@@ -30,7 +30,7 @@ serviceWorker.unregister();
 //let { location } = document;
 //if (location.host && false) {
 
-(async function() {
+(async function () {
 	nav.setSettings(appConfig);
 	let onLogined: () => Promise<void>;
 
@@ -52,12 +52,20 @@ serviceWorker.unregister();
 		return <NavView onLogined={onLogined} notLogined={onLogined} />;
 	}
 
+
+	let elRoot = document.getElementById('root');
+	if (!elRoot) {
+		elRoot = document.createElement('div');
+		elRoot.style.display = 'none';
+		document.body.append(elRoot);
+	}
 	ReactDOM.render(
 		<React.StrictMode>
 			<App />
 		</React.StrictMode>,
-		document.getElementById('root')
+		elRoot
 	);
+	// document.getElementById('root')
 	// If you want your app to work offline and load faster, you can change
 	// unregister() to register() below. Note this comes with some pitfalls.
 	// Learn more about service workers: https://bit.ly/CRA-PWA

@@ -1,6 +1,7 @@
 import { RowContext, BoxId } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
+import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
 import { CartPackRow, CartItem } from './Cart';
 import { Product } from 'model';
@@ -19,6 +20,10 @@ export class CCart extends CUqBase {
      */
     renderCartLabel() {
         return this.renderView(VCartLabel);
+    }
+
+    renderCartLabel_web() {
+        return this.renderView(VCartLabelWeb);
     }
 
     /**
