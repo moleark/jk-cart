@@ -21,7 +21,7 @@ export class VLoginState extends View<CMe> {
         }
         else {
             let { name, nick, icon } = user;
-            let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" src={icon} />
+            let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" style={{ width: "1rem", height: "1rem" }} src={icon} />
             v = <>
                 <a className="mr-2 nav-item dropdown" href="/me" target="_self">
                     {Avatar}
