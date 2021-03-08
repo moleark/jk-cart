@@ -97,8 +97,7 @@ export class CProduct extends CUqBase {
 
     private async searchByKey() {
         let url = GLOABLE.CONTENTSITE + '/api/search';
-        this.searchKey = encodeURIComponent(this.searchKey)
-        await this.searchAction(url, this.searchKey);
+        await this.searchAction(url, encodeURIComponent(this.searchKey));
         /* this.productsPager = new QueryPager<Product>(this.uqs.product.SearchProduct, 10, 10);
         this.productsPager.setItemConverter(this.productConverter);
         this.productsPager.first({
