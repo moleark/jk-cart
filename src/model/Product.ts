@@ -157,8 +157,16 @@ export class Product {
 				discount = brandDiscount && brandDiscount.discount;
 		}
 
-		let { id: currentSalesRegionId } = currentSalesRegion;
-		let prices = await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
+		// let { id: currentSalesRegionId } = currentSalesRegion;
+		let prices = await this.getProductPacks();
+		/* 修复pack获取的数据 obj应为Object,但有时会获取为number,故重新调用一次接口 */
+		if (prices.length) {
+			let endIndex: number = 0;
+			while (!prices.some((v: any) => { let pack: BoxId = v.pack; return typeof pack.obj === 'object' }) || endIndex <= 1) {
+				endIndex += 1;
+				prices = await this.getProductPacks();
+			};
+		};
 
 		this.prices = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
 			let ret: any = {};
@@ -220,6 +228,13 @@ export class Product {
 		let { currentUser } = this.cApp;
 		await this.cApp.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
 		this.favorite = false;
+	}
+
+	getProductPacks = async () => {
+		let { product } = this.cApp.uqs;
+		let { currentSalesRegion } = this.cApp;
+		let { id: currentSalesRegionId } = currentSalesRegion;
+		return await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
 	}
 
 	favoriteOrCancel = async (pack?: any) => {
