@@ -38,7 +38,7 @@ export class NavHeaderView extends View<CApp> {
             }
             else {
                 let { name, nick, icon } = user;
-                let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" style={{ width:"1rem",height: "1rem"}} src={icon} />
+                let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" style={{ width: "1rem", height: "1rem" }} src={icon} />
                 v = <>
                     <A className="mr-2 nav-item dropdown" href="/me" target="_self">
                         {Avatar}
@@ -207,11 +207,12 @@ export class NavFooterView extends View<CApp> {
                             <li><a href="/product/mscu/msds" target="_blank">安全说明书(SDS)</a></li>
                             <li><a href="/product-catalog">产品</a></li>
                             <ul className="ml-3">
-                                <li><a href="/product-catalog/7">有机化学</a></li>
-                                <li><a href="/product-catalog/430">分析化学</a></li>
-                                <li><a href="/product-catalog/986">生命科学</a></li>
-                                <li><a href="/product-catalog/1214">材料科学</a></li>
-                                <li><a href="/product-catalog/#">仪器耗材</a></li>
+                                {
+                                    Object.keys(ProductCategorys).map((name: string) => {
+                                        let id = env.testing === true ? ProductCategorys[name].id_test : ProductCategorys[name].id;
+                                        return <li key={name}><a href={`/product-catalog/${id}`}>{name}</a></li>
+                                    })
+                                }
                             </ul>
                             <li><a href="/hazard-purchase" className="text-danger" target="_blank">危险品购买提示</a></li>
                         </ul>
