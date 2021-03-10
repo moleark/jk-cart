@@ -79,7 +79,8 @@ export class Cart {
         else
             this.cartStore = new CartLocal(this.cApp);
         let cartData = await this.cartStore.load();
-        await this.mergeCartDate(cartData);
+        this.cartItems = await this.buildItem2(cartData);
+        // await this.mergeCartData(cartData);
         /*
         this.cartData = cartData;
         let count = 0;
@@ -97,23 +98,35 @@ export class Cart {
      * @param cartData 
      * @returns 
      */
-    private async mergeCartDate(cartData: any[]) {
+    async mergeFromRemote() {
+        let { isLogined } = this.cApp;
+        if (!isLogined)
+            return;
+        this.cartStore = new CartRemote(this.cApp);
+        let cartData = await this.cartStore.load();
         if (!cartData) return;
         let cartItems = await this.buildItem2(cartData);
         if (!(this.cartItems) || this.cartItems.length === 0) {
             this.cartItems = cartItems;
             return;
         }
-        for (let i = 0; i < cartItems.length; i++) {
-            const e = cartItems[i];
+
+        for (let i = 0; i < this.cartItems.length; i++) {
+            const e = this.cartItems[i];
             let { product, packs } = e;
             let { pack, quantity, price, currency } = packs[0];
-            let cartItemExists = this.cartItems.find((ci) => Tuid.equ(e.product, ci.product) && Tuid.equ(e.packs[0].pack, ci.packs[0].pack));
+            let cartItemExists = cartItems.find((ci) => Tuid.equ(product, ci.product) && Tuid.equ(pack, ci.packs[0].pack));
+            if (!cartItemExists)
+                await this.cartStore.storeCart(product, pack, quantity, price, currency);
+        }
+        cartItems.forEach(e => {
+            let { product, packs } = e;
+            let { pack } = packs[0];
+            let cartItemExists = this.cartItems.find((ci) => Tuid.equ(product, ci.product) && Tuid.equ(pack, ci.packs[0].pack));
             if (!cartItemExists) {
                 this.cartItems.push(e);
-                await this.cartStore.storeCart(product, pack, quantity, price, currency);
             }
-        }
+        });
     }
 
     /**

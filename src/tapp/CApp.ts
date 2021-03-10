@@ -454,7 +454,7 @@ export class CApp extends CUqApp {
             let loginCallback = async (user: User) => {
                 if (user) {
                     await this.currentUser.setUser(user);
-                    await this.loginCallBack(user);
+                    await this.cart.mergeFromRemote();
                 }
                 if (this.isWebNav) {
                     window.history.back();
@@ -468,18 +468,20 @@ export class CApp extends CUqApp {
         });
     }
 
-    async loginCallBack(user: User) {
-        await this.cart.init();
-        /*
-        if (this.cartService.isLocal) {
-            let cartLocal = { ...this.cartViewModel } as CartViewModel;
-            // this.cartService.clear(this.cartViewModel);
-            this.cartService = CartServiceFactory.getCartService(this);
-            this.cartViewModel = await this.cartService.load();
-            // this.cartViewModel = await this.cartService.merge(cartLocal);
+    loginCallback = async (user: User) => {
+        if (user) {
+            await this.currentUser.setUser(user);
+            await this.cart.mergeFromRemote();
         }
-        */
+        if (this.isWebNav) {
+            window.history.back();
+        }
+        else {
+            this.closePage(1);
+        }
+        nav.resolveRoute();
     }
+
     /*
     renderHeader = () => {
         return this.renderView(NavHeaderView);
