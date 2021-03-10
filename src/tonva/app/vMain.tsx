@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Page, FA, nav, LMR, List } from "../components";
 import { VPage } from '../vm';
-import { appInFrame } from '../net';
 import { CAppBase } from "./CAppBase";
 import { UQsMan } from '../uq';
 
@@ -101,7 +100,7 @@ export class VUnitSelect extends VPage<CAppBase> {
         </LMR>;
     }
     private onRowClick = async (appUnit: any) => {
-		appInFrame.unit = appUnit.id; // 25;
+		//appInFrame.unit = appUnit.id; // 25;
 		this.controller.setAppUnit(appUnit);
         await this.controller.start();
     }

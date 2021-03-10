@@ -1,7 +1,6 @@
 import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute } from "../components";
 import { Controller } from '../vm';
 import { UQsMan, TVs } from "../uq";
-import { appInFrame } from "../net";
 import { centerApi } from "./centerApi";
 import { VUnitSelect, VErrorsPage, VStartError, VUnsupportedUnit } from "./vMain";
 
@@ -96,10 +95,11 @@ export abstract class CAppBase extends Controller {
             // if (isDevelopment === true) {
 			// 这段代码原本打算只是在程序员调试方式下使用，实际上，也可以开放给普通用户，production方式下
 			let retErrors = UQsMan.errors;
-            let {predefinedUnit} = appInFrame;
+            //let {predefinedUnit} = appInFrame;
             let {user} = nav;
             if (user !== undefined && user.id > 0) {
-				let result = await centerApi.userAppUnits(UQsMan.value.id);
+				let uqAppId = UQsMan.value.id;
+				let result = await centerApi.userAppUnits(uqAppId);
 				this.appUnits = result;
 				/*
 				// 老版本，只返回一个数组。新版本，返回两个数组。下面做两个数组的判断
@@ -121,10 +121,14 @@ export abstract class CAppBase extends Controller {
 				}
 				*/
 				if (this.noUnit === true) return true;
+				/*
                 switch (this.appUnits.length) {
                     case 0:
-                        this.showUnsupport(predefinedUnit);
-						return false;
+						this.setAppUnit({});
+                        //this.showUnsupport(predefinedUnit);
+						//appInFrame.unit = predefinedUnit;
+						//return false;
+						break;
                     case 1:
 						let appUnit = this.appUnits[0];
 						this.setAppUnit(appUnit);
@@ -146,6 +150,7 @@ export abstract class CAppBase extends Controller {
                         this.openVPage(VUnitSelect);
                         return false;
                 }
+				*/
             }
             if (retErrors !== undefined) {
                 this.openVPage(VErrorsPage, retErrors);

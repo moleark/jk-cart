@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { UqApi, UqData, UnitxApi, appInFrame } from '../net';
+import { UqApi, UqData, UnitxApi } from '../net';
 import { Tuid, TuidDiv, TuidImport, TuidInner, TuidBox, TuidsCache } from './tuid';
 import { Action } from './action';
 import { Sheet } from './sheet';
@@ -9,7 +9,7 @@ import { History } from './history';
 import { Map } from './map';
 import { Pending } from './pending';
 import { CreateBoxId, BoxId } from './tuid';
-import { LocalMap, LocalCache } from '../tool';
+import { LocalMap, LocalCache, env } from '../tool';
 import { UQsMan } from './uqsMan';
 import { ReactBoxId } from './tuid/reactBoxId';
 import { Tag } from './tag/tag';
@@ -121,7 +121,7 @@ export class UqMan {
         if (this.name === '$$$/$unitx') {
             // 这里假定，点击home link之后，已经设置unit了
             // 调用 UnitxApi会自动搜索绑定 unitx service
-            this.uqApi = new UnitxApi(appInFrame.unit);
+            this.uqApi = new UnitxApi(env.unit);
         }
         else {
             let {appOwner, appName} = uqs;

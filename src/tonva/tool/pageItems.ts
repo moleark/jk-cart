@@ -240,6 +240,7 @@ export abstract class PageItems<T> {
                 this.pageStart,
 				pageSize);
         this.loaded = true;
+		if (!ret) ret = [];
 		let len = ret.length;
         if ((this.isFirst===true && len>this.firstSize) ||
             (this.isFirst===false && len>this.pageSize))

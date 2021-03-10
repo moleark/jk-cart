@@ -59,7 +59,10 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
     render() {
         let {icon, actions, isRight, className, itemIconClass, itemCaptionClass} = this.props;
         if (isRight === undefined) isRight = true;
-        let hasIcon = actions.some(v => v.icon!==undefined);
+        let hasIcon = actions.some(v => {
+			if (!v) return false;
+			return v.icon !== undefined
+		});
         let {dropdownOpen} = this.state;
 		//isOpen={this.state.dropdownOpen} toggle={this.toggle}
 		let cn = className || 'cursor-pointer dropdown-toggle btn btn-sm';

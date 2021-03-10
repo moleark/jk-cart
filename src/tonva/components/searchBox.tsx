@@ -1,6 +1,5 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { observable } from 'mobx';
 
 export interface SearchBoxProps {
     className?: string;
@@ -16,15 +15,9 @@ export interface SearchBoxProps {
     allowEmptySearch?: boolean;
 }
 
-/*
-export interface SearchBoxState {
-    disabled: boolean;
-}*/
-
 export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxState> {
     private input: HTMLInputElement;
     private key: string = null;
-    @observable private disabled: boolean;
 
     private onChange = (evt: React.ChangeEvent<any>) => {
         this.key = evt.target.value;
@@ -33,7 +26,7 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
             if (this.key === '') this.key = undefined;
         }
         if (this.props.allowEmptySearch !== true) {
-            this.disabled = !this.key;
+            this.input.disabled = !this.key;
         }
     }
     private onSubmit = async (evt: React.FormEvent<any>) => {
@@ -50,36 +43,36 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
         if (this.input) this.input.value = '';
     }
     render() {
-        let {className, inputClassName, onFocus,
-            label, placeholder, buttonText, maxLength, size} = this.props;
-        let inputSize:string;
-        switch (size) {
-            default:
-            case 'sm': inputSize = 'input-group-sm'; break;
-            case 'md': inputSize = 'input-group-md'; break;
-            case 'lg': inputSize = 'input-group-lg'; break;
-        }
-        return <form className={className} onSubmit={this.onSubmit} >
-            <div className={classNames("input-group", inputSize)}>
-                {label && <div className="input-group-addon align-self-center mr-2">{label}</div>}
-                <input ref={v=>this.input=v} onChange={this.onChange}
-                    type="text"
-                    name="key"
-                    onFocus={onFocus}
-                    className={classNames('form-control', inputClassName || 'border-primary')}
-                    placeholder={placeholder}
-                    defaultValue={this.props.initKey}
-                    maxLength={maxLength} />
-                <div className="input-group-append">
-                    <button className="btn btn-primary"
-                        type="submit"
-                        disabled={this.disabled}>
-                        <i className='fa fa-search' />
-                        <i className="fa"/>
-                        {buttonText}
-                    </button>
-                </div>
-            </div>
-        </form>;
+		let {className, inputClassName, onFocus,
+		label, placeholder, buttonText, maxLength, size} = this.props;
+		let inputSize:string;
+		switch (size) {
+			default:
+			case 'sm': inputSize = 'input-group-sm'; break;
+			case 'md': inputSize = 'input-group-md'; break;
+			case 'lg': inputSize = 'input-group-lg'; break;
+		}
+		return <form className={className} onSubmit={this.onSubmit} >
+			<div className={classNames("input-group", inputSize)}>
+				{label && <div className="input-group-addon align-self-center mr-2">{label}</div>}
+				<input ref={v=>this.input=v} onChange={this.onChange}
+					type="text"
+					name="key"
+					onFocus={onFocus}
+					className={classNames('form-control', inputClassName || 'border-primary')}
+					placeholder={placeholder}
+					defaultValue={this.props.initKey}
+					maxLength={maxLength} />
+				<div className="input-group-append">
+					<button className="btn btn-primary"
+						type="submit"
+						disabled={this.props.allowEmptySearch !== true}>
+						<i className='fa fa-search' />
+						<i className="fa"/>
+						{buttonText}
+					</button>
+				</div>
+			</div>
+		</form>;
     }
 }
