@@ -469,6 +469,7 @@ export class CApp extends CUqApp {
     }
 
     async loginCallBack(user: User) {
+        await this.cart.init();
         /*
         if (this.cartService.isLocal) {
             let cartLocal = { ...this.cartViewModel } as CartViewModel;

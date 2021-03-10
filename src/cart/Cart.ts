@@ -79,6 +79,8 @@ export class Cart {
         else
             this.cartStore = new CartLocal(this.cApp);
         let cartData = await this.cartStore.load();
+        await this.mergeCartDate(cartData);
+        /*
         this.cartData = cartData;
         let count = 0;
         for (let cd of cartData) {
@@ -86,12 +88,41 @@ export class Cart {
             count += quantity;
         }
         this.count.set(count);
+        */
+        this.calcSum();
     }
 
-    async buildItems() {
-        if (this.cartItems) return;
+    /**
+     * 合并购物车数据
+     * @param cartData 
+     * @returns 
+     */
+    private async mergeCartDate(cartData: any[]) {
+        if (!cartData) return;
+        let cartItems = await this.buildItem2(cartData);
+        if (!(this.cartItems) || this.cartItems.length === 0) {
+            this.cartItems = cartItems;
+            return;
+        }
+        for (let i = 0; i < cartItems.length; i++) {
+            const e = cartItems[i];
+            let { product, packs } = e;
+            let { pack, quantity, price, currency } = packs[0];
+            let cartItemExists = this.cartItems.find((ci) => Tuid.equ(e.product, ci.product) && Tuid.equ(e.packs[0].pack, ci.packs[0].pack));
+            if (!cartItemExists) {
+                this.cartItems.push(e);
+                await this.cartStore.storeCart(product, pack, quantity, price, currency);
+            }
+        }
+    }
+
+    /**
+     * 填充购物车中相关产品的具体信息 
+     * @param cartData 
+     * @returns 
+     */
+    private async buildItem2(cartData: any[]): Promise<CartItem[]> {
         let { uqs, currentSalesRegion } = this.cApp;
-        let cartData = this.cartData;
         // 初始化购物车中产品的目录价
         let { product } = uqs;
         let { PriceX } = product;
@@ -109,7 +140,7 @@ export class Cart {
             }
         }
 
-        let cartDataGrouped = groupByProduct(cartData);
+        // let cartDataGrouped = groupByProduct(cartData);
         let productPromises: Promise<any>[] = [];
         let cartItems: CartItem[] = [];
         if (cartData && cartData.length) {
@@ -127,7 +158,12 @@ export class Cart {
             };
         };
         await Promise.all(productPromises);
-        this.cartItems = cartItems;
+        return cartItems;
+    }
+
+    async buildItems() {
+        if (this.cartItems) return;
+        this.cartItems = await this.buildItem2(this.cartData);
         delete this.cartData;
     }
 
