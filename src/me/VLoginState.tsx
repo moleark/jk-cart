@@ -25,7 +25,7 @@ export class VLoginState extends View<CMe> {
             v = <>
                 <a className="mr-2 nav-item dropdown" href="/me" target="_self">
                     {Avatar}
-                    <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
+                    <span className="dropdown-menu dropdown-menu-right px-2 m-0">{nick || name}</span>
                 </a>
                 <a className="mr-2" href="/logout" target="_self">退出</a>
             </>;

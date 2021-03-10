@@ -43,7 +43,7 @@ export class NavHeaderView extends View<CApp> {
                     <A className="mr-2 nav-item dropdown" href="/me" target="_self">
                         {Avatar}
                         {/* <FA name="user" size="lg" className="text-primary" /> */}
-                        <span className="dropdown-menu dropdown-menu-right px-2">{nick || name}</span>
+                        <span className="dropdown-menu dropdown-menu-right px-2 m-0">{nick || name}</span>
                     </A>
                     {/* <A className="mr-2" href="/me" target="_self">{nick || name}</A> */}
                     <A className="mr-2" href="/logout" target="_self">退出</A>
@@ -134,7 +134,7 @@ export class NavHeaderView extends View<CApp> {
                                     aria-expanded="false">
                                     产品<b className="caret"></b>
                                 </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
+                                <div className="dropdown-menu dropdown-menu-right m-0" aria-labelledby="navbarDropdownPortfolio">
                                     {
                                         Object.keys(ProductCategorys).map((name: string) => {
                                             let id = env.testing === true ? ProductCategorys[name].id_test : ProductCategorys[name].id;
@@ -150,7 +150,7 @@ export class NavHeaderView extends View<CApp> {
                                     aria-expanded="false">
                                     服务<b className="caret"></b>
                                 </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
+                                <div className="dropdown-menu dropdown-menu-right m-0" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item text-center" href="/myOrders">订单查询</a>
                                     <a className="dropdown-item text-center" href="/pointshop">积分查询</a>
                                 </div>
@@ -160,7 +160,7 @@ export class NavHeaderView extends View<CApp> {
                                     aria-expanded="false">
                                     会员<b className="caret"></b>
                                 </a>
-                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
+                                <div className="dropdown-menu dropdown-menu-right m-0" aria-labelledby="navbarDropdownBlog">
                                     <a className="dropdown-item text-center" href="/password">修改密码</a>
                                     <a className="dropdown-item text-center" href="/meInfo">账户信息</a>
                                     <a className="dropdown-item text-center" href="/contact">地址管理</a>
