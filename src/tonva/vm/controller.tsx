@@ -97,7 +97,9 @@ export abstract class Controller {
     protected onDispose() {
 	}
 	
-	//get isRouting() {return nav.isRouting;}
+	get timeZone():number {
+		return env.timeZone;
+	}
 
 	isMe(id:any):boolean {
 		if (id === null) return false;

@@ -812,7 +812,11 @@ export class Nav {
 		else {
             await this.showAppView(isUserLogin);
         }
+		await this.actionAfterLogin?.();
 	}
+
+	actionAfterLogin: () => Promise<void>;
+	actionAfterLogout: () => Promise<void>;
 
 	// 缓冲登录
     async logined(user: User, callback?: (user:User)=>Promise<void>) {
@@ -823,11 +827,6 @@ export class Nav {
     async userLogined(user: User, callback?: (user:User)=>Promise<void>) {
 		await this.internalLogined(user, callback, true);
     }
-
-    //wsConnect() {
-        //let ws:WSChannel = this.ws = new WSChannel(this.wsHost, this.user.token);
-        //ws.connect();
-    //}
 
     loginTop(defaultTop:JSX.Element) {
         return (this.navSettings && this.navSettings.loginTop) || defaultTop;
@@ -899,18 +898,17 @@ export class Nav {
 	}
 
     async logout(callback?:()=>Promise<void>) { //notShowLogin?:boolean) {
-        //appInFrame.unit = undefined;
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
         let guest = this.local.guest.get();
         setCenterToken(0, guest && guest.token);
-		//this.ws = undefined;
 		this.clear();
         if (callback === undefined)
             await nav.start();
         else
             await callback();
+		this.actionAfterLogout?.();
     }
 
     async changePassword() {

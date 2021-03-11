@@ -10,7 +10,7 @@ export class IdCache {
     private queue: number[] = [];               // 每次使用，都排到队头
 	private cache = observable.map({}, {deep: false});    // 已经缓冲的
 	//private loading:boolean = false;
-	private loadingIds: number[];
+	//private loadingIds: number[];
 
     protected localArr:LocalArr;
     protected waitingIds: number[] = [];          // 等待loading的
@@ -58,11 +58,8 @@ export class IdCache {
             }
             else {
                 // 如果移除r还没有缓存
-				/*
                 let index = this.waitingIds.findIndex(v => v === r);
                 this.waitingIds.splice(index, 1);
-				*/
-				//this.removeWaiting(r);
             }
         }
         this.waitingIds.push(id);
@@ -74,11 +71,11 @@ export class IdCache {
 		let index = this.waitingIds.findIndex(v => v === id);
 		this.waitingIds.splice(index, 1);
 	}
-	*/
+	
 	protected clearWaiting() {
 		this.waitingIds.splice(0, this.waitingIds.length);
 	}
-	/*
+	
 	protected removeLoading(id:number) {
 		if (this.loadingIds === undefined) return;
 		let index = this.loadingIds.findIndex(v => v === id);
@@ -133,7 +130,7 @@ export class IdCache {
     protected getIdFromObj(val:any) {return this.tuidInner.getIdFromObj(val)}
 
     async cacheIds():Promise<void> {
-        if (this.waitingIds.length === 0) return;
+        //if (this.waitingIds.length === 0) return;
 		let tuidValues = await this.loadIds();
 		/*
 		if (tuidValues === undefined || tuidValues.length === 0) {
@@ -169,11 +166,12 @@ export class IdCache {
 		if (this.waitingIds.length === 0) return;
 		//if (this.loading === true) return;
 		//this.loading = true;
-		this.loadingIds = [...this.waitingIds];
-		this.clearWaiting();
-		let ret = await this.loadTuidIdsOrLocal(this.loadingIds);
+		let loadingIds = [...this.waitingIds];
+		//this.clearWaiting();
+		this.waitingIds = [];
+		let ret = await this.loadTuidIdsOrLocal(loadingIds);
 		//this.loading = false;
-		this.loadingIds = undefined;
+		//this.loadingIds = undefined;
         return ret;
     }
     protected unpackTuidIds(values:string[]):any[] {

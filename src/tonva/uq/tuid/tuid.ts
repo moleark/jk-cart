@@ -20,7 +20,6 @@ export abstract class UqTuid<M> extends Entity {
     protected noCache: boolean;
     readonly typeName:string = 'tuid';
     protected idName: string;
-    cached: boolean;
     unique: string[];
 
     public setSchema(schema:any) {
@@ -124,7 +123,9 @@ export class TuidInner extends Tuid {
         if (!createBoxId) return {id: id} as BoxId;
         return createBoxId(this, id);
     }
-    valueFromId(id:number) {return this.idCache.getValue(id)}
+    valueFromId(id:number) {
+		return this.idCache.getValue(id)
+	}
 	resetCache(id:number|BoxId):void {
 		if (typeof id === 'object') id = id.id;
 		this.idCache.resetCache(id);
@@ -150,8 +151,7 @@ export class TuidInner extends Tuid {
         return this.divs && this.divs[name];
     }
     async loadTuidIds(divName:string, ids:number[]):Promise<any[]> {
-        let ret:any[] = await new IdsCaller(this, {divName:divName, ids:ids}, false).request();
-        if (ret.length > 0) this.cached = true;
+        let ret:any[] = await new IdsCaller(this, {divName, ids}, false).request();
         return ret;
     }
     async loadMain(id:number|BoxId):Promise<any> {
@@ -545,6 +545,7 @@ export class TuidDiv extends TuidInner /* Entity*/ {
 
     useId(id:number, defer?:boolean):void {
         if (this.noCache === true) return;
+		//addTuids(this.name, [id]);
         this.idCache.useId(id, defer);
     }
 
