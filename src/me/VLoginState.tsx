@@ -19,19 +19,19 @@ export class VLoginState extends View<CMe> {
         let v: any;
         if (!user) {
             v = <>
-                <Ax className="" href="/register" target="_self">注册</Ax> /&nbsp;
-                <Ax className="" href="/login" target="_self">登录</Ax>
+                <a className="" href="/register" target="_self">注册</a> /&nbsp;
+                <a className="" href="/login" target="_self">登录</a>
             </>;
         }
         else {
             let { name, nick, icon } = user;
             let Avatar: JSX.Element = !icon ? <FA name="user" size="lg" className="text-primary" /> : <Image className="w-1c h-1c" style={{ width: "1rem", height: "1rem" }} src={icon} />
             v = <>
-                <Ax className="mr-2 nav-item dropdown" href="/me" target="_self">
+                <a className="mr-2 nav-item dropdown" href="/me" target="_self">
                     {Avatar}
                     <span className="dropdown-menu dropdown-menu-right px-2 m-0">{nick || name}</span>
-                </Ax>
-                <Ax className="mr-2" href="/logout" target="_self">退出</Ax>
+                </a>
+                <a className="mr-2" href="/logout" target="_self">退出</a>
             </>;
         }
         return <>
