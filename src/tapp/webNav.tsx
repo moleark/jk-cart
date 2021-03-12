@@ -92,7 +92,7 @@ export class NavHeaderView extends View<CApp> {
 
             <nav className="navbar navbar-expand-lg navbar-dark pad-tb20">
                 <div className="container">
-                    <A href="/" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></A>
+                    <a href="/" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></a>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
                             <li><a href="/subjectpost/18" type="_blank">特惠活动</a> </li>
