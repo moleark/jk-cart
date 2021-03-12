@@ -12,7 +12,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
     private renderBreadcrumbs = (allAncestors: any[]) => {
         let { cApp } = this.controller;
         return <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
-            <Ax href="/">首页</Ax>
+            <a href="/">首页</a>
             <Ax href="/product-catalog">产品</Ax>
             {allAncestors.map((parent: any) => {
                 return tv(parent, (e: any) => {
