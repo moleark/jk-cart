@@ -23,7 +23,7 @@ export class VModelByCreateOrder extends View<COrder>{
                         </div>
                     }
                     <div className="text-center border-bottom h4 py-2">{modalTitleS[modalTitle]?.title}</div>
-                    <div className="h-max-30c overflow-auto scroll-S" style={{overflowX:"hidden"}}>{renderModelContent()}</div>
+                    <div className="h-max-30c overflow-auto scroll-S" style={{ overflowX: "hidden" }}>{renderModelContent()}</div>
                 </div>
             </div>
         </div>;
