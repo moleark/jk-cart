@@ -452,10 +452,6 @@ export class CApp extends CUqApp {
         if (this.isLogined) return;
         return new Promise<void>((resolve, reject) => {
             let loginCallback = async (user: User) => {
-                if (user) {
-                    await this.currentUser.setUser(user);
-                    await this.cart.mergeFromRemote();
-                }
                 if (this.isWebNav) {
                     window.history.back();
                 }
@@ -468,29 +464,14 @@ export class CApp extends CUqApp {
         });
     }
 
-    loginCallback = async (user: User) => {
+    protected async onChangeLogin(user: User) {
         if (user) {
             await this.currentUser.setUser(user);
             await this.cart.mergeFromRemote();
+        } else {
+            // 退出的话把购物车清掉？
         }
-        if (this.isWebNav) {
-            window.history.back();
-        }
-        else {
-            this.closePage(1);
-        }
-        nav.resolveRoute();
     }
-
-    /*
-    renderHeader = () => {
-        return this.renderView(NavHeaderView);
-    }
-
-    renderFooter = () => {
-        return this.renderView(NavFooterView);
-    }
-    */
 
     protected onDispose() {
         this.cart.dispose();
