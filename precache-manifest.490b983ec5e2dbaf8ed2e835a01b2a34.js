@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6803765607b224acae4c3e5272c13405",
+    "revision": "19c2b9febfaef2730018b8ac5d545954",
     "url": "./index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/css/2.e226fe3a.chunk.css"
   },
   {
-    "revision": "4fd82ed5b2fcff55bc66",
-    "url": "./static/css/main.4fe4a8fa.chunk.css"
+    "revision": "33e521f0b7dbb3e37592",
+    "url": "./static/css/main.3643c0ed.chunk.css"
   },
   {
     "revision": "0b3e60b0126aac7545d2",
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/js/2.7ccec44b.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4fd82ed5b2fcff55bc66",
-    "url": "./static/js/main.8ac94fd7.chunk.js"
+    "revision": "33e521f0b7dbb3e37592",
+    "url": "./static/js/main.690a5868.chunk.js"
   },
   {
     "revision": "f3bf36e81ba3e4da0e32",
@@ -72,8 +72,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/MaterialScience.f2439aa0.png"
   },
   {
-    "revision": "2e58a251fa3d28ceb37ed09c95c1dd5f",
-    "url": "./static/media/Menu.2e58a251.svg"
+    "revision": "86a66d1b4fdfdcf1ee68d7fe2d398ae6",
+    "url": "./static/media/Menu.86a66d1b.svg"
   },
   {
     "revision": "11e84ba2e7c08c7f20f97066b45b48d8",
@@ -96,16 +96,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/cards.c1307206.png"
   },
   {
-    "revision": "00019799eadee6abadc8f54734e78fd9",
-    "url": "./static/media/chevron-right-hover.00019799.svg"
+    "revision": "b3f6f904efe5eaa7eab08ca32e4c73fc",
+    "url": "./static/media/chevron-right-hover.b3f6f904.svg"
   },
   {
-    "revision": "5643de9e51735bda32b52fe610c5a4db",
-    "url": "./static/media/commerce-and-shopping-hover.5643de9e.svg"
+    "revision": "d59775bb19969d7446b23c8562e51784",
+    "url": "./static/media/commerce-and-shopping-hover.d59775bb.svg"
   },
   {
-    "revision": "fb7260439e550df7a3035930e783be66",
-    "url": "./static/media/commerce-and-shopping.fb726043.svg"
+    "revision": "0889c62634c30c1dd85896be9daa5312",
+    "url": "./static/media/commerce-and-shopping.0889c626.svg"
   },
   {
     "revision": "3c4ef45ab083a69a59b74c4b6e8a5d2b",
@@ -148,8 +148,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/infb.ce9e0db2.jpg"
   },
   {
-    "revision": "eb360cc28d0f3686b967dcaf2b9d9a4d",
-    "url": "./static/media/left-arrow.eb360cc2.svg"
+    "revision": "03c9d58e751d9355a0dcff6ab039601d",
+    "url": "./static/media/left-arrow.03c9d58e.svg"
   },
   {
     "revision": "ee7cd8ed2dcec943251eb2763684fc6f",
@@ -172,8 +172,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/pig.772a31a6.png"
   },
   {
-    "revision": "71e0aaee15a9d4ad29846871a47d7bde",
-    "url": "./static/media/s-triangle.71e0aaee.svg"
+    "revision": "572250564939cbb2cff1401d8b524779",
+    "url": "./static/media/s-triangle.57225056.svg"
   },
   {
     "revision": "928fc4cf4497553c15dd90a78c59670d",
@@ -200,16 +200,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/slick.f97e3bbf.svg"
   },
   {
-    "revision": "cd60def72bf9d80fb022b37bac886aa5",
-    "url": "./static/media/under-arrow-1hover.cd60def7.svg"
+    "revision": "f88d0357c7404b6b0124b1fb1dcbef00",
+    "url": "./static/media/under-arrow-1hover.f88d0357.svg"
   },
   {
-    "revision": "58976ad5a825e65a670c820b03b42b01",
-    "url": "./static/media/under-arrow-hover.58976ad5.svg"
+    "revision": "80a7cbe23e193bc0d11bccc65036c867",
+    "url": "./static/media/under-arrow-hover.80a7cbe2.svg"
   },
   {
-    "revision": "3b9f39c29162e0d2689612f27c0b2176",
-    "url": "./static/media/under-arrow.3b9f39c2.svg"
+    "revision": "9688c417fe87caf816abc72272853b66",
+    "url": "./static/media/under-arrow.9688c417.svg"
   },
   {
     "revision": "21166a383165b8a9faa231bf391802bb",
