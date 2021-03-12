@@ -1,7 +1,7 @@
 /* eslint-disable */
 import ReactDOM from 'react-dom';
 import { User, nav, NavPage, Elements, BoxId, View, Controller, PageWebNav } from 'tonva';
-import { Cart } from "../cart/Cart";
+import { Cart, LOCALCARTNAME } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";
 import { CProduct } from "../product";
@@ -470,6 +470,9 @@ export class CApp extends CUqApp {
             await this.cart.mergeFromRemote();
         } else {
             // 退出的话把购物车清掉？
+            localStorage.removeItem(LOCALCARTNAME);
+            this.cart.count.set(0);
+            this.cart.cartItems = [];
         }
     }
 

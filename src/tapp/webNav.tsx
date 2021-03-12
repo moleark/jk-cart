@@ -79,7 +79,7 @@ export class NavHeaderView extends View<CApp> {
                                 <img src="/images/icon/Phone.svg" /> 客服热线： 400-666-7788
                             </div>
                             <div className="area">
-                                <a className="mr-2" data-toggle="modal">
+                                <a className="px-1" data-toggle="modal">
                                     中国
                                 </a>
                             </div>

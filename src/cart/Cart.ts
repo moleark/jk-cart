@@ -395,7 +395,7 @@ class CartRemote extends CartStore {
     }
 }
 
-const LOCALCARTNAME: string = "cart";
+export const LOCALCARTNAME: string = "cart";
 class CartLocal extends CartStore {
 
     private cartData: any[] = [];

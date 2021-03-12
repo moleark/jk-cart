@@ -154,7 +154,7 @@ export class VCart extends VPage<CCart> {
     });
 
     private empty() {
-        return <div className="py-5 text-center bg-white">你的购物车空空如也</div>
+        return <div className="mt-1 py-5 text-center bg-white">你的购物车空空如也</div>
     }
 
     /**
@@ -194,27 +194,31 @@ export class VCart extends VPage<CCart> {
         return <div className="navheader">购物车</div>;
     }
     footer() {
-        let { cart } = this.controller.cApp;
-        let footer: any;
-        if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
-            footer = undefined;
-        }
-        else {
-            footer = React.createElement(this.CheckOutButton);
-        }
-        return footer;
+        return  React.createElement(observer(() => {
+            let { cart } = this.controller.cApp;
+            let footer: any;
+            if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
+                footer = undefined;
+            }
+            else {
+                footer = React.createElement(this.CheckOutButton);
+            }
+            return footer;
+        }));
     }
 
     content() {
-        let { cart } = this.controller.cApp;
-        let content: any;
-        if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
-            content = this.empty();
-        }
-        else {
-            content = React.createElement(this.cartForm);
-        }
-        return content;
+        return  React.createElement(observer(() => {
+            let { cart } = this.controller.cApp;
+            let content: any;
+            if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
+                content = this.empty();
+            }
+            else {
+                content = React.createElement(this.cartForm);
+            }
+            return content;
+        }));
     }
 
     private tab = observer(() => {
