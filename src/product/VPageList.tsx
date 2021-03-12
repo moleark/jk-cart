@@ -14,60 +14,50 @@ import { observer } from 'mobx-react-lite';
 */
 
 export class VPageList extends VPage<CProduct> {
-	
-    private searchKey: string;
+
     async open() {
         this.openPage(this.page)
         //this.searchKey = key;
         //xs ? this.openPage(this.page) : this.openPage(this.largePage);
-	}
-	
+    }
 
-	
+
+
     /* render(key: any) {
         this.searchKey = key;
         return <this.page />
-	} */
-	
+    } */
+
 
     private onProductClick = async (product: Product) => {
-		let {id} = product;
-		// await this.controller.showProductDetail(product.id);
-		//if (this.isWebNav === true) {
-			let url = "/product/" + id;
-			console.log(url);
-			this.navigate(url);
-		//}
-		//else {
-		//	await this.controller.showProductDetail(id);
-		//}
+        let { id } = product;
+        let url = "/product/" + id;
+        this.navigate(url);
     }
 
     private onScrollBottom = async (scroller: Scroller) => {
         scroller.scrollToBottom();
-        let { productsPager,esproductsPager } = this.controller;
-        if(!(esproductsPager instanceof Array))
+        let { productsPager, esproductsPager } = this.controller;
+        if (!(esproductsPager instanceof Array))
             esproductsPager.more();
-        // productsPager.more();
     }
 
     private renderProduct = (p: Product) => {
-        // console.log(p);
-        return this.controller.cApp.cProduct.renderProduct(p,'productList');
+        return this.controller.cApp.cProduct.renderProduct(p, 'productList');
     }
 
-	/* header() {
-		return this.isWebNav===true? null: this.controller.cApp.cHome.renderSearchHeader();
-	}
+    /* header() {
+        return this.isWebNav===true? null: this.controller.cApp.cHome.renderSearchHeader();
+    }
 
-	right() {
-		return this.isWebNav===true? null: this.controller.cApp.cCart.renderCartLabel();
-	} */
+    right() {
+        return this.isWebNav===true? null: this.controller.cApp.cCart.renderCartLabel();
+    } */
 
-	/* content() {
+    /* content() {
         let { productsPager,esproductsPager, searchKey } = this.controller;
         let none = <div className="p-3 text-warning">[无]</div>;
-		return <Page header={''}>
+        return <Page header={''}>
             <div className="bg-white py-2 px-3 my-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
             <div className="row mx-0 bg-light">
                 <div className="col-lg-3 product-side d-none d-lg-block">
@@ -81,12 +71,12 @@ export class VPageList extends VPage<CProduct> {
                     </div>
                 </div>
             </div>
-		</Page>;
+        </Page>;
     } */
-	
+
     private page = observer(() => {
 
-        let { productsPager, esproductsPager,cApp,searchKey, esProductsPagerMore, esProductsTotal, currentPage} = this.controller;
+        let { productsPager, esproductsPager, cApp, searchKey, esProductsPagerMore, esProductsTotal, currentPage } = this.controller;
         let { cHome, cCart } = cApp;
         let header: any, cart: any;
         if (xs) {
@@ -94,8 +84,8 @@ export class VPageList extends VPage<CProduct> {
             cart = cCart.renderCartLabel();
         }
         let none = <div className="p-3 text-warning">[无]</div>
-        
-        return <Page header={header}  right={cart} onScrollBottom={this.onScrollBottom}>
+
+        return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
             <div className="bg-white py-2 px-3 my-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
             <div className="row mx-0 bg-light">
                 <div className="col-lg-3 product-side d-none d-lg-block">
@@ -105,15 +95,15 @@ export class VPageList extends VPage<CProduct> {
                     <List before={''} none={none} items={esproductsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
                     <div className="text-center mt-3 mb-5 d-none d-sm-block">
                         <Pagination onChange={(v) => {
-                            document.body.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                            document.body.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
                             esProductsPagerMore(v);//scrollTo(0,0);
                         }} defaultCurrent={currentPage} pageSize={20} hideOnSinglePage={true}
                             total={esProductsTotal ? esProductsTotal.value : 0} showSizeChanger={false} />
                     </div>
                 </div>
             </div>
-		</Page>;
-        
+        </Page>;
+
         /* return <Page header={header} right={cart} onScrollBottom={this.onScrollBottom}>
             <div className="bg-white py-2 px-3 mb-1 text1"><small className=" small text-muted">搜索: </small>{searchKey}</div>
             <List before={''} none={none} items={esproductsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
@@ -128,5 +118,5 @@ export class VPageList extends VPage<CProduct> {
             <div className="bg-white py-2 px-3 mb-1"><small className=" small text-muted">搜索: </small>{this.searchKey}</div>
             <List before={''} none={none} items={productsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
         </Page>
-	}; */
+    }; */
 }
