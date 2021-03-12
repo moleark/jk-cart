@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, Elements, nav, NavPage, NavView, WebNav } from 'tonva';
+import { Elements, nav, WebNav } from 'tonva';
 import { CApp } from "./CApp";
 import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
@@ -36,7 +36,7 @@ export class CWeb extends CApp {
         }
         this.hookElements(elements);
         window.onfocus = () => {
-            this.hookElements(elements)
+            nav.reloadUser();
         }
     }
 
