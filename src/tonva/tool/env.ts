@@ -1,12 +1,5 @@
 import { from62 } from './62';
 import { LocalMap } from './localDb';
-/*
-// 如果路径上有独立的test单词，则是test环境
-function isTesting():boolean {
-	let ret = /(\btest\b)/i.test(document.location.href);
-	return ret;
-}
-*/
 
 export const env = (function () {
 	let {unit, testing, params, lang, district, timeZone} = initEnv();
@@ -17,6 +10,7 @@ export const env = (function () {
 		lang, 
 		district,
 		timeZone,
+		browser: detectBrowser(), 
         isDevelopment: process.env.NODE_ENV === 'development',
         localDb: new LocalMap(testing===true? '$$':'$'),
         setTimeout: (tag:string, callback: (...args: any[]) => void, ms: number, ...args: any[]):NodeJS.Timer => {
@@ -125,4 +119,18 @@ function initEnv(): {
     }
 	let timeZone = -new Date().getTimezoneOffset() / 60;
 	return {unit, testing, params, lang, district, timeZone};
+}
+
+function detectBrowser() { 
+    if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 )
+        return 'Opera';
+	if(navigator.userAgent.indexOf("Chrome") != -1 )
+        return 'Chrome';
+	if(navigator.userAgent.indexOf("Safari") != -1)
+        return 'Safari';
+	if(navigator.userAgent.indexOf("Firefox") != -1 )
+        return 'Firefox';
+	if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!(document as any).documentMode == true ))
+        return 'IE'; //crap
+    return 'Unknown';
 }

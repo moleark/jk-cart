@@ -6,7 +6,6 @@ import {Page} from './page/page';
 import {netToken} from '../net/netToken';
 import FetchErrorView, { SystemNotifyPage } from './fetchErrorView';
 import {FetchError} from '../net/fetchError';
-//import {appUrl, setAppInFrame, getExHash, getExHashPos} from '../net/appBridge';
 import {LocalData, env} from '../tool';
 import {guestApi, logoutApis, setCenterUrl, setCenterToken, host, resUrlFromHost, messageHub} from '../net';
 import { resOptions } from '../res/res';
@@ -49,10 +48,13 @@ export interface StackItem {
     disposer?: ()=>void;
 }
 export interface NavViewState {
-    stack: StackItem[];
+	notSupportedBrowser: boolean;
+	stack: StackItem[];
     wait: 0|1|2;
     fetchError: FetchError
 }
+
+const notSupportedBrowsers = ['IE'];
 
 export class NavView extends React.Component<Props, NavViewState> {
     private stack: StackItem[];
@@ -62,8 +64,11 @@ export class NavView extends React.Component<Props, NavViewState> {
     constructor(props:Props) {
         super(props);
         this.stack = [];
+		let {browser} = env;
+		let notSupportedBrowser = notSupportedBrowsers.findIndex(v => v === browser) >= 0;
         this.state = {
-            stack: this.stack,
+			notSupportedBrowser,
+			stack: this.stack,
             wait: 0,
             fetchError: undefined
         };
@@ -71,10 +76,9 @@ export class NavView extends React.Component<Props, NavViewState> {
     }
     async componentDidMount()
     {
+		if (this.state.notSupportedBrowser === true) return;
 		window.addEventListener('popstate', this.navBack);
-		//if (nav.isRouting === false) {
 		await nav.init();
-		//}
         await nav.start();
     }
 
@@ -334,7 +338,12 @@ export class NavView extends React.Component<Props, NavViewState> {
         this.setState({fetchError: undefined});
     }
     render() {
-        const {wait, fetchError} = this.state;
+        const {notSupportedBrowser, wait, fetchError} = this.state;
+		if (notSupportedBrowser === true) {
+			return <div className="p-3 text-danger">
+				{env.browser} not supported !
+			</div>;
+		}
         let {stack} = this.state;
         let top = stack.length - 1;
         let elWait = null, elError = null;
