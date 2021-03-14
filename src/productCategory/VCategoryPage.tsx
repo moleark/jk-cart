@@ -1,28 +1,12 @@
 /* eslint-disable */
 import * as React from 'react';
-import { Ax, Tuid, VPage } from 'tonva';
+import { VPage } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
-import $ from 'jquery';
-import { tv } from '../tonva/uq/tuid/reactBoxId';
 import { xs } from '../tools/browser';
 import { rootCategroyResFromId } from 'global';
+import { VBrandCrumbs } from './VBreadCrumbs';
 
 export class VCategoryPage extends VPage<CProductCategory> {
-
-    private renderBreadcrumbs = (allAncestors: any[]) => {
-        let { cApp } = this.controller;
-        return <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
-            <a href="/">首页</a>
-            <Ax href="/product-catalog">产品</Ax>
-            {allAncestors.map((parent: any) => {
-                return tv(parent, (e: any) => {
-                    let { id, productcategorylanguage } = e;
-                    let jL = productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
-                    return jL !== undefined ? <Ax href={"/product-catalog/" + id}>{jL.name}</Ax> : null;
-                })
-            })}
-        </div>
-    }
 
     private getBgClass = (productCategoryId: number, allAncestors: any[]) => {
         let bgClass = "";
@@ -41,7 +25,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
         let main, breadcrumbs;
         if (current) {
             let { productCategory: productCategoryId, name, children, parent, allAncestors } = current;
-            breadcrumbs = this.renderBreadcrumbs(allAncestors);
+            breadcrumbs = this.renderVm(VBrandCrumbs, allAncestors);
 
             let instructionUi;
             if (instruction) {

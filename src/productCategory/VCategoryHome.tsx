@@ -2,28 +2,14 @@
 import * as React from 'react';
 import { Ax, VPage } from 'tonva';
 import { CProductCategory } from './CProductCategory';
-import { tv } from '../tonva/uq/tuid/reactBoxId';
 import { xs } from '../tools/browser';
 import { rootCategroyResFromId } from 'global';
 import classNames from 'classnames';
 import combinations5 from 'images/J&K triangle combinations 5.png';
 import combinations4 from 'images/J&K triangle combinations4.png';
+import { VBrandCrumbs } from './VBreadCrumbs';
 
 export class VCategoryHome extends VPage<CProductCategory> {
-    private renderBreadcrumbs = (allAncestors: any[]) => {
-        let { cApp } = this.controller;
-        return <div className="breadcrumbs mb-4" style={{ lineHeight: 1.5 }}>
-            <Ax href="/">首页</Ax>
-            <Ax href="/product-catalog">产品</Ax>
-            {allAncestors.map((parent: any) => {
-                return tv(parent, (e: any) => {
-                    let { id, productcategorylanguage } = e;
-                    let jL = productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
-                    return jL !== undefined ? <Ax href={"/product-catalog/" + id}>{jL.name}</Ax> : null;
-                })
-            })}
-        </div>
-    }
 
     private renderCategory() {
         let main = <div className="row">
@@ -63,7 +49,7 @@ export class VCategoryHome extends VPage<CProductCategory> {
                 <img src={combinations4} className="img2" />
                 <img src={combinations4} className="img3" />
             </div>
-            <div className="mt-lg-2 px-3">{this.renderBreadcrumbs([])}</div>
+            <div className="mt-lg-2 px-3">{this.renderVm(VBrandCrumbs, [])}</div>
             <div className="container main-product-introduce w-100 px-3 pt-0">
                 <p className="text-left">向全球化学、生命科学、材料领域客户提供60万种高质量化学品和仪器耗材产品，以及定制生产服务，满足从研发到生产的需求。</p>
             </div>
