@@ -10,24 +10,6 @@ import { GLOABLE } from 'global';
 import { ElasticSearchPager } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';
 
-/**
- *
- */
-/*
-interface ProductProps {
-    //packs?: {[packId:number]: PackValues};
-    inventoryAllocation?: any[];
-    futureDeliveryTimeDescription?: string;
-    chemical?: any;
-    prices?: any;
-    favorite?: boolean;
-    MSDSFiles: any;
-    specFiles: any;
-    data: any;
-    discount: any;
-}
-*/
-
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
     @observable esproductsPager: ElasticSearchPager<Product> | any[];
@@ -62,12 +44,6 @@ export class CProduct extends CUqBase {
         this.currentPage = 1;
         this.searchByKey();
     }
-
-    /*
-    renderProductList2(key: any) {
-        return this.renderView(VProductList);
-    }
-    */
 
     private productConverter = (item: any, queryResults?: { [name: string]: any[] }): Product => {
         let product = this.cApp.getProduct(item.id);

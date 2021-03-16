@@ -7,27 +7,12 @@ import { Product } from 'model';
 import Pagination from 'antd/lib/pagination/Pagination';
 import { observer } from 'mobx-react';
 import { xs } from 'tools/browser';
-/*
-import { NavHeader, NavFooter } from 'tools/ShopPage';
-import { xs } from 'tools/browser';
-import { observer } from 'mobx-react-lite';
-*/
 
 export class VPageList extends VPage<CProduct> {
 
     async open() {
         this.openPage(this.page)
-        //this.searchKey = key;
-        //xs ? this.openPage(this.page) : this.openPage(this.largePage);
     }
-
-
-
-    /* render(key: any) {
-        this.searchKey = key;
-        return <this.page />
-    } */
-
 
     private onProductClick = async (product: Product) => {
         let { id } = product;
