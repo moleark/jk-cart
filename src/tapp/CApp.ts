@@ -1,6 +1,5 @@
 /* eslint-disable */
-import ReactDOM from 'react-dom';
-import { User, nav, NavPage, Elements, BoxId, View, Controller, PageWebNav } from 'tonva';
+import { User, nav, NavPage, BoxId, PageWebNav } from 'tonva';
 import { Cart, LOCALCARTNAME } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";
@@ -22,7 +21,6 @@ import { Product } from '../model';
 import { WebUser } from 'CurrentUser';
 import { GLOABLE } from 'global';
 import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectContact';
-//import { NavHeaderView, NavFooterView } from 'tapp/header';
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 
@@ -33,12 +31,7 @@ export class CApp extends CUqApp {
     currentLanguage: any;
     currentUser: WebUser;
 
-    //get uqs(): UQs { return this._uqs as UQs };
-
     topKey: any;
-
-    // currentCouponCode: string;
-    // currentCreditCode: string;
 
     cHome: CHome;
     cCart: CCart;
@@ -59,14 +52,10 @@ export class CApp extends CUqApp {
     cAddress: CAddress;
     cInvoiceInfo: CInvoiceInfo;
 
-    /*
-    protected newC<T extends CUqBase>(type: IConstructor<T>): T {
-        return new type(this);
-    }
-    */
 
     protected async beforeStart(): Promise<boolean> {
         if (await super.beforeStart() === false) return false;
+
         this.currentSalesRegion = GLOABLE.SALESREGION_CN;
         this.currentLanguage = GLOABLE.CHINESE;
         this.setUser();
@@ -99,13 +88,9 @@ export class CApp extends CUqApp {
     }
 
     protected async internalStart(params: any) {
-        //await super.init();
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
-        // this.cMe.openMyPoint();
-        // this.cLottery.openLotteryProduct();
-        // this.cSignIn.openPointSign();
 
         let { location } = document;
         let { search, pathname } = location;
@@ -130,12 +115,6 @@ export class CApp extends CUqApp {
                     this.showMain();
                     if (query.credits) {
                         await this.cCoupon.showSharedCredits(query);
-                        /*
-                        if (query.platform === "1")
-                            await this.cPointProduct.openPointDrawing(query.credits);
-                        else
-                            await this.cCoupon.showSharedCredits(query);
-                        */
                     }
                     break;
                 case "vipcard":
@@ -181,8 +160,11 @@ export class CApp extends CUqApp {
         this.currentUser.setUser(this.user);
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getPageWebNav(): PageWebNav {
-        if (nav.isWebNav === false) return;
         let webNav = this.getWebNav();
         if (webNav === undefined) return;
         let { VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader } = webNav;
@@ -257,26 +239,7 @@ export class CApp extends CUqApp {
             });
         }
     */
-    /*
-        protected async afterStart() {
-            await super.afterStart();
-            // elements定义div元素id与一个函数的对应关系，定义之后，
-            // 当在页面上存在相应id的div元素时，则执行其对应的函数，并将函数执行的结果(UI)挂载在该div上 
-            let elements: Elements = {
-                login: this.renderLogin,
-                productlist: this.productList,
-                productdetail: this.productDetail,
-                carts: this.carts,
-            };
-    
-            this.hookElements(elements);
-    
-            window.onfocus = () => {
-                this.hookElements(elements);
-            }
-            return;
-        }
-    */
+
     private navHome: NavPage = async (params: any) => {
         await this.cHome.getSlideShow();
 
@@ -405,48 +368,6 @@ export class CApp extends CUqApp {
     setHomeRoute() {
         nav.onNavRoute(this.navHome);
     }
-
-    /*
-    private productList = (element: HTMLElement) => {
-        // console.log("productlist");
-
-        let { location } = document;
-        let { search } = location;
-        if (search) {
-            let query: any = qs.parse(search.toLowerCase());
-            let { type, key } = query;
-            if (type === "search") {
-                ReactDOM.render(this.cProduct.renderProductList(key), element);
-            }
-        }
-    }
-
-    private productDetail = async (element: HTMLElement) => {
-        // console.log("productDetail");
-
-        let { location } = document;
-        let { pathname } = location;
-        if (pathname) {
-            // console.log(pathname);
-            let productid = pathname.split('/')[2];
-            // console.log(productid);
-            if (productid) {
-                ReactDOM.render(await this.cProduct.renderProductWeb(productid), element);
-            }
-        }
-    }
-
-    private carts = (element: HTMLElement) => {
-        console.log("carts");
-        //element.innerText = "hello";
-        let { location } = document;
-        let { pathname } = location;
-        if (pathname) {
-            console.log(pathname);
-            ReactDOM.render(this.cCart.tab(), element);
-        }
-    }
-    */
 
     async assureLogin(): Promise<void> {
         if (this.isLogined) return;
