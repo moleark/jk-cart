@@ -9,7 +9,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 	//}
 
 	render() {
-		return <div className="bg-white">
+		return <>
 			<h2>产品大类</h2>
 			<nav id="sidebar">
 				<ul className="list-unstyled components">
@@ -24,8 +24,7 @@ export class VRootCategorySideBar extends View<CProductCategory>{
 					})}
 				</ul>
 			</nav>
-		</div>;
-		//<a href={'/product-catalog/'+productCategory} data-toggle="collapse" aria-expanded="false">{name}</a>
+		</>;
 	}
 
 	private renderChildren(children: ProductCategory[], menuId: string) {
