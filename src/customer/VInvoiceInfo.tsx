@@ -82,7 +82,7 @@ const uiSchema: UiSchema = {
 const commonRequired = {
     id: false,
     title: true,
-    taxNo: false,
+    taxNo: true,
     address: false,
     telephone: false,
     bank: false,
@@ -104,7 +104,7 @@ const valueAddedRequired = {
 const commonVisible = {
     id: false,
     title: true,
-    taxNo: false,
+    taxNo: true,
     address: false,
     telephone: false,
     bank: false,

@@ -105,7 +105,8 @@ export class VCoupleAvailable extends VPage<CCoupon> {
             <div className="px-2 bg-white">
                 {vipCardUI}
             </div>
-            <List items={this.coupons} item={{ render: this.renderCoupon }} none={null}></List>
+            <List items={this.coupons} item={{ render: this.renderCoupon }}
+                none={ <div className="w-100 d-flex justify-content-center text-secondary my-3">无可用卡券</div> } ></List>
         </>
     }
 

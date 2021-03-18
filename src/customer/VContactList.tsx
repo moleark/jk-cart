@@ -83,9 +83,10 @@ export class VContactList extends VPage<CSelectContact> {
                 this.controller.cApp.cOrder.editContact = undefined;
                 */
             }} >添加新地址</button>;
-        let contactList = <List items={userContacts} item={{ render: this.onContactRender }} className="h-max-20c overflow-auto border-bottom scroll-S" none="无地址" />;
+        let contactList = <List items={userContacts} item={{ render: this.onContactRender }} className="h-max-20c overflow-auto border-bottom scroll-S"
+            none={<div className="w-100 d-flex justify-content-center text-secondary my-3">您现未有任何地址信息，请添加</div>} />;
         return React.createElement(observer(() => {
-            return <div className="d-flex flex-column px-2">
+            return <div className="d-flex flex-column px-2" style={{minWidth:300}}>
                 {contactList}
                 {footer}
             </div>;
