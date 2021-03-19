@@ -1,7 +1,7 @@
 import React from 'react';
 import { CUqBase } from '../tapp/CBase';
 import { VRootCategory } from './VRootCategory';
-import { VRootCategorySideBar } from './VRootCategorySideBar';
+import { VRootCategorySideBar, VRootCategorySideBarToSelect } from './VRootCategorySideBar';
 import { GLOABLE } from "global";
 import './cat.css';
 import { Ax, BoxId, Tuid, VPage } from 'tonva';
@@ -126,6 +126,13 @@ export class CProductCategory extends CUqBase {
      */
     renderRootSideBar = () => {
         return this.renderView(VRootCategorySideBar, this.rootCategories);
+    }
+
+    /**
+     * 渲染mobile版SideBar中的目录树
+     */
+    renderRootSideBarByMob = () => {
+        return this.renderView(VRootCategorySideBarToSelect, this.rootCategories);
     }
 
     /**

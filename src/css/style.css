@@ -2120,6 +2120,11 @@ a[data-toggle="collapse"] {
     margin-bottom: 20px;
 }
 
+.each-product img.favorite {
+    position: absolute;
+    right: 20px;
+}
+
 .each-product .background-grey {
     padding: 20px;
 }
@@ -2143,11 +2148,10 @@ a[data-toggle="collapse"] {
     position: absolute;
     color: #239AB7;
     border: 1px solid #239AB7;
-    padding: 5px 25px 5px 10px;
+    padding: 15px;
     background: url(../images/icon/under-arrow.svg);
     background-repeat: no-repeat;
-    background-position: 90% 55%;
-    width: 70px;
+    background-position: 55% 55%;
     bottom: 0;
     right: 15px;
     margin-top: -10px;
@@ -2158,7 +2162,9 @@ a[data-toggle="collapse"] {
     color: #AD2031;
     background: url(../images/icon/under-arrow-1hover.svg);
     background-repeat: no-repeat;
-    background-position: 90% 55%;
+    background-position: 55% 55%;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .each-product a.button:focus {
@@ -2166,7 +2172,7 @@ a[data-toggle="collapse"] {
     color: #AD2031;
     background: url(../images/icon/under-arrow-hover.svg);
     background-repeat: no-repeat;
-    background-position: 90% 55%;
+    background-position: 55% 55%;
 }
 
 .each-product ul {

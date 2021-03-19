@@ -51,8 +51,9 @@ export class VFavorite extends View<CProduct> {
 			}
 
 			return <div className="d-flex justify-content-end">
-				<small onClick={onClick} style={{ zIndex: 9 }}>
-					<FA className="mr-3 text-danger" name={icon} size="lg" />
+                <small onClick={onClick} style={{ zIndex: 9 }}>
+                    <img src={`/images/icon/favorite${favorite === true ? '-save' : ''}.svg`} width="25px" className="favorite" />
+					{/* <FA className="mr-3 text-danger" name={icon} size="lg" /> */}
 				</small>
 			</div>;
 		}));

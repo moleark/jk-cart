@@ -83,12 +83,17 @@ export class VPageList extends VPage<CProduct> {
         let none = <div className="p-3 text-warning">[无]</div>;
         return <section className="container mt-lg-2">
             <div className="breadcrumbs mb-4"><small className=" small text-muted">搜索: </small>{searchKey}</div>
+            <div className="container display-mobile">
+                {cApp.cProductCategory.renderRootSideBarByMob()}
+            </div>
             <div className="row">
-                <div className="d-none d-lg-block col-lg-3 product-side">
+                <div className="col-lg-3 product-side display-desktop">{/* d-none d-lg-block col-lg-3 product-side */}
+                    {/* col-lg-3 product-side display-desktop */}
                     {cApp.cProductCategory.renderRootSideBar()}
                 </div>
                 <div className="col-lg-9 product-introduct">
-                    <List before={''} none={none} items={esproductsPager} item={{ render: this.renderProduct, onClick: this.onProductClick }} />
+                    <List before={''} none={none} items={esproductsPager} className="bg-white"
+                        item={{ render: this.renderProduct, onClick: this.onProductClick, className: "py-3 border-bottom" }} />
                     <div className="text-center mt-lg-65">
                         <Pagination onChange={(v) => {
                             document.body.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
