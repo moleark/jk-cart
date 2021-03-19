@@ -56,11 +56,13 @@ export class VProuductView2 extends View<CProduct> {
 								{brand && renderPropItemC('品牌', brand.name)}
 							</p>
 					}
-					<div className="text-right">
-						<a className="button ahover4 display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
-							onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
-						></a>
-					</div>
+					{!this.controller.showFavorites &&
+						<div className="text-right">
+							<a className="button ahover4 display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+								onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
+							></a>
+						</div>
+					}
 				</div>
 
 				<div className="col-lg-12 mt-lg-2 collapse" id={`description${id}`}

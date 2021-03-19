@@ -49,10 +49,10 @@ export class VFavorite extends View<CProduct> {
                 favoriteOrCancel();
                 if (callback) callback();
 			}
-
+            let imgSrc = favorite === true ? "/images/icon/favoriteSave.svg" : "/images/icon/favorite.svg";
 			return <div className="d-flex justify-content-end">
                 <small onClick={onClick} style={{ zIndex: 9 }}>
-                    <img src={`/images/icon/favorite${favorite === true ? '-save' : ''}.svg`} width="25px" className="favorite" />
+                    <img src={imgSrc} width="25px" className="favorite" />
 					{/* <FA className="mr-3 text-danger" name={icon} size="lg" /> */}
 				</small>
 			</div>;
