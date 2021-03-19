@@ -18,7 +18,7 @@ export class VInCart extends View<CProduct> {
         if (!brand.name) brand = brand.obj;
 		let cName:any;
 		if (descriptionC !== description) {
-			cName = <div className="pb-2"><strong>{descriptionC}</strong></div>;
+			cName = <div className="pb-2"><strong dangerouslySetInnerHTML={{__html:descriptionC || ''}}></strong></div>;
         }
         return <div className="row mx-0">
                     <div className="col-lg-3">
@@ -26,7 +26,7 @@ export class VInCart extends View<CProduct> {
                     </div>
                     <div className="col-lg-9">
                         <div className="py-2 text-truncate">
-                            <strong>{description}</strong>
+                            <strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong>
                         </div>
                         {cName}
                         <div className="row mx-0">

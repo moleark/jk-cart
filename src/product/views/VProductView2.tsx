@@ -21,10 +21,10 @@ export class VProuductView2 extends View<CProduct> {
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="mr-3"><strong>{description}</strong></div>;
+			let eName = <div className="mr-3"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
-				cName = <div>{descriptionC}</div>;
+				cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
 			return <div className="row mx-0 my-3 bg-white">
 				<div className="col-lg-4 d-flex">

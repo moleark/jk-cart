@@ -128,10 +128,10 @@ export class VPageProduct extends VPage<CProduct> {
     private renderProduct = (product: Product) => {
         let { id, brand, props, chemical } = product;
         let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
-        let eName = <div className="py-2"><strong>{description}</strong></div>;
+        let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
         let cName: any;
         if (descriptionC !== description) {
-            cName = <div>{descriptionC}</div>;
+            cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
         }
         imageUrl = imageUrl || props.chemical.toString();
         return <>
