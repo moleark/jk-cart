@@ -16,6 +16,18 @@ import {
 export class EditMeInfo extends VPage<CMe>{
 
     async open(param: any) {
+        let { cApp } = this.controller;
+        if(!cApp.currentUser?.mobile) await cApp.currentUser.setUser(nav.user);
+        let { telephone, mobile, email, fax, zipCode, address, addressString } = cApp.currentUser;
+        this.webUserContactData = {
+            telephone: telephone,
+            mobile: mobile,
+            email: email,
+            fax: fax,
+            address: address,
+            addressString: addressString,
+            zipCode: zipCode,
+        };
         this.openPage(this.page);
     }
 
