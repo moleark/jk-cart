@@ -21,10 +21,10 @@ export class VProuductView2 extends View<CProduct> {
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="mr-3"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+			let eName = <div className="pr-5"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
-				cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
+				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
 			return <div className="row mx-0 my-lg-2">
 				<div className="col-lg-2">
@@ -36,7 +36,7 @@ export class VProuductView2 extends View<CProduct> {
 					<div onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}>
 						<div>{this.renderVm(VFavorite, { product, callback: callback })}</div>
 					</div>
-					<h3>
+					<h3 className="ml-lg-3">
 						{eName}
 						{cName}
 					</h3>
@@ -50,7 +50,7 @@ export class VProuductView2 extends View<CProduct> {
 								{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
 								{renderBrand(brand)}
 							</div>
-							: <p>
+							: <p className="ml-lg-3">
 								{renderPropItemC('产品编号', origin, null, false)}
 								{renderPropItemC('CAS', CAS || props.CAS)}
 								{brand && renderPropItemC('品牌', brand.name)}

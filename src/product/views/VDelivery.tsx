@@ -29,7 +29,7 @@ export class VDelivery extends View<CProduct> {
 				if (quantity > 0) {
                     restrict += 1;
 					return <div key={index} className="text-success">
-						{tv(warehouse, (values: any) => <span className="small">{values.name}</span>)}: {(quantity > 10 ? '>10' : quantity)}
+						{tv(warehouse, (values: any) => <span>{values.name}</span>)}: {(quantity > 10 ? '>10' : quantity)}{/* small */}
 						{deliveryTimeDescription}
 					</div>
 				} else {
