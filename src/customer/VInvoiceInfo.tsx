@@ -68,8 +68,8 @@ const uiSchema: UiSchema = {
             widget: 'text', label: '银行账号', placeholder: '必填',
             rules: (value: string) => {
                 // if (value && !/^([1-9]{1})(\d{14}|\d{17}|\d{18}|\d{15})$/.test(value))
-                /* 银行卡位数校验 现已开放 12-30位,后期可针对具体银行进行细化校验 */
-                if (value && !/^([1-9]{1})(\d{11,29})$/.test(value))
+                /* 银行卡位数校验 现已开放 11-30位,后期可针对具体银行进行细化校验 */
+                if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
                 else
                     return undefined;
