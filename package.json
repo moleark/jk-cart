@@ -1,6 +1,5 @@
 {
   "name": "jk-cart",
-  "homepage": ".",
   "version": "1.0.2",
   "private": true,
   "dependencies": {
