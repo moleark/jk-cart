@@ -43,7 +43,7 @@ serviceWorker.unregister();
 	}
 	else {
 		require('style-loader!./css/style.css');
-		loadScript('https://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNjk3OV80OTI2NjBfNDAwNjY2Nzc4OF8');
+		loadQQScript();
 		onLogined = async () => {
 			await startPage(CWeb, appConfig);
 		};
@@ -73,9 +73,9 @@ serviceWorker.unregister();
 	serviceWorker.unregister();
 })();
 
-function  loadScript(url:any){                                                                
-	let f=document.createElement("script");                                                                                                       
-	f.type="text/javascript";                                                                                                                                                    
-	f.src = url;
-	document.body.appendChild(f);                                                                                                                                                             
+function loadQQScript() {
+	let f = document.createElement("script");
+	f.type = "text/javascript";
+	f.src = 'https://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNjk3OV80OTI2NjBfNDAwNjY2Nzc4OF8';
+	document.body.appendChild(f);
 };
