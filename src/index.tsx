@@ -43,6 +43,7 @@ serviceWorker.unregister();
 	}
 	else {
 		require('style-loader!./css/style.css');
+		loadScript('https://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNjk3OV80OTI2NjBfNDAwNjY2Nzc4OF8');
 		onLogined = async () => {
 			await startPage(CWeb, appConfig);
 		};
@@ -71,3 +72,10 @@ serviceWorker.unregister();
 	// Learn more about service workers: https://bit.ly/CRA-PWA
 	serviceWorker.unregister();
 })();
+
+function  loadScript(url:any){                                                                
+	let f=document.createElement("script");                                                                                                       
+	f.type="text/javascript";                                                                                                                                                    
+	f.src = url;
+	document.body.appendChild(f);                                                                                                                                                             
+};
