@@ -1,18 +1,19 @@
 import { PageItems } from 'tonva';
 import * as _ from 'lodash';
-import { result } from 'lodash';
 
 export class ElasticSearchPager<T extends any> extends PageItems<T>{
 
     private searchUrl: string;
+    private urlGen: UrlGen;
     protected idFieldName: any;
     private pageNumber: number;
-    constructor(searchUrl: string, pageSize?: number, firstSize?: number, itemObservable?: boolean) {
+    constructor(searchUrl: string, urlGen: UrlGen, pageSize?: number, firstSize?: number, itemObservable?: boolean) {
         super(itemObservable);
         this.searchUrl = searchUrl;
         if (pageSize !== undefined) this.pageSize = pageSize;
         if (firstSize !== undefined) this.firstSize = firstSize;
         this.pageNumber = 1;
+        this.urlGen = urlGen;
     }
 
     setReverse() {
@@ -25,11 +26,16 @@ export class ElasticSearchPager<T extends any> extends PageItems<T>{
     }
 
     protected async loadResults(param: any, pageStart: number, pageSize: number): Promise<{ [name: string]: any[] }> {
+
         let { keyWord, salesregion } = param;
+        /*
         let url = this.searchUrl + '/' + keyWord;
         if (this.pageNumber > 1) {
+            url += "&pageNumber=" + this.pageNumber;
             url += "/" + this.pageNumber;
         }
+        */
+        let url = this.searchUrl + this.urlGen.generateUrl(keyWord, this.pageNumber);
         try {
             let resp = await fetch(url, {
                 method: 'GET',
@@ -47,49 +53,34 @@ export class ElasticSearchPager<T extends any> extends PageItems<T>{
         }
     }
 
-    /*
-    async refreshItems(item: T) {
-        let index = this._items.indexOf(item);
-        if (index < 0) return;
-        let startIndex: number;
-        if (this.appendPosition === 'tail') {
-            startIndex = index - 1;
-        }
-        else {
-            startIndex = index + 1;
-        }
-        let pageStart = this.getPageId(this._items[startIndex]);
-        let pageSize = 1;
-        let ret = await this.load(
-            this.param,
-            pageStart,
-            pageSize);
-        let len = ret.length;
-        if (len === 0) {
-            this._items.splice(index, 1);
-            return;
-        }
-        for (let i = 0; i < len; i++) {
-            let newItem = ret[i];
-            if (!newItem) continue;
-            let newId = newItem[this.idFieldName];
-            if (newId === undefined || newId === null) continue;
-            if (typeof newId === 'object') newId = newId.id;
-            let oldItem = this._items.find(v => {
-                let oldId = (v as any)[this.idFieldName];
-                if (oldId === undefined || oldId === null) return false;
-                if (typeof oldId === 'object') oldId = oldId.id;
-                return oldId = newId;
-            });
-            if (oldItem) {
-                _.merge(oldItem, newItem);
-            }
-        }
-    }
-    */
-
     protected async onLoaded(): Promise<void> {
-
         this.pageNumber += 1;
+    }
+}
+
+
+export abstract class UrlGen {
+    abstract generateUrl(keyWord: string, pageNumber: number): string;
+}
+
+export class productUrlGen extends UrlGen {
+
+    generateUrl(keyWord: string, pageNumber: number): string {
+        let url = '?key=' + keyWord;
+        if (pageNumber > 1) {
+            url += "&pageNumber=" + pageNumber;
+        }
+        return url;
+    }
+}
+
+export class productCatalogUrlGen extends UrlGen {
+
+    generateUrl(keyWord: string, pageNumber: number): string {
+        let url = '/' + keyWord;
+        if (pageNumber > 1) {
+            url += "/" + pageNumber;
+        }
+        return url;
     }
 }
