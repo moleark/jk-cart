@@ -7,7 +7,7 @@ import { VPageVerifyCode } from './VPageVerifyCode';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../model';
 import { GLOABLE } from 'global';
-import { ElasticSearchPager } from '../tools/elasticSearchPager';
+import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';
 
 export class CProduct extends CUqBase {
@@ -53,27 +53,38 @@ export class CProduct extends CUqBase {
         return product;
     }
 
-    searchAction = async (url: string, keyWord: any) => {
+    searchAction = async (url: string, keyWord: any, urlGen: UrlGen) => {
         let { currentSalesRegion } = this.cApp;
         this.searchUrl = url;
-        if (xs) {
-            this.esproductsPager = new ElasticSearchPager<Product>(url, 10, 10);
-            this.esproductsPager.setItemConverter(this.productConverter);
-            await this.esproductsPager.first({
-                keyWord: keyWord,
-                salesRegion: currentSalesRegion.id
-            });
-        };
-        if (!xs) {
-            this.searchUrl = url + '/' + keyWord;
+        // if (xs) {
+        this.esproductsPager = new ElasticSearchPager<Product>(url, urlGen, 10, 10);
+        this.esproductsPager.setItemConverter(this.productConverter);
+        await this.esproductsPager.first({
+            keyWord: keyWord,
+            salesRegion: currentSalesRegion.id
+        });
+        // };
+
+        /* if (!xs) {
+            this.searchUrl = url + '?key=' + keyWord;
+            // this.searchUrl = url + '/' + keyWord;
             await this.esProductsPagerMore(this.currentPage);
         }
-        this.openVPage(VPageList);
+        this.openVPage(VPageList); */
     }
 
     private async searchByKey() {
-        let url = GLOABLE.CONTENTSITE + '/api/search';
-        await this.searchAction(url, encodeURIComponent(this.searchKey));
+        let url = GLOABLE.CONTENTSITE + '/api/product/search';
+        let keyWord = encodeURIComponent(this.searchKey);
+        if (xs) {
+            let urlGen = new productUrlGen();
+            await this.searchAction(url, keyWord, urlGen);
+        };
+        if (!xs) {
+            this.searchUrl = url + '?key=' + keyWord + '&pageNumber=';
+            await this.esProductsPagerMore(this.currentPage);
+        };
+        this.openVPage(VPageList);
         /* this.productsPager = new QueryPager<Product>(this.uqs.product.SearchProduct, 10, 10);
         this.productsPager.setItemConverter(this.productConverter);
         this.productsPager.first({
@@ -93,7 +104,15 @@ export class CProduct extends CUqBase {
         this.searchKey = name; this.currentPage = 1;
         let url = GLOABLE.CONTENTSITE + '/api/product-catalog';
         let keyWord = productCategory + '/products';
-        await this.searchAction(url, keyWord);
+        if (xs) {
+            let urlGen = new productCatalogUrlGen();
+            await this.searchAction(url, keyWord, urlGen);
+        };
+        if (!xs) {
+            this.searchUrl = url + '/' + keyWord + '/';
+            await this.esProductsPagerMore(this.currentPage);
+        };
+        this.openVPage(VPageList);
         /* this.productsPager = new QueryPager<any>(this.uqs.product.SearchProductByCategory, 10, 10);
         this.productsPager.setItemConverter(this.productConverter);
         await this.productsPager.first({
@@ -105,8 +124,10 @@ export class CProduct extends CUqBase {
 
     esProductsPagerMore = async (page: number) => {
         this.currentPage = page;
-        let url = this.searchUrl + '/' + page;
+        let url = this.searchUrl + page;
+        // let url = this.searchUrl + '/' + page;
         let resp = await fetch(url, {
+            // mode: 'cors',
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

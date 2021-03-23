@@ -137,7 +137,9 @@ export class VPageProduct extends VPage<CProduct> {
         return <>
             <div className="col-lg-4 ">
                 <div className="">
-                    <ProductImage chemicalId={imageUrl} className="w-100 mb-2" />
+                    <div className="border px-1">
+                        <ProductImage chemicalId={imageUrl} className="w-100 mb-2" />
+                    </div>
                     <div className="d-none d-sm-block">{this.material(id)}</div>
                     {/* <div className="left-below display-desktop mt-1">
                         {this.renderProductMaterial()}
