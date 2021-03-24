@@ -12,6 +12,7 @@ import {
     organizationNameValidation, departmentNameValidation,
     salutationValidation, nameValidation
 } from '../tools/inputValidations';
+import { xs } from 'tools/browser';
 
 export class EditMeInfo extends VPage<CMe>{
 
@@ -99,16 +100,26 @@ export class EditMeInfo extends VPage<CMe>{
 
     private page = () => {
         let { schema, uiSchema, data, onItemChanged, webUserData, onWebUserChanged, webUserContactData, onWebUserContactChanged, controller } = this;
-        return <Page header="个人信息">
-            <Edit schema={schema} uiSchema={uiSchema}
-                data={data}
-                onItemChanged={onItemChanged} />
-            <Edit schema={webUserSchema} uiSchema={webUserUiSchema}
-                data={webUserData}
-                onItemChanged={onWebUserChanged} />
-            <Edit schema={webUserContactSchema} uiSchema={webUserContactUiSchema(controller.pickAddress)}
-                data={webUserContactData}
-                onItemChanged={onWebUserContactChanged} />
+        let header: any, title = '个人信息';
+        if (xs) header = title;
+        return <Page header={header}>
+             <div className="row mx-0 mb-lg-5 mb-sm-5">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0 mx-auto" style={{ maxWidth: !xs ? 800 : 'none' }}>
+                    {!xs && <div className="text-left mt-5 px-3"><h1>{title}</h1></div>}
+                    <Edit schema={schema} uiSchema={uiSchema}
+                        data={data}
+                        onItemChanged={onItemChanged} />
+                    <Edit schema={webUserSchema} uiSchema={webUserUiSchema}
+                        data={webUserData}
+                        onItemChanged={onWebUserChanged} />
+                    <Edit schema={webUserContactSchema} uiSchema={webUserContactUiSchema(controller.pickAddress)}
+                        data={webUserContactData}
+                        onItemChanged={onWebUserContactChanged} />
+                </div>
+            </div>
         </Page>;
     }
 }
