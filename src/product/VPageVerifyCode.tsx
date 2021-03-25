@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { xs } from '../tools/browser';
 import { VPagePDF } from './VPagePDF';
 import { languageCaptions } from './VPageProduct';
+import { VPageCoa } from './VPageCoa';
 
 const materialCaptions: { [type: string]: any } = {
 	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Material Safety Data Sheet (SDS)' },
@@ -23,6 +24,7 @@ export class VPageVerifyCode extends VPage<CProduct> {
 	private selectVal: HTMLSelectElement;
 	private productOriginTip = observable.box<string>();
 	private productLotTip = observable.box<string>();
+	private productLotTipNone = observable.box<string>();
 	private captchaTip = observable.box<string>();
 
 	async open(param?: any) {
@@ -55,39 +57,18 @@ export class VPageVerifyCode extends VPage<CProduct> {
 										{autoHideTips(this.productOriginTip, tip => <div className='small text-danger'>* {tip}</div>)}
 									</div>
 									{assistContent}
+									{autoHideTips(this.productLotTipNone, tip => <div className='small text-danger px-3'>* {tip}</div>)}
 									<div className="col-md-12">
 										<button className="btn btn-primary w-5c mt-2 mb-5" onClick={(e: any) => { e.preventDefault(); this.onSubmit() }}>查询</button>
 									</div>
 								</div>
+								
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</Page>
-
-
-		/* return <div className="d-flex flex-column pt-3 m-auto mt-lg-2" style={{ maxWidth: '20rem' }}>
-			<div className='d-flex '>
-				<img src={captcha} alt="" className="border p-1 rounded-lg" />
-				<button className="btn btn-link btn-block w-6c align-self-end py-0"
-					onClick={(e:any)=>{ getCaptcha()}}>换一张</button>
-			</div>
-			<form onSubmit={(e) => { e.preventDefault(); this.onSubmit() }} >
-				<input ref={v => this.verifyCodeInput = v} type="text" 
-					className='form-control border-primary mt-2' 
-					placeholder='输入验证码' 
-					style={{ maxWidth: '20rem' }} />
-			</form>
-			
-			{
-				// this.verifyInfo && <div className='small text-danger'>* {this.verifyInfo}</div>
-				autoHideTips(this.verifyInfo, tip => <div className='small text-danger'>* {tip}</div>)
-			}
-			<button className="btn btn-sm btn-outline-primary mt-2" type="button" 
-				onClick={() => this.onSubmit()} 
-				style={{ maxWidth: '20rem' }}>确 认</button>
-		</div>; */
 	})
 
 	private lots = () => {
@@ -141,11 +122,13 @@ export class VPageVerifyCode extends VPage<CProduct> {
 		});
 		if (content === undefined) return;
 		if (content.status) {
-			this.captchaTip.set(content.msg);
+			if (this.controller.materialType === 'coa') this.productLotTipNone.set(content.msg);
+			else this.captchaTip.set(content.msg);
 		} else {
 			if (this.captchaInput) this.captchaInput.value = '';
 			if (this.productLot) this.productLot.value = '';
-			this.openVPage(VPagePDF, content);
+			if (this.controller.materialType === 'coa') this.openVPage(VPageCoa, content);
+			else this.openVPage(VPagePDF, content);
 		};
 	}
 }

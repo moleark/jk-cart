@@ -14,12 +14,14 @@ export interface UqOrder {
 
 export interface UqProduct {
     ProductX: Tuid;
+    Lot: Tuid;
     ProductCategory: Tuid;
     PriceX: Map;
     AgentPrice: Map;
     ProductChemical: Map;
     ProductMSDSFile: Map;
     ProductSpecFile: Map;
+    COA: Map;
     Brand: Tuid;
     GetRootCategory: Query;
     GetRootCategories: Query;
@@ -28,6 +30,7 @@ export interface UqProduct {
     SearchProductByCategory: Query;
     GetFutureDeliveryTime: Query;
     GetProductByOrigin: Query;
+    GetLotByLotnumber:Query;
 }
 
 export interface UqCommon {

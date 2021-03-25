@@ -265,8 +265,31 @@ export class CProduct extends CUqBase {
         if (this.materialType === 'spec')
             return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
         if (this.materialType === 'coa') {
-            return undefined;
+            let getLot = await this.getLotByOrigin({ lotnumber: lot, origin: origin });/* LV50T103 911810  */
+            let res = {
+                status: 404,
+                msg: `暂时不能提供质检报告（COA）, 您可能输入了错误的产品编号（批号），或者您查询产品品牌暂时不能提供质检报告。`
+            };
+            if (!getLot) return res;
+            let getCoaByOrigin = await this.getCoaByOrigin(getLot.id);
+            if (!getCoaByOrigin) return res;
+            return {
+                content: {
+                    ...getLot,
+                    ...getCoaByOrigin,
+                    origin: origin
+                }
+            };
         };
+    }
+
+    getCoaByOrigin = async (lotNumber: string | number) => {
+        return await this.uqs.product.COA.obj({ lot: lotNumber });
+    }
+
+    getLotByOrigin = async (row: any) => {
+        let { origin, lotnumber } = row;
+        return await this.uqs.product.GetLotByLotnumber.obj({ lotnumber: lotnumber, origin: origin });
     }
 
     fetchPdf = async (url: string) => {

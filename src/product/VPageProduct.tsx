@@ -113,6 +113,7 @@ export class VPageProduct extends VPage<CProduct> {
         let Materials = [
             { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
             { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
+            { id: 3, name: "质检报告 (COA)", type: "coa" },
         ];
         return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}
             {

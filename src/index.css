@@ -93,12 +93,18 @@
 }
 
 @media (max-width: 320px) {
+  .r-font-size{
+    font-size: 12px;
+  }
   .z-height,.z-height-more{
     height: 70px;
   }
 }
 
 @media (min-width: 320px) {
+  .r-font-size{
+    font-size: 12px;
+  }
   .z-height{
     height: 120px;
   }
@@ -117,6 +123,9 @@
 }
 
 @media (min-width: 540px) {
+  .r-font-size{
+    font-size: 16px;
+  }
   .z-height{
     height: 200px;
   }
@@ -135,12 +144,18 @@
 }
 
 @media (min-width: 992px) {
+  .r-font-size{
+    font-size: 20px;
+  }
   .z-height,.z-height-more{
     height: calc(1.5em + 11rem + 2px);
   }
 }
 
 @media (min-width: 1200px) {
+  .r-font-size{
+    font-size: 22px;
+  }
   .z-height,.z-height-more{
     height: calc(1.5em + 12rem + 2px);
   }
