@@ -58,7 +58,7 @@ export class VProuductView2 extends View<CProduct> {
 					}
 					{!this.controller.showFavorites &&
 						<div className="text-right">
-							<a className="button ahover4 display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+							<a className="button display-desktop collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
 								onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
 							></a>
 						</div>

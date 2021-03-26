@@ -81,6 +81,22 @@
   margin-bottom: 0px;
 }
 
+.each-product a[aria-expanded="false"] {
+    background: url(./images/icon/under-arrow.svg) !important;
+    background-repeat: no-repeat !important;
+    background-position: 55% 55% !important;
+    color: #239AB7 !important;
+    border: 1px solid #239AB7 !important;
+}
+
+.each-product a[aria-expanded="true"] {
+    background: url(./images/icon/under-arrow-hover.svg) !important;
+    background-repeat: no-repeat !important;
+    background-position: 55% 55% !important;
+    border: 1px solid #AD2031 !important;
+    color: #AD2031 !important;
+}
+
 .table td{
   vertical-align: middle;
 }

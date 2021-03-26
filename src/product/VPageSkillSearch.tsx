@@ -17,7 +17,7 @@ const materialCaptions: { [type: string]: any } = {
 
 const defLangs = [{ language: "CN" }, { language: "EN" }, { language: "DE" }, { language: "EN-US" },];
 
-export class VPageVerifyCode extends VPage<CProduct> {
+export class VPageSkillSearch extends VPage<CProduct> {
 	private productOrigin: HTMLInputElement;
 	private productLot: HTMLInputElement;
 	private captchaInput: HTMLInputElement;

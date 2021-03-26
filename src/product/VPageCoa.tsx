@@ -31,7 +31,6 @@ export class VPageCoa extends VPage<CProduct> {
         let header: any, title = '质检报告';
         if (xs) header = title;
 		return <Page header={header}>
-            {!xs && <div className="text-center mt-5 px-3"><h1>{title}</h1></div>}
 			<div className="text-center w-100">
                 <img src={BrandImg[brand?.name] || BrandImg['J&K']} className="w-75" alt=""/>
                 <h5 className="r-font-size font-weight-bolder">CERTIFICATE OF ANALYSIS</h5>

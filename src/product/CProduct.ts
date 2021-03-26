@@ -3,7 +3,7 @@ import { BoxId, QueryPager } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
-import { VPageVerifyCode } from './VPageVerifyCode';
+import { VPageSkillSearch } from './VPageSkillSearch';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../model';
 import { GLOABLE } from 'global';
@@ -341,6 +341,6 @@ export class CProduct extends CUqBase {
                 else this.productMsdsVersions = [];
             }
         }
-        this.openVPage(VPageVerifyCode, origin);
+        this.openVPage(VPageSkillSearch, origin);
     }
 }

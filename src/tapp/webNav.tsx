@@ -190,7 +190,9 @@ export class NavFooterView extends View<CApp> {
                     <div className="col-lg-3 col-6">
                         <img src="/images/icon/footer-logo.svg" className="footer-logo" />
                         <p>促进科技与工业发展，造福人类</p>
-                        <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" />
+                        <img src="/images/qrcode.jpg" style={{width:100}} className="mt-lg-50 qrcode" />
+                        <p className="follow">关注微信公众号</p>
+                        {/* <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" /> */}
                     </div>
                     <div className="col-lg-3 col-6">
                         <div className="footer-title">百灵威集团</div>
@@ -215,7 +217,7 @@ export class NavFooterView extends View<CApp> {
                                     })
                                 }
                             </ul>
-                            <li><a href="/hazard-purchase" className="text-danger" target="_blank">危险品购买提示</a></li>
+                            <li><a href="/hazard-purchase"  target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
@@ -234,9 +236,9 @@ export class NavFooterView extends View<CApp> {
                         <div className="contact">
                             QQ：4006667788
                         </div>
-                        <div className="contact">
+                        {/* <div className="contact">
                             <a href="/ch/contact" target="_blank">更多...</a>
-                        </div>
+                        </div> */}
                         <div className="footer-social">
                         </div>
                     </div>

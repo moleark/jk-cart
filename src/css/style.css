@@ -2163,8 +2163,8 @@ a[data-toggle="collapse"] {
     background: url(../images/icon/under-arrow-1hover.svg);
     background-repeat: no-repeat;
     background-position: 55% 55%;
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
+    /* -webkit-transform: rotate(180deg);
+    transform: rotate(180deg); */
 }
 
 .each-product a.button:focus {
