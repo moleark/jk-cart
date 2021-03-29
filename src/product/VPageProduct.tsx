@@ -14,6 +14,8 @@ import { pdfIcon } from 'tools/images';
 import { VFavorite, VPrice } from './views';
 import classNames from 'classnames';
 import { TopicDivision } from 'pointMarket/VPointProduct';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -33,15 +35,28 @@ export const languageCaptions: { [language: string]: string } = {
     'CN': '中文',
 }
 
+const SymbolSrcs:any[] = [
+    { name: "LK", src: "GHS02.gif" },
+    { name: "LM", src: "GSH04.gif" },
+    { name: "LN", src: "GHS07.gif" },
+    { name: "LO", src: "GHS03.gif" },
+    { name: "LP", src: "GHS05.gif" },
+    { name: "LQ", src: "GHS09.gif" },
+    { name: "LR", src: "GHS01.gif" },
+    { name: "LS", src: "GHS06.gif" },
+    { name: "LT", src: "GHS08.gif" },
+];
+
 export class VPageProduct extends VPage<CProduct> {
     //private productBox: BoxId;
     //private discount: number;
+    @observable p: boolean = false;
 
     async open(param: any) {
         //let { productData, product, discount } = param;
         //let { getProductSpecFile, getProductMSDSFile } = this.controller;
         //let page = xs ? this.page : this.lpage;
-        this.openPage(() => {
+        this.openPage(observer(() => {
             let { cApp, product, openMaterial } = this.controller;
             let { MSDSFiles, specFiles, data, id } = product;
             /* let CurrentUA = browser.versions.mobile;
@@ -66,6 +81,7 @@ export class VPageProduct extends VPage<CProduct> {
                             {TopicDivision('产品资料')}
                             {this.material(id, true)}
                         </div>
+                        {this.renderAssistInfo(product)}
                     </div>
                 </section>
             </Page>;
@@ -84,7 +100,7 @@ export class VPageProduct extends VPage<CProduct> {
              </Page>
              */
             //}
-        });
+        }));
     }
 
     /*
@@ -108,6 +124,122 @@ export class VPageProduct extends VPage<CProduct> {
         return <this.page />;
     }
     */
+    renderAssistInfo = (product: Product) => {
+        let basicInfoKey = [
+            { insideKey: "MF", webKey: "MF" },
+            { insideKey: "MW", webKey: "MW" },
+            { insideKey: "Synonymity", webKey: "Synonymity" },
+            { insideKey: "SynonymityC", webKey: "SynonymityC" },
+            { insideKey: "MP", webKey: "MP" },
+            { insideKey: "BP", webKey: "BP" },
+            { insideKey: "FP", webKey: "FP" },
+            { insideKey: "Density", webKey: "Density" },
+            { insideKey: "n20D", webKey: "n20D" },
+            { insideKey: "[a]20D", webKey: "[a]20D" },
+            { insideKey: "pH", webKey: "pH" },
+            { insideKey: "MDL", webKey: "MDL" },
+            { insideKey: "Beilstein", webKey: "Beilstein" },
+            { insideKey: "Merck", webKey: "Merck" },
+            { insideKey: "EC No.", webKey: "EC No" },
+            { insideKey: "EINECS", webKey: "EINECS" },
+        ];
+        let securityInfoKey = [
+            { insideKey: "Hazard", webKey: "Symbol" },
+            { insideKey: "RiskSign", webKey: "Signal Word" },
+            { insideKey: "HValue", webKey: "Hazard  Statements" },
+            { insideKey: "PValue", webKey: "Precautionary Statements" },
+            { insideKey: "UN", webKey: "UN" },
+            { insideKey: "HazardClass", webKey: "Hazard Class" },
+            { insideKey: "subrisk", webKey: "SubRisk" },
+            { insideKey: "PackingG", webKey: "Packing Group" },
+            { insideKey: "WGK", webKey: "WGK Germany" },
+            { insideKey: "RTECS", webKey: "RTECS" },
+            { insideKey: "TSCA", webKey: "TSCA" },
+        ];
+
+
+        let { extention } = product;
+        if (!extention) return;
+        let { content } = extention;
+        content = content ? JSON.parse(content) : undefined;
+        let allContent = Object.keys(content);
+        let arr1 = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
+        let arr2 = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
+        let tableInfo = (data: any[]) => {
+            if (data.length === 0 && !content) return;
+            return <table className="product-table w-100">
+                <tbody>
+                    {data.map((v: any, index: number) => {
+                        let value = content[v.insideKey];
+                        if (!value) return null;
+                        if (v.insideKey === 'Hazard') {
+                            value = SymbolSrcs.map((o: any) => {
+                                if (value.indexOf(o.name) > -1) {
+                                    return <img className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
+                                }
+                                return '';
+                            });
+                        };
+                        return <tr key={index}><th className="w-50">{v.webKey}</th><td className="w-50">{value}</td></tr>
+                    })}
+                </tbody>
+            </table> 
+        }
+        
+        return <div className="col-lg-12 mt-lg-2">{/* col-lg-9 */}
+            {
+                arr1.length ?
+                <div className="accordion background-grey mt-lg-1">
+                    <div className="w-100 btn text-left collapsed" data-toggle="collapse" data-target="#description1"
+                    role="button" aria-expanded="false" aria-controls="description1">
+                    基本信息&emsp;<i className="fa fa-chevron-down"></i>
+                    </div>
+                    </div>
+                    :null
+            }
+            <div className="container mt-lg-2 collapse show" id="description1">
+                {tableInfo(arr1.slice(0,6))}
+                <div className="container collapse px-0" id="description2">
+                    {tableInfo(arr1.slice(6))}
+                </div>
+                {
+                    arr1.length > 6
+                        ?<p className="text-right"> 
+                            <a className="btn text-left collapsed" onClick={() => this.p = !this.p }
+                                data-toggle="collapse" href="#description2" role="button" aria-expanded="false" aria-controls="description2">
+                                {!this.p ?'更多':'收起'} <i className={`fa ${!this.p ? 'fa-angle-right':'fa-angle-up'}`} aria-hidden="true"></i>
+                            </a>
+                        </p> : null
+                }
+            </div>
+            {
+                arr2.length ?
+                <div className="accordion background-grey mt-lg-1">
+                    <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#description4"
+                    role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+                    安全信息&emsp;<i className="fa fa-chevron-down"></i>
+                    </a>
+                    </div>
+                    :null
+            }
+            <div className="container mt-lg-2 mb-lg-2 collapse show" id="description4">
+                {tableInfo(arr2)}
+            </div>
+            {/* <div className="mt-lg-1">
+                <div className="bg-nobackground-one">产品分类</div>
+            </div>
+            <div className="mt-lg-1">
+                <Ax className="mint" href={"/product-catalog/" + 1}>有机化学</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>分子砌块</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>含氮化合物</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>氰或晴</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>材料化学</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>高分子化学</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>单体</Ax>,
+                <Ax className="mint" href={"/product-catalog/" + 1}>乙烯类单体</Ax>
+            </div> */}
+        </div>
+    }
 
     private material = (id: any, showMob?: boolean) => {
         let Materials = [
@@ -142,9 +274,6 @@ export class VPageProduct extends VPage<CProduct> {
                         <ProductImage chemicalId={imageUrl} className="w-100 mb-2" />
                     </div>
                     <div className="d-none d-sm-block">{this.material(id)}</div>
-                    {/* <div className="left-below display-desktop mt-1">
-                        {this.renderProductMaterial()}
-                    </div> */}
                 </div>
             </div>
             <div className="col-lg-8">
@@ -165,27 +294,27 @@ export class VPageProduct extends VPage<CProduct> {
             </div>
         </>
 
-        return <div className="mb-3 px-2">
-            {eName}
-            {cName}
-            <div className="row mt-3">
-                <div className="col-12 col-sm-3">
-                    <ProductImage chemicalId={imageUrl} className="w-100" />
-                </div>
-                <div className="col-12 col-sm-9">
-                    <div className="row mx-3">
-                        {renderPropItem('产品编号', origin, "font-weight-bold")}
-                        {renderPropItem('CAS', CAS, "font-weight-bold")}
-                        {renderPropItem('纯度', purity)}
-                        {renderPropItem('分子式', molecularFomula)}
-                        {renderPropItem('分子量', molecularWeight)}
-                        {renderBrand(brand)}
-                    </div>
-                </div>
-            </div>
-            {this.renderVm(VFavorite, { product })/*this.controller.renderFavoritesLabel(product)*/}
-            {this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
-        </div>;
+        // return <div className="mb-3 px-2">
+        //     {eName}
+        //     {cName}
+        //     <div className="row mt-3">
+        //         <div className="col-12 col-sm-3">
+        //             <ProductImage chemicalId={imageUrl} className="w-100" />
+        //         </div>
+        //         <div className="col-12 col-sm-9">
+        //             <div className="row mx-3">
+        //                 {renderPropItem('产品编号', origin, "font-weight-bold")}
+        //                 {renderPropItem('CAS', CAS, "font-weight-bold")}
+        //                 {renderPropItem('纯度', purity)}
+        //                 {renderPropItem('分子式', molecularFomula)}
+        //                 {renderPropItem('分子量', molecularWeight)}
+        //                 {renderBrand(brand)}
+        //             </div>
+        //         </div>
+        //     </div>
+        //     {this.renderVm(VFavorite, { product })/*this.controller.renderFavoritesLabel(product)*/}
+        //     {this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
+        // </div>;
         /*
         let NewProductPropItem = (caption: string, value: any, captionClass?: string,isSplit?:boolean) => {
             if (value === null || value === undefined || value === '0') return null;
@@ -302,20 +431,6 @@ export class VPageProduct extends VPage<CProduct> {
         let lang = shiftArr[1];
         let caption = languageCaptions[lang];
         if (!caption) caption = languageCaptions['CN'];
-        /*
-        switch (shiftArr[1]) {
-            case 'DE':
-                return '德文';
-            case 'EN':
-                return '英文';
-            case 'EN-US':
-                return '英美';
-            case 'CN':
-                return '中文';
-            default:
-                return '中文';
-        }
-        */
         return caption;
     }
 

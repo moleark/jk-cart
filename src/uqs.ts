@@ -22,6 +22,7 @@ export interface UqProduct {
     ProductMSDSFile: Map;
     ProductSpecFile: Map;
     COA: Map;
+    ProductExtention: Map;
     Brand: Tuid;
     GetRootCategory: Query;
     GetRootCategories: Query;
@@ -30,7 +31,7 @@ export interface UqProduct {
     SearchProductByCategory: Query;
     GetFutureDeliveryTime: Query;
     GetProductByOrigin: Query;
-    GetLotByLotnumber:Query;
+    GetLotByLotnumber: Query;
 }
 
 export interface UqCommon {

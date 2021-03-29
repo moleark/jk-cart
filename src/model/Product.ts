@@ -48,6 +48,7 @@ export class Product {
 	@observable.ref brand: MainBrand;
 	@observable.ref chemical: Chemical;
 	@observable favorite: boolean;
+	@observable extention: any;
 	@observable.shallow packs: ProductPackRow[];
 	@observable prices: any[];				// 包含价格和折扣信息
 	@observable futureDeliveryTimeDescription: string;
@@ -79,7 +80,8 @@ export class Product {
 			this.loadPrices(),
 			this.loadMSDSFile(),
 			this.loadSpecFile(),
-			this.loadFDTimeDescription()
+			this.loadFDTimeDescription(),
+			this.getProductExtention()
 		];
 		await Promise.all(promises);
 	}
@@ -257,6 +259,11 @@ export class Product {
 			discount = discountSetting && discountSetting.discount;
 		}
 		return { product: product, discount: discount };
+	}
+
+	getProductExtention = async () => {
+		if (this.extention) return;
+		this.extention = await this.cApp.uqs.product.ProductExtention.obj({ product: this.id });
 	}
 
 	/**
