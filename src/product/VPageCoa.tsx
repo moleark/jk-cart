@@ -38,7 +38,7 @@ export class VPageCoa extends VPage<CProduct> {
             <div className="border-bottom border-dark font-weight-bold py-1" style={{ borderTopStyle:'double'}}>
                 <div className="row mx-0">
                     {renderCOAItem('catalogNO.',origin)}
-                    {renderCOAItem('LotNumber',lot?.id)}
+                    {renderCOAItem('LotNumber',lot?.obj?.lotnumber)}
                 </div>
                 <div className="row mx-0">{renderCOAItem('ProductName',content['description'],null,'col-lg-5')}</div>
                 <div className="row mx-0">{renderCOAItem('CAS',content['cas'],null,'col-lg-5')}</div>
