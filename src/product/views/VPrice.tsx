@@ -192,7 +192,7 @@ export class VPriceWithTr extends VPrice {
                         {tv(pack)}
                         {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
                     </td>
-                <td data-title="预计发运期"> <span className="mint">{this.controller.renderDeliveryTime(pack)}</span></td>
+                <td data-title="库存"> <span className="mint">{this.controller.renderDeliveryTime(pack)}</span></td>
                 {this.renderPrice(product, v)}
                 {/* <td data-title="价格" className=" red">
                     <div className="item-product-price">

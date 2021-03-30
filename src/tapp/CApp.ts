@@ -263,7 +263,7 @@ export class CApp extends CUqApp {
     }
 
     private navProductMSCU: NavPage = async (params: any) => {
-        await this.assureLogin();
+        // await this.assureLogin();
         this.cProduct.openMaterial(params?.type, params?.id);
     }
 

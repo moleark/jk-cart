@@ -73,7 +73,7 @@ export class VProuductView2 extends View<CProduct> {
 							<thead>
 								<tr className="article-product-list">
 									<th>包装</th>
-									<th>预计发运期</th>
+									<th>库存</th>
 									<th>价格</th>
 									<th>数量</th>
 								</tr>
