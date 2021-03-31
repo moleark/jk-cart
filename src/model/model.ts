@@ -31,6 +31,7 @@ export interface Chemical {
     purity: string;
     molecularFomula: string;
     molecularWeight: string;
+    mdlnumber?: string;
 }
 
 export interface Pack extends Id {

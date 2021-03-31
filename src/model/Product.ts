@@ -36,6 +36,7 @@ export interface ProductProps {
 	molecularFomula: string;
 	no: string; //				// 'A01102033'
 	purity: string; 			// '98%'
+	mdlnumber?: string;
 	// seq: number;
 }
 
@@ -48,6 +49,7 @@ export class Product {
 	@observable.ref brand: MainBrand;
 	@observable.ref chemical: Chemical;
 	@observable favorite: boolean;
+	@observable warningSigns: string;
 	@observable extention: any;
 	@observable.shallow packs: ProductPackRow[];
 	@observable prices: any[];				// 包含价格和折扣信息
@@ -84,6 +86,7 @@ export class Product {
 			this.getProductExtention()
 		];
 		await Promise.all(promises);
+		await this.getProductWarningSigns();
 	}
 
 	async loadListItem() {
@@ -264,6 +267,31 @@ export class Product {
 	getProductExtention = async () => {
 		if (this.extention) return;
 		this.extention = await this.cApp.uqs.product.ProductExtention.obj({ product: this.id });
+	}
+
+	/**
+	 * 产品警示标示
+	 */
+	getProductWarningSigns = async () => {
+		let JNKRestrictByChemical = await this.getChemicalJNKRestrict();
+		this.warningSigns = '';
+		if (!JNKRestrictByChemical) return;
+		else {
+			let { jnkRestrict } = JNKRestrictByChemical;
+			let jnkRestrictObj = await this.loadJNKRestrict(jnkRestrict?.id);
+			if (jnkRestrictObj) {
+				let { no } = jnkRestrictObj;
+				if (no.indexOf('WX') > -1) this.warningSigns = '危化品';
+			}
+		}
+	}
+
+	getChemicalJNKRestrict = async () => {
+		return await this.cApp.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
+	}
+
+	loadJNKRestrict = async (id: number) => {
+		return await this.cApp.uqs.chemicalSecurity.JNKRestrict.load(id);
 	}
 
 	/**

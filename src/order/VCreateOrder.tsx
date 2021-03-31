@@ -19,6 +19,7 @@ export class VCreateOrder extends VPage<COrder> {
 	private shippingAddressTip = observable.box();
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
+    @observable orderNotes: HTMLTextAreaElement;
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
@@ -168,7 +169,8 @@ export class VCreateOrder extends VPage<COrder> {
 			this.invoiceTip.set(renderTip('必须填写发票信息'));
             return;
         }
-
+        let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
+        this.controller.orderData.comments = endComments;
         this.controller.submitOrder();
     }
 
@@ -318,6 +320,10 @@ export class VCreateOrder extends VPage<COrder> {
                     {freightFeeRemittedUI}
                 </div >
                 {couponUI}
+            </div>
+            <div className="px-2">
+                <div>订单备注（可填）</div>
+                <textarea ref={ v => this.orderNotes = v } placeholder="您若有疑问或其他问题, 可添加备注" className="w-100 rounded p-1 mx-1" style={{ outline:'none', resize:"none", borderColor:"#719ECE" }} rows={3}></textarea>
             </div>
             {this.renderVm(VModelByCreateOrder)}
         </Page>

@@ -12,6 +12,14 @@ export interface UqOrder {
     CommonText: Tuid;
 }
 
+export interface UqChemical {
+    ChemicalJNKRestrict: Map;
+}
+
+export interface UqChemicalSecurity {
+    JNKRestrict: Tuid;
+}
+
 export interface UqProduct {
     ProductX: Tuid;
     Lot: Tuid;
@@ -135,6 +143,8 @@ export interface UqWebBuilder {
 
 export interface UQs {
     order: UqOrder;
+    chemical: UqChemical;
+    chemicalSecurity: UqChemicalSecurity;
     product: UqProduct;
     common: UqCommon;
     webuser: UqWebUser;

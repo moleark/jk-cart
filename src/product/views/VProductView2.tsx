@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BoxId, tv, View } from 'tonva';
+import { Ax, BoxId, nav, tv, View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
@@ -44,7 +44,7 @@ export class VProuductView2 extends View<CProduct> {
 						!productListSource
 							? <div className="row p-0 mx-0">
 								{renderPropItem('产品编号', origin)}
-								{renderPropItem('CAS', CAS || props.CAS)}
+								{renderPropItem('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}}  href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
 								{renderPropItem('纯度', purity || props.purity)}
 								{renderPropItem('分子式', molecularFomula || props.molecularFomula)}
 								{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
@@ -52,7 +52,7 @@ export class VProuductView2 extends View<CProduct> {
 							</div>
 							: <p className="ml-lg-3">
 								{renderPropItemC('产品编号', origin, null, false)}
-								{renderPropItemC('CAS', CAS || props.CAS)}
+								{renderPropItemC('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}} href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
 								{brand && renderPropItemC('品牌', brand.name)}
 							</p>
 					}

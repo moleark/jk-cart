@@ -259,8 +259,8 @@ export class VPageProduct extends VPage<CProduct> {
     }
 
     private renderProduct = (product: Product) => {
-        let { id, brand, props, chemical } = product;
-        let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl } = props;
+        let { id, brand, props, chemical, warningSigns } = product;
+        let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber } = props;
         let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
         let cName: any;
         if (descriptionC !== description) {
@@ -282,12 +282,14 @@ export class VPageProduct extends VPage<CProduct> {
                     {cName}
                     <div className="row mx-3">
                         {renderPropItem('产品编号', origin, "font-weight-bold")}
-                        {renderPropItem('CAS', CAS || chemical.CAS, "font-weight-bold")}
+                        {renderPropItem('CAS', <Ax href={`/search/${ CAS || chemical.CAS }` } className="text-primary">{CAS || chemical.CAS}</Ax> , "font-weight-bold")}
                         {renderPropItem('纯度', purity || chemical.purity)}
                         {renderPropItem('分子式', molecularFomula || chemical.molecularFomula)}
                         {renderPropItem('分子量', molecularWeight || chemical.molecularWeight)}
                         {renderBrand(brand)}
+                        {renderPropItem('MDL', (mdlnumber|| chemical.mdlnumber) ? <Ax href={`/search/${ mdlnumber|| chemical.mdlnumber }` } className="text-primary">{mdlnumber|| chemical.mdlnumber}</Ax> : null)}
                     </div>
+                    <div className="text-danger px-3 mx-3">{ warningSigns }</div>
                 </div>
                 {this.renderVm(VFavorite, { product })}
                 {this.renderVm(VPrice, product)}
