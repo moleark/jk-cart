@@ -140,10 +140,10 @@ export class VPageProduct extends VPage<CProduct> {
             { insideKey: "MDL", webKey: "MDL编码" },
             { insideKey: "Beilstein", webKey: "Reaxys-RN (Beilstein)" },
             { insideKey: "Merck", webKey: "Merck Index" },
-            { insideKey: "ECNo", webKey: "EC No." },
-            { insideKey: "EINECS", webKey: "EINECS" },
+            { insideKey: "EINECS", webKey: "EC No." },
         ];
         let securityInfoKey = [
+            { insideKey: "SpecialRequirement", webKey: "存储条件" },
             { insideKey: "Hazard", webKey: "Symbol" },
             { insideKey: "RiskSign", webKey: "Signal Word" },
             { insideKey: "HValue", webKey: "Hazard Statements" },
@@ -171,7 +171,7 @@ export class VPageProduct extends VPage<CProduct> {
                 <tbody>
                     {data.map((v: any, index: number) => {
                         let value = content[v.insideKey];
-                        if (!value) return null;
+                        if (!value || value.replace(/\s*/g,'') ==='N/A') return null;
                         if (v.insideKey === 'Hazard') {
                             value = SymbolSrcs.map((o: any) => {
                                 if (value.indexOf(o.name) > -1) {
@@ -180,6 +180,11 @@ export class VPageProduct extends VPage<CProduct> {
                                 return '';
                             });
                         };
+                        if (v.insideKey === 'TSCA') {
+                            let TSCAs: { [typeNum: number]: string } = { 0: '', 1: "是", 2: "否" };
+                            value = TSCAs[value] || "";
+                        };
+                        if (!value) return null;
                         return <tr key={index}><th className="w-50">{v.webKey}</th><td className="w-50">{value}</td></tr>
                     })}
                 </tbody>

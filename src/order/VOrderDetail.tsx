@@ -51,7 +51,7 @@ export class VOrderDetail extends VPage<COrder> {
 
         let { brief, data } = order;
         let { id, no, state, description, date } = brief;
-        let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, couponOffsetAmount, couponRemitted
+        let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, comments, couponOffsetAmount, couponRemitted
             , freightFee, freightFeeRemitted } = data;
         let couponUI;
         if (couponOffsetAmount || couponRemitted) {
@@ -92,6 +92,11 @@ export class VOrderDetail extends VPage<COrder> {
             <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button>
         </div>
 
+        let commentsUI = comments ? <div className="bg-white row no-gutters p-3 my-1">
+            <div className="col-3 text-muted">备注:</div>
+            <div className="col-9">{comments}</div>
+        </div> : null;
+
         let header: any
         if (xs) header = <>订单详情: {no}</>            //orderAgainUI
         return <Page header={header} footer={<></>}>
@@ -118,6 +123,7 @@ export class VOrderDetail extends VPage<COrder> {
                 <div className="col-3 text-muted">下单时间:</div>
                 <div className="col-9 text-right"><EasyDate date={date} /></div>
             </div>
+            {commentsUI}
             <div className="bg-white p-3 my-1 text-right">
                 <span className="text-danger font-weight-bold">总金额: {amount}{tv(currency)}</span>
             </div>
