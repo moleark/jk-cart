@@ -173,9 +173,9 @@ export class VPageProduct extends VPage<CProduct> {
                         let value = content[v.insideKey];
                         if (!value || value.replace(/\s*/g,'') ==='N/A') return null;
                         if (v.insideKey === 'Hazard') {
-                            value = SymbolSrcs.map((o: any) => {
+                            value = SymbolSrcs.map((o: any,ind:number) => {
                                 if (value.indexOf(o.name) > -1) {
-                                    return <img className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
+                                    return <img key={ind} className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
                                 }
                                 return '';
                             });

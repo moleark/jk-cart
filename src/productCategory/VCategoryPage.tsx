@@ -5,6 +5,7 @@ import { CProductCategory, ProductCategory } from './CProductCategory';
 import { xs } from '../tools/browser';
 import { rootCategroyResFromId } from 'global';
 import { VBrandCrumbs } from './VBreadCrumbs';
+import classNames from 'classnames';
 
 export class VCategoryPage extends VPage<CProductCategory> {
 
@@ -78,7 +79,7 @@ export class VCategoryPage extends VPage<CProductCategory> {
             <div>{this.controller.renderCategoryItem(item, undefined, <>{total > 1000 ? '>1000' : total}个产品</>)}</div>;
 
         return <div key={name} className="col-lg-4 each-product">
-            {this.controller.renderCategoryItem(item, undefined, <h2 className={titleBgClass}>{name}</h2>)}
+            {this.controller.renderCategoryItem(item, undefined, <h2 className={classNames(titleBgClass,'text-truncate')}>{name}</h2>)}
             <div className="background-grey">{vItem}</div>
         </div>
     }
