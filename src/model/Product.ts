@@ -151,6 +151,12 @@ export class Product {
 			let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand?.id, customer: currentUser.currentCustomer });
 			if (discountSetting && discountSetting.discount)
 				discount = discountSetting.discount;
+			else {
+				if (currentUser.currentCustomer.Organization) {
+					discountSetting = await customerDiscount.GetDiscountByOrganization.obj({ brand: this.brand?.id, organization: currentUser.currentCustomer.Organization });
+					if (discountSetting && discountSetting.discount) discount = discountSetting.discount;
+				}
+			}
 		}
 
 		// 协议客户与vip客户不同存

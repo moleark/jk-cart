@@ -76,10 +76,12 @@ export interface UqCustomer {
     CustomerContacts: Map;
     CustomerSetting: Map;
     CustomerContractor: Map;
+    getCustomerOrganization: Query;
 }
 
 export interface UqCustomerDiscount {
     GetDiscount: Query;
+    GetDiscountByOrganization: Query;
 }
 
 export interface UqPromotion {

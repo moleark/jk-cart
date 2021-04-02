@@ -265,6 +265,7 @@ export class Customer {
 
     private customerSettings: any;
     Contractor: any;
+    Organization: any;
 
     constructor(customer: BoxId, uqs: UQs) {
         this.id = customer.id;
@@ -288,6 +289,8 @@ export class Customer {
         let customerContactorMap: any = await this.uqs.customer.CustomerContacts.obj({ customer: this.id });
         if (customerContactorMap)
             this.Contractor = customerContactorMap.contractor;
+        let customerOrganization = await this.uqs.customer.getCustomerOrganization.obj({ customerId: this.id });
+        if (customerOrganization) this.Organization = customerOrganization.organization;
     }
 
     getSetting() {
