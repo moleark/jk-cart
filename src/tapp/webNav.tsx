@@ -189,7 +189,7 @@ export class NavFooterView extends View<CApp> {
                 <div className="row">
                     <div className="col-lg-3 col-6">
                         <img src="/images/icon/footer-logo.svg" className="footer-logo" />
-                        <p>促进科技与工业发展，造福人类</p>
+                        <p>服务科技与工业发展 造福人类</p>
                         <img src="/images/qrcode.jpg" style={{width:100}} className="mt-lg-50 qrcode" />
                         <p className="follow">关注微信公众号</p>
                         {/* <img src="/images/qrcode.jpg" className="w-75 mt-lg-28 qrcode" /> */}
