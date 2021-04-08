@@ -93,6 +93,19 @@ export class Cart {
         this.calcSum();
     }
 
+    againOrderCart = async (data: CartItem[]) => {
+        this.cartItems.forEach((v: any) => v.$isSelected = false);
+        data.forEach((v: any) => {
+            let findRepeatData = this.cartItems.findIndex((i: any) => Tuid.equ(v.product, i.product) && Tuid.equ(v.packs[0].pack, i.packs[0].pack));
+            if (findRepeatData > -1) {
+                v.packs[0].quantity = v.packs[0].quantity + this.cartItems[findRepeatData].packs[0].quantity;
+                this.cartItems.splice(findRepeatData, 1);
+            };
+        });
+        this.cartItems = [...data, ...this.cartItems];
+        this.calcSum();
+    }
+
     /**
      * 合并购物车数据
      * @param cartData 

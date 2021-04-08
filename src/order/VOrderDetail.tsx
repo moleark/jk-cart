@@ -1,12 +1,13 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyDate, Ax } from 'tonva';
+import { VPage, Page, BoxId, EasyDate, Ax, Tuid, nav } from 'tonva';
 import { COrder } from './COrder';
 import { tv } from 'tonva';
 import { List } from 'tonva';
 import { OrderItem } from './Order';
 import { xs } from '../tools/browser';
 import classNames from 'classnames';
+import { CartItem } from '../cart/Cart';
 
 export class VOrderDetail extends VPage<COrder> {
 
@@ -30,6 +31,53 @@ export class VOrderDetail extends VPage<COrder> {
         </div>;
     }
 
+    againCreatOrder = async (initialData: OrderItem[]) => {
+        let { uqs, currentSalesRegion, cart } = this.controller.cApp;
+        let { product: p } = uqs;
+        let { PriceX } = p;
+        let promises: PromiseLike<void>[] = [];
+        initialData.forEach((e: any) => e.packs.forEach((v: any) => {
+            promises.push(PriceX.obj({ product: e.product, pack: v.pack, salesRegion: currentSalesRegion }))
+        }));
+        let prices: any[] = await Promise.all(promises);
+        let orderData: CartItem[] = [];
+        let productPromises: Promise<any>[] = [];
+        for (let key of initialData) {
+            let { product, packs } = key;
+            let filtPacksByProductId = prices.filter((v: any) => Tuid.equ(v.product, product) && v.discountinued === 0 && v.expireDate > Date.now());
+            if (!filtPacksByProductId.length) continue;
+            for (let i of packs) {
+                let findPack = filtPacksByProductId.find((v: any) => Tuid.equ(v.pack, i.pack));
+                if (!findPack) continue;
+                product = this.controller.cApp.getProduct(product.id);
+                productPromises.push(product.loadListItem());
+                orderData.push({
+                    product: product,
+                    packs: [{ pack: i.pack, quantity: i.quantity || 1, price: findPack.retail, retail: findPack.retail, currency: findPack.salesRegion?.obj?.currency }],
+                    $isSelected: true,
+                    $isDeleted: false,
+                    createdate: Date.now()
+                })
+            };
+        };
+        await Promise.all(productPromises);
+        orderData.forEach((v: any) => {
+            let newPrices: any[] = v.product?.prices || [];
+            let findPack = newPrices.find((i: any) => Tuid.equ(i.pack, v.packs[0].pack));
+            if (findPack) {
+                let { vipPrice, promotionPrice } = findPack;
+                v.packs[0].price = this.minPrice(vipPrice, promotionPrice) || v.packs[0].price;
+            };
+        });
+        cart.againOrderCart(orderData);
+        nav.navigate('/cart');
+    }
+
+    private minPrice(vipPrice: any, promotionPrice: any) {
+        if (vipPrice || promotionPrice)
+            return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
+    }
+
     private renderOrderItem = (orderItem: OrderItem) => {
         let { product, packs } = orderItem;
         let { id } = product;
@@ -43,6 +91,10 @@ export class VOrderDetail extends VPage<COrder> {
             }</div>
             <div className="text-right w-100 px-3">
                 <Ax className="mx-2 text-info font-weight-bold" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
+                <div className="btn btn-sm btn-info float-left float-lg-right"
+                    style={{ background: "#17a2b8" }} onClick={() => { this.againCreatOrder([orderItem]) }}>
+                    立即购买
+                </div>
             </div>
         </div>
     }
@@ -88,8 +140,12 @@ export class VOrderDetail extends VPage<COrder> {
                 </>
             }
         }
-        let orderAgainUI = <div className="d-flex justify-content-center">
-            <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button>
+        let orderAgainUI = <div className="px-3 py-2 border-bottom" style={{userSelect: "none"}}>
+            <span className="align-middle">您若想购买订单中所有产品,请 </span>
+            <button className="btn btn-sm btn-secondary cursor-pointer" title='可直接下单再次购买订单中产品'
+                style={{ background: "#6c757d" }}
+                onClick={() => { this.againCreatOrder(orderItems) }}>立即下单</button>
+            {/* <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button> */}
         </div>
 
         let commentsUI = comments ? <div className="bg-white row no-gutters p-3 my-1">
@@ -101,6 +157,7 @@ export class VOrderDetail extends VPage<COrder> {
         if (xs) header = <>订单详情: {no}</>            //orderAgainUI
         return <Page header={header} footer={<></>}>
             {!xs && <div className="alert alert-info alert-signin mt-3">订单编号 {no}</div>}
+            {orderAgainUI}
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>
