@@ -89,6 +89,7 @@ interface Global {
 	ANDROIDAPPADDRESS: string;
 	PIRVACYURL: string;
 	CONTENTSITE: string;
+	AUTOLOGIN: string;
 };
 
 // 生产配置
@@ -100,6 +101,7 @@ const GLOABLE_PRODUCTION: Global = {
 	ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
 	PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
 	CONTENTSITE: "https://web.jkchemical.com",
+	AUTOLOGIN: "https://web.jkchemical.com/api/epec/clientLogin",
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -113,6 +115,7 @@ const GLOABLE_TEST: Global = {
 	PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
 	// CONTENTSITE: "https://c.jkchemical.com/jk-web",
 	CONTENTSITE: "http://localhost:6061",
+	AUTOLOGIN: "http://localhost:6061/api/epec/clientLogin",
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

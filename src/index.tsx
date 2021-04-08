@@ -49,8 +49,12 @@ serviceWorker.unregister();
 		};
 	}
 
+	let userPassword = async () => {
+		return { user: 'xxxx', password: 'xxxxx' };
+	}
+
 	const App: React.FC = () => {
-		return <NavView onLogined={onLogined} notLogined={onLogined} />;
+		return <NavView onLogined={onLogined} notLogined={onLogined} userPassword={userPassword} />;
 	}
 
 
