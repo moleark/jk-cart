@@ -10,6 +10,8 @@ import { appConfig } from 'configuration';
 import './App.css';
 import 'antd/dist/antd.css';
 import { CApp, CWeb } from './tapp';
+import * as qs from 'querystringify';
+import { GLOABLE } from 'global';
 //import logo from './logo.svg';
 
 /*
@@ -50,7 +52,18 @@ serviceWorker.unregister();
 	}
 
 	let userPassword = async () => {
-		return { user: 'xxxx', password: 'xxxxx' };
+		let { search } = window.location;
+		if (search) {
+			let query: any = qs.parse(search.toLowerCase());
+			if (search.startsWith('?lgtk=')) {
+				let result = await fetch(GLOABLE.AUTOLOGIN + '?lgtk=' + query?.lgtk);
+				if (result.ok) {
+					let res = await result.json();
+					return res;
+				};
+			};
+		};
+		return; /* { user: 'xxxx', password: 'xxxxx' }; */
 	}
 
 	const App: React.FC = () => {
