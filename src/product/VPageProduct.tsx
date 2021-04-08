@@ -126,8 +126,8 @@ export class VPageProduct extends VPage<CProduct> {
     */
     renderAssistInfo = (product: Product) => {
         let basicInfoKey = [
-            { insideKey: "MF", webKey: "MF" },
-            { insideKey: "MW", webKey: "MW" },
+            // { insideKey: "MF", webKey: "MF" },
+            // { insideKey: "MW", webKey: "MW" },
             { insideKey: "Synonymity", webKey: "英文别名" },
             { insideKey: "SynonymityC", webKey: "中文别名" },
             { insideKey: "MP", webKey: "MP" },
