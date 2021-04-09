@@ -271,7 +271,7 @@ export class VPageProduct extends VPage<CProduct> {
         if (descriptionC !== description) {
             cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
         }
-        imageUrl = imageUrl || props.chemical.toString();
+        // imageUrl = imageUrl || props.chemical.toString();
         return <>
             <div className="col-lg-4 ">
                 <div className="">
