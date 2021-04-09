@@ -103,7 +103,9 @@ export class Product {
 
 	private async loadBase() {
 		if (this.props) return;
-		let ret = await this.cApp.uqs.product.ProductX.load(this.id);
+		let { currentSalesRegion } = this.cApp;
+		let ret = await this.cApp.uqs.product.GetAvailableProductById.obj({ product: this.id, salesRegion: currentSalesRegion });
+		// let ret = await this.cApp.uqs.product.ProductX.load(this.id);
 		this.props = ret;
 	}
 

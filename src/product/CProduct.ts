@@ -9,6 +9,7 @@ import { Product } from '../model';
 import { GLOABLE } from 'global';
 import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';
+import { VError } from '../tools/VError';
 
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
@@ -157,7 +158,11 @@ export class CProduct extends CUqBase {
         this.product = this.cApp.getProduct(productId);
         await this.product.loadDetail();
         if (JumpSource) this.closePage();
-        this.openVPage(VPageProduct);
+        if (!this.product.props) {
+            this.openVPage(VError);
+        } else {
+            this.openVPage(VPageProduct);
+        }
     }
 
     /*

@@ -40,6 +40,7 @@ export interface UqProduct {
     GetFutureDeliveryTime: Query;
     GetProductByOrigin: Query;
     GetLotByLotnumber: Query;
+    GetAvailableProductById: Query;
 }
 
 export interface UqCommon {
