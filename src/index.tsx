@@ -56,7 +56,7 @@ serviceWorker.unregister();
 		if (search) {
 			let query: any = qs.parse(search.toLowerCase());
 			if (search.startsWith('?lgtk=')) {
-				let result = await fetch(GLOABLE.AUTOLOGIN + '?lgtk=' + query?.lgtk);
+				let result = await fetch(GLOABLE.EPEC.AUTOLOGIN + '?lgtk=' + query?.lgtk);
 				if (result.ok) {
 					let res = await result.json();
 					return res;

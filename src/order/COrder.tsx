@@ -237,20 +237,23 @@ export class COrder extends CUqBase {
         });
         cart.removeItem(param);
 
-        /*
-        let o1 = this.orderData.getDataForSave2();
-        o1.id = orderId;
-        o1.no = no;
-        ol.type = 1;
-        let rep = await window.fetch("http://localhost:3016/epec/pushOrder", {
+        // epec客户下单后要求跳转到指定的url
+        let epecOrder = this.orderData.getDataForSave2();
+        epecOrder.id = orderId;
+        epecOrder.no = no;
+        epecOrder.type = 1;
+        let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
             method: 'post',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(o1)
+            body: JSON.stringify(epecOrder)
         });
         if (rep.ok) {
-            window.location.href = await rep.json();
+            let url = await rep.json();
+            if (url) {
+                window.location.href = url;
+                return;
+            }
         }
-        */
 
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);

@@ -89,7 +89,10 @@ interface Global {
 	ANDROIDAPPADDRESS: string;
 	PIRVACYURL: string;
 	CONTENTSITE: string;
-	AUTOLOGIN: string;
+	EPEC: {
+		AUTOLOGIN: string;
+		PUSHORDERURL: string;
+	},
 };
 
 // 生产配置
@@ -101,7 +104,10 @@ const GLOABLE_PRODUCTION: Global = {
 	ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
 	PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
 	CONTENTSITE: "https://web.jkchemical.com",
-	AUTOLOGIN: "https://web.jkchemical.com/api/epec/clientLogin",
+	EPEC: {
+		AUTOLOGIN: "https://web.jkchemical.com/api/epec/clientLogin",
+		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
+	},
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -115,7 +121,10 @@ const GLOABLE_TEST: Global = {
 	PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
 	// CONTENTSITE: "https://c.jkchemical.com/jk-web",
 	CONTENTSITE: "http://localhost:6061",
-	AUTOLOGIN: "http://localhost:6061/api/epec/clientLogin",
+	EPEC: {
+		AUTOLOGIN: "http://localhost:6061/api/epec/clientLogin",
+		PUSHORDERURL: "http://localhost:3016/epec/pushOrder"
+	},
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;
