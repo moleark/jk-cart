@@ -23,7 +23,7 @@ export class VPageCoa extends VPage<CProduct> {
 	page = observer((param?: any) => {
         let { content : COAContent } = param;
         let { content, version, issueDate, lot, origin, product } = COAContent;
-        content = JSON.parse(content.replace(/(\n)*/g, ''));
+        content = JSON.parse(content.replace(/(\n|\t|\r)*/g, ''));
         issueDate = moment(issueDate).format('YYYY-MM-DD');
         let brand:any = product?.obj?.brand?.obj;
         let arr1 = ['description','cas','molecularFormula','molecularWeight','issueDate'];
