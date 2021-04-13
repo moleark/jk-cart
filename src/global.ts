@@ -105,7 +105,7 @@ const GLOABLE_PRODUCTION: Global = {
 	PIRVACYURL: "https://shop.jkchemical.com/privacy/shop.txt",
 	CONTENTSITE: "https://web.jkchemical.com",
 	EPEC: {
-		AUTOLOGIN: "https://web.jkchemical.com/api/epec/clientLogin",
+		AUTOLOGIN: "https://web.jkchemical.com/joint/clientLogin",
 		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
 	},
 	// CONTENTSITE: "http://localhost:6061",
@@ -122,7 +122,7 @@ const GLOABLE_TEST: Global = {
 	// CONTENTSITE: "https://c.jkchemical.com/jk-web",
 	CONTENTSITE: "http://localhost:6061",
 	EPEC: {
-		AUTOLOGIN: "http://localhost:6061/api/epec/clientLogin",
+		AUTOLOGIN: "http://localhost:6061/joint/clientLogin",
 		PUSHORDERURL: "http://localhost:3016/epec/pushOrder"
 	},
 }
