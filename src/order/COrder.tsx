@@ -242,17 +242,21 @@ export class COrder extends CUqBase {
         epecOrder.id = orderId;
         epecOrder.no = no;
         epecOrder.type = 1;
-        let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(epecOrder)
-        });
-        if (rep.ok) {
-            let url = await rep.json();
-            if (url) {
-                window.location.href = url;
-                return;
+        try {
+            let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(epecOrder)
+            });
+            if (rep.ok) {
+                let url = await rep.json();
+                if (url) {
+                    window.location.href = url;
+                    return;
+                }
             }
+        } catch (error) {
+
         }
 
         // 打开下单成功显示界面
