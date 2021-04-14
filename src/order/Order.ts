@@ -5,7 +5,7 @@ import { Product } from 'model';
 
 export class Order {
 
-    webUser: any;
+    webUser: number;
     organization: BoxId;
     customer: any;
 
@@ -100,7 +100,7 @@ export class Order {
             })
         });
         return {
-            webUser: this.webUser?.id,
+            webUser: this.webUser,
             organization: this.organization?.id,
             customer: this.customer?.id,
             shippingContact: this.shippingContact?.id,
