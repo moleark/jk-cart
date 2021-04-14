@@ -217,7 +217,7 @@ export class NavFooterView extends View<CApp> {
                                     })
                                 }
                             </ul>
-                            <li><a href="/hazard-purchase"  target="_blank">危险品购买提示</a></li>
+                            <li><a href="/hazard-purchase" className="text-danger" target="_blank">危险品购买提示</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
