@@ -17,6 +17,8 @@ const BrandImg: { [brand: string]:string} = {
 export class VPageCoa extends VPage<CProduct> {
 
     async open(param?: any) {
+        let iframeList: any = document.querySelectorAll('body iframe');
+        if (iframeList && iframeList.length) iframeList[iframeList.length - 1].setAttribute('class', "test-iframe-d-n");
 		this.openPage(this.page,param);
 	}
 
@@ -30,7 +32,8 @@ export class VPageCoa extends VPage<CProduct> {
         let OtherArr = Object.keys(content).filter((v: any) => !arr1.find((i: any) => i === v));
         let header: any, title = '质检报告';
         if (xs) header = title;
-		return <Page header={header}>
+        return <Page header={header}>
+            <div style={{visibility: "hidden"}} onClick={()=>{window.print();}} >打印</div>
 			<div className="text-center w-100 mt-lg-2">
                 <img src={BrandImg[brand?.name] || BrandImg['J&K']} className="w-75" alt=""/>
                 <h5 className="r-font-size font-weight-bolder">CERTIFICATE OF ANALYSIS</h5>

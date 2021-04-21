@@ -214,3 +214,22 @@
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #e5e5e5;
 }
+
+@media print{
+  .top-header,.footer-bottom,.footer-m,.btnText,.navbar{
+      display: none !important;
+  };
+
+  #end-page-footer{
+      display: none !important;
+  };
+
+  body iframe:last-child{
+      display: none !important;
+  }
+
+  .test-iframe-d-n{
+    height: 0 !important;
+    display: none !important;
+  }
+}
