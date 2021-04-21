@@ -26,7 +26,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 	private productLotTip = observable.box<string>();
 	private productLotTipNone = observable.box<string>();
 	private captchaTip = observable.box<string>();
-
+	@observable buttonDisable: boolean = false;
 	async open(param?: any) {
 		this.openPage(this.page, { origin: param });
 	}
@@ -59,7 +59,9 @@ export class VPageSkillSearch extends VPage<CProduct> {
 									{assistContent}
 									{autoHideTips(this.productLotTipNone, tip => <div className='small text-danger px-3'>* {tip}</div>)}
 									<div className="col-md-12">
-										<button className="btn btn-primary w-5c mt-2 mb-5" onClick={(e: any) => { e.preventDefault(); this.onSubmit() }}>查询</button>
+										<button className="btn btn-primary w-5c mt-2 mb-5"
+											disabled={this.buttonDisable}
+											onClick={(e: any) => { e.preventDefault(); this.buttonDisable = true; this.onSubmit();  }}>查询</button>
 									</div>
 								</div>
 								
@@ -130,5 +132,6 @@ export class VPageSkillSearch extends VPage<CProduct> {
 			if (this.controller.materialType === 'coa') this.openVPage(VPageCoa, content);
 			else this.openVPage(VPagePDF, content);
 		};
+		this.buttonDisable = false;
 	}
 }
