@@ -21,6 +21,7 @@ import { CAddress } from 'customer/CAddress';
 import { VInvoiceInfo } from 'customer/VInvoiceInfo';
 import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 import _ from 'lodash';
+import { VEpecOrderError } from './VEpecOrderError';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -248,11 +249,22 @@ export class COrder extends CUqBase {
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(epecOrder)
             });
-            if (rep.ok) {
+            let { ok, status } = rep;
+            if (ok) {
                 let url = await rep.json();
                 if (url) {
                     window.location.href = url;
                     return;
+                }
+            } else {
+                switch (status) {
+                    case 500:
+                        let repContent = await rep.json();
+                        this.openVPage(VEpecOrderError, { message: repContent.message });
+                        return;
+                        break;
+                    default:
+                        break;
                 }
             }
         } catch (error) {
