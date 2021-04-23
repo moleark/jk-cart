@@ -20,6 +20,7 @@ export class VCreateOrder extends VPage<COrder> {
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
     @observable orderNotes: HTMLTextAreaElement;
+    @observable submitOrderEd: boolean = false;
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
@@ -184,14 +185,15 @@ export class VCreateOrder extends VPage<COrder> {
 
         let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit, getValidCardForWebUser } = this.controller;
 		let { currentUser } = cApp;
-		let { allowOrdering } = currentUser;
+        let { allowOrdering } = currentUser;
+        let disableOrderBtn = () => { this.submitOrderEd = true; setTimeout(() => this.submitOrderEd = false, 5000); };
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
             <div className="d-flex justify-content-left">
                 <div className="text-danger flex-grow-1 align-self-center" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"
                     className={classNames('btn', { 'btn-danger': allowOrdering, 'btn-secondary': !allowOrdering })}
-                    style={{backgroundColor: '#c82333'}}
-                    onClick={this.onSubmit} disabled={!allowOrdering}>提交订单
+                    style={{ backgroundColor: '#c82333' }}
+                    onClick={() => { disableOrderBtn(); this.onSubmit()}} disabled={!allowOrdering || this.submitOrderEd}>提交订单
                 </button>
             </div>
         </div>;
