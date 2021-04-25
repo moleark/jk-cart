@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema } from 'tonva';
+import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema, Tuid } from 'tonva';
 import { CProduct } from '../CProduct';
 import { MinusPlusWidget } from 'tools';
 import { Product } from 'model';
 import { VFavorite } from './VFavorite';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 
 /**
  * 显示产品包装价格，配合CProduct.renderProductPrice使用
@@ -12,7 +13,7 @@ import { observer } from 'mobx-react';
  */
 export class VPrice extends View<CProduct> {
     isShowTable: boolean = false;
-    private schema: ItemSchema[] = [
+    protected schema: ItemSchema[] = [
         { name: 'pack', type: 'object' } as ObjectSchema,
         { name: 'quantity', type: 'number' } as NumSchema,
         { name: 'retail', type: 'number' } as NumSchema,
@@ -110,7 +111,7 @@ export class VPrice extends View<CProduct> {
         return right;
     }
 
-    private minPrice(vipPrice: any, promotionPrice: any) {
+    protected minPrice(vipPrice: any, promotionPrice: any) {
         if (vipPrice || promotionPrice)
             return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
     }
@@ -177,7 +178,9 @@ export class VPrice extends View<CProduct> {
 	*/
 }
 
-
+/**
+ * 应用场景 产品列表显示包装 table
+ */
 export class VPriceWithTr extends VPrice {
     isShowTable: boolean = true;
 
@@ -228,6 +231,107 @@ export class VPriceWithTr extends VPrice {
             //         } */}
             //     </tr>;
             // })}</>;
+        }))
+    }
+}
+
+/**
+ * 根据产品编号/包装规格查询产品，在客户手动输入或提交excel表格下单的场景下使用
+ */
+export class VPriceQuickOrder extends VPrice {
+    @observable selectPack: any;
+    renderPrice(param: any, item: any) {
+        let onQuantityChanged = async (context: Context, value: any, prev: any):Promise<void> => {
+            let { data } = context;
+            let { pack, retail, vipPrice, promotionPrice, currency } = data;
+            let { cApp } = this.controller;
+            let { cQuickOrder } = cApp;
+            await cQuickOrder.changeProductQuantity(param, pack, value);
+        }
+
+		let uiSchema: UiSchema = {
+			items: {
+				pack: { visible: false },
+				retail: { visible: false },
+				vipPrice: { visible: false },
+				promotionPrice: { visible: false },
+				currency: { visible: false },
+				quantity: {
+					widget: 'custom',
+					label: null,
+					className: 'text-center',
+					WidgetClass: MinusPlusWidget,
+					onChanged: onQuantityChanged
+				} as UiCustom
+			}
+		}
+	
+        let { retail, vipPrice, promotionPrice, quantity } = item;
+        // if (!quantity) return;
+        let right = null;
+        if (retail) {
+            let price: number = this.minPrice(vipPrice, promotionPrice);
+            let retailUI: any;
+            if (price) {
+                retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
+            }
+            else {
+                price = retail;
+            }
+            right = <div className="row">
+                <div className="col-sm-6 mb-2 d-flex justify-content-end align-items-center">
+                    <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
+                    <span className="text-danger">¥ <span className="h5">{price}</span></span>
+                </div>
+                <div className="col-sm-6 mb-0 d-flex justify-content-end align-items-center">
+                    <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
+                </div>
+            </div >
+        } else {
+            right = <small>请询价</small>
+            if (this.isShowTable) right = <><td className="py-3">请询价</td><td></td></>;
+        }
+        return right;
+    }
+
+    render(param: any): JSX.Element {
+        return React.createElement(observer(() => {
+
+        let { id, product, QPacks, noPackTip, selectedPack } = param;
+        if (!product) return <></>;
+        if (QPacks && !QPacks.length) return <div className="text-danger small align-self-center col-6">{noPackTip}</div>;
+        let { cApp } = this.controller;
+        let { cQuickOrder } = cApp;
+        this.selectPack = selectedPack;
+        let { renderDeliveryTime } = this.controller;
+        let pricesByPackUI = this.selectPack ? <div className="px-2 col-6 col-sm-7 mb-0" key={this.selectPack?.pack?.id + 1}>
+            {this.renderPrice(param, this.selectPack)}
+        </div> : null;
+        return <>
+            <div className="row mx-0">
+                <div className="col-6 col-sm-5 d-flex flex-column justify-content-center">
+                    <div>
+                        <select defaultValue={this.selectPack?.pack?.id || ''} onChange={(e: any) => {
+                            this.selectPack = QPacks.find((i: any) => i.pack.id == e.target.value);
+                            cQuickOrder.selectedPack(param, this.selectPack);
+                        }} name="" id="" className="form-control" >
+                            <option hidden value="">选择包装</option>
+                            {
+                                QPacks?.map((v: any,index:number) => {
+                                    return <option key={index} value={v.pack.id}>{v.pack.obj?.radioy}{v.pack.obj?.unit}</option>
+                                })
+                            }
+                        </select>
+                    </div>
+                    {this.selectPack && <div className="small">{renderDeliveryTime(this.selectPack?.pack)}</div>}
+                </div>
+                {
+                    this.selectPack && this.selectPack.pack
+                        ? <>{pricesByPackUI}</>
+                    :null
+                }
+            </div>
+            </>        
         }))
     }
 }

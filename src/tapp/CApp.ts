@@ -23,6 +23,7 @@ import { GLOABLE } from 'global';
 import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectContact';
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
+import { CQuickOrder } from '../order/CQuickOrder';
 
 export class CApp extends CUqApp {
     private cache: Map<number, Product>;
@@ -38,6 +39,7 @@ export class CApp extends CUqApp {
 
     cProduct: CProduct;
     cOrder: COrder;
+    cQuickOrder: CQuickOrder;
     cCoupon: CCoupon;
     cProductCategory: CProductCategory;
     cMember: CMember;
@@ -69,6 +71,7 @@ export class CApp extends CUqApp {
         this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
         this.cProduct = this.newC(CProduct);
         this.cOrder = this.newC(COrder);
+        this.cQuickOrder = this.newC(CQuickOrder);
         this.cCart = this.newC(CCart);
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
@@ -335,6 +338,9 @@ export class CApp extends CUqApp {
         this.cMe.openMeInfo();
     }
 
+    private navQuickOrder: NavPage = async (params: any) => {
+        this.cQuickOrder.openDirectOrder();
+    }
 
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
@@ -360,6 +366,8 @@ export class CApp extends CUqApp {
             '/favorites': this.navFavorites,
             '/password': this.navPassword,
             '/meInfo': this.navMeInfo,
+
+            '/quickOrder': this.navQuickOrder,
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();

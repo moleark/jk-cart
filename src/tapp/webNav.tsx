@@ -83,6 +83,7 @@ export class NavHeaderView extends View<CApp> {
                                     中国
                                 </a>
                             </div>
+                            <Ax className="text-primary small ml-1" href="/quickOrder">快速订购</Ax>
                             {vCartLabel}
                             {vLogin}
                         </div>
@@ -184,7 +185,7 @@ export class NavHeaderView extends View<CApp> {
 
 export class NavFooterView extends View<CApp> {
     render() {
-        return <div className="d-none d-sm-block footer footer-m reset-z-footer-bg">
+        return <div className="d-none d-sm-block footer footer-m reset-z-footer-bg" id="end-page-footer">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-3 col-6">
