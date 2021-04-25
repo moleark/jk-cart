@@ -115,6 +115,10 @@ export class VQuickOrder extends VPage<CQuickOrder> {
         let readExcelFile = (e: any) => {
             let reads = new FileReader();
             let fileName = e.target.files[0];
+            if (!(/.xls(x?)$/.test(fileName?.name))) {
+                this.excelTip.set("文件格式仅限于 .xlsx 或 .xls");
+                return;
+            };
             this.execlFileName = fileName?.name ? fileName.name.replace(/(.{2}).*(.{1}.xls(x?))/, "$1...$2") : '';
             reads.readAsBinaryString(fileName);
             reads.onload = (e) => {
