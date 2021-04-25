@@ -179,14 +179,16 @@ export class VQuickOrder extends VPage<CQuickOrder> {
                     }
                 </div>
             </div>
-            <div className="d-none d-sm-block">
-                <div className="mt-3 px-2 px-lg-0">
-                    <h5>上传您自己的产品列表</h5>
-                    <div className="small">通过上载每行一个产品（最多30行）的Excel文件，将商品添加到列表中。
-                        文件的第一列必须是产品编号,第二列包装大小和第三列数量的列表。您可以将任何/所有产品的包装尺寸和数量列留空。上传文件后，您就可以添加/编辑包装的尺寸和数量。</div>
-                </div>
-                {this.excelUpload()}
-            </div>
+            {
+                !xs ? <div>
+                    <div className="mt-3 px-2 px-lg-0">
+                        <h5>上传您自己的产品列表</h5>
+                        <div className="small">通过上载每行一个产品（最多30行）的Excel文件，将商品添加到列表中。
+                            文件的第一列必须是产品编号,第二列包装大小和第三列数量的列表。您可以将任何/所有产品的包装尺寸和数量列留空。上传文件后，您就可以添加/编辑包装的尺寸和数量。</div>
+                    </div>
+                    {this.excelUpload()}
+                </div> : null
+            }
         </div>
     });
 
