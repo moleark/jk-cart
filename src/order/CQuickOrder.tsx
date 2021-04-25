@@ -32,7 +32,7 @@ export class CQuickOrder extends CUqBase {
     /**
      * 一键下单页
      */
-    openDirectOrder = async () => {
+    openQuickOrder = async () => {
         this.initProduct();
         this.openVPage(VQuickOrder);
     }

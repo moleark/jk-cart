@@ -339,7 +339,7 @@ export class CApp extends CUqApp {
     }
 
     private navQuickOrder: NavPage = async (params: any) => {
-        this.cQuickOrder.openDirectOrder();
+        this.cQuickOrder.openQuickOrder();
     }
 
     protected onNavRoutes() {

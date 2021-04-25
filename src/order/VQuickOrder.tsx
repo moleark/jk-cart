@@ -164,7 +164,7 @@ export class VQuickOrder extends VPage<CQuickOrder> {
             {!xs ? <h4 className="col-12 mt-5 mb-4 text-center">快速订购</h4> : null}
             <div className="px-2 px-lg-0">
                 <h5>按产品编号订购</h5>
-                <div className="small">输入商品编号,检索商品。下单时必须包装所有产品有效,且已选择包装的大小和数量。</div>
+                <div className="small">输入商品编号,检索商品。下单时所有产品必须有效,且已选择包装的大小和数量。</div>
             </div>
             <div className="col-lg-12 mx-auto p-2 rounded" style={{ background: "#efefef" }}>
                 <List items={quickOrderProducts} item={{ render: this.productContent, className: "bg-transparent" }} none={<div className="py-2 d-flex justify-content-center" style={{userSelect: "none"}}>请添加产品</div>} />
