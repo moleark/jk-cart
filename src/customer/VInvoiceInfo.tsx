@@ -71,7 +71,7 @@ const uiSchema: UiSchema = {
                 /* 银行卡位数校验 现已开放 11-30位,后期可针对具体银行进行细化校验 */
                 /* 二次修改  客户银行卡号存在 0开头,暂时只校验数字及数位 */
                 if (value && !/^\d{11,30}$/.test(value.replace(/\s*/g, "")))
-                // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
+                    // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
                 else
                     return undefined;
@@ -127,9 +127,9 @@ const valueAddedVisible = {
 
 export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private form: Form;
-	//@observable showTip: boolean = false;	
-	//saveTip: string = "";
-	private saveTip = observable.box();
+    //@observable showTip: boolean = false;	
+    //saveTip: string = "";
+    private saveTip = observable.box();
     private invoiceInfoData: any;
 
     async open(origInvoice?: any) {
@@ -137,14 +137,14 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         this.openPage(this.page);
     }
 
-    invoiceInfo = (origInvoice?:any) => {
+    invoiceInfo = (origInvoice?: any) => {
         let { invoiceType, invoiceInfo } = origInvoice;
         this.invoiceType = (invoiceType && invoiceType.id) || 1;
         if (invoiceInfo) {
             invoiceInfo.assure();
             this.invoiceInfoData = { ...invoiceInfo.obj };
         } else {
-            this.invoiceInfoData = { 'title': this.controller.cApp.currentUser.defaultOrganizationName };
+            this.invoiceInfoData = { 'title': this.controller.cApp.currentUser?.defaultOrganizationName };
         }
     }
 
@@ -157,7 +157,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         };
         this.invoiceInfoData = data;
 
-		let tip:string;
+        let tip: string;
         try {
             await this.controller.saveInvoiceInfo(invoice);
             tip = "发票信息已经保存";
@@ -165,8 +165,8 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             tip = "发票信息保存失败，请稍后再试";
         }
         //this.showTip = true;
-		//setTimeout(() => { this.showTip = false; }, 2000);
-		this.saveTip.set(tip);
+        //setTimeout(() => { this.showTip = false; }, 2000);
+        this.saveTip.set(tip);
     }
 
     private onSaveInvoice = async () => {
@@ -186,12 +186,12 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         });
 
         return React.createElement(observer(() => {
-             return <Form ref={v => this.form = v} className="my-3"
-            schema={schema}
-            uiSchema={uiSchema}
-            formData={this.invoiceInfoData}
-            onButtonClick={this.onFormButtonClick}
-            fieldLabelSize={3} />
+            return <Form ref={v => this.form = v} className="my-3"
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={this.invoiceInfoData}
+                onButtonClick={this.onFormButtonClick}
+                fieldLabelSize={3} />
         }))
     }
 
@@ -202,11 +202,11 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private page = observer(() => {
         let frm = this.buildForm();
 
-		/*
+        /*
         let tipUI = this.showTip ? (<div className="alert alert-primary" role="alert">
             <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
             {this.saveTip}
-		</div>) : null;
+        </div>) : null;
         */
         let header = CrPageHeaderTitle('发票');
         return <Page header={header}>
@@ -215,7 +215,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                     {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
                 <div className="col-lg-9 px-0">
-                    { !xs && <div className="text-center mt-5"><h1>发票</h1></div>}
+                    {!xs && <div className="text-center mt-5"><h1>发票</h1></div>}
                     {this.renderInvoiceContent()}
                 </div>
             </div>
@@ -223,7 +223,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     });
 
     @observable InvoiceTypeChecked: boolean;
-    render(param?: any): JSX.Element{
+    render(param?: any): JSX.Element {
         return React.createElement(observer(() => {
             if (!this.InvoiceTypeChecked) {
                 let { origInvoice } = param;
@@ -237,34 +237,34 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     renderInvoiceContent = () => {
         let frm = this.buildForm();
         return <>
-                <div className="px-3 mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
-                    <div className="form-group row py-3 mb-1 bg-white">
-                        <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
-                        <div className="col-12 col-sm-9">
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="invoiceType" id="common" value="1"
-                                    onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 1}></input>
-                                <label className="form-check-label" htmlFor="common">增值税普通发票</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="invoiceType" id="valueAdded" value="2"
-                                    onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 2}></input>
-                                <label className="form-check-label" htmlFor="valueAdded">增值税专用发票</label>
-                            </div>
+            <div className="px-3 mx-auto" style={{ maxWidth: !xs ? 600 : 'none' }}>
+                <div className="form-group row py-3 mb-1 bg-white">
+                    <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
+                    <div className="col-12 col-sm-9">
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="invoiceType" id="common" value="1"
+                                onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 1}></input>
+                            <label className="form-check-label" htmlFor="common">增值税普通发票</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="invoiceType" id="valueAdded" value="2"
+                                onChange={(event) => this.onInvoiceTypeClick(event)} checked={this.invoiceType === 2}></input>
+                            <label className="form-check-label" htmlFor="valueAdded">增值税专用发票</label>
                         </div>
                     </div>
                 </div>
-                <div className="p-3 bg-white mx-auto" style={{maxWidth:!xs? 600 :'none'}}>
-                    {frm}
-                    <button type="button"
-                        className="btn btn-primary w-100"
-                        onClick={this.onSaveInvoice}>确定</button>
-                    {/*tipUI*/}
-                    {autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
-                        <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-                        {this.saveTip.get()}
-                    </div>)}
-                </div>
-            </>
+            </div>
+            <div className="p-3 bg-white mx-auto" style={{ maxWidth: !xs ? 600 : 'none' }}>
+                {frm}
+                <button type="button"
+                    className="btn btn-primary w-100"
+                    onClick={this.onSaveInvoice}>确定</button>
+                {/*tipUI*/}
+                {autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
+                    <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                    {this.saveTip.get()}
+                </div>)}
+            </div>
+        </>
     }
 }

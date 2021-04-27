@@ -395,10 +395,13 @@ export class CApp extends CUqApp {
 
     protected async onChangeLogin(user: User) {
         if (user) {
+            if (this.currentUser === undefined)
+                this.currentUser = new WebUser(this.uqs);
             await this.currentUser.setUser(user);
             await this.cart.mergeFromRemote();
         } else {
             // 退出的话把购物车清掉？
+            this.currentUser = undefined;
             localStorage.removeItem(LOCALCARTNAME);
             this.cart.count.set(0);
             this.cart.cartItems = [];

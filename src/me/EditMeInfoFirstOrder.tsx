@@ -18,8 +18,8 @@ interface Options {
 
 export class EditMeInfoFirstOrder extends VPage<CMe>{
     private options: Options;
-	//@observable tips: JSX.Element;
-	private tips = observable.box();
+    //@observable tips: JSX.Element;
+    private tips = observable.box();
     private form: Form;
 
     async open(param: any) {
@@ -29,21 +29,23 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
     }
 
     @observable private webUserData: any;
-	@observable private webUserContactData: any;
-	
-	private ref = (f:Form) => {
-		if (this.form === f) {
-			debugger;
-		}
-		this.form = f;
-	}
+    @observable private webUserContactData: any;
+
+    private ref = (f: Form) => {
+        if (this.form === f) {
+            debugger;
+        }
+        this.form = f;
+    }
 
     constructor(props: any) {
         super(props);
 
         let { cApp } = this.controller;
+        let { currentUser } = cApp;
+        if (!currentUser) return;
         let { firstName, gender, salutation, organizationName, departmentName, telephone
-            , mobile, email, fax, address, addressString, zipCode } = cApp.currentUser;
+            , mobile, email, fax, address, addressString, zipCode } = currentUser;
         this.webUserData = {
             firstName: firstName,
             gender: gender,
@@ -71,7 +73,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         await this.controller.changeWebUserContact(this.webUserContactData);
 
         let { currentUser } = this.controller.cApp;
-        if (currentUser.allowOrdering) {
+        if (currentUser && currentUser.allowOrdering) {
             this.closePage();
             let webUserContacts = await currentUser.getContacts();
             if (webUserContacts === undefined || webUserContacts.length === 0) {
@@ -92,15 +94,15 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
     }
 
     private page = observer(() => {
-		/*
+        /*
         let tipsUI = <></>;
         if (this.tips) {
             tipsUI = <div className="alert alert-primary" role="alert">
                 <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
                 {this.tips}
             </div>
-		}
-		*/
+        }
+        */
 
         let { onlyRequired, caption, note, actionButton } = this.options;
         let schemaFilter = (itemSchema: ItemSchema): boolean => {
@@ -146,10 +148,10 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
 
             <div className="p-3 bg-white">
                 {/*tipsUI*/}
-				{autoHideTips(this.tips, <div className="alert alert-primary" role="alert">
-					<FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
-					{this.tips}
-				</div>)}
+                {autoHideTips(this.tips, <div className="alert alert-primary" role="alert">
+                    <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                    {this.tips}
+                </div>)}
                 <button type="button" className="btn btn-primary w-100" onClick={() => this.onCompleted()}>{value}</button>
             </div>
         </Page >;
