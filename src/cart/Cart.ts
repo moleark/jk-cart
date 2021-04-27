@@ -356,9 +356,9 @@ abstract class CartStore {
         this.cApp = cApp;
     }
     //abstract get isLocal(): boolean;
-    abstract async load(): Promise<CartItem[]>;
-    abstract async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
-    abstract async removeFromCart(rows: [{ productId: number, packId: number }]): Promise<void>;
+    abstract load(): Promise<CartItem[]>;
+    abstract storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
+    abstract removeFromCart(rows: [{ productId: number, packId: number }]): Promise<void>;
 }
 
 class CartRemote extends CartStore {
