@@ -147,7 +147,7 @@ export class Product {
 	private async loadPrices() {
 		let { customerDiscount, product, promotion, warehouse } = this.cApp.uqs;
 		let discount = 0;
-		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
+		let { currentUser, currentSalesRegion, cCart, currentLanguage } = this.cApp;
 		//线上客户是否是线下客户 协议折扣  discount
 		if (currentUser) {
 			if (currentUser.hasCustomer) {
@@ -190,8 +190,8 @@ export class Product {
 			if (discount !== 0)
 				ret.vipPrice = Math.round(element.retail * (1 - discount));
 			ret.currency = currentSalesRegion.currency;
-			if (cart) {
-				ret.quantity = cart.getQuantity(this.id, element.pack.id)
+			if (cCart) {
+				ret.quantity = cCart.getQuantity(this.id, element.pack.id)
 			}
 			return ret;
 		});

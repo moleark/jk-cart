@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { View, nav, FA } from 'tonva';
+import { View, FA } from 'tonva';
 import { CCart } from './CCart';
-import { observer } from 'mobx-react';
 
 export class VCartLabelWeb extends View<CCart> {
 
     render() {
-        let { cart } = this.controller.cApp;
+        let { cart } = this.controller;
         if (!cart) return null;
         let count = cart.count.get();
         let vCount: any;

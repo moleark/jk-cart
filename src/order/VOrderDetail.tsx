@@ -34,7 +34,7 @@ export class VOrderDetail extends VPage<COrder> {
     }
 
     againCreatOrder = async (initialData: OrderItem[]) => {
-        let { uqs, currentSalesRegion, cart } = this.controller.cApp;
+        let { uqs, currentSalesRegion, cCart } = this.controller.cApp;
         let { product: p } = uqs;
         let { PriceX } = p;
         let promises: PromiseLike<void>[] = [];
@@ -71,7 +71,7 @@ export class VOrderDetail extends VPage<COrder> {
                 v.packs[0].price = this.minPrice(vipPrice, promotionPrice) || v.packs[0].price;
             };
         });
-        cart.againOrderCart(orderData);
+        cCart.againOrderCart(orderData);
         nav.navigate('/cart');
     }
 

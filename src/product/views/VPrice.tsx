@@ -36,11 +36,11 @@ export class VPrice extends View<CProduct> {
 			let { pack, retail, vipPrice, promotionPrice, currency } = data;
 			let price = this.minPrice(vipPrice, promotionPrice) || retail;
 			let { cApp } = this.controller;
-			let { cart } = cApp;
+			let { cCart } = cApp;
 			if (value > 0)
-				await cart.add(product, pack, value, price, retail, currency);
+				await cCart.add(product, pack, value, price, retail, currency);
 			else
-				await cart.removeItem([{ productId: product.id, packId: pack.id }]);
+				await cCart.removeItem([{ productId: product.id, packId: pack.id }]);
 		}
 
 		let uiSchema: UiSchema = {

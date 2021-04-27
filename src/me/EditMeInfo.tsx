@@ -18,7 +18,8 @@ export class EditMeInfo extends VPage<CMe>{
 
     async open(param: any) {
         let { cApp } = this.controller;
-        if(!cApp.currentUser?.mobile) await cApp.currentUser.setUser(nav.user);
+		// 程序运行到这里，必须有currentWebUser，否则一定是其它某个地方出错了。
+        //if(!cApp.currentUser?.mobile) await cApp.currentUser.setUser(nav.user);
         let { telephone, mobile, email, fax, zipCode, address, addressString } = cApp.currentUser;
         this.webUserContactData = {
             telephone: telephone,

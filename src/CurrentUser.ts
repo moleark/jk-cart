@@ -85,58 +85,61 @@ export class WebUser {
 
     private async loadWebUser() {
         let { id, _user } = this;
-        if (this._user !== undefined) {
-            let { webuser: webUserTuid, salesTask } = this.uqs;
-            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
-            let webUser = await WebUser.load(this.id);
-            if (webUser) {
-                let { firstName, gender, salutation, organizationName, departmentName } = webUser;
-                this.firstName = firstName;
-                this.gender = gender;
-                this.salutation = salutation;
-                this.organizationName = organizationName;
-                this.departmentName = departmentName;
-                this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
-                if (this.webUserVIPCard !== undefined) {
-                    // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
-                    this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
-                }
+        if (this._user === undefined) return;
 
-                await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
-            }
+		let { webuser: webUserTuid, salesTask } = this.uqs;
+		let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
+		let webUser = await WebUser.load(this.id);
+		if (webUser) {
+			let { firstName, gender, salutation, organizationName, departmentName } = webUser;
+			this.firstName = firstName;
+			this.gender = gender;
+			this.salutation = salutation;
+			this.organizationName = organizationName;
+			this.departmentName = departmentName;
+			this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
+			if (this.webUserVIPCard !== undefined) {
+				// this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
+				this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
+			}
+
+			await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
+		}
 
 
-            let contact = await WebUserContact.obj({ "webUser": id });
-            if (contact) {
-                let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
-                this.telephone = telephone;
-                this.mobile = mobile;
-                this.email = email;
-                this.fax = fax;
-                this.address = address;
-                this.addressString = addressString;
-                this.zipCode = zipCode;
-            }
+		let contact = await WebUserContact.obj({ "webUser": id });
+		if (contact) {
+			let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
+			this.telephone = telephone;
+			this.mobile = mobile;
+			this.email = email;
+			this.fax = fax;
+			this.address = address;
+			this.addressString = addressString;
+			this.zipCode = zipCode;
+		}
 
-            this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
+		this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
 
-            let value = await WebUserCustomer.obj({ webUser: id });
-            if (value !== undefined) {
-                this.currentCustomer = new Customer(value.customer, this.uqs);
-                await this.currentCustomer.init();
-            }
-            let accountValue = await WebUserBuyerAccount.query({ webUser: id });
-            let { ret: buyerAccounts } = accountValue;
-            if (buyerAccounts && buyerAccounts.length > 0) {
-                // TODO: 暂时不考虑有多个相关账号的情况
-                this.buyerAccount = buyerAccounts[0].buyerAccount;
-            }
-        }
+		let value = await WebUserCustomer.obj({ webUser: id });
+		if (value !== undefined) {
+			this.currentCustomer = new Customer(value.customer, this.uqs);
+			await this.currentCustomer.init();
+		}
+		let accountValue = await WebUserBuyerAccount.query({ webUser: id });
+		let { ret: buyerAccounts } = accountValue;
+		if (buyerAccounts && buyerAccounts.length > 0) {
+			// TODO: 暂时不考虑有多个相关账号的情况
+			this.buyerAccount = buyerAccounts[0].buyerAccount;
+		}
     }
 
+	/*
     get isLogined(): boolean {
         return this._user !== undefined;
     }
+	*/
+	
     get hasCustomer(): boolean {
         return this.currentCustomer !== undefined;
     }

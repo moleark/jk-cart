@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { User, nav, NavPage, BoxId, PageWebNav } from 'tonva';
-import { Cart, LOCALCARTNAME } from "../cart/Cart";
+//import { Cart/*, LOCALCARTNAME*/ } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";
 import { CProduct } from "../product";
@@ -27,7 +27,7 @@ import { CQuickOrder } from '../order/CQuickOrder';
 
 export class CApp extends CUqApp {
     private cache: Map<number, Product>;
-    cart: Cart;
+    //cart: Cart;
     currentSalesRegion: any;
     currentLanguage: any;
     currentUser: WebUser;
@@ -60,12 +60,14 @@ export class CApp extends CUqApp {
 
         this.currentSalesRegion = GLOABLE.SALESREGION_CN;
         this.currentLanguage = GLOABLE.CHINESE;
-        this.setUser();
 
         this.cache = new Map();
+		/*
+        this.setUser();
         this.cart = new Cart(this);
         await this.cart.init();
         await this.cart.buildItems();
+		*/
 
         this.cHome = this.newC(CHome);
         this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
@@ -158,10 +160,12 @@ export class CApp extends CUqApp {
         this.topKey = nav.topKey();
     }
 
+	/*
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         this.currentUser.setUser(this.user);
     }
+	*/
 
     /**
      * 
@@ -256,12 +260,12 @@ export class CApp extends CUqApp {
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
-        await this.cart.buildItems();
+        await this.cCart.buildItems();
         this.cProduct.start(params?.key);
     }
 
     private navProduct: NavPage = async (params: any) => {
-        await this.cart.buildItems();
+        await this.cCart.buildItems();
         this.cProduct.showProductDetail(params?.id);
     }
 
@@ -271,7 +275,7 @@ export class CApp extends CUqApp {
     }
 
     private navCart: NavPage = async (params: any) => {
-        await this.cart.buildItems();
+        await this.cCart.buildItems();
         await this.cSelectShippingContact.getContactList();
         await this.cCart.start();
     }
@@ -279,7 +283,7 @@ export class CApp extends CUqApp {
     private navProductCategory: NavPage = async (params: any) => {
         let id = params.id;
         if (id) id = Number(id);
-        await this.cart.buildItems();
+        await this.cCart.buildItems();
         await this.cProductCategory.showCategoryPage(id);
     }
 
@@ -395,20 +399,37 @@ export class CApp extends CUqApp {
 
     protected async onChangeLogin(user: User) {
         if (user) {
-            if (this.currentUser === undefined)
-                this.currentUser = new WebUser(this.uqs);
-            await this.currentUser.setUser(user);
-            await this.cart.mergeFromRemote();
-        } else {
-            // 退出的话把购物车清掉？
-            this.currentUser = undefined;
-            localStorage.removeItem(LOCALCARTNAME);
-            this.cart.count.set(0);
-            this.cart.cartItems = [];
+			await this.initLogined(user);
+        } 
+		else {
+			this.initNotLogined();
         }
+		this.cCart.buildData();
     }
 
+	private async initLogined(user: User) {
+        this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
+        await this.currentUser.setUser(this.user);
+		/*
+		// 如果currentUser，也必须重置
+		//if (this.currentUser === undefined)
+		this.currentUser = new WebUser(this.uqs);
+		await this.currentUser.setUser(user);
+		await this.cart.mergeFromRemote();
+		*/
+	}
+
+	private initNotLogined() {
+		// 退出的话把购物车清掉？
+		this.currentUser = undefined;
+		/*
+		localStorage.removeItem(LOCALCARTNAME);
+		this.cart.count.set(0);
+		this.cart.cartItems = [];
+		*/
+	}
+
     protected onDispose() {
-        this.cart.dispose();
+        this.cCart.disposeCart();
     }
 }

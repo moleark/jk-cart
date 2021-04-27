@@ -3,11 +3,11 @@ import { nav, Image, VPage, Ax } from 'tonva';
 import { Prop, IconText, FA, PropGrid, LMR } from 'tonva';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
-import { EditMeInfo } from './EditMeInfo';
+//import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
 import { appConfig } from 'configuration';
-import { observable } from 'mobx';
+//import { observable } from 'mobx';
 import { browser, xs } from 'tools/browser';
 import welcome from 'images/welcome.png';
 import { MeLib } from './VMeSideBar';
@@ -18,7 +18,7 @@ export class VMe extends VPage<CMe> {
 		this.open
 	}
 	*/
-	private tips = observable.box('a');
+	//private tips = observable.box('a');
 
     private exit() {
         nav.showLogout();
@@ -66,9 +66,8 @@ export class VMe extends VPage<CMe> {
         return <LMR className="px-3 py-2 cursor-pointer w-100 bg-primary text-white"
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
             right={<FA className="align-self-end" name="angle-right" />}
-            onClick={() => {
-                this.openVPage(EditMeInfo);
-            }}>
+            onClick={this.controller.openMeInfo
+				 /*() => {this.openVPage(EditMeInfo);}*/}>
             <div>
                 <div>{userSpan(name, nick)}</div>
                 <div className="small"><span className="text-light">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>

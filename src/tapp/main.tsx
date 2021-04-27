@@ -10,7 +10,7 @@ export class VMain extends VPage<CApp> {
     }
 
     render = (param?: any): JSX.Element => {
-        let { cHome, cCart, cMe, cart } = this.controller;
+	let { cHome, cCart, cMe/*, cart*/ } = this.controller;
         let faceTabs = [
             { name: 'home', label: '首页', icon: 'home', page: cHome.tab, notify: undefined/*store.homeCount*/ },
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
@@ -20,7 +20,7 @@ export class VMain extends VPage<CApp> {
                 icon: 'shopping-cart',
                 //content: cCart.tab, 
                 page: cCart.tabPage,
-                notify: cart.count
+                notify: cCart.count
             },
             {
                 name: 'me',

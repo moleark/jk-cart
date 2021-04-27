@@ -3,16 +3,50 @@ import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
-import { CartPackRow, CartItem } from './Cart';
+import { CartPackRow, CartItem, Cart } from './Cart';
 import { Product } from 'model';
 
 export class CCart extends CUqBase {
+	cart: Cart;
 
     private selectedCartItems: CartItem[];
 
     protected async internalStart(param: any) {
         this.openVPage(VCart);
     }
+
+
+	get count(): number {return this.cart.count.get();}
+
+	async buildItems(): Promise<void> {
+		await this.cart.buildItems();
+	}
+
+	async buildData() {
+		this.cart = new Cart(this.cApp);
+		await this.cart.init();
+		await this.cart.buildItems();
+	}
+
+    disposeCart() {
+		this.cart.dispose();
+	}
+
+	getQuantity(productId: number, packId: number): number {
+		return this.cart.getQuantity(productId, packId);
+	}
+
+	async add(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
+		await this.cart.add(product, pack, quantity, price, retail, currency);
+	}
+
+	async removeItem(rows: [{ productId: number, packId: number }]) {
+		await this.cart.removeItem(rows);
+	}
+
+	async againOrderCart(data: CartItem[]) {
+		await this.cart.againOrderCart(data);
+	}
 
     /**
      *
@@ -36,11 +70,11 @@ export class CCart extends CUqBase {
         let { data, parentData } = context;
         let { product } = parentData;
         let { pack, price, retail, currency } = data as CartPackRow;
-        let { cart } = this.cApp;
+        //let { cart } = this.cApp;
         if (value > 0)
-            await cart.add(product, pack, value, price, retail, currency);
+            await this.cart.add(product, pack, value, price, retail, currency);
         else
-            await cart.removeItem([{ productId: product.id, packId: pack.id }]);
+            await this.cart.removeItem([{ productId: product.id, packId: pack.id }]);
     }
 
     /**
@@ -49,12 +83,12 @@ export class CCart extends CUqBase {
      */
     onRemoveCartItem = (row: any) => {
         let { product, packs } = row;
-        let { cart } = this.cApp;
+        //let { cart } = this.cApp;
         let packsToDeleted: any = [];
         packs.forEach((each: any) => {
             packsToDeleted.push({ productId: product.id, packId: each.pack.id });
         });
-        cart.removeItem(packsToDeleted);
+        this.cart.removeItem(packsToDeleted);
     }
 
     onRowStateChanged = async (context: RowContext, selected: boolean, deleted: boolean) => {
@@ -72,9 +106,9 @@ export class CCart extends CUqBase {
     */
 
     onItemClick = (cartItem: CartItem) => {
-        let { cart, cProduct } = this.cApp;
+        let { cProduct } = this.cApp;
         let { product } = cartItem;
-        if (!cart.isDeleted(product.id)) {
+        if (!this.cart.isDeleted(product.id)) {
             cProduct.showProductDetail(product.id);
         }
     }
@@ -82,9 +116,9 @@ export class CCart extends CUqBase {
      * 商品从购物车永久性删除
      */
     strikeOut = async () => {
-        let { cart } = this.cApp;
-        this.selectedCartItems = cart.getSelectedItems();
-        await cart.removeStrike(this.selectedCartItems)
+        //let { cart } = this.cApp;
+        this.selectedCartItems = this.cart.getSelectedItems();
+        await this.cart.removeStrike(this.selectedCartItems)
 
 
         // let combinedData = this.selectedCartItems.map((el: CartItem2) => {
@@ -100,8 +134,8 @@ export class CCart extends CUqBase {
     }
 
     checkOut = async () => {
-        let { cart } = this.cApp;
-        this.selectedCartItems = cart.getSelectedItems();
+        //let { cart } = this.cApp;
+        this.selectedCartItems = this.cart.getSelectedItems();
         if (this.selectedCartItems === undefined) return;
         /*
         if (!this.isLogined) {

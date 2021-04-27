@@ -34,8 +34,7 @@ export class VCart extends VPage<CCart> {
     */
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cApp } = this.controller;
-        let { cart } = cApp;
+        let { checkOut, strikeOut, cart } = this.controller;
         let amount = cart.amount.get();
         let check = cart.editButton.get() ? '删除' : "去结算";
         let content = cart.editButton.get() ? <>{check}</> : amount > 0 ?
@@ -133,7 +132,7 @@ export class VCart extends VPage<CCart> {
     }
 
     protected cartForm = observer(() => {
-        let { cart } = this.controller.cApp;
+        let { cart } = this.controller;
         let { cartItems } = cart;
         let data = { list: cartItems };
         return <>
@@ -195,7 +194,7 @@ export class VCart extends VPage<CCart> {
     }
     footer() {
         return  React.createElement(observer(() => {
-            let { cart } = this.controller.cApp;
+            let { cart } = this.controller;
             let footer: any;
             if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
                 footer = undefined;
@@ -209,7 +208,7 @@ export class VCart extends VPage<CCart> {
 
     content() {
         return  React.createElement(observer(() => {
-            let { cart } = this.controller.cApp;
+            let { cart } = this.controller;
             let content: any;
             if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
                 content = this.empty();
@@ -225,7 +224,7 @@ export class VCart extends VPage<CCart> {
     }
 
     private tab = observer(() => {
-        let { cart } = this.controller.cApp;
+        let { cart } = this.controller;
         let header = <header className="py-2 text-center bg-info text-white">
             <FA className="align-middle" name="shopping-cart" size="2x" /> &nbsp; <span className="h5 align-middle">购物车</span>
         </header>;

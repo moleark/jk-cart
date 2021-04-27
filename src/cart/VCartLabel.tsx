@@ -8,14 +8,14 @@ import { observer } from 'mobx-react';
 export class VCartLabel extends View<CCart> {
 
     private showCart = async () => {
-        let { cart } = this.controller.cApp;
+        let { cart } = this.controller;
 		cart.editButton.set(false);
         nav.navigate("/cart");
     }
 
     render(): JSX.Element {
 		return React.createElement(observer(() => {
-			let { cart } = this.controller.cApp;
+			let { cart } = this.controller;
 			let count: any = cart.count.get();
 			let badge, onClick, pointer;
 			if (count > 0) {

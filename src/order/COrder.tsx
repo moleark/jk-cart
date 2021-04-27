@@ -204,7 +204,7 @@ export class COrder extends CUqBase {
      * 提交订单
      */
     submitOrder = async () => {
-        let { uqs, cart, currentUser } = this.cApp;
+        let { uqs, cCart, currentUser } = this.cApp;
         let { order, webuser, 积分商城 } = uqs;
         let { orderItems } = this.orderData;
 
@@ -237,7 +237,7 @@ export class COrder extends CUqBase {
                 param.push({ productId: e.product.id, packId: v.pack.id })
             })
         });
-        cart.removeItem(param);
+        cCart.removeItem(param);
 
         // epec客户下单后要求跳转到指定的url
         let epecOrder = this.orderData.getDataForSave2();
