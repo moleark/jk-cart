@@ -149,25 +149,27 @@ export class Product {
 		let discount = 0;
 		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.cApp;
 		//线上客户是否是线下客户 协议折扣  discount
-		if (currentUser.hasCustomer) {
-			let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand?.id, customer: currentUser.currentCustomer });
-			if (discountSetting && discountSetting.discount)
-				discount = discountSetting.discount;
-			else {
-				if (currentUser.currentCustomer.Organization) {
-					discountSetting = await customerDiscount.GetDiscountByOrganization.obj({ brand: this.brand?.id, organization: currentUser.currentCustomer.Organization });
-					if (discountSetting && discountSetting.discount) discount = discountSetting.discount;
+		if (currentUser) {
+			if (currentUser.hasCustomer) {
+				let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand?.id, customer: currentUser?.currentCustomer });
+				if (discountSetting && discountSetting.discount)
+					discount = discountSetting.discount;
+				else {
+					if (currentUser.currentCustomer.Organization) {
+						discountSetting = await customerDiscount.GetDiscountByOrganization.obj({ brand: this.brand?.id, organization: currentUser.currentCustomer.Organization });
+						if (discountSetting && discountSetting.discount) discount = discountSetting.discount;
+					}
 				}
 			}
-		}
 
-		// 协议客户与vip客户不同存
-		if (currentUser.webUserVIPCard !== undefined) {
-			let brandDiscounts = currentUser.VIPDiscount;
-			let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand?.id);
-			// 协议与vip折扣比较 取其大值  (两者不可同存)
-			if (brandDiscount && brandDiscount.discount > discount)
-				discount = brandDiscount && brandDiscount.discount;
+			// 协议客户与vip客户不同存
+			if (currentUser.webUserVIPCard !== undefined) {
+				let brandDiscounts = currentUser.VIPDiscount;
+				let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand?.id);
+				// 协议与vip折扣比较 取其大值  (两者不可同存)
+				if (brandDiscount && brandDiscount.discount > discount)
+					discount = brandDiscount && brandDiscount.discount;
+			}
 		}
 
 		// let { id: currentSalesRegionId } = currentSalesRegion;

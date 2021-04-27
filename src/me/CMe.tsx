@@ -23,11 +23,13 @@ export class CMe extends CUqBase {
 
     async changeWebUser(webUser: any) {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         await currentUser.changeWebUser(webUser);
     }
 
     async changeWebUserContact(webUserContact: any) {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         await currentUser.changeWebUserContact(webUserContact);
     }
 
@@ -52,6 +54,7 @@ export class CMe extends CUqBase {
     openInvoice = async () => {
         let cInvoiceInfo = this.newC(CInvoiceInfo); // new CInvoiceInfo(this.cApp, undefined, false);
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         let defaultSetting = await currentUser.getSetting();
 
         let origInvoice = _.pick(defaultSetting, ['invoiceType', 'invoiceInfo']);

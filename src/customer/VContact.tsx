@@ -80,9 +80,11 @@ export class VContact extends VPage<CSelectContact> {
             this.closePage();
         };
     }
-    
+
     ContactDataP = () => {
-        let { defaultOrganizationName, defaultName, defaultMobile, address, addressString } = this.controller.cApp.currentUser;
+        let { currentUser } = this.controller.cApp;
+        if (!currentUser) return;
+        let { defaultOrganizationName, defaultName, defaultMobile, address, addressString } = currentUser;
         return {
             'organizationName': defaultOrganizationName,
             'name': defaultName,
@@ -104,7 +106,7 @@ export class VContact extends VPage<CSelectContact> {
 
     private page = () => {
         let contactData = _.clone(this.userContactData.contact);
-        let titleH:string= `${contactData !== undefined ?  "编辑" :'添加'}地址`;
+        let titleH: string = `${contactData !== undefined ? "编辑" : '添加'}地址`;
         let buttonDel: any;
         if (contactData !== undefined) {
             buttonDel = <button className="btn btn-sm btn-info" onClick={this.onDelContact}>删除</button>;
@@ -123,10 +125,10 @@ export class VContact extends VPage<CSelectContact> {
         return <Page header={header} footer={footer} right={buttonDel}>
             <div className="App-container container text-left position-relative">
                 {pageHTitle(titleH)}
-                <div className="postion-img" style={{left:"-33%",top:200}}>
+                <div className="postion-img" style={{ left: "-33%", top: 200 }}>
                     <img src='/images/triangle.svg' />
                 </div>
-                <Form ref={v => this.form = v} className={classNames("my-3",!xsOrIpad ? 'w-50 mx-auto' :'')}
+                <Form ref={v => this.form = v} className={classNames("my-3", !xsOrIpad ? 'w-50 mx-auto' : '')}
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={contactData}
@@ -156,11 +158,11 @@ export class VContact extends VPage<CSelectContact> {
                     uiSchema={this.uiSchema}
                     formData={contactData}
                     onButtonClick={this.onFormButtonClick}
-                fieldLabelSize={3} />
-            {footer}
+                    fieldLabelSize={3} />
+                {footer}
             </div>
-		}));
-	}
+        }));
+    }
 }
 
 export class VConfirmDeleteContact extends VPage<CSelectContact> {

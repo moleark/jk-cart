@@ -10,6 +10,7 @@ export interface UqOrder {
     GetCart: Query;
     GetPendingPayment: Query;
     CommonText: Tuid;
+    orderTransportation: Map;
 }
 
 export interface UqChemical {

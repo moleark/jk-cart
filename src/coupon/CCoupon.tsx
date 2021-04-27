@@ -15,23 +15,23 @@ export const COUPONBASE: any = {
 }
 
 
-const couponTips:{[key:number]: string} = {
-	"-1": '对不起，当前服务器繁忙，请稍后再试。',
-	"1": '有效',
-	"0": "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。",
-	"2": '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。',
-	"3": '优惠券无效，请重新输入或与您的专属销售人员联系。',
-	"5": '优惠券无效，请重新输入或与您的专属销售人员联系。',
-	"6": '不允许使用本人优惠券！',
-	"4": '该优惠券已经被使用过了，不允许重复使用。',
+const couponTips: { [key: number]: string } = {
+    "-1": '对不起，当前服务器繁忙，请稍后再试。',
+    "1": '有效',
+    "0": "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。",
+    "2": '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。',
+    "3": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+    "5": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+    "6": '不允许使用本人优惠券！',
+    "4": '该优惠券已经被使用过了，不允许重复使用。',
 }
 
 export class CCoupon extends CUqBase {
     isOpenMyCouponManage: boolean = false;
     @observable couponDrawed: boolean;
     @observable sharedCouponValidationResult: any;
-    @observable CardDiscount:boolean = false;
-    @observable curCardDiscount:any;
+    @observable CardDiscount: boolean = false;
+    @observable curCardDiscount: any;
     couponPager: QueryPager<any>;
 
     applyCoupon = async (coupon: string) => {
@@ -158,6 +158,7 @@ export class CCoupon extends CUqBase {
      */
     getValidCardForWebUser = async () => {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         let { id: currentUserId } = currentUser;
 
         let validVIPCardForWebUser = await this.getValidVipCardForWebUser(currentUserId);
@@ -208,8 +209,8 @@ export class CCoupon extends CUqBase {
     }
 
     applyTip = (ret: any) => {
-		return couponTips[ret];
-		/*
+        return couponTips[ret];
+        /*
         switch (ret) {
             case -1:
                 return '对不起，当前服务器繁忙，请稍后再试。';
@@ -346,6 +347,7 @@ export class CCoupon extends CUqBase {
 
         // 自动领取积分券
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         let { id: currentUserId, allowOrdering } = currentUser;
         if (result === 1 && currentUserId && allowOrdering)
             await this.drawCoupon(this.sharedCouponValidationResult);
@@ -369,7 +371,7 @@ export class CCoupon extends CUqBase {
         let { result } = this.sharedCouponValidationResult;
         let allowCurrentUser = async () => {
             if (result === 1) {
-                if (!currentUser.allowOrdering) {
+                if (!currentUser || !currentUser.allowOrdering) {
                     cMe.toPersonalAccountInfo(async () => await this.drawCoupon(this.sharedCouponValidationResult));
                 } else {
                     await this.drawCoupon(this.sharedCouponValidationResult);
@@ -377,9 +379,9 @@ export class CCoupon extends CUqBase {
             }
         }
 
-		await this.cApp.assureLogin();
-		await allowCurrentUser();
-		/*
+        await this.cApp.assureLogin();
+        await allowCurrentUser();
+        /*
         let loginCallback = async (user: User) => {
             await cApp.currentUser.setUser(user);
             await cApp.loginCallBack(user);
@@ -390,13 +392,14 @@ export class CCoupon extends CUqBase {
             nav.showLogin(loginCallback, true);
         else {
             await allowCurrentUser();
-		}
-		*/
+        }
+        */
     }
 
     drawCoupon = async (credits: any) => {
         let { uqs, cApp } = this;
         let { currentUser } = cApp;
+        if (!currentUser) return;
         let { id: currentUserId } = currentUser;
         let { 积分商城, webuser } = uqs;
         let { result, id: creditsId, code, validitydate, types } = credits;
@@ -470,8 +473,8 @@ export class CCoupon extends CUqBase {
     renderModelCardDiscount = () => {
         return this.renderView(VModelCardDiscount);
     }
-    
+
     renderCardDiscount = () => {
-        return this.renderView(VVIPCardDiscount,{vipCard:this.curCardDiscount});
+        return this.renderView(VVIPCardDiscount, { vipCard: this.curCardDiscount });
     }
 }

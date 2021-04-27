@@ -12,7 +12,7 @@ export abstract class CSelectContact extends CUqBase {
 
     async internalStart(fromOrderCreation: boolean/*contactType: ContactType*/) {
         this.fromOrderCreation = fromOrderCreation;
-        let userContactMaps = await this.cApp.currentUser.getContacts();
+        let userContactMaps = await this.cApp.currentUser?.getContacts();
         this.userContacts = userContactMaps.map((v: any) => v.contact);
         this.openVPage(VContactList);
         if (this.fromOrderCreation && (!this.userContacts || this.userContacts.length === 0)) {
@@ -20,10 +20,10 @@ export abstract class CSelectContact extends CUqBase {
         }
     }
 
-     protected abstract getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
+    protected abstract getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
 
-    renderContentList = (param?:any) => {
-        return this.renderView(VContactList,param);
+    renderContentList = (param?: any) => {
+        return this.renderView(VContactList, param);
     }
 
     /**
@@ -39,7 +39,7 @@ export abstract class CSelectContact extends CUqBase {
     onEditContact = async (userContact: BoxId) => {
         let userContactId = userContact.id;
         let contact = await this.uqs.customer.Contact.load(userContactId);
-        let userSetting = await this.cApp.currentUser.getSetting();
+        let userSetting = await this.cApp.currentUser?.getSetting();
         contact.isDefault = await this.getIsDefault(userSetting, userContactId);
         let userContactData: any = { contact: contact };
         this.openVPage(VContact, userContactData);
@@ -47,11 +47,12 @@ export abstract class CSelectContact extends CUqBase {
 
     delContact = async (contact: any) => {
         let { id } = contact;
+        let { currentUser } = this.cApp;
+        if (!currentUser) return;
         if (contact.isDefault === undefined) {
-            let userSetting = await this.cApp.currentUser.getSetting();
+            let userSetting = await currentUser.getSetting();
             contact.isDefault = await this.getIsDefault(userSetting, id);
         }
-        let { currentUser } = this.cApp;
         await currentUser.delContact(id);
         if (contact.isDefault) {
             this.setDefaultContact(undefined);
@@ -99,6 +100,7 @@ export abstract class CSelectContact extends CUqBase {
         let contactBox = contactTuid.boxId(newContactId);
 
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         await currentUser.addContact(newContactId);
         this.userContacts.push(contactBox);
         let { id, isDefault } = contact;
@@ -117,7 +119,7 @@ export abstract class CSelectContact extends CUqBase {
 
     protected abstract setDefaultContact(contactId: BoxId): Promise<any>;
 
-    onContactSelected = async(contact: BoxId,source?:string) => {
+    onContactSelected = async (contact: BoxId, source?: string) => {
         if (this.fromOrderCreation) {
             this.backPage();
             this.returnCall(contact);
@@ -133,7 +135,9 @@ export abstract class CSelectContact extends CUqBase {
     }
 
     getContactList = async () => {
-        let userContactMaps = await this.cApp.currentUser.getContacts();
+        let { currentUser } = this.cApp;
+        if (!currentUser) return;
+        let userContactMaps = await currentUser.getContacts();
         this.userContacts = userContactMaps.map((v: any) => v.contact);
     }
 }
@@ -150,6 +154,7 @@ export class CSelectShippingContact extends CSelectContact {
 
     protected async setDefaultContact(contactId: BoxId) {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         await currentUser.setDefaultShippingContact(contactId);
     }
 }
@@ -165,6 +170,7 @@ export class CSelectInvoiceContact extends CSelectContact {
 
     protected async setDefaultContact(contactId: BoxId) {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         await currentUser.setDefaultInvoiceContact(contactId);
     }
 }

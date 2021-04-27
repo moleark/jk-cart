@@ -318,7 +318,7 @@ export class VPriceQuickOrder extends VPrice {
                             <option hidden value="">选择包装</option>
                             {
                                 QPacks?.map((v: any,index:number) => {
-                                    return <option key={index} value={v.pack.id}>{v.pack.obj?.radioy}{v.pack.obj?.unit}</option>
+                                    return <option key={index} value={v.pack.id}>{v.pack.obj?.radiox !==1 ? v.pack.obj?.radiox + "*" : ""} {v.pack.obj?.radioy}{v.pack.obj?.unit}</option>
                                 })
                             }
                         </select>

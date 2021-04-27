@@ -116,7 +116,7 @@ export class CCart extends CUqBase {
 
     private doFirstOrderChecking = async () => {
         let { cMe, currentUser } = this.cApp;
-        if (!currentUser.allowOrdering) {
+        if (!currentUser || !currentUser.allowOrdering) {
             cMe.toPersonalAccountInfo(this.doCheckOut);
             // cMe.openMeInfoFirstOrder({
             //     onlyRequired: false,
