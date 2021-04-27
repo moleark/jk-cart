@@ -9,7 +9,7 @@ import { CSelectShippingContact, CSelectInvoiceContact } from '../customer/CSele
 import { VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
-import { groupByProduct } from '../tools/groupByProduct';
+import { groupByProduct, groupByProduct1 } from '../tools/groupByProduct';
 import { CartItem, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
 import { Product } from 'model';
@@ -22,6 +22,7 @@ import { VInvoiceInfo } from 'customer/VInvoiceInfo';
 import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 import _ from 'lodash';
 import { VEpecOrderError } from './VEpecOrderError';
+import { VOrderTrans } from './VOrderTrans';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -462,10 +463,41 @@ export class COrder extends CUqBase {
         let order = await this.uqs.order.Order.getSheet(orderId);
         let { data } = order;
         let { orderItems } = data;
-        let orderItemsGrouped = groupByProduct(orderItems);
+        let orderItemsGrouped = groupByProduct1(orderItems);
         data.orderItems = orderItemsGrouped;
+        let promise: PromiseLike<any>[] = [];
+        data.orderItems.forEach((el:any,index:number) => {
+            promise.push(this.getOrderTransportation(orderId, index + 1));
+        });
+        let res = await Promise.all(promise);
+        data.orderTrans = res.filter((v:any)=> v);
         this.openVPage(VOrderDetail, order);
     }
+
+    getOrderTransportation = async (orderId: number, row: number) => {
+        return await this.uqs.order.orderTransportation.obj({ order: orderId, row: row });
+    };
+
+    getOrderTrackByTransNum = async (transCompany: string, transNumber: number | string) => {
+        let param = { code: transCompany, no: transNumber };
+        let res = await fetch(GLOABLE.EPEC.ORDERTRANS, {
+            method: "POST",
+            body: JSON.stringify(param)
+        });
+        if (!res.ok) return;
+        return await res.json();
+    }
+
+    openOrderTrans = async (orderTrans: any) => {
+        let { transCompany, transNumber } = orderTrans;
+        /* 入驻的快递（可查物流） */
+        let settledTrans = ["Y", "ST"];
+        if (settledTrans.includes(transCompany)) {
+            let orderTrackRult = await this.getOrderTrackByTransNum(transCompany, transNumber);
+            orderTrans.orderTrackRult = orderTrackRult?.response;
+        };
+        this.openVPage(VOrderTrans, orderTrans);
+    };
 
     renderDeliveryTime = (pack: BoxId) => {
         let { cProduct } = this.cApp;

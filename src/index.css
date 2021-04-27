@@ -233,3 +233,80 @@
         display: none !important;
     }
 }
+
+.rz-user-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.result-body .step {
+    position: relative;
+    padding-bottom: 35px;
+    font-size: 14px;
+    color: #666;
+}
+
+.result-body .step.start {
+    color: #0082FA;
+}
+
+.result-body .step:after {
+    position: absolute;
+    top: 33px;
+    left: 90px;
+    width: 1px;
+    bottom: 0px;
+    background: #c4c4c4;
+    content: '';
+}
+
+.result-body .step .text {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.result-body .datetime {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 60px;
+    font-size: 12px;
+}
+
+.result-body .step-icon {
+    display: inline-block;
+    vertical-align: top;
+    width: 35px;
+    height: 30px;
+    padding-right: 2rem;
+    background: url("https://cdn.kuaidi100.com/images/www/sp-index.png") -276px -132px no-repeat #f5f5f5;
+}
+
+.result-body .step.start .step-icon {
+    background: url("https://cdn.kuaidi100.com/images/www/sp-index.png") -230px -42px no-repeat #f5f5f5;
+}
+
+.result-body .step.end:after {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .result-body .step:after {
+        left: 150px;
+    }
+    .result-body .datetime {
+        width: 120px;
+    }
+}
+
+@media (min-width: 992px) {
+    .result-body .step:after {
+        left: 190px;
+    }
+    .result-body .datetime {
+        width: 160px;
+    }
+}

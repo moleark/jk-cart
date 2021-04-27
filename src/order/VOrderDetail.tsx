@@ -8,9 +8,11 @@ import { OrderItem } from './Order';
 import { xs } from '../tools/browser';
 import classNames from 'classnames';
 import { CartItem } from '../cart/Cart';
+import { observable } from 'mobx';
 
 export class VOrderDetail extends VPage<COrder> {
-
+    @observable orderTrans: any[] = [];
+    
     async open(order: any) {
 
         this.openPage(this.page, order);
@@ -78,10 +80,14 @@ export class VOrderDetail extends VPage<COrder> {
             return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
     }
 
-    private renderOrderItem = (orderItem: OrderItem) => {
+    private renderOrderItem = (orderItem: OrderItem, index: number) => {
         let { product, packs } = orderItem;
         let { id } = product;
         let { controller, packsRow } = this;
+        let getOrderTrans = this.orderTrans.find((v: any) => v.row === (index + 1));
+        let orderTransUI: JSX.Element;
+        if (getOrderTrans) orderTransUI = <span className="cursor-pointer text-info font-weight-bold"
+            onClick={() => controller.openOrderTrans(getOrderTrans)} >物流信息</span>;
         return <div className="row my-1 w-100 mx-0">
             <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
             <div className="col-lg-6">{
@@ -90,6 +96,7 @@ export class VOrderDetail extends VPage<COrder> {
                 })
             }</div>
             <div className="text-right w-100 px-3">
+                {orderTransUI}
                 <Ax className="mx-2 text-info font-weight-bold" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
                 <div className="btn btn-sm btn-info float-left float-lg-right"
                     style={{ background: "#17a2b8" }} onClick={() => { this.againCreatOrder([orderItem]) }}>
@@ -104,7 +111,8 @@ export class VOrderDetail extends VPage<COrder> {
         let { brief, data } = order;
         let { id, no, state, description, date } = brief;
         let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, comments, couponOffsetAmount, couponRemitted
-            , freightFee, freightFeeRemitted } = data;
+            , freightFee, freightFeeRemitted, orderTrans } = data;
+        this.orderTrans = orderTrans;
         let couponUI;
         if (couponOffsetAmount || couponRemitted) {
             let offsetUI, remittedUI;
