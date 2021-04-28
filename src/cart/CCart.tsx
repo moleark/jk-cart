@@ -19,7 +19,7 @@ export class CCart extends CUqBase {
 	get count(): number {return this.cart?.count.get();}
 
 	async buildItems(): Promise<void> {
-		await this.cart.buildItems();
+		await this.cart?.buildItems();
 	}
 
 	async buildData() {
