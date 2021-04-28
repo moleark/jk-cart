@@ -23,6 +23,7 @@ import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 import _ from 'lodash';
 import { VEpecOrderError } from './VEpecOrderError';
 import { VOrderTrans } from './VOrderTrans';
+import { VError } from '../tools/VError';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -461,7 +462,11 @@ export class COrder extends CUqBase {
     openOrderDetail = async (orderId: number) => {
 
         let order = await this.uqs.order.Order.getSheet(orderId);
-        let { data } = order;
+        let { brief, data } = order;
+        if (this.user?.id !== brief?.user) {
+            this.openVPage(VError);
+            return;
+        };
         let { orderItems } = data;
         let orderItemsGrouped = groupByProduct1(orderItems);
         data.orderItems = orderItemsGrouped;

@@ -62,12 +62,12 @@ export class CApp extends CUqApp {
         this.currentLanguage = GLOABLE.CHINESE;
 
         this.cache = new Map();
-		/*
+        /*
         this.setUser();
         this.cart = new Cart(this);
         await this.cart.init();
         await this.cart.buildItems();
-		*/
+        */
 
         this.cHome = this.newC(CHome);
         this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
@@ -75,6 +75,7 @@ export class CApp extends CUqApp {
         this.cOrder = this.newC(COrder);
         this.cQuickOrder = this.newC(CQuickOrder);
         this.cCart = this.newC(CCart);
+        await this.cCart.buildData();/* 暂时性初始化购物车 调整后可删除 */
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -160,12 +161,12 @@ export class CApp extends CUqApp {
         this.topKey = nav.topKey();
     }
 
-	/*
+    /*
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         this.currentUser.setUser(this.user);
     }
-	*/
+    */
 
     /**
      * 
@@ -399,35 +400,35 @@ export class CApp extends CUqApp {
 
     protected async onChangeLogin(user: User) {
         if (user) {
-			await this.initLogined(user);
-        } 
-		else {
-			this.initNotLogined();
+            await this.initLogined(user);
         }
-		this.cCart.buildData();
+        else {
+            this.initNotLogined();
+        }
+        this.cCart.buildData();
     }
 
-	private async initLogined(user: User) {
+    private async initLogined(user: User) {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         await this.currentUser.setUser(this.user);
-		/*
-		// 如果currentUser，也必须重置
-		//if (this.currentUser === undefined)
-		this.currentUser = new WebUser(this.uqs);
-		await this.currentUser.setUser(user);
-		await this.cart.mergeFromRemote();
-		*/
-	}
+        /*
+        // 如果currentUser，也必须重置
+        //if (this.currentUser === undefined)
+        this.currentUser = new WebUser(this.uqs);
+        await this.currentUser.setUser(user);
+        await this.cart.mergeFromRemote();
+        */
+    }
 
-	private initNotLogined() {
-		// 退出的话把购物车清掉？
-		this.currentUser = undefined;
-		/*
-		localStorage.removeItem(LOCALCARTNAME);
-		this.cart.count.set(0);
-		this.cart.cartItems = [];
-		*/
-	}
+    private initNotLogined() {
+        // 退出的话把购物车清掉？
+        this.currentUser = undefined;
+        /*
+        localStorage.removeItem(LOCALCARTNAME);
+        this.cart.count.set(0);
+        this.cart.cartItems = [];
+        */
+    }
 
     protected onDispose() {
         this.cCart.disposeCart();
