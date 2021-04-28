@@ -148,6 +148,7 @@ export class Cart {
      * @returns 
      */
     private async buildItem2(cartData: any[]): Promise<CartItem[]> {
+		if (!cartData) return;
         let { uqs, currentSalesRegion } = this.cApp;
         // 初始化购物车中产品的目录价
         let { product } = uqs;

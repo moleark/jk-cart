@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import _ from 'lodash';
 import {User, Guest/*, UserInNav*/} from '../tool/user';
 import {Page} from './page/page';
@@ -591,7 +591,7 @@ export class Nav {
 	reloadUser = () => {
 		let user: User = this.local.user.get();
 		let curUser = nav.user;
-		console.log('window onfocus storage user', user, 'curUser', curUser);
+		console.log('window onfocus storage user', user, 'curUser', toJS(curUser));
 		if (user === undefined && curUser === undefined) return;
 		if (user && curUser && user.id === curUser.id) return;
 		if (!user) nav.logout();
