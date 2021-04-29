@@ -81,11 +81,12 @@ export class WebUser {
 		this.icon = user.icon;
 
 		await this.loadWebUser();
+		console.error('WebUser in setUser after this.loadWebUser allowOrdering = ' + this.allowOrdering);
     }
 
     private async loadWebUser() {
         let { id, _user } = this;
-        if (this._user === undefined) return;
+        if (_user === undefined) return;
 
 		let { webuser: webUserTuid, salesTask } = this.uqs;
 		let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;

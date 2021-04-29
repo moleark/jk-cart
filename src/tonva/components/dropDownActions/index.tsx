@@ -11,9 +11,11 @@ export interface DropdownAction {
 
 export interface DropdownActionsProps {
     icon?: string;
+	content?: string|JSX.Element;
     actions: DropdownAction[];
     isRight?: boolean;
 	className?: string;
+	containerClass?: string;
 	itemIconClass?: string;
 	itemCaptionClass?: string;
 }
@@ -32,6 +34,7 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
         };
     }
 
+	/*
     componentDidMount() {
         document.addEventListener('click', this.handleDocumentClick);
         document.addEventListener('touchstart', this.handleDocumentClick);
@@ -41,23 +44,32 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
         document.removeEventListener('click', this.handleDocumentClick);
         document.removeEventListener('touchstart', this.handleDocumentClick);
     }
+	*/
 
     private handleDocumentClick = (evt:any) => {
-        if (this.state.dropdownOpen === false) return;
-        if (this.button && this.button.contains(evt.target)) return;
+		document.removeEventListener('click', this.handleDocumentClick);
+		document.removeEventListener('touchstart', this.handleDocumentClick);
+		if (this.state.dropdownOpen === false) return;
+        //if (this.button && this.button.contains(evt.target)) return;
         if (!this.menu) return;
         //if (!this.menu.contains(evt.target)) 
         this.toggle();
     }
 
     private toggle = () => {
-        this.setState({
-            dropdownOpen: !this.state.dropdownOpen
-        });
+		let {dropdownOpen} = this.state;
+		dropdownOpen = !dropdownOpen;
+        this.setState({dropdownOpen});
+		if (dropdownOpen === true) {
+			setTimeout(() => {
+				document.addEventListener('click', this.handleDocumentClick);
+				document.addEventListener('touchstart', this.handleDocumentClick);	
+			},10)
+		}
     }
 
     render() {
-        let {icon, actions, isRight, className, itemIconClass, itemCaptionClass} = this.props;
+        let {icon, content, actions, isRight, className, containerClass, itemIconClass, itemCaptionClass} = this.props;
         if (isRight === undefined) isRight = true;
         let hasIcon = actions.some(v => {
 			if (!v) return false;
@@ -67,13 +79,14 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
 		//isOpen={this.state.dropdownOpen} toggle={this.toggle}
 		let cn = className || 'cursor-pointer dropdown-toggle btn btn-sm';
 		//if (className) cn += className;
-        return <div className={'dropdown'}>
+        return <div className={classNames('dropdown', containerClass)}>
 			<button ref={v=>this.button=v} 
 				className={cn}
                 data-toggle="dropdown"
                 aria-expanded={dropdownOpen}
                 onClick={this.toggle}>
-                <i className={classNames('fa fa-fw ', 'fa-'+(icon||'ellipsis-v'))} />
+                {icon!==null && <i className={classNames('fa fa-fw ', 'fa-'+(icon||'ellipsis-v'))} />}
+				{content && <span className="ml-1">{content}</span>}
             </button>
             <div ref={v => this.menu=v} className={classNames({"dropdown-menu":true, "dropdown-menu-right":isRight, "show":dropdownOpen})}>
                 {
@@ -87,6 +100,7 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
                         let i:any;
                         if (hasIcon === true) {
                             if (icon !== undefined) icon = 'fa-' + icon;
+							if (!iconClass) iconClass = 'text-info';
 							i = <i className={classNames('mr-2', 'fa', icon, 'fa-fw', iconClass || itemIconClass)}
 								aria-hidden={true}></i>;
                         }

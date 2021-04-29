@@ -24,6 +24,7 @@ import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectC
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
+import { toJS } from 'mobx';
 
 export class CApp extends CUqApp {
     private cache: Map<number, Product>;
@@ -409,7 +410,8 @@ export class CApp extends CUqApp {
     }
 
 	private async initLogined(user: User) {
-        this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
+        this.currentUser = new WebUser(this.uqs);
+		console.error('initLogined user=', toJS(user));
         await this.currentUser.setUser(this.user);
 		/*
 		// 如果currentUser，也必须重置
