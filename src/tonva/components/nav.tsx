@@ -824,7 +824,7 @@ export class Nav {
 		nav.clear();
 
         if (callback !== undefined) //this.loginCallbacks.has)
-            callback(user);
+            await callback(user);
             //this.loginCallbacks.call(user);
         else if (this.isWebNav === true) {
 			this.navigate('/index');
