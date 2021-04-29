@@ -487,6 +487,9 @@ export class COrder extends CUqBase {
         let param = { code: transCompany, no: transNumber };
         let res = await fetch(GLOABLE.EPEC.ORDERTRANS, {
             method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
             body: JSON.stringify(param)
         });
         if (!res.ok) return;
