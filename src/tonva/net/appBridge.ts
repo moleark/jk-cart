@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {nav} from '../components';
 import {uid} from '../tool/uid';
-import {uqTokenApi, callCenterapi, centerToken, setCenterToken} from './uqApi';
+import {uqTokenApi, callCenterapi, centerToken, setCenterToken, UqTokenApi} from './uqApi';
 import {setSubAppWindow} from './wsChannel';
 import { host } from './host';
 import { env } from '../tool';
@@ -17,6 +17,7 @@ export function logoutUqTokens() {
     for (let i in uqTokens) {
         uqTokens[i] = undefined;
     }
+	UqTokenApi.clearLocal();
 }
 /*
 export interface AppInFrame {
@@ -52,6 +53,7 @@ export function isBridged():boolean {
 
 window.addEventListener('message', async function(evt) {
     var message = evt.data;
+	if (!message) return;
     switch (message.type) {
         case 'sub-frame-started':
             subFrameStarted(evt);
