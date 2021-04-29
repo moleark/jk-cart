@@ -404,6 +404,7 @@ export class CApp extends CUqApp {
 		else {
 			this.initNotLogined();
         }
+		await this.initUQs();
 		this.cCart.buildData();
     }
 

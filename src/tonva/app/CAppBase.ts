@@ -1,8 +1,9 @@
+import { logoutApis } from "../net";
 import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute } from "../components";
 import { Controller } from '../vm';
 import { UQsMan, TVs } from "../uq";
 import { centerApi } from "./centerApi";
-import { VUnitSelect, VErrorsPage, VStartError, VUnsupportedUnit } from "./vMain";
+import { VErrorsPage, VStartError, VUnsupportedUnit } from "./vMain";
 import { User } from "../tool";
 
 export interface IConstructor<T> {
@@ -82,11 +83,32 @@ export abstract class CAppBase extends Controller {
 		else {
 			this.roleDefines = [];
 		}
-}
+	}
+
+	protected async initUQs() {
+		if (!this.appConfig) return true;
+		logoutApis();
+		let {appName, version, tvs} = this.appConfig;
+		await UQsMan.load(appName, version, tvs);
+		this._uqs = UQsMan._uqs;
+		//let retErrors = await this.load();
+		//let app = await loadAppUqs(this.appOwner, this.appName);
+		// if (isDevelopment === true) {
+		// 这段代码原本打算只是在程序员调试方式下使用，实际上，也可以开放给普通用户，production方式下
+		//let retErrors = UQsMan.errors;
+		let {user} = nav;
+		if (user !== undefined && user.id > 0) {
+			let uqAppId = UQsMan.value.id;
+			let result = await centerApi.userAppUnits(uqAppId);
+			this.appUnits = result;
+			//if (this.noUnit === true) return true;
+		}
+	}
 	
     protected async beforeStart():Promise<boolean> {
         try {
 			this.onNavRoutes();
+			/*
 			if (!this.appConfig) return true;
 			let {appName, version, tvs} = this.appConfig;
 			await UQsMan.load(appName, version, tvs);
@@ -96,63 +118,16 @@ export abstract class CAppBase extends Controller {
             // if (isDevelopment === true) {
 			// 这段代码原本打算只是在程序员调试方式下使用，实际上，也可以开放给普通用户，production方式下
 			let retErrors = UQsMan.errors;
-            //let {predefinedUnit} = appInFrame;
             let {user} = nav;
             if (user !== undefined && user.id > 0) {
 				let uqAppId = UQsMan.value.id;
 				let result = await centerApi.userAppUnits(uqAppId);
 				this.appUnits = result;
-				/*
-				// 老版本，只返回一个数组。新版本，返回两个数组。下面做两个数组的判断
-				if (result.length === 0) {
-					this.appUnits = result;
-				}
-				else {
-					if (Array.isArray(result[0]) === true) {
-						this.appUnits = result[0];
-						let result1 = result[1];
-						if (Array.isArray(result1) === true) {
-							this.roleDefines = result1[0]?.roles?.split('\t');
-							if (this.roleDefines === undefined) this.roleDefines = [];
-						}
-					}
-					else {
-						this.appUnits = result;
-					}
-				}
-				*/
 				if (this.noUnit === true) return true;
-				/*
-                switch (this.appUnits.length) {
-                    case 0:
-						this.setAppUnit({});
-                        //this.showUnsupport(predefinedUnit);
-						//appInFrame.unit = predefinedUnit;
-						//return false;
-						break;
-                    case 1:
-						let appUnit = this.appUnits[0];
-						this.setAppUnit(appUnit);
-						let {id} = appUnit;
-                        let appUnitId = id;
-                        if (appUnitId === undefined || appUnitId < 0 || 
-                            (predefinedUnit !== undefined && appUnitId !== predefinedUnit))
-                        {
-                            this.showUnsupport(predefinedUnit);
-                            return false;
-                        }
-                        appInFrame.unit = appUnitId;
-                        break;
-                    default:
-                        if (predefinedUnit>0 && this.appUnits.find(v => v.id===predefinedUnit) !== undefined) {
-                            appInFrame.unit = predefinedUnit;
-                            break;
-                        }
-                        this.openVPage(VUnitSelect);
-                        return false;
-                }
-				*/
             }
+			*/
+			await this.initUQs();
+			let retErrors = UQsMan.errors;
             if (retErrors !== undefined) {
                 this.openVPage(VErrorsPage, retErrors);
                 return false;
