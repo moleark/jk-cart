@@ -158,78 +158,96 @@ export class VPageProduct extends VPage<CProduct> {
         ];
 
 
-        let { extention } = product;
-        if (!extention) return;
-        let { content } = extention;
-        content = content ? JSON.parse(content) : undefined;
-        let allContent = Object.keys(content);
-        let arr1 = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
-        let arr2 = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
-        let tableInfo = (data: any[]) => {
-            if (data.length === 0 && !content) return;
-            return <table className="product-table w-100">
-                <tbody>
-                    {data.map((v: any, index: number) => {
-                        let value = content[v.insideKey];
-                        if (!value || value.replace(/\s*/g,'') ==='N/A') return null;
-                        if (v.insideKey === 'Hazard') {
-                            value = SymbolSrcs.map((o: any,ind:number) => {
-                                if (value.indexOf(o.name) > -1) {
-                                    return <img key={ind} className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
-                                }
-                                return '';
-                            });
-                        };
-                        if (v.insideKey === 'TSCA') {
-                            let TSCAs: { [typeNum: number]: string } = { 0: '', 1: "是", 2: "否" };
-                            value = TSCAs[value] || "";
-                        };
-                        if (!value) return null;
-                        return <tr key={index}><th className="w-50">{v.webKey}</th><td className="w-50">{value}</td></tr>
-                    })}
-                </tbody>
-            </table> 
-        }
+        let { extention, descriptionPost } = product;
+        let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element;
+        if (extention) {
+            let { content } = extention;
+            content = content ? JSON.parse(content) : undefined;
+            let allContent = Object.keys(content);
+            let arr1: any[] = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
+            let arr2: any[] = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
+            let tableInfo = (data: any[]) => {
+                if (data.length === 0 && !content) return;
+                return <table className="product-table w-100">
+                    <tbody>
+                        {data.map((v: any, index: number) => {
+                            let value = content[v.insideKey];
+                            if (!value || value.replace(/\s*/g, '') === 'N/A') return null;
+                            if (v.insideKey === 'Hazard') {
+                                value = SymbolSrcs.map((o: any, ind: number) => {
+                                    if (value.indexOf(o.name) > -1) {
+                                        return <img key={ind} className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
+                                    }
+                                    return '';
+                                });
+                            };
+                            if (v.insideKey === 'TSCA') {
+                                let TSCAs: { [typeNum: number]: string } = { 0: '', 1: "是", 2: "否" };
+                                value = TSCAs[value] || "";
+                            };
+                            if (!value) return null;
+                            return <tr key={index}><th className="w-50">{v.webKey}</th><td className="w-50">{value}</td></tr>
+                        })}
+                    </tbody>
+                </table>
+            };
+            if (arr1.length) {
+                basicInfoUI = <>
+                    <div className="accordion background-grey mt-lg-1">
+                        <div className="w-100 btn text-left collapsed" data-toggle="collapse" data-target="#description1"
+                            role="button" aria-expanded="false" aria-controls="description1">
+                            基本信息&emsp;<i className="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div className="container mt-lg-2 collapse show" id="description1">
+                        {tableInfo(arr1.slice(0, 6))}
+                        <div className="container collapse px-0" id="description2">
+                            {tableInfo(arr1.slice(6))}
+                        </div>
+                        {
+                            arr1.length > 6
+                                ? <p className="text-right">
+                                    <a className="btn text-left collapsed" onClick={() => this.p = !this.p}
+                                        data-toggle="collapse" href="#description2" role="button" aria-expanded="false" aria-controls="description2">
+                                        {!this.p ? '更多' : '收起'} <i className={`fa ${!this.p ? 'fa-angle-right' : 'fa-angle-up'}`} aria-hidden="true"></i>
+                                    </a>
+                                </p> : null
+                        }
+                    </div>
+                </>;
+            };
+            if (arr2.length) {
+                securityInfoUI = <>
+                    <div className="accordion background-grey mt-lg-1">
+                        <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#description4"
+                            role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+                            安全信息&emsp;<i className="fa fa-chevron-down"></i>
+                        </a>
+                    </div>
+                    <div className="container mt-lg-2 mb-lg-2 collapse show" id="description4">
+                        {tableInfo(arr2)}
+                    </div>
+                </>;
+            };
+        };
+        if (descriptionPost) {
+            descriptionPostUI = <>
+                <div className="accordion background-grey mt-lg-1">
+                    <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#descriptionpost"
+                        role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+                        产品应用&emsp;<i className="fa fa-chevron-down"></i>
+                    </a>
+                </div>
+                <div dangerouslySetInnerHTML={{ __html: descriptionPost || "" }}
+                    className="container mt-lg-2 mb-lg-2 collapse show" id="descriptionpost">
+                </div>
+            </>;
+        };
         
         return <div className="col-lg-12 mt-lg-2">{/* col-lg-9 */}
-            {
-                arr1.length ?
-                <div className="accordion background-grey mt-lg-1">
-                    <div className="w-100 btn text-left collapsed" data-toggle="collapse" data-target="#description1"
-                    role="button" aria-expanded="false" aria-controls="description1">
-                    基本信息&emsp;<i className="fa fa-chevron-down"></i>
-                    </div>
-                    </div>
-                    :null
-            }
-            <div className="container mt-lg-2 collapse show" id="description1">
-                {tableInfo(arr1.slice(0,6))}
-                <div className="container collapse px-0" id="description2">
-                    {tableInfo(arr1.slice(6))}
-                </div>
-                {
-                    arr1.length > 6
-                        ?<p className="text-right"> 
-                            <a className="btn text-left collapsed" onClick={() => this.p = !this.p }
-                                data-toggle="collapse" href="#description2" role="button" aria-expanded="false" aria-controls="description2">
-                                {!this.p ?'更多':'收起'} <i className={`fa ${!this.p ? 'fa-angle-right':'fa-angle-up'}`} aria-hidden="true"></i>
-                            </a>
-                        </p> : null
-                }
-            </div>
-            {
-                arr2.length ?
-                <div className="accordion background-grey mt-lg-1">
-                    <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#description4"
-                    role="button" aria-expanded="false" aria-controls="jk" target="_blank">
-                    安全信息&emsp;<i className="fa fa-chevron-down"></i>
-                    </a>
-                    </div>
-                    :null
-            }
-            <div className="container mt-lg-2 mb-lg-2 collapse show" id="description4">
-                {tableInfo(arr2)}
-            </div>
+            {basicInfoUI}
+            {descriptionPostUI}
+            {securityInfoUI}
             {/* <div className="mt-lg-1">
                 <div className="bg-nobackground-one">产品分类</div>
             </div>

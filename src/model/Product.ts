@@ -1,3 +1,4 @@
+import { GLOABLE } from 'global';
 import { observable } from 'mobx';
 import moment from 'moment';
 import { CApp } from 'tapp';
@@ -51,6 +52,7 @@ export class Product {
 	@observable favorite: boolean;
 	@observable warningSigns: string;
 	@observable extention: any;
+	@observable descriptionPost: any;
 	@observable.shallow packs: ProductPackRow[];
 	@observable prices: any[];				// 包含价格和折扣信息
 	@observable futureDeliveryTimeDescription: string;
@@ -83,7 +85,8 @@ export class Product {
 			this.loadMSDSFile(),
 			this.loadSpecFile(),
 			this.loadFDTimeDescription(),
-			this.getProductExtention()
+			this.getProductExtention(),
+			this.loadDescriptionPost()
 		];
 		await Promise.all(promises);
 		await this.getProductWarningSigns();
@@ -277,6 +280,15 @@ export class Product {
 	getProductExtention = async () => {
 		if (this.extention) return;
 		this.extention = await this.cApp.uqs.product.ProductExtention.obj({ product: this.id });
+	}
+
+	loadDescriptionPost = async () => {
+		if (this.descriptionPost) return;
+		let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productapplication/' + 18625);
+		if (result.ok) {
+			let content = await result.text();
+			this.descriptionPost = content;
+		};
 	}
 
 	/**

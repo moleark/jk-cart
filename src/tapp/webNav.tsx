@@ -82,7 +82,6 @@ export class NavHeaderView extends View<CApp> {
                                     中国
                                 </a>
                             </div>
-                            <Ax className="text-primary small ml-1" href="/quickOrder">快速订购</Ax>
                             {vCartLabel}
                             {vLogin}
                         </div>
@@ -99,6 +98,7 @@ export class NavHeaderView extends View<CApp> {
                             <li><a href="/myOrders">订单查询</a> </li>
                             <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
+                            <li><a href="/quickOrder" target="_blank">快速订购</a></li>
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
