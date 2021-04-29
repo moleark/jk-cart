@@ -118,14 +118,12 @@ const GLOABLE_TEST: Global = {
 	CHINA: 43,
 	CHINESE: { "id": 197, "no": "zh-CN", "description": "华 -中国" },
 	SALESREGION_CN: { "id": 4, "name": "中国大陆", "currency": 5, "no": "CN" },
-	//TIPDISPLAYTIME: 3000,
 	ANDROIDAPPADDRESS: "https://shop.jkchemical.com/download/jk-shop.apk",
 	PIRVACYURL: "https://c.jkchemical.com/privacy/shop.txt",
-	// CONTENTSITE: "https://c.jkchemical.com/jk-web",
-	CONTENTSITE: "http://localhost:6061",
+	CONTENTSITE: "https://c.jkchemical.com",
 	EPEC: {
-		AUTOLOGIN: "http://localhost:6061/api/joint/clientLogin",
-		PUSHORDERURL: "http://localhost:3016/epec/pushOrder",
+		AUTOLOGIN: "https://c.jkchemical.com/api/joint/clientLogin",
+		PUSHORDERURL: "https://c.jkchemical.com/joint/epec/pushOrder",
 		ORDERTRANS: "https://c.jkchemical.com/joint/epec/GetTravelInformation"
 	},
 }
