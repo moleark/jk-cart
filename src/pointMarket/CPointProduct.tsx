@@ -63,6 +63,7 @@ export class CPointProduct extends CUqBase {
      */
     refreshMypoint = async () => {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         this.myPoints = await currentUser.getPoints();
         this.myEffectivePoints = this.myPoints.reduce((v, e) => { return v + e.effectiveLeftPoint }, 0);
         this.myTotalPoints = this.myPoints.reduce((v, e) => { return v + e.totalLeftPoint }, 0)
