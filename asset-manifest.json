@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.02eec628.chunk.css",
-    "main.js": "/static/js/main.17777ce2.chunk.js",
-    "main.js.map": "/static/js/main.17777ce2.chunk.js.map",
+    "main.css": "/static/css/main.02ff019c.chunk.css",
+    "main.js": "/static/js/main.95ebf98e.chunk.js",
+    "main.js.map": "/static/js/main.95ebf98e.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e6ba6c1c.js",
     "runtime-main.js.map": "/static/js/runtime-main.e6ba6c1c.js.map",
     "static/css/2.78dd6d45.chunk.css": "/static/css/2.78dd6d45.chunk.css",
     "static/js/2.03f71c9c.chunk.js": "/static/js/2.03f71c9c.chunk.js",
     "static/js/2.03f71c9c.chunk.js.map": "/static/js/2.03f71c9c.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.d5ae9149df1a48eb8ee7668b8f581ceb.js": "/precache-manifest.d5ae9149df1a48eb8ee7668b8f581ceb.js",
+    "precache-manifest.75b0e7e8f6d25c5da39b67be97f239c2.js": "/precache-manifest.75b0e7e8f6d25c5da39b67be97f239c2.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.78dd6d45.chunk.css.map": "/static/css/2.78dd6d45.chunk.css.map",
-    "static/css/main.02eec628.chunk.css.map": "/static/css/main.02eec628.chunk.css.map",
+    "static/css/main.02ff019c.chunk.css.map": "/static/css/main.02ff019c.chunk.css.map",
     "static/js/2.03f71c9c.chunk.js.LICENSE.txt": "/static/js/2.03f71c9c.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.jpg": "/static/media/AnalyticalChemistry.79b8b498.jpg",
     "static/media/AnalyticalChemistry.png": "/static/media/AnalyticalChemistry.f85ff3e0.png",
@@ -25,7 +25,7 @@
     "static/media/LifeScience.jpg": "/static/media/LifeScience.d11aa936.jpg",
     "static/media/MaterialScience.jpg": "/static/media/MaterialScience.efdb4390.jpg",
     "static/media/MaterialScience.png": "/static/media/MaterialScience.f2439aa0.png",
-    "static/media/style.css": "/static/media/under-arrow.9688c417.svg",
+    "static/media/style.css": "/static/media/under-arrow.3b9f39c2.svg",
     "static/media/OrganicChemistry.jpg": "/static/media/OrganicChemistry.11e84ba2.jpg",
     "static/media/OrganicChemistry.png": "/static/media/OrganicChemistry.6d56971c.png",
     "static/media/TriangleShadingO.png": "/static/media/TriangleShadingO.abe107d7.png",
@@ -47,7 +47,7 @@
     "static/js/runtime-main.e6ba6c1c.js",
     "static/css/2.78dd6d45.chunk.css",
     "static/js/2.03f71c9c.chunk.js",
-    "static/css/main.02eec628.chunk.css",
-    "static/js/main.17777ce2.chunk.js"
+    "static/css/main.02ff019c.chunk.css",
+    "static/js/main.95ebf98e.chunk.js"
   ]
 }
