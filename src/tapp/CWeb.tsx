@@ -75,7 +75,7 @@ export class CWeb extends CApp {
      * @param user 
      */
     protected async onChangeLogin(user: User) {
-        super.onChangeLogin(user);
+        await super.onChangeLogin(user);
         if (user) {
             // 登陆后
 
