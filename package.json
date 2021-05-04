@@ -43,7 +43,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build -r git@47.92.87.6:/srv/git/jk-cart-nav.git",
     "start": "set PORT=7798 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
