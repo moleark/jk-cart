@@ -81,7 +81,6 @@ export class WebUser {
 		this.icon = user.icon;
 
 		await this.loadWebUser();
-		console.error('WebUser in setUser after this.loadWebUser allowOrdering = ' + this.allowOrdering);
     }
 
     private async loadWebUser() {

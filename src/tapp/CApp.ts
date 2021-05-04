@@ -421,7 +421,6 @@ export class CApp extends CUqApp {
 
 	private async initLogined(user: User) {
         this.currentUser = new WebUser(this.uqs);
-		console.error('initLogined user=', toJS(user));
         await this.currentUser.setUser(this.user);
 		this.store.currentUser = this.currentUser;
         /*
