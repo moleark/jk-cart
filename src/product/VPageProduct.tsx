@@ -65,7 +65,7 @@ export class VPageProduct extends VPage<CProduct> {
 
             if (xs) {
                 header = cApp.cHome.renderSearchHeader();
-                cartLabel = cApp.cCart.renderCartLabel();
+                cartLabel = cApp.renderCartLabel();
                 material = <div className="col-lg-9 mt-lg-2 mb-lg-2">
                     {this.renderProductMaterial()}
                 </div>;
@@ -420,11 +420,14 @@ export class VPageProduct extends VPage<CProduct> {
         let { pack, retail, vipPrice, promotionPrice, currency } = data;
         let price = this.minPrice(vipPrice, promotionPrice) || retail;
         let { cApp, product } = this.controller;
+		await cApp.store.cart.changeQuantity(product, pack, value, price, retail, currency);
+		/*
         let { cCart } = cApp;
         if (value > 0)
             await cCart.add(product, pack, value, price, retail, currency);
         else
             await cCart.removeItem([{ productId: product.id, packId: pack.id }]);
+		*/
     }
 
     private minPrice(vipPrice: any, promotionPrice: any) {

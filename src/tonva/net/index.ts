@@ -6,3 +6,4 @@ export * from './uqApi';
 export {/*appInFrame, */isBridged/*, getExHash*/} from './appBridge';
 export * from './host';
 export * from './messageHub';
+export * from './centerApi';

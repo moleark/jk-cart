@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { VPage, Page, tv, List, LMR, FA, autoHideTips } from 'tonva';
 import { COrder } from './COrder';
 import { OrderItem } from './Order';
-import { CartPackRow } from '../cart/Cart';
+import { CartPackRow } from '../store';
 import classNames from 'classnames';
 //import { GLOABLE } from 'cartenv';
 import { xs } from '../tools/browser';

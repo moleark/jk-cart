@@ -4,6 +4,8 @@ import moment from 'moment';
 import { CApp } from 'tapp';
 import { BoxId } from 'tonva';
 import { MainBrand, Chemical } from './model';
+import { UQs } from '../uqs';
+import { Store } from 'store';
 
 export interface InventoryAllocation {
 	warehouse: BoxId;
@@ -42,7 +44,8 @@ export interface ProductProps {
 }
 
 export class Product {
-	private cApp: CApp;
+	private uqs: UQs;
+	private store: Store;
 
 	id: number;
 	@observable.ref props: ProductProps;
@@ -61,8 +64,9 @@ export class Product {
 	@observable data: any;
 	@observable discount: any;
 
-	constructor(cApp: CApp, id: number | BoxId) {
-		this.cApp = cApp;
+	constructor(store: Store, id: number | BoxId) {
+		this.uqs = store.uqs;
+		this.store = store;
 		this.id = typeof id === 'object' ? id.id : id;
 	}
 
@@ -106,27 +110,27 @@ export class Product {
 
 	private async loadBase() {
 		if (this.props) return;
-		let { currentSalesRegion } = this.cApp;
-		let ret = await this.cApp.uqs.product.GetAvailableProductById.obj({ product: this.id, salesRegion: currentSalesRegion });
-		// let ret = await this.cApp.uqs.product.ProductX.load(this.id);
+		let { currentSalesRegion } = this.store;
+		let ret = await this.uqs.product.GetAvailableProductById.obj({ product: this.id, salesRegion: currentSalesRegion });
+		// let ret = await this.uqs.product.ProductX.load(this.id);
 		this.props = ret;
 	}
 
 	private async loadBrand() {
 		if (this.brand) return;
-		let ret = await this.cApp.uqs.product.Brand.load(this.props?.brand?.id);
+		let ret = await this.uqs.product.Brand.load(this.props?.brand?.id);
 		this.brand = ret;
 	}
 
 	private async loadChemical() {
 		if (this.chemical) return;
-		let ret = await this.cApp.uqs.product.ProductChemical.obj({ product: this.id });
+		let ret = await this.uqs.product.ProductChemical.obj({ product: this.id });
 		this.chemical = ret;
 	}
 
 	async loadFavorite() {
 		if (this.favorite !== undefined) return;
-		let ret = await this.cApp.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id });
+		let ret = await this.uqs.webuser.myFavorites.obj({ webUser: this.store.currentUser, product: this.id });
 		this.favorite = (ret !== undefined);
 	}
 
@@ -135,7 +139,7 @@ export class Product {
 	 */
 	private async loadMSDSFile() {
 		if (this.MSDSFiles) return;
-		let productMSDSFiles = await this.cApp.uqs.product.ProductMSDSFile.table({ product: this.id });
+		let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
 		this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
 	}
 
@@ -144,13 +148,13 @@ export class Product {
 	 */
 	private async loadSpecFile() {
 		if (this.specFiles) return;
-		this.specFiles = await this.cApp.uqs.product.ProductSpecFile.table({ product: this.id });
+		this.specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
 	}
 
 	private async loadPrices() {
-		let { customerDiscount, product, promotion, warehouse } = this.cApp.uqs;
+		let { customerDiscount, product, promotion, warehouse } = this.uqs;
 		let discount = 0;
-		let { currentUser, currentSalesRegion, cCart, currentLanguage } = this.cApp;
+		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.store;
 		//线上客户是否是线下客户 协议折扣  discount
 		if (currentUser) {
 			if (currentUser.hasCustomer) {
@@ -193,8 +197,8 @@ export class Product {
 			if (discount !== 0)
 				ret.vipPrice = Math.round(element.retail * (1 - discount));
 			ret.currency = currentSalesRegion.currency;
-			if (cCart) {
-				ret.quantity = cCart.getQuantity(this.id, element.pack.id)
+			if (cart) {
+				ret.quantity = cart.getQuantity(this.id, element.pack.id)
 			}
 			return ret;
 		});
@@ -205,7 +209,7 @@ export class Product {
 		this.prices.forEach(v => {
 			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
 			promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
-			// promises2.push(this.cApp.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id, pack: v.pack.id }));
+			// promises2.push(this.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id, pack: v.pack.id }));
 		});
 		let results = await Promise.all(promises);
 		let results2 = await Promise.all(promises1);
@@ -229,34 +233,33 @@ export class Product {
 	}
 
 	async loadPacks(param: any) {
-		let { currentSalesRegion, uqs } = this.cApp;
+		let { currentSalesRegion } = this.store;
 		let { pack, quantity, retail, currency } = param;
-		let inventoryAllocation = await uqs.warehouse.GetInventoryAllocation.table({ product: this.id, pack: pack, salesRegion: currentSalesRegion });
+		let inventoryAllocation = await this.uqs.warehouse.GetInventoryAllocation.table({ product: this.id, pack: pack, salesRegion: currentSalesRegion });
 		this.packs = [{ pack, quantity, retail, currency, inventoryAllocation }];
 	}
 
 	private async addProductFavorites(pack?: any) {
-		let { currentUser } = this.cApp;
+		let { currentUser } = this.store;
 		let createDate = moment().format('YYYY-MM-DD HH:mm:ss');
-		await this.cApp.uqs.webuser.myFavorites.add({ webUser: currentUser, product: this.id, arr1: [{ pack: 0, date: createDate }] });
+		await this.uqs.webuser.myFavorites.add({ webUser: currentUser, product: this.id, arr1: [{ pack: 0, date: createDate }] });
 		this.favorite = true;
 	}
 
 	private async delProductFavorites(pack?: any) {
-		let { currentUser } = this.cApp;
-		await this.cApp.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
+		let { currentUser } = this.store;
+		await this.uqs.webuser.myFavorites.del({ webUser: currentUser, product: this.id, arr1: [{ pack: 0 }] });
 		this.favorite = false;
 	}
 
 	getProductPacks = async () => {
-		let { product } = this.cApp.uqs;
-		let { currentSalesRegion } = this.cApp;
+		let { product } = this.uqs;
+		let { currentSalesRegion } = this.store;
 		let { id: currentSalesRegionId } = currentSalesRegion;
 		return await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
 	}
 
 	favoriteOrCancel = async (pack?: any) => {
-		await this.cApp.assureLogin();
 		await this.loadFavorite();
 		if (this.favorite === true) {
 			await this.delProductFavorites();
@@ -267,11 +270,11 @@ export class Product {
 	}
 
 	getProductAndDiscount = async (productId: BoxId) => {
-		let product = await this.cApp.uqs.product.ProductX.load(productId);
+		let product = await this.uqs.product.ProductX.load(productId);
 		let discount = 0;
-		let { currentUser } = this.cApp;
+		let { currentUser } = this.store;
 		if (currentUser.hasCustomer) {
-			let discountSetting = await this.cApp.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
+			let discountSetting = await this.uqs.customerDiscount.GetDiscount.obj({ brand: product.brand.id, customer: currentUser.currentCustomer });
 			discount = discountSetting && discountSetting.discount;
 		}
 		return { product: product, discount: discount };
@@ -279,7 +282,7 @@ export class Product {
 
 	getProductExtention = async () => {
 		if (this.extention) return;
-		this.extention = await this.cApp.uqs.product.ProductExtention.obj({ product: this.id });
+		this.extention = await this.uqs.product.ProductExtention.obj({ product: this.id });
 	}
 
 	loadDescriptionPost = async () => {
@@ -309,11 +312,11 @@ export class Product {
 	}
 
 	getChemicalJNKRestrict = async () => {
-		return await this.cApp.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
+		return await this.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
 	}
 
 	loadJNKRestrict = async (id: number) => {
-		return await this.cApp.uqs.chemicalSecurity.JNKRestrict.load(id);
+		return await this.uqs.chemicalSecurity.JNKRestrict.load(id);
 	}
 
 	/**
@@ -350,8 +353,8 @@ export class Product {
 	}
 
 	private async loadFDTimeDescription() {
-		let { currentSalesRegion, uqs } = this.cApp;
-		let futureDeliveryTime = await uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		let { currentSalesRegion } = this.store;
+		let futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
 		if (futureDeliveryTime.length > 0) {
 			let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
 			this.futureDeliveryTimeDescription = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
@@ -466,3 +469,17 @@ export class Product {
 	*/
 
 }
+/*
+export class ProductInCApp extends Product {
+	//private cApp: CApp;
+
+	constructor(cApp: CApp, id: number | BoxId)	{
+		super(cApp.uqs, id);
+		//this.cApp = cApp;
+	}
+}
+
+export class ProductInStore extends Product {
+
+}
+*/

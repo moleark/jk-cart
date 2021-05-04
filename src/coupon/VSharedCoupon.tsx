@@ -81,10 +81,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
 
     private page = observer(() => {
         let { renderProduct, cApp, sharedCouponValidationResult } = this.controller;
-
-        let { cCart } = cApp;
-        let cart = cCart.renderCartLabel();
-        return <Page header="与您分享" right={cart}>
+        return <Page header="与您分享" right={cApp.renderCartLabel()}>
             {this.renderCouponBase(sharedCouponValidationResult)}
             {React.createElement(this.drawCouponUI)}
             <List items={this.products} item={{ render: renderProduct, onClick: this.onProductClick, className: "mb-1" }} none={null} />

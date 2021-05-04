@@ -6,20 +6,14 @@ import { CCart } from './CCart';
 import { observer } from 'mobx-react';
 
 export class VCartLabel extends View<CCart> {
-
-    private showCart = async () => {
-        let { cart } = this.controller;
-		cart.editButton.set(false);
-        nav.navigate("/cart");
-    }
-
     render(): JSX.Element {
 		return React.createElement(observer(() => {
-			let { cart } = this.controller;
-			let count: any = cart.count.get();
+			let { cApp } = this.controller;
+			let { cart } = cApp.store;
+			let count: any = cart.count;
 			let badge, onClick, pointer;
 			if (count > 0) {
-				onClick = this.showCart;
+				onClick = this.controller.showCart;
 				pointer = 'cursor-pointer';
 				if (count < 100) badge = <u style={{right:0}}>{count}</u>;
 				else badge = <u style={{right:0}}>99+</u>;

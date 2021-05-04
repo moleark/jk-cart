@@ -1,13 +1,15 @@
-import { RowContext, BoxId } from 'tonva';
+import { RowContext, BoxId, nav } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
-import { CartPackRow, CartItem, Cart } from './Cart';
+import { CartPackRow, CartItem } from '../store';
 import { Product } from 'model';
+import { observable } from 'mobx';
 
 export class CCart extends CUqBase {
-	cart: Cart;
+	//cart: Cart;
+    @observable editButton: boolean = false; // = observable.box<boolean>(false);
 
     private selectedCartItems: CartItem[];
 
@@ -15,38 +17,33 @@ export class CCart extends CUqBase {
         this.openVPage(VCart);
     }
 
+	showCart = async () => {
+		this.editButton = false;
+        nav.navigate("/cart");
+    }
 
-	get count(): number {return this.cart?.count.get();}
 
-	async buildItems(): Promise<void> {
-		await this.cart?.buildItems();
-	}
+	//get count(): number {return this.cart?.count.get();}
 
-	async buildData() {
-		this.cart = new Cart(this.cApp);
-		await this.cart.init();
-		await this.cart.buildItems();
-	}
-
-    disposeCart() {
-		this.cart.dispose();
-	}
-
+	/*
 	getQuantity(productId: number, packId: number): number {
-		return this.cart.getQuantity(productId, packId);
+		return this.cApp.store.cart.getQuantity(productId, packId);
 	}
-
+	*/
+	/*
 	async add(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
-		await this.cart.add(product, pack, quantity, price, retail, currency);
+		await this.cApp.store.cart.add(product, pack, quantity, price, retail, currency);
 	}
 
 	async removeItem(rows: [{ productId: number, packId: number }]) {
-		await this.cart.removeItem(rows);
+		await this.cApp.store.cart.removeItem(rows);
 	}
-
+	*/
+	/*
 	async againOrderCart(data: CartItem[]) {
-		await this.cart.againOrderCart(data);
+		await this.cApp.store.cart.againOrderCart(data);
 	}
+	*/
 
     /**
      *
@@ -70,11 +67,11 @@ export class CCart extends CUqBase {
         let { data, parentData } = context;
         let { product } = parentData;
         let { pack, price, retail, currency } = data as CartPackRow;
-        //let { cart } = this.cApp;
+        let { cart } = this.cApp.store;
         if (value > 0)
-            await this.cart.add(product, pack, value, price, retail, currency);
+            await cart.add(product, pack, value, price, retail, currency);
         else
-            await this.cart.removeItem([{ productId: product.id, packId: pack.id }]);
+            await cart.removeItem([{ productId: product.id, packId: pack.id }]);
     }
 
     /**
@@ -88,7 +85,7 @@ export class CCart extends CUqBase {
         packs.forEach((each: any) => {
             packsToDeleted.push({ productId: product.id, packId: each.pack.id });
         });
-        this.cart.removeItem(packsToDeleted);
+        this.cApp.store.cart.removeItem(packsToDeleted);
     }
 
     onRowStateChanged = async (context: RowContext, selected: boolean, deleted: boolean) => {
@@ -106,9 +103,9 @@ export class CCart extends CUqBase {
     */
 
     onItemClick = (cartItem: CartItem) => {
-        let { cProduct } = this.cApp;
+        let { store, cProduct } = this.cApp;
         let { product } = cartItem;
-        if (!this.cart.isDeleted(product.id)) {
+        if (!store.cart.isDeleted(product.id)) {
             cProduct.showProductDetail(product.id);
         }
     }
@@ -116,9 +113,9 @@ export class CCart extends CUqBase {
      * 商品从购物车永久性删除
      */
     strikeOut = async () => {
-        //let { cart } = this.cApp;
-        this.selectedCartItems = this.cart.getSelectedItems();
-        await this.cart.removeStrike(this.selectedCartItems)
+        let { cart } = this.cApp.store;
+        this.selectedCartItems = cart.getSelectedItems();
+        await cart.removeStrike(this.selectedCartItems)
 
 
         // let combinedData = this.selectedCartItems.map((el: CartItem2) => {
@@ -134,8 +131,8 @@ export class CCart extends CUqBase {
     }
 
     checkOut = async () => {
-        //let { cart } = this.cApp;
-        this.selectedCartItems = this.cart.getSelectedItems();
+        let { cart } = this.cApp.store;
+        this.selectedCartItems = cart.getSelectedItems();
         if (this.selectedCartItems === undefined) return;
         /*
         if (!this.isLogined) {

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv, Ax } from 'tonva';
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
-import { CartPackRow, CartItem } from './Cart';
+import { CartPackRow, CartItem } from '../store';
 import { xs } from 'tools/browser';
 
 const cartSchema = [
@@ -34,14 +34,21 @@ export class VCart extends VPage<CCart> {
     */
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cart } = this.controller;
-        let amount = cart.amount.get();
-        let check = cart.editButton.get() ? '删除' : "去结算";
-        let content = cart.editButton.get() ? <>{check}</> : amount > 0 ?
+        let { checkOut, strikeOut, cApp, editButton } = this.controller;
+		let { cart } = cApp.store;
+        let amount = cart.amount;
+		/*
+        let check = editButton ? '删除' : "去结算";
+        let content = editButton ? <>{check}</> : amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-        if (cart.editButton.get()) {
-            return <div className="d-flex justify-content-end">
+		*/
+        if (editButton) {
+			let check = editButton ? '删除' : "去结算";
+			let content = editButton ? <>{check}</> : amount > 0 ?
+				<>{check} (¥{amount})</> :
+				<>{check}</>;
+			return <div className="d-flex justify-content-end">
                 <button className="btn btn-success w-25 mx-5" style={{ background: '#28a745' }}
                     type="button"
                     onClick={strikeOut}>
@@ -49,7 +56,11 @@ export class VCart extends VPage<CCart> {
                 </button>
             </div>;
         } else {
-            return <div className="d-flex justify-content-center">
+			let check = editButton ? '删除' : "去结算";
+			let content = editButton ? <>{check}</> : amount > 0 ?
+				<>{check} (¥{amount})</> :
+				<>{check}</>;
+			return <div className="d-flex justify-content-center">
                 <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
                     type="button"
                     onClick={checkOut} disabled={amount <= 0}>
@@ -132,7 +143,8 @@ export class VCart extends VPage<CCart> {
     }
 
     protected cartForm = observer(() => {
-        let { cart } = this.controller;
+        let { cApp } = this.controller;
+		let { cart } = cApp.store;
         let { cartItems } = cart;
         let data = { list: cartItems };
         return <>
@@ -194,9 +206,10 @@ export class VCart extends VPage<CCart> {
     }
     footer() {
         return  React.createElement(observer(() => {
-            let { cart } = this.controller;
+            let { cApp } = this.controller;
+			let { cart } = cApp.store;
             let footer: any;
-            if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
                 footer = undefined;
             }
             else {
@@ -208,9 +221,10 @@ export class VCart extends VPage<CCart> {
 
     content() {
         return  React.createElement(observer(() => {
-            let { cart } = this.controller;
+            let { cApp } = this.controller;
+			let { cart } = cApp.store;
             let content: any;
-            if (cart.count.get() === 0 && cart.cartItems && cart.cartItems.length === 0) {
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
                 content = this.empty();
             }
             else {
@@ -224,11 +238,12 @@ export class VCart extends VPage<CCart> {
     }
 
     private tab = observer(() => {
-        let { cart } = this.controller;
+        let { cApp } = this.controller;
+		let { cart } = cApp.store;
         let header = <header className="py-2 text-center bg-info text-white">
             <FA className="align-middle" name="shopping-cart" size="2x" /> &nbsp; <span className="h5 align-middle">购物车</span>
         </header>;
-        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+        if (cart.count === 0 && cart.cartItems.length === 0) {
             return <>
                 {header}
                 {this.empty()}

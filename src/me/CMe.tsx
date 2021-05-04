@@ -141,11 +141,6 @@ export class CMe extends CUqBase {
         nav.showLogout(callback);
     }
 
-    renderCarLabel = () => {
-        let { cCart } = this.cApp;
-        return cCart.renderCartLabel();
-    }
-
     renderMeSideBar = () => {
         return this.renderView(VMeSideBar);
     }

@@ -25,8 +25,10 @@ import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
 import { toJS } from 'mobx';
+import { Store } from 'store';
 
 export class CApp extends CUqApp {
+	store: Store;
     private cache: Map<number, Product>;
     //cart: Cart;
     currentSalesRegion: any;
@@ -59,8 +61,11 @@ export class CApp extends CUqApp {
     protected async beforeStart(): Promise<boolean> {
         if (await super.beforeStart() === false) return false;
 
+		this.store = new Store(this.uqs);
         this.currentSalesRegion = GLOABLE.SALESREGION_CN;
         this.currentLanguage = GLOABLE.CHINESE;
+		this.store.currentSalesRegion = this.currentSalesRegion;
+		this.store.currentLanguage = this.currentLanguage;
 
         this.cache = new Map();
         /*
@@ -76,7 +81,7 @@ export class CApp extends CUqApp {
         this.cOrder = this.newC(COrder);
         this.cQuickOrder = this.newC(CQuickOrder);
         this.cCart = this.newC(CCart);
-        await this.cCart.buildData();/* 暂时性初始化购物车 调整后可删除 */
+        await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -162,6 +167,10 @@ export class CApp extends CUqApp {
         this.topKey = nav.topKey();
     }
 
+	renderCartLabel() {
+		return this.cCart.renderCartLabel();
+	}
+
     /*
     private setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
@@ -215,7 +224,7 @@ export class CApp extends CUqApp {
         if (typeof id === 'object') id = id.id;
         let product = this.cache.get(id);
         if (!product) {
-            product = new Product(this, id);
+            product = new Product(this.store, id);
             this.cache.set(id, product);
         }
         return product;
@@ -262,12 +271,12 @@ export class CApp extends CUqApp {
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
-        await this.cCart.buildItems();
+        await this.store.buildCartItems();
         this.cProduct.start(params?.key);
     }
 
     private navProduct: NavPage = async (params: any) => {
-        await this.cCart.buildItems();
+        await this.store.buildCartItems();
         this.cProduct.showProductDetail(params?.id);
     }
 
@@ -277,7 +286,7 @@ export class CApp extends CUqApp {
     }
 
     private navCart: NavPage = async (params: any) => {
-        await this.cCart.buildItems();
+        await this.store.buildCartItems();
         await this.cSelectShippingContact.getContactList();
         await this.cCart.start();
     }
@@ -285,7 +294,7 @@ export class CApp extends CUqApp {
     private navProductCategory: NavPage = async (params: any) => {
         let id = params.id;
         if (id) id = Number(id);
-        await this.cCart.buildItems();
+        await this.store.buildCartItems();
         await this.cProductCategory.showCategoryPage(id);
     }
 
@@ -407,13 +416,14 @@ export class CApp extends CUqApp {
             this.initNotLogined();
         }
         await this.initUQs();
-        this.cCart.buildData();
+        this.store.initCart();
     }
 
 	private async initLogined(user: User) {
         this.currentUser = new WebUser(this.uqs);
 		console.error('initLogined user=', toJS(user));
         await this.currentUser.setUser(this.user);
+		this.store.currentUser = this.currentUser;
         /*
         // 如果currentUser，也必须重置
         //if (this.currentUser === undefined)
@@ -434,6 +444,6 @@ export class CApp extends CUqApp {
     }
 
     protected onDispose() {
-        this.cCart.disposeCart();
+        this.store.dispose();
     }
 }

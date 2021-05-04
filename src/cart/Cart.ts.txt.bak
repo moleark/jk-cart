@@ -2,7 +2,7 @@ import { observable, autorun, IReactionDisposer } from 'mobx';
 import { TuidDiv, BoxId, Tuid } from 'tonva';
 //import { CCartApp } from '../CCartApp';
 import { PackRow, Product } from 'model';
-import { groupByProduct } from 'tools/groupByProduct';
+//import { groupByProduct } from 'tools/groupByProduct';
 import { CApp } from 'tapp';
 
 export interface CartItem {

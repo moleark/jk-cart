@@ -10,7 +10,7 @@ import { VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct, groupByProduct1 } from '../tools/groupByProduct';
-import { CartItem, CartPackRow } from '../cart/Cart';
+import { CartItem, CartPackRow } from '../store';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
 import { Product } from 'model';
 import { VContactList } from 'customer/VContactList';
@@ -205,7 +205,7 @@ export class COrder extends CUqBase {
      * 提交订单
      */
     submitOrder = async () => {
-        let { uqs, cCart, currentUser } = this.cApp;
+        let { uqs, store, currentUser } = this.cApp;
         let { order, webuser, 积分商城 } = uqs;
         let { orderItems } = this.orderData;
 
@@ -238,7 +238,7 @@ export class COrder extends CUqBase {
                 param.push({ productId: e.product.id, packId: v.pack.id })
             })
         });
-        cCart.removeItem(param);
+        store.cart.removeItem(param);
 
         // epec客户下单后要求跳转到指定的url
         let epecOrder = this.orderData.getDataForSave2();

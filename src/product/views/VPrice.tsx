@@ -35,12 +35,15 @@ export class VPrice extends View<CProduct> {
 			let { data } = context;
 			let { pack, retail, vipPrice, promotionPrice, currency } = data;
 			let price = this.minPrice(vipPrice, promotionPrice) || retail;
+			await this.controller.cApp.store.cart.changeQuantity(product, pack, value, price, retail, currency);
+			/*
 			let { cApp } = this.controller;
 			let { cCart } = cApp;
 			if (value > 0)
 				await cCart.add(product, pack, value, price, retail, currency);
 			else
 				await cCart.removeItem([{ productId: product.id, packId: pack.id }]);
+			*/
 		}
 
 		let uiSchema: UiSchema = {

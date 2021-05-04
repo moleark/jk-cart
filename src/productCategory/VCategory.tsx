@@ -3,7 +3,6 @@ import * as React from 'react';
 import { VPage, Page } from 'tonva';
 import { CProductCategory, ProductCategory } from './CProductCategory';
 import { observer } from 'mobx-react';
-import $ from 'jquery';
 import { xs } from '../tools/browser';
 
 export class VCategory extends VPage<CProductCategory> {
@@ -21,7 +20,7 @@ export class VCategory extends VPage<CProductCategory> {
         let header: any, cartLabel: any;
         if (xs) {
             header = cHome.renderSearchHeader();
-            cartLabel = this.controller.cApp.cCart.renderCartLabel();
+            cartLabel = this.controller.cApp.renderCartLabel();
         }
         return <Page header={header} right={cartLabel}>
             {this.renderRootCategory()}
@@ -62,6 +61,7 @@ export class VCategory extends VPage<CProductCategory> {
 
     private renderRootCategory = () => {
         //let { productCategory, name, children } = this.controller.rootCategories;
+		let {name} = this.controller.current;
         let instructionUi;
         if (this.instruction) {
             // let instr: JQuery<Element> = $(this.instruction);

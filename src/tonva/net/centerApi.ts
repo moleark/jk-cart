@@ -1,4 +1,4 @@
-import {CenterApiBase} from '../net';
+import {CenterApiBase} from './uqApi';
 
 export class CenterApi extends CenterApiBase {
     async userAppUnits(app:number):Promise<any[]> {

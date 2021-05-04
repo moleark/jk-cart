@@ -44,8 +44,9 @@ export class VFavorite extends View<CProduct> {
 			//if (currentUser)
 			//    this.initInventoryAllocation(productId);
 			let icon = favorite === true ? "heart" : 'heart-o';
-			let onClick = (evt: React.MouseEvent) => {
+			let onClick = async (evt: React.MouseEvent) => {
 				evt.stopPropagation();
+				await this.controller.cApp.assureLogin();
                 favoriteOrCancel();
                 if (callback) callback();
 			}

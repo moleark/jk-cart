@@ -7,7 +7,7 @@ import { List } from 'tonva';
 import { OrderItem } from './Order';
 import { xs } from '../tools/browser';
 import classNames from 'classnames';
-import { CartItem } from '../cart/Cart';
+//import { CartItem } from '../cart/Cart';
 import { observable } from 'mobx';
 
 export class VOrderDetail extends VPage<COrder> {
@@ -34,6 +34,7 @@ export class VOrderDetail extends VPage<COrder> {
     }
 
     againCreatOrder = async (initialData: OrderItem[]) => {
+		/*
         let { uqs, currentSalesRegion, cCart } = this.controller.cApp;
         let { product: p } = uqs;
         let { PriceX } = p;
@@ -72,12 +73,9 @@ export class VOrderDetail extends VPage<COrder> {
             };
         });
         cCart.againOrderCart(orderData);
+		*/
+		await this.controller.cApp.store.cart.againCreatOrder(initialData);
         nav.navigate('/cart');
-    }
-
-    private minPrice(vipPrice: any, promotionPrice: any) {
-        if (vipPrice || promotionPrice)
-            return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
     }
 
     private renderOrderItem = (orderItem: OrderItem, index: number) => {

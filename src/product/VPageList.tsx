@@ -70,7 +70,7 @@ export class VPageList extends VPage<CProduct> {
     }
 
     right() {
-        return this.isWebNav === true ? null : this.controller.cApp.cCart.renderCartLabel();
+        return this.isWebNav === true ? null : this.controller.cApp.renderCartLabel();
     }
 
     content() {

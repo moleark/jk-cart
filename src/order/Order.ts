@@ -1,6 +1,6 @@
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
-import { CartPackRow } from 'cart/Cart';
+import { CartPackRow } from '../store';
 import { Product } from 'model';
 
 export class Order {

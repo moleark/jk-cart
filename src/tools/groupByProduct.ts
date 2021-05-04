@@ -1,4 +1,4 @@
-import { CartPackRow } from "cart/Cart";
+import { CartPackRow } from "../store";
 
 export function groupByProduct(packItems: any[]) {
     let result: any[] = [];

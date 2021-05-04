@@ -1,8 +1,7 @@
-import { logoutApis } from "../net";
+import { centerApi, logoutApis } from "../net";
 import { nav, t, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute } from "../components";
 import { Controller } from '../vm';
 import { UQsMan, TVs } from "../uq";
-import { centerApi } from "./centerApi";
 import { VErrorsPage, VStartError, VUnsupportedUnit } from "./vMain";
 import { User } from "../tool";
 

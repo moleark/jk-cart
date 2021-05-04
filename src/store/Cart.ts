@@ -2,6 +2,7 @@ import { observable, autorun, IReactionDisposer } from 'mobx';
 import { TuidDiv, BoxId, Tuid } from 'tonva';
 import { PackRow, Product } from 'model';
 import { Store } from './store';
+import { OrderItem } from 'order/Order';
 
 export interface CartItem {
     product: Product; // BoxId;
@@ -40,9 +41,8 @@ export class Cart {
     };
     */
     @observable cartItems: CartItem[];
-    count = observable.box<number>(0);
-    amount = observable.box<number>(0);
-    editButton = observable.box<boolean>(false);
+    @observable count = 0; //observable.box<number>(0);
+    @observable amount = 0; //= observable.box<number>(0);
     constructor(store: Store) {
         //this.cApp = cApp;
         //this.cartItems = this.data.list;
@@ -67,8 +67,8 @@ export class Cart {
                 amount += quantity * price;
             }
         }
-        this.count.set(count);
-        this.amount.set(parseFloat(amount.toFixed(2)));
+        this.count = count;
+        this.amount = parseFloat(amount.toFixed(2));
     }
 
     async init(): Promise<void> {
@@ -82,7 +82,7 @@ export class Cart {
         this.calcSum();
     }
 
-    againOrderCart = async (data: CartItem[]) => {
+    againOrderCart = (data: CartItem[]) => {
         this.cartItems.forEach((v: any) => v.$isSelected = false);
         data.forEach((v: any) => {
             let findRepeatData = this.cartItems.findIndex((i: any) => Tuid.equ(v.product, i.product) && Tuid.equ(v.packs[0].pack, i.packs[0].pack));
@@ -290,6 +290,61 @@ export class Cart {
             })
             this.cartStore.removeFromCart(rows);
         }
+    }
+
+	async changeQuantity(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
+		if (quantity > 0)
+			await this.add(product, pack, quantity, price, retail, currency);
+		else
+			await this.removeItem([{ productId: product.id, packId: pack.id }]);
+	}
+
+
+    againCreatOrder = async (initialData: OrderItem[]) => {
+        let { uqs, currentSalesRegion } = this.store;
+        let { product: p } = uqs;
+        let { PriceX } = p;
+        let promises: PromiseLike<void>[] = [];
+        initialData.forEach((e: any) => e.packs.forEach((v: any) => {
+            promises.push(PriceX.obj({ product: e.product, pack: v.pack, salesRegion: currentSalesRegion }))
+        }));
+        let prices: any[] = await Promise.all(promises);
+        let orderData: CartItem[] = [];
+        let productPromises: Promise<any>[] = [];
+        for (let key of initialData) {
+            let { product, packs } = key;
+            let filtPacksByProductId = prices.filter((v: any) => Tuid.equ(v.product, product) && v.discountinued === 0 && v.expireDate > Date.now());
+            if (!filtPacksByProductId.length) continue;
+            for (let i of packs) {
+                let findPack = filtPacksByProductId.find((v: any) => Tuid.equ(v.pack, i.pack));
+                if (!findPack) continue;
+                product = this.store.getProduct(product.id);
+                productPromises.push(product.loadListItem());
+                orderData.push({
+                    product: product,
+                    packs: [{ pack: i.pack, quantity: i.quantity || 1, price: findPack.retail, retail: findPack.retail, currency: findPack.salesRegion?.obj?.currency }],
+                    $isSelected: true,
+                    $isDeleted: false,
+                    createdate: Date.now()
+                })
+            };
+        };
+        await Promise.all(productPromises);
+        orderData.forEach((v: any) => {
+            let newPrices: any[] = v.product?.prices || [];
+            let findPack = newPrices.find((i: any) => Tuid.equ(i.pack, v.packs[0].pack));
+            if (findPack) {
+                let { vipPrice, promotionPrice } = findPack;
+                v.packs[0].price = this.minPrice(vipPrice, promotionPrice) || v.packs[0].price;
+            };
+        });
+        this.againOrderCart(orderData);
+        //nav.navigate('/cart');
+    }
+
+	private minPrice(vipPrice: any, promotionPrice: any) {
+        if (vipPrice || promotionPrice)
+            return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
     }
 
     /*
