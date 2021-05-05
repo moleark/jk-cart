@@ -84,8 +84,12 @@ export abstract class CAppBase extends Controller {
 		}
 	}
 
+	private uqsUser: any = null;
 	protected async initUQs() {
 		if (!this.appConfig) return true;
+		let {user} = nav;
+		if (user === this.uqsUser) return true;
+		this.uqsUser = user;
 		logoutApis();
 		let {appName, version, tvs} = this.appConfig;
 		await UQsMan.load(appName, version, tvs);
@@ -95,7 +99,6 @@ export abstract class CAppBase extends Controller {
 		// if (isDevelopment === true) {
 		// 这段代码原本打算只是在程序员调试方式下使用，实际上，也可以开放给普通用户，production方式下
 		//let retErrors = UQsMan.errors;
-		let {user} = nav;
 		if (user !== undefined && user.id > 0) {
 			let uqAppId = UQsMan.value.id;
 			let result = await centerApi.userAppUnits(uqAppId);

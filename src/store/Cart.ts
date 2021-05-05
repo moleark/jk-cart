@@ -502,7 +502,10 @@ class CartLocal extends CartStore {
     }
 
     async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any) {
-        let cartItemExists = this.cartData.find(e => Tuid.equ(e.product, product) && TuidDiv.equ(e.pack, pack));
+        let cartItemExists = this.cartData.find(e => {
+			if (!e) return false;
+			return Tuid.equ(e.product, product) && TuidDiv.equ(e.pack, pack);
+		});
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;
             cartItemExists.price = price;

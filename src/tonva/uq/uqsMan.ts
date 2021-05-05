@@ -92,21 +92,19 @@ export class UQsMan {
     }
 
     async init(uqsData:UqData[]):Promise<void> {
-        let promiseInits: PromiseLike<void>[] = uqsData.map(uqData => {
+        let promiseInits: PromiseLike<void>[] = [];
+		for (let uqData of uqsData) {
 			let {uqOwner, uqName} = uqData;
 			let uqFullName = uqOwner + '/' + uqName;
-			//let uqUI = this.ui.uqs[uqFullName] as UqUI || {};
-			//let cUq = this.newCUq(uqData, uqUI);
-			//this.cUqCollection[uqFullName] = cUq;
-			//this.uqs.addUq(cUq.uq);
+			if (this.collection[uqFullName]) continue;
 			let uq = new UqMan(this, uqData, undefined, this.tvs[uqFullName] || this.tvs[uqName]);
 			this.collection[uqFullName] = uq;
 			let lower = uqFullName.toLowerCase();
 			if (lower !== uqFullName) {
 				this.collection[lower] = uq;
 			}
-			return uq.init();
-		});
+			promiseInits.push(uq.init());
+		}
         await Promise.all(promiseInits);
     }
 
