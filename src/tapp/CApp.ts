@@ -17,15 +17,13 @@ import { CYncProjects } from "ync/CYncProjects";
 import { CFavorites } from 'customer/CFavorites';
 import { CLottery } from 'pointMarket/CLottery';
 import { CSignIn } from 'pointMarket/CSignIn';
-import { Product } from '../model';
+import { Store, Product } from '../store';
 import { WebUser } from 'CurrentUser';
 import { GLOABLE } from 'global';
 import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectContact';
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
-import { toJS } from 'mobx';
-import { Store } from 'store';
 
 export class CApp extends CUqApp {
 	store: Store;

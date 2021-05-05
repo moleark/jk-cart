@@ -1,6 +1,5 @@
 import { observable } from 'mobx';
 import { BoxId, Tuid } from 'tonva';
-import { Product } from 'model';
 import { CUqBase } from '../tapp/CBase';
 import { VQuickOrder } from './VQuickOrder';
 import { VPriceQuickOrder } from 'product/views';

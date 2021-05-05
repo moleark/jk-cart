@@ -3,13 +3,10 @@ import { Ax, BoxId, nav, tv, View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
-//import { observable } from 'mobx';
 import { renderBrand, renderPropItem, renderUnsold } from '../renders';
-import { Product } from '../../model';
 import { VFavorite } from './VFavorite';
-import { VPrice, VPriceWithTr } from './VPrice';
+import { VPriceWithTr } from './VPrice';
 import classNames from 'classnames';
-import { xs } from '../../tools/browser';
 
 export class VProuductView2 extends View<CProduct> {
 	// @observable product: any;

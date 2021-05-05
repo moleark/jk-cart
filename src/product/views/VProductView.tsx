@@ -5,7 +5,7 @@ import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import {renderBrand, renderPropItem} from '../renders';
 import { VChemicalInfoInCart } from './VChemicalInfo';
-import { Product } from '../../model';
+import { Product } from '../../store';
 import { VFavorite } from './VFavorite';
 /*
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';

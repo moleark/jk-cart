@@ -1,12 +1,11 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Scroller, Page } from 'tonva';
+import { VPage, Scroller } from 'tonva';
 import { CProduct } from './CProduct';
 import { List } from 'tonva';
-import { Product } from 'model';
+import { Product } from '../store';
 import Pagination from 'antd/lib/pagination/Pagination';
 import { observer } from 'mobx-react';
-import { xs } from 'tools/browser';
 
 export class VPageList extends VPage<CProduct> {
 

@@ -1,11 +1,10 @@
 import { GLOABLE } from 'global';
 import { observable } from 'mobx';
 import moment from 'moment';
-import { CApp } from 'tapp';
 import { BoxId } from 'tonva';
 import { MainBrand, Chemical } from './model';
 import { UQs } from '../uqs';
-import { Store } from 'store';
+import { Store } from './store';
 
 export interface InventoryAllocation {
 	warehouse: BoxId;

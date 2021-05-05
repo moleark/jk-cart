@@ -1,5 +1,5 @@
 import { WebUser } from "CurrentUser";
-import { Product } from "model";
+import { Product } from "./Product";
 import { BoxId } from "tonva";
 import { UQs } from "uqs";
 import { Cart } from "./Cart";

@@ -5,7 +5,7 @@ import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
 import { VPageSkillSearch } from './VPageSkillSearch';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
-import { Product } from '../model';
+import { Product } from '../store';
 import { GLOABLE } from 'global';
 import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';

@@ -3,8 +3,6 @@ import { View, tv } from 'tonva';
 import { CProduct } from '../CProduct';
 import {renderBrand, renderPropItem} from '../renders';
 import { ProductImage } from '../../tools/productImage';
-import { VChemicalInfoInCart } from './VChemicalInfo';
-import { Product } from 'model';
 
 export class VInCart extends View<CProduct> {
     render(param: any): JSX.Element {

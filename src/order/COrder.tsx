@@ -12,7 +12,7 @@ import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct, groupByProduct1 } from '../tools/groupByProduct';
 import { CartItem, CartPackRow } from '../store';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
-import { Product } from 'model';
+import { Product } from '../store';
 import { VContactList } from 'customer/VContactList';
 import { VContact } from 'customer/VContact';
 import { VAddress, VCity, VCounty, VProvince } from '../customer/VAddress';

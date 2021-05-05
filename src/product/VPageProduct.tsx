@@ -6,7 +6,7 @@ import {
 } from 'tonva';
 import { CProduct } from './CProduct';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
-import { ProductPackRow, Product } from '../model';
+import { ProductPackRow, Product } from '../store';
 import { ProductImage } from 'tools/productImage';
 import { renderPropItem, renderBrand } from './renders';
 import { xs } from 'tools/browser';

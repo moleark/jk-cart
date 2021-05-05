@@ -1,14 +1,13 @@
 /* eslint-disable */
 import * as React from 'react';
-import { autoHideTips, BoxId, FA, List, tv, VPage } from 'tonva';
+import { autoHideTips, LMR, FA, List, VPage } from 'tonva';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import classNames from 'classnames';
 import XLSX from "xlsx";
-import { LMR } from '../tonva/components/simple/LMR';
 import { xs } from 'tools/browser';
 import { CQuickOrder } from './CQuickOrder';
-import { Product } from 'model';
+import { Product } from '../store';
 import { renderBrand, renderPropItem } from 'product/renders';
 
 const productOrderType: { [type:number]:string } = {

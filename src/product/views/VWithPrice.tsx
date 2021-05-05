@@ -4,7 +4,7 @@ import { View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { renderBrand, renderPropItem } from '../renders';
-import { Product } from '../../model';
+import { Product } from '../../store';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VPrice } from './VPrice';
 

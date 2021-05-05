@@ -1,6 +1,6 @@
 import { observable, autorun, IReactionDisposer } from 'mobx';
 import { TuidDiv, BoxId, Tuid } from 'tonva';
-import { PackRow, Product } from 'model';
+import { PackRow, Product } from './Product';
 import { Store } from './store';
 import { OrderItem } from 'order/Order';
 

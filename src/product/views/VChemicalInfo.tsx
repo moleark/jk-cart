@@ -3,7 +3,7 @@ import { View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
 import { renderPropItem } from '../renders';
-import { Product } from '../../model';
+import { Product } from '../../store';
 
 export class VChemicalInfoInCart extends View<CProduct> {
     render(product: Product): JSX.Element {

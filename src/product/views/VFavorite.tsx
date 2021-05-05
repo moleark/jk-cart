@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, FA } from 'tonva';
 import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
-import { Product } from '../../model';
+import { Product } from '../../store';
 
 export class VFavorite extends View<CProduct> {
 	/*

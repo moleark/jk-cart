@@ -1,7 +1,7 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../tapp/CBase';
 import { QueryPager } from 'tonva';
-import { Product } from 'model';
+import { Product } from '../store';
 //import { VProductFavorateLabel } from './VProductFavorateLabel';
 
 export class CFavorites extends CUqBase {

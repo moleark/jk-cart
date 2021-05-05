@@ -1,11 +1,10 @@
+import { observable } from 'mobx';
 import { RowContext, BoxId, nav } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
-import { CartPackRow, CartItem } from '../store';
-import { Product } from 'model';
-import { observable } from 'mobx';
+import { Product, CartPackRow, CartItem } from '../store';
 
 export class CCart extends CUqBase {
 	//cart: Cart;

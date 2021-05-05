@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import moment from 'moment';
 import classNames from 'classnames';
 import { xs } from 'tools/browser';
-import { Product } from 'model/Product';
+import { Product } from 'store/Product';
 
 const BrandImg: { [brand: string]:string} = {
     'J&K':'/images/coa/coa.jpg',

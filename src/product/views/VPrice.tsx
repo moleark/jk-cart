@@ -2,8 +2,7 @@ import * as React from 'react';
 import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema, Tuid } from 'tonva';
 import { CProduct } from '../CProduct';
 import { MinusPlusWidget } from 'tools';
-import { Product } from 'model';
-import { VFavorite } from './VFavorite';
+import { Product } from '../../store';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
