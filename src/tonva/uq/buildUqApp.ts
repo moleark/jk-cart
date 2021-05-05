@@ -2,7 +2,6 @@ import fs from 'fs';
 import { Action, Book, Query, Sheet, Tuid, UqEnum, UqMan, UQsMan, Map, History, Tag, Pending, Entity, ArrFields, Field } from './index';
 import { nav } from '../components';
 import { AppConfig } from '../app';
-//import { env } from 'tonva/tool';
 
 //const uqAppPath = 'src/UqApp';
 const red = '\x1b[41m%s\x1b[0m';

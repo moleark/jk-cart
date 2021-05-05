@@ -146,8 +146,13 @@ export class Cart {
         let prices = await Promise.all(promises);
         for (let index = cartData.length - 1; index >= 0; index--) {
             let e: any = cartData[index];
-            let priceMap: any = prices.find((v: any) => Tuid.equ(v.product, e.product)
-                && Tuid.equ(v.pack, e.pack) && v.discountinued === 0 && v.expireDate > Date.now());
+            let priceMap: any = prices.find((v: any) => {
+				if (!v) return false;
+				return Tuid.equ(v.product, e.product)
+                	&& Tuid.equ(v.pack, e.pack) 
+					&& v.discountinued === 0 
+					&& v.expireDate > Date.now()
+			});
             if (priceMap && priceMap.retail) {
                 e.retail = priceMap.retail;
             } else {

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { VPage, Page, Tabs, TabCaptionComponent, TabProp } from 'tonva';
 import { COrder } from './COrder';
-import { List, EasyDate } from 'tonva';
+import { Ax, List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
 import { xs } from 'tools/browser';
-import { Ax } from '../tonva/components/ax/index';
 import { ListTable } from 'tools/listTable';
 
 export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';

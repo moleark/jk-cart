@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { VPage, autoHideTips } from 'tonva';
+import { Page, VPage, autoHideTips } from 'tonva';
 import { CProduct } from './CProduct';
-import { Page } from '../tonva/components/page/page';
 import { observer } from 'mobx-react';
 import { xs } from '../tools/browser';
 import { VPagePDF } from './VPagePDF';

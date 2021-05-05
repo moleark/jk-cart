@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { observable } from 'mobx';
-import { VPage } from 'tonva';
+import { Page, VPage } from 'tonva';
 import { CProduct } from './CProduct';
-import { Page } from '../tonva/components/page/page';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import classNames from 'classnames';
 import { xs } from 'tools/browser';
-import { Product } from 'store/Product';
 
 const BrandImg: { [brand: string]:string} = {
     'J&K':'/images/coa/coa.jpg',

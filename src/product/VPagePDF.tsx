@@ -5,7 +5,6 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import Pdfh5 from 'pdfh5'
 import "pdfh5/css/pdfh5.css";
-import { FA } from '../tonva/components/simple/FA';
 
 export class VPagePDF extends VPage<CProduct> {
     @observable pdfh5: any;

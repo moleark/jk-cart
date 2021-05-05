@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { View } from '../tonva/vm/view';
-import { CUqBase } from '../tapp/CBase';
-import { CApp } from '../tapp/CApp';
+import { View } from 'tonva';
 import { COrder } from './COrder';
 import { FA } from 'tonva';
 
