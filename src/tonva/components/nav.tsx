@@ -822,6 +822,7 @@ export class Nav {
 		netToken.set(user.id, user.token);
 		nav.clear();
 
+		await this.onChangeLogin?.(this.user);
         if (callback !== undefined) //this.loginCallbacks.has)
             await callback(user);
             //this.loginCallbacks.call(user);
@@ -831,7 +832,6 @@ export class Nav {
 		else {
             await this.showAppView(isUserLogin);
         }
-		await this.onChangeLogin?.(this.user);
 	}
 
 	onChangeLogin: (user:User) => Promise<void>;

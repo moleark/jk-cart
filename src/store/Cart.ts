@@ -237,7 +237,7 @@ export class Cart {
     /**
      *
      */
-    add = async (product: Product/*BoxId*/, pack: BoxId, quantity: number, price: number, retail: number, currency: any) => {
+    private async add(product: Product/*BoxId*/, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
         let cartItemExists = this.cartItems.find((e) => Tuid.equ(e.product, product) && Tuid.equ(e.packs[0].pack, pack));
         if (!cartItemExists) {
             this.cartItems.push({

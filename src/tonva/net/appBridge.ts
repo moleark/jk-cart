@@ -272,7 +272,7 @@ interface BridgeCenterApi {
 const brideCenterApis:{[id:string]: BridgeCenterApi} = {};
 export async function bridgeCenterApi(url:string, method:string, body:any):Promise<any> {
     console.log('bridgeCenterApi: url=%s, method=%s', url, method);
-    return await new Promise<any>(async (resolve, reject) => {
+    return new Promise<any>(async (resolve, reject) => {
         let callId:string;
         for (;;) {
             callId = uid();
