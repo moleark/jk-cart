@@ -92,7 +92,9 @@ serviceWorker.unregister();
 
 function loadQQScript() {
 	let f = document.createElement("script");
+	f.setAttribute("id", "qd30090316631c3780361b3caa2f8195e48a7a2bd5c5");
 	f.type = "text/javascript";
-	f.src = 'https://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNjk3OV80OTI2NjBfNDAwNjY2Nzc4OF8';
+	f.src = 'https://wp.qiye.qq.com/qidian/3009031663/1c3780361b3caa2f8195e48a7a2bd5c5';
+	// f.src = 'https://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNjk3OV80OTI2NjBfNDAwNjY2Nzc4OF8';
 	document.body.appendChild(f);
 };
