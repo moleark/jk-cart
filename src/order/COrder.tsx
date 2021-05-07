@@ -485,7 +485,7 @@ export class COrder extends CUqBase {
 
     getOrderTrackByTransNum = async (transCompany: string, transNumber: number | string) => {
         let param = { code: transCompany, no: transNumber };
-        let res = await fetch(GLOABLE.EPEC.ORDERTRANS, {
+        let res = await fetch(GLOABLE.LOGISTIC.ORDERTRANS, {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"

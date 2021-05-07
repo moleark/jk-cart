@@ -92,6 +92,8 @@ interface Global {
 	EPEC: {
 		AUTOLOGIN: string;
 		PUSHORDERURL: string;
+	},
+	LOGISTIC: {
 		ORDERTRANS: string;
 	},
 };
@@ -107,9 +109,12 @@ const GLOABLE_PRODUCTION: Global = {
 	CONTENTSITE: "https://web.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://web.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder",
-		ORDERTRANS: "https://joint.jkchemical.com/epec/GetTravelInformation"
+		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
 	},
+	LOGISTIC: {
+		ORDERTRANS: "https://joint.jkchemical.com/logistics/getTravelInformation"
+	},
+
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -123,8 +128,10 @@ const GLOABLE_TEST: Global = {
 	CONTENTSITE: "https://c.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://c.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://c.jkchemical.com/joint/epec/pushOrder",
-		ORDERTRANS: "https://c.jkchemical.com/joint/epec/GetTravelInformation"
+		PUSHORDERURL: "https://c.jkchemical.com/joint/epec/pushOrder"
+	},
+	LOGISTIC: {
+		ORDERTRANS: "https://c.jkchemical.com/joint/logistics/getTravelInformation"
 	},
 }
 
