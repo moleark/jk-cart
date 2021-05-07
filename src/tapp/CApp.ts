@@ -26,7 +26,7 @@ import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
 
 export class CApp extends CUqApp {
-	store: Store;
+    store: Store;
     private cache: Map<number, Product>;
     //cart: Cart;
     currentSalesRegion: any;
@@ -59,11 +59,11 @@ export class CApp extends CUqApp {
     protected async beforeStart(): Promise<boolean> {
         if (await super.beforeStart() === false) return false;
 
-		this.store = new Store(this.uqs);
+        this.store = new Store(this.uqs);
         this.currentSalesRegion = GLOABLE.SALESREGION_CN;
         this.currentLanguage = GLOABLE.CHINESE;
-		this.store.currentSalesRegion = this.currentSalesRegion;
-		this.store.currentLanguage = this.currentLanguage;
+        this.store.currentSalesRegion = this.currentSalesRegion;
+        this.store.currentLanguage = this.currentLanguage;
 
         this.cache = new Map();
         /*
@@ -161,13 +161,16 @@ export class CApp extends CUqApp {
     }
 
     protected async afterStart(): Promise<void> {
-        await super.afterStart();
+        // await super.afterStart();
+        nav.onChangeLogin = (user: User) => this.onChangeLogin(user);
+        await this.onChangeLogin(this.user);
+        nav.resolveRoute();
         this.topKey = nav.topKey();
     }
 
-	renderCartLabel() {
-		return this.cCart.renderCartLabel();
-	}
+    renderCartLabel() {
+        return this.cCart.renderCartLabel();
+    }
 
     /*
     private setUser() {
@@ -417,10 +420,10 @@ export class CApp extends CUqApp {
         this.store.initCart();
     }
 
-	private async initLogined(user: User) {
+    private async initLogined(user: User) {
         this.currentUser = new WebUser(this.uqs);
         await this.currentUser.setUser(this.user);
-		this.store.currentUser = this.currentUser;
+        this.store.currentUser = this.currentUser;
         /*
         // 如果currentUser，也必须重置
         //if (this.currentUser === undefined)
