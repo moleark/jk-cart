@@ -310,3 +310,9 @@
         width: 160px;
     }
 }
+
+@media (max-width: 768px){
+    .each-product .favorite {
+        margin-top: 10px;
+    }
+}

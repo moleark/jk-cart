@@ -50,7 +50,7 @@ export class VFavorite extends View<CProduct> {
                 favoriteOrCancel();
                 if (callback) callback();
 			}
-            let imgSrc = favorite === true ? "/images/icon/favoriteSave.svg" : "/images/icon/favorite.svg";
+            let imgSrc = favorite === true ? "/images/icon/favorite-icon-choose.svg" : "/images/icon/favorite-icon.svg";
 			return <div className="d-flex justify-content-end">
                 <small onClick={onClick} style={{ zIndex: 9 }}>
                     <img src={imgSrc} width="25px" className="favorite" />
