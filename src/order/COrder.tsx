@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId, Context } from 'tonva';
+import { BoxId, Context, env } from 'tonva';
 import { nav } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VCreateOrder } from './VCreateOrder';
@@ -475,7 +475,7 @@ export class COrder extends CUqBase {
             promise.push(this.getOrderTransportation(orderId, index + 1));
         });
         let res = await Promise.all(promise);
-        data.orderTrans = res.filter((v:any)=> v);
+        data.orderTrans = res.filter((v: any) => v);
         this.openVPage(VOrderDetail, order);
     }
 
@@ -497,10 +497,16 @@ export class COrder extends CUqBase {
     }
 
     openOrderTrans = async (orderTrans: any) => {
-        let { transCompany, transNumber } = orderTrans;
+        let { transNumber, expressLogistics } = orderTrans;
         /* 入驻的快递（可查物流） */
-        let settledTrans = ["Y", "ST"];
-        if (settledTrans.includes(transCompany)) {
+        let settledTrans: any = [
+            { transCompany: "Y", transCompanyId: 1, transCompanyIdTest: 25 },
+            { transCompany: "ST", transCompanyId: 22, transCompanyIdTest: 21 },
+        ];
+        let currTransBoxId: any = settledTrans.find((v: any) =>
+            (env.testing === true ? v.transCompanyIdTest : v.transCompanyId) === expressLogistics.id);
+        if (currTransBoxId) {
+            let { transCompany } = currTransBoxId;
             let orderTrackRult = await this.getOrderTrackByTransNum(transCompany, transNumber);
             orderTrans.orderTrackRult = orderTrackRult?.response;
         };

@@ -286,7 +286,7 @@ export class Product {
 
 	loadDescriptionPost = async () => {
 		if (this.descriptionPost) return;
-		let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productapplication/' + 18625);
+		let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productapplication/' + this.id);
 		if (result.ok) {
 			let content = await result.text();
 			this.descriptionPost = content;
