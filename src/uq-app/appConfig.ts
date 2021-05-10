@@ -6,9 +6,17 @@ const bz: DevConfig = {
 	alias: 'bz',
 }
 
+const jk: DevConfig = {
+	name: '百灵威系统工程部',
+	alias: 'jk',
+}
+
 export const appConfig: AppConfig = {
 	version: '0.1.0',
-	app: undefined,
+	app: {
+		dev: jk,
+		name: 'cart',
+	},
 	uqs: [
 		{
 			dev: bz,
