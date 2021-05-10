@@ -170,7 +170,7 @@ export class Cart {
                 productPromises.push(product.loadListItem());
                 cartItems.push({
                     product: product,
-                    packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency && currency.id }],
+                    packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: typeof currency === 'number' ? currency : currency?.id }],
                     $isSelected: true,
                     $isDeleted: false,
                     createdate: createdate,
@@ -509,9 +509,9 @@ class CartLocal extends CartStore {
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;
             cartItemExists.price = price;
-            cartItemExists.currency = currency && currency.id;
+            cartItemExists.currency = typeof currency === 'number' ? currency : currency?.id
         } else
-            this.cartData.push({ product: product.id, pack: pack.id, quantity: quantity, price: price, currency: currency && currency.id });
+            this.cartData.push({ product: product.id, pack: pack.id, quantity: quantity, price: price, currency: typeof currency === 'number' ? currency : currency?.id });
         localStorage.setItem(LOCALCARTNAME, JSON.stringify(this.cartData));
     }
 
