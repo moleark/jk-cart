@@ -2,6 +2,7 @@ import * as React from 'react';
 import { tv, View } from 'tonva';
 import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
+import className from 'classnames';
 
 export class VDelivery extends View<CProduct> {
 	/*
@@ -9,7 +10,8 @@ export class VDelivery extends View<CProduct> {
     @observable private futureDeliveryTimeDescription: string;
 	*/
     render(param: any): JSX.Element {
-        let { id: packId,obj } = param;
+        let { pack } = param;
+        let { id: packId, obj } = pack;
         //let { obj: packObj } = param;
 		return React.createElement(observer(() => {
 			//let { packId, productId } = param;
@@ -28,7 +30,7 @@ export class VDelivery extends View<CProduct> {
 				let { warehouse, quantity, deliveryTimeDescription } = v;
 				if (quantity > 0) {
                     restrict += 1;
-					return <div key={index} className="text-success">
+					return <div key={index} className={className(param?.defColor ? param?.defColor : "text-success" )}>
 						{tv(warehouse, (values: any) => <span>{values?.name ? String(values.name).replace('库房','') : null}</span>)}: {(quantity > 10 ? '>10' : quantity)}{/* small */}
 						{deliveryTimeDescription}
 					</div>

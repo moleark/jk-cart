@@ -207,8 +207,9 @@ export class CProduct extends CUqBase {
     }
     */
 
-    renderDeliveryTime = (pack: BoxId) => {
-        return this.renderView(VDelivery, pack);
+    renderDeliveryTime = (pack: BoxId, defColor?: string) => {
+        let param = { pack: pack, defColor: defColor };
+        return this.renderView(VDelivery, param);
     }
 
     /*

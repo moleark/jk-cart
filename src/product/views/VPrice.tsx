@@ -68,7 +68,11 @@ export class VPrice extends View<CProduct> {
             let price: number = this.minPrice(vipPrice, promotionPrice);
             let retailUI: any;
             if (price) {
-                retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
+                if (this.isShowTable) {
+                    retailUI = <del className="text-danger"><span className="text-muted">¥{retail}</span></del>;
+                } else {
+                    retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
+                }
             }
             else {
                 price = retail;
@@ -85,19 +89,10 @@ export class VPrice extends View<CProduct> {
 
             if (this.isShowTable) 
                 right = <>
-                {/* <td className="align-middle">
-                    <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
-                    <span className="text-danger">¥ <span className="h5">{price}</span></span>
-                </td>
-                <td className="align-middle">
-                    <div className="d-flex justify-content-center mt-2">
-                        <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
-                    </div>
-                </td> */}
                 <td data-title="价格" className=" red">
                     <div className="item-product-price">
                         <small className="text-muted">{retailUI}</small>&nbsp;{retailUI ? '/' : ''} &nbsp;
-                        <span className="text-danger">¥ <span className="h5">{price}</span></span>
+                        <span className="text-danger">¥ <span>{price}</span></span>
                     </div>
                 </td>
                 <td data-title="数量">
@@ -193,46 +188,13 @@ export class VPriceWithTr extends VPrice {
             let { pack } = v;
             
             return <tr className="article-product-list">
-                    <td data-title="包装" className="mint">
+                    <td data-title="包装">
                         {tv(pack)}
-                        {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
                     </td>
-                <td data-title="库存"> <span className="mint">{this.controller.renderDeliveryTime(pack)}</span></td>
+                <td data-title="库存"> <span>{this.controller.renderDeliveryTime(pack,"dark-333")}</span></td>
                 {this.renderPrice(product, v)}
-                {/* <td data-title="价格" className=" red">
-                    <div className="item-product-price">
-                        {this.renderPrice(product, v)}
-                        <p className="inline subdescription">¥406<span  className="old-price"></span></p>   /
-                        <p className="inline price-num">¥300</p>
-                        <div></div>
-                    </div>
-                    
-                </td>
-                <td data-title="数量">
-                    <div className="quantity">
-                        <button className="minus-btn" type="button" name="button"><img src="img/minus.png" alt="" /></button>
-                        <input type="text" name="name" value="1" /><button className="plus-btn" type="button" name="button"><img src="img/plus.png" alt="" />
-                        </button>
-                    </div>
-                </td> */}
-                {/* <td data-title="加入购物车">
-                    <img src="/images/icon/cart.svg" width="25px" className="m-0" />
-                </td> */}
             </tr>
             })}</>;
-
-            // return  <>{prices?.map((v: any, index: number) => {
-            //     let { pack, retail } = v;
-            //     return <tr className="px-2 text-center" key={pack.id}>
-            //         <td className="align-middle"><b>{tv(pack)}</b>
-            //         <div>{this.controller.renderDeliveryTime(pack)}</div></td>
-            //         {this.renderPrice(product, v)}
-            //         {/* {retail
-            //             ? <td className="align-middle"><span className="d-flex justify-content-center">{this.renderVm(VFavorite, { product, curPack: v })}</span></td>
-            //             : <td></td>
-            //         } */}
-            //     </tr>;
-            // })}</>;
         }))
     }
 }
