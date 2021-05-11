@@ -83,7 +83,7 @@ export class VQuickOrder extends VPage<CQuickOrder> {
         }));
     };
 
-    renProduct = (product: Product) => {
+    private renProduct = (product: Product) => {
         if (!product) return <></>;
         let { props, brand } = product;
         let { description, descriptionC, origin } = props;

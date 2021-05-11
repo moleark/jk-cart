@@ -1,5 +1,7 @@
 //=== UqApp builder created on Tue Jan 12 2021 23:14:51 GMT-0500 (GMT-05:00) ===//
+import { jnkTop } from "me/loginTop";
 import { AppConfig, DevConfig } from "tonva-react";
+import { tvs } from "tvs";
 
 const bz: DevConfig = {
 	name: 'bizdev',
@@ -26,6 +28,7 @@ export const appConfig: AppConfig = {
 		},
 	],
 	noUnit: true,
-    tvs: {},
+    tvs,
 	oem: undefined,
+	loginTop: jnkTop
 };

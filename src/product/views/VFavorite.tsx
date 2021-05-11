@@ -51,9 +51,9 @@ export class VFavorite extends View<CProduct> {
                 if (callback) callback();
 			}
             let imgSrc = favorite === true ? "/images/icon/favorite-icon-choose.svg" : "/images/icon/favorite-icon.svg";
-			return <div className="d-flex justify-content-end">
+			return <div className="d-flex justify-content-end mb-3 mr-3">
                 <small onClick={onClick} style={{ zIndex: 9 }}>
-                    <img src={imgSrc} width="25px" className="favorite" alt="" />
+                    <img src={imgSrc} className="favorite w-1c mr-2" alt="" /> 收藏本品
 					{/* <FA className="mr-3 text-danger" name={icon} size="lg" /> */}
 				</small>
 			</div>;

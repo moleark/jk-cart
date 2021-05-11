@@ -128,7 +128,7 @@ export class VContact extends VPage<CSelectContact> {
                 <div className="postion-img" style={{ left: "-33%", top: 200 }}>
                     <img src='/images/triangle.svg' />
                 </div>
-                <Form ref={v => this.form = v} className={classNames("my-3", !xsOrIpad ? 'w-50 mx-auto' : '')}
+                <Form ref={v => this.form = v} className={classNames("my-3", !xsOrIpad ? 'w-lg-50 mx-auto' : '')}
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={contactData}

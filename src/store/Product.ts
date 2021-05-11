@@ -80,7 +80,6 @@ export class Product {
             data: observable,
             discount: observable
         });
-
         this.uqs = store.uqs;
         this.store = store;
         this.id = typeof id === 'object' ? id.id : id;

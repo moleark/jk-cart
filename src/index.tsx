@@ -26,7 +26,7 @@ import { GLOABLE } from 'global';
 	}
 	else {
 		//require('style-loader!./css/style.css');
-		loadQQScript();
+		//loadQQScript();
 		onLogined = async () => {
 			await startPage(CWeb, appConfig);
 		};

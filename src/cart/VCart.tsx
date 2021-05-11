@@ -201,21 +201,17 @@ export class VCart extends VPage<CCart> {
 
     // header() {return <div className="navheader">购物车</div>}
     header() {
-        if (!xs) return '';
+        if (!xs) return null;
         return <div className="navheader">购物车</div>;
     }
     footer() {
         return  React.createElement(observer(() => {
             let { cApp } = this.controller;
 			let { cart } = cApp.store;
-            let footer: any;
             if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
-                footer = undefined;
+                return null;
             }
-            else {
-                footer = React.createElement(this.CheckOutButton);
-            }
-            return footer;
+            return React.createElement(this.CheckOutButton);
         }));
     }
 

@@ -34,8 +34,8 @@ export class CProduct extends CUqBase {
     //@observable product: any;
     //@observable discount: any;
 
-    private salesRegion: any;
-    private language: any;
+    //private salesRegion: any;
+    //private language: any;
 
     product: Product;
 

@@ -323,7 +323,7 @@ export class VPageProduct extends VPage<CProduct> {
                         {renderPropItem('MDL', (mdlnumber|| chemical.mdlnumber) ? <Ax href={`/search/${ mdlnumber|| chemical.mdlnumber }` } className="text-primary">{mdlnumber|| chemical.mdlnumber}</Ax> : null)}
                     </div>
                     <div className="text-danger px-3 mx-3">{ warningSigns }</div>
-                </div>
+                </div>				
                 {this.renderVm(VFavorite, { product })}
                 {this.renderVm(VPrice, product)}
             </div>

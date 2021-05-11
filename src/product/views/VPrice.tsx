@@ -326,7 +326,8 @@ export class VPriceQuickOrder extends VPrice {
                 <div className="col-6 col-sm-5 d-flex flex-column justify-content-center">
                     <div>
                         <select defaultValue={this.selectPack?.pack?.id || ''} onChange={(e: any) => {
-                            this.selectPack = QPacks.find((i: any) => i.pack.id === e.target.value);
+							// id 是数字，e.target.value 是字符串，必须转换成数字之后，再比较
+                            this.selectPack = QPacks.find((i: any) => i.pack.id === Number(e.target.value));
                             cQuickOrder.selectedPack(param, this.selectPack);
                         }} name="" id="" className="form-control" >
                             <option hidden value="">选择包装</option>
