@@ -162,10 +162,12 @@ export class VPageProduct extends VPage<CProduct> {
         let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element;
         if (extention) {
             let { content } = extention;
-            content = content ? JSON.parse(content) : undefined;
+            content = content ? JSON.parse(content.replace(/(\t|\n|\r)*/g, "")) : {};
             let allContent = Object.keys(content);
             let arr1: any[] = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
             let arr2: any[] = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
+            let arr2Restrict: boolean = true;
+            arr2.forEach((el: any) => { if (el.insideKey === 'TSCA' && content[el.insideKey] == 0) arr2Restrict = false;});
             let tableInfo = (data: any[]) => {
                 if (data.length === 0 && !content) return;
                 return <table className="product-table w-100">
@@ -216,7 +218,7 @@ export class VPageProduct extends VPage<CProduct> {
                     </div>
                 </>;
             };
-            if (arr2.length) {
+            if (arr2.length && arr2Restrict) {
                 securityInfoUI = <>
                     <div className="accordion background-grey mt-lg-1">
                         <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#description4"
