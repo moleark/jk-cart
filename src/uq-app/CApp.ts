@@ -119,10 +119,8 @@ export class CApp extends CUqApp {
     cAddress: CAddress;
     cInvoiceInfo: CInvoiceInfo;
 
-
     protected async beforeStart(): Promise<boolean> {
         if (await super.beforeStart() === false) return false;
-
         this.store = new Store(this.uqs);
         this.currentSalesRegion = GLOABLE.SALESREGION_CN;
         this.currentLanguage = GLOABLE.CHINESE;
@@ -130,20 +128,12 @@ export class CApp extends CUqApp {
         this.store.currentLanguage = this.currentLanguage;
 
         this.cache = new Map();
-        /*
-        this.setUser();
-        this.cart = new Cart(this);
-        await this.cart.init();
-        await this.cart.buildItems();
-        */
-
         this.cHome = this.newC(CHome);
         this.cProductCategory = this.newC<CProductCategory>(CProductCategory);
         this.cProduct = this.newC(CProduct);
         this.cOrder = this.newC(COrder);
         this.cQuickOrder = this.newC(CQuickOrder);
         this.cCart = this.newC(CCart);
-        await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -156,12 +146,15 @@ export class CApp extends CUqApp {
         this.cSelectInvoiceContact = this.newC(CSelectInvoiceContact);
         this.cAddress = this.newC(CAddress);
         this.cInvoiceInfo = this.newC(CInvoiceInfo);
+		await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         await this.cSelectShippingContact.getContactList();
         await this.cHome.getSlideShow();
+
         return true;
     }
 
-    protected async internalStart(params: any) {
+	protected async internalStart(params: any) {
+		nav.onNavRoute(this.navHome);
 		/*
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
@@ -224,6 +217,7 @@ export class CApp extends CUqApp {
             //this.openVPage(Entrance);
         }
 		*/
+
     }
 
     protected async afterStart(): Promise<void> {
@@ -244,32 +238,6 @@ export class CApp extends CUqApp {
         this.currentUser.setUser(this.user);
     }
     */
-
-    /**
-     * 
-     * @returns 
-     */
-    getPageWebNav(): PageWebNav {
-        let webNav = this.getWebNav();
-        if (webNav === undefined) return;
-        let { VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader } = webNav;
-        let navHeader: JSX.Element;
-        if (VNavHeader) navHeader = this.renderView(VNavHeader);
-        let navRawHeader: JSX.Element;
-        if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
-        let navFooter: JSX.Element;
-        if (VNavFooter) navFooter = this.renderView(VNavFooter);
-        let navRawFooter: JSX.Element;
-        if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
-        let ret: PageWebNav = {
-            navHeader,
-            navRawHeader,
-            navFooter,
-            navRawFooter,
-            renderPageHeader,
-        };
-        return ret;
-    }
 
     protected showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
@@ -323,6 +291,61 @@ export class CApp extends CUqApp {
             });
         }
     */
+    async assureLogin(): Promise<void> {
+        if (this.isLogined) return;
+        return new Promise<void>((resolve, reject) => {
+            let loginCallback = async (user: User) => {
+                if (this.isWebNav) {
+                    window.history.back();
+                }
+                else {
+                    this.closePage(1);
+                }
+                resolve();
+            };
+            nav.showLogin(loginCallback, true);
+        });
+    }
+
+    protected async onChangeLogin(user: User) {
+        if (user) {
+            await this.initLogined(user);
+        }
+        else {
+            this.initNotLogined();
+        }
+        await this.initUQs();
+        this.store.initCart();
+    }
+
+    private async initLogined(user: User) {
+        this.currentUser = new WebUser(this.uqs);
+        await this.currentUser.setUser(this.user);
+        this.store.currentUser = this.currentUser;
+        /*
+        // 如果currentUser，也必须重置
+        //if (this.currentUser === undefined)
+        this.currentUser = new WebUser(this.uqs);
+        await this.currentUser.setUser(user);
+        await this.cart.mergeFromRemote();
+        */
+    }
+
+    private initNotLogined() {
+        // 退出的话把购物车清掉？
+        this.currentUser = undefined;
+        /*
+        localStorage.removeItem(LOCALCARTNAME);
+        this.cart.count.set(0);
+        this.cart.cartItems = [];
+        */
+    }
+
+    protected onDispose() {
+        this.store.dispose();
+    }
+
+	getPageWebNav(): PageWebNav {return undefined;}	
 
     private navHome: NavPage = async (params: any) => {
         await this.cHome.getSlideShow();
@@ -422,6 +445,10 @@ export class CApp extends CUqApp {
         this.cQuickOrder.openQuickOrder();
     }
 
+	protected setHomeRoute() {
+        nav.onNavRoute(this.navHome);
+    }
+
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
             '/app': this.navHome,
@@ -451,63 +478,5 @@ export class CApp extends CUqApp {
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();
-    }
-
-    setHomeRoute() {
-        nav.onNavRoute(this.navHome);
-    }
-
-    async assureLogin(): Promise<void> {
-        if (this.isLogined) return;
-        return new Promise<void>((resolve, reject) => {
-            let loginCallback = async (user: User) => {
-                if (this.isWebNav) {
-                    window.history.back();
-                }
-                else {
-                    this.closePage(1);
-                }
-                resolve();
-            };
-            nav.showLogin(loginCallback, true);
-        });
-    }
-
-    protected async onChangeLogin(user: User) {
-        if (user) {
-            await this.initLogined(user);
-        }
-        else {
-            this.initNotLogined();
-        }
-        await this.initUQs();
-        this.store.initCart();
-    }
-
-    private async initLogined(user: User) {
-        this.currentUser = new WebUser(this.uqs);
-        await this.currentUser.setUser(this.user);
-        this.store.currentUser = this.currentUser;
-        /*
-        // 如果currentUser，也必须重置
-        //if (this.currentUser === undefined)
-        this.currentUser = new WebUser(this.uqs);
-        await this.currentUser.setUser(user);
-        await this.cart.mergeFromRemote();
-        */
-    }
-
-    private initNotLogined() {
-        // 退出的话把购物车清掉？
-        this.currentUser = undefined;
-        /*
-        localStorage.removeItem(LOCALCARTNAME);
-        this.cart.count.set(0);
-        this.cart.cartItems = [];
-        */
-    }
-
-    protected onDispose() {
-        this.store.dispose();
     }
 }

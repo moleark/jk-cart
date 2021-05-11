@@ -51,6 +51,7 @@ export class CHome extends CUqBase {
     }
 
     renderSearchHeader = (size?: string) => {
+		if (this.isWebNav) return null;
         return this.renderView(VSearchHeader, size);
     }
 
@@ -77,5 +78,5 @@ export class CHome extends CUqBase {
     }
 
     tab = () => this.renderView(VHome);
-    // tab: VHome = new VHome(this);
+    tabContent() {return new VHome(this).content();}
 }

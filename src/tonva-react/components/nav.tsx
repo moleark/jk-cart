@@ -585,10 +585,14 @@ export class Nav {
 	reloadUser = () => {
 		let user: User = this.local.user.get();
 		let curUser = nav.user;
-		if (user === undefined && curUser === undefined) return;
-		if (user && curUser && user.id === curUser.id) return;
-		if (!user) nav.logout();
-		else nav.logined(user)
+		if (!user && !curUser) return;
+		if (user?.id === curUser?.id) return;
+		if (!user) {
+			nav.logout();
+		}
+		else {
+			nav.logined(user);
+		}
 	}
 
     async start() {

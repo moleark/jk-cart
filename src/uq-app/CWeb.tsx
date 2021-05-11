@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import { Elements, env, nav, User, WebNav } from 'tonva-react';
+import { Elements, env, nav, PageWebNav, User, WebNav } from 'tonva-react';
 import { CApp } from "./CApp";
 import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
@@ -30,9 +30,11 @@ export class CWeb extends CApp {
         await super.afterStart();
 
         this.hookElements();
+		/*
         window.onfocus = () => {
             nav.reloadUser();
         }
+		*/
     }
 
     private hookElements() {
@@ -63,8 +65,34 @@ export class CWeb extends CApp {
         this.openVPage(VMainWebNav);
     }
 
-    setHomeRoute() {
-        nav.onNavRoute(async (params: any) => {
+    /**
+     * 
+     * @returns 
+     */
+	 getPageWebNav(): PageWebNav {
+        let webNav = this.getWebNav();
+        if (webNav === undefined) return;
+        let { VNavHeader, VNavRawHeader, VNavFooter, VNavRawFooter, renderPageHeader } = webNav;
+        let navHeader: JSX.Element;
+        if (VNavHeader) navHeader = this.renderView(VNavHeader);
+        let navRawHeader: JSX.Element;
+        if (VNavRawHeader) navRawHeader = this.renderView(VNavRawHeader);
+        let navFooter: JSX.Element;
+        if (VNavFooter) navFooter = this.renderView(VNavFooter);
+        let navRawFooter: JSX.Element;
+        if (VNavRawFooter) navRawFooter = this.renderView(VNavRawFooter);
+        let ret: PageWebNav = {
+            navHeader,
+            navRawHeader,
+            navFooter,
+            navRawFooter,
+            renderPageHeader,
+        };
+        return ret;
+    }
+
+    protected setHomeRoute() {
+    	nav.onNavRoute(async (params: any) => {
             // window.location.href = process.env.REACT_APP_HOME_PATH;
         });
     }

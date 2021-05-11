@@ -133,11 +133,15 @@ export class UQsMan {
     }
 
     async init(uqsData:UqData[]):Promise<void> {
-        let promiseInits: PromiseLike<void>[] = uqsData.map(uqData => {
+        let promiseInits: PromiseLike<void>[] = [];
+		for (let uqData of uqsData) {
 			let {uqOwner, ownerAlias, uqName, uqAlias} = uqData;
 
 			// 原名加入collection
 			let uqFullName = uqOwner + '/' + uqName;
+			if (this.collection[uqFullName]) {
+				continue;
+			}
 			let uq = new UqMan(this, uqData, undefined, this.tvs[uqFullName] || this.tvs[uqName]);
 			this.uqMans.push(uq);
 			let lower = uqFullName.toLowerCase();
@@ -149,9 +153,8 @@ export class UQsMan {
 			uqFullName = uqOwner + '/' + uqName;
 			lower = uqFullName.toLowerCase();
 			this.collection[lower] = uq;
-
-			return uq.init();
-		});
+			promiseInits.push(uq.init());
+		}
         await Promise.all(promiseInits);
     }
 

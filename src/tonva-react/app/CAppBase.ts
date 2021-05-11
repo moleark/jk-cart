@@ -83,11 +83,11 @@ export abstract class CAppBase<U> extends Controller {
 	}
 	protected afterBuiltUQs(uqs: any) {}
 
-	private uqsUser: any = null;
+	private uqsUser: any = '';
 	protected async initUQs():Promise<any> {
-		if (!this.appConfig) return true;
+		if (!this.appConfig) return;
 		let {user} = nav;
-		if (user === this.uqsUser) return true;
+		if (user === this.uqsUser) return;
 		this.uqsUser = user;
 		logoutApis();
 		//let {appName, version, tvs} = this.appConfig;

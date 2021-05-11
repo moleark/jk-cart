@@ -28,5 +28,4 @@ export const appConfig: AppConfig = {
 	noUnit: true,
     tvs: {},
 	oem: undefined,
-	htmlTitle: 'hello-tonva',
 };

@@ -20,8 +20,7 @@ const ProductCategorys: { [name: string]: PCategoryId } = {
 export class VMainWebNav extends VPage<CApp> {
     content() {
         let { cHome } = this.controller;
-        //return cHome.tab.content();
-		return cHome.tab();
+        return cHome.tabContent();
     }
 }
 
