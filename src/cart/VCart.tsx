@@ -262,9 +262,9 @@ export class VCart extends VPage<CCart> {
         let { cQuickOrder } = this.controller.cApp;
         return <div className="row mx-0 px-2 my-2">
                 <div className="border rounded col-12 col-lg-6 p-2" style={{ background: "#f5f5f5" }}>
-                <div className="font-weight-bolder">快速订购</div>
+                <div className="font-weight-bolder">批量订购</div>
                 <div className="small">按产品编号订购或上传您自己的产品列表，以快速将多个产品添加到购物车。</div>
-                <Ax className="text-primary small ml-1" onClick={() => { cQuickOrder.openQuickOrder() }} href="/quickOrder">快速订购 &gt;&gt; </Ax>
+                <Ax className="text-primary small ml-1" onClick={() => { cQuickOrder.openQuickOrder() }} href="/quickOrder">批量订购 &gt;&gt; </Ax>
             </div>
         </div>
     };
