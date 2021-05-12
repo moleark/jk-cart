@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Image } from 'tonva';
 
 const imagePath = "https://static.jkchemical.com/Structure/";
-const pointProductImagePath = "https://www.jkchemical.com/static/images/pointshop";
+const pointProductImagePath = "https://static.jkchemical.com/images/pointshop";
 const altimagePath = "https://static.jkchemical.com/Structure/999.png";
 
 interface ProductImageProps {
