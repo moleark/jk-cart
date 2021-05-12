@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.c30f0c35.chunk.css",
-    "main.js": "/static/js/main.3c1569c1.chunk.js",
-    "main.js.map": "/static/js/main.3c1569c1.chunk.js.map",
+    "main.css": "/static/css/main.8f8725c5.chunk.css",
+    "main.js": "/static/js/main.6b455f8d.chunk.js",
+    "main.js.map": "/static/js/main.6b455f8d.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e6ba6c1c.js",
     "runtime-main.js.map": "/static/js/runtime-main.e6ba6c1c.js.map",
     "static/css/2.78dd6d45.chunk.css": "/static/css/2.78dd6d45.chunk.css",
-    "static/js/2.a3c59159.chunk.js": "/static/js/2.a3c59159.chunk.js",
-    "static/js/2.a3c59159.chunk.js.map": "/static/js/2.a3c59159.chunk.js.map",
+    "static/js/2.3246e9b4.chunk.js": "/static/js/2.3246e9b4.chunk.js",
+    "static/js/2.3246e9b4.chunk.js.map": "/static/js/2.3246e9b4.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.85ea43f07b83374c64f6c1da1dc83a97.js": "/precache-manifest.85ea43f07b83374c64f6c1da1dc83a97.js",
+    "precache-manifest.e8a644738b7c513975539e2c8cf281f7.js": "/precache-manifest.e8a644738b7c513975539e2c8cf281f7.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.78dd6d45.chunk.css.map": "/static/css/2.78dd6d45.chunk.css.map",
-    "static/css/main.c30f0c35.chunk.css.map": "/static/css/main.c30f0c35.chunk.css.map",
-    "static/js/2.a3c59159.chunk.js.LICENSE.txt": "/static/js/2.a3c59159.chunk.js.LICENSE.txt",
+    "static/css/main.8f8725c5.chunk.css.map": "/static/css/main.8f8725c5.chunk.css.map",
+    "static/js/2.3246e9b4.chunk.js.LICENSE.txt": "/static/js/2.3246e9b4.chunk.js.LICENSE.txt",
     "static/media/AnalyticalChemistry.jpg": "/static/media/AnalyticalChemistry.79b8b498.jpg",
     "static/media/AnalyticalChemistry.png": "/static/media/AnalyticalChemistry.f85ff3e0.png",
     "static/media/Homemadelogo.png": "/static/media/Homemadelogo.06f15feb.png",
@@ -25,7 +25,7 @@
     "static/media/LifeScience.jpg": "/static/media/LifeScience.d11aa936.jpg",
     "static/media/MaterialScience.jpg": "/static/media/MaterialScience.efdb4390.jpg",
     "static/media/MaterialScience.png": "/static/media/MaterialScience.f2439aa0.png",
-    "static/media/style.css": "/static/media/under-arrow.9688c417.svg",
+    "static/media/style.css": "/static/media/under-arrow.3b9f39c2.svg",
     "static/media/OrganicChemistry.jpg": "/static/media/OrganicChemistry.11e84ba2.jpg",
     "static/media/OrganicChemistry.png": "/static/media/OrganicChemistry.6d56971c.png",
     "static/media/TriangleShadingO.png": "/static/media/TriangleShadingO.abe107d7.png",
@@ -46,8 +46,8 @@
   "entrypoints": [
     "static/js/runtime-main.e6ba6c1c.js",
     "static/css/2.78dd6d45.chunk.css",
-    "static/js/2.a3c59159.chunk.js",
-    "static/css/main.c30f0c35.chunk.css",
-    "static/js/main.3c1569c1.chunk.js"
+    "static/js/2.3246e9b4.chunk.js",
+    "static/css/main.8f8725c5.chunk.css",
+    "static/js/main.6b455f8d.chunk.js"
   ]
 }
