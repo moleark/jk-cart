@@ -43,6 +43,7 @@ export interface UqProduct {
     GetLotByLotnumber: Query;
     GetAvailableProductById: Query;
     GetProductPackByOrigin: Query;
+    GetProductPrices: Query;
 }
 
 export interface UqCommon {

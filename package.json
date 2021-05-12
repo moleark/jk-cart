@@ -23,7 +23,7 @@
     "gh-pages": "^2.1.1",
     "jquery": "^3.5.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "marked": "^0.7.0",
     "mobx": "^5.14.0",
     "mobx-react": "^6.1.3",
@@ -43,7 +43,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r git@47.92.87.6:/srv/git/jk-cart-nav.git",
+    "deploy": "gh-pages -d build",
     "start": "set PORT=7798 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
