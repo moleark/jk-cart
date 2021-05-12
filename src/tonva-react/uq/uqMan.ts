@@ -666,10 +666,12 @@ export class UqMan {
             if (t === undefined) continue;
             let div = t.div(arr || tuid);
             f._tuid = div && div.buildTuidDivBox(ownerField);
+			/*
             if (f._tuid === undefined) {
                 debugger;
                 throw new Error(`owner field ${owner} is not tuid`);
             }
+			*/
         }
     }
     buildArrFieldsTuid(arrFields:ArrFields[], mainFields:Field[]) {

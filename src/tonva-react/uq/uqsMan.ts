@@ -31,6 +31,18 @@ export class UQsMan {
 		return retErrors;
 	}
 
+	static async buildUQs(uqsConfig: AppConfig) {
+		let {uqs, tvs, version} = uqsConfig;
+		let retErrors:string[];
+		if (uqs) {
+			retErrors = await UQsMan.loadUqs(uqs, version, tvs);
+		}
+		else {
+			throw new Error('either uqs or app must be defined in AppConfig');
+		}
+		return retErrors;
+	}
+
 	// 返回 errors, 每个uq一行
 	private static async load(tonvaAppName:string, version:string, tvs:TVs):Promise<string[]> {
 		let uqsMan = UQsMan.value = new UQsManApp(tonvaAppName, tvs);
