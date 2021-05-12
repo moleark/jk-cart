@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Image } from 'tonva';
 
-const imagePath = "https://static.jkchemical.com/static/Structure/";
+const imagePath = "https://static.jkchemical.com/Structure/";
 const pointProductImagePath = "https://www.jkchemical.com/static/images/pointshop";
-const altimagePath = "https://static.jkchemical.com/static/Structure/999.png";
+const altimagePath = "https://static.jkchemical.com/Structure/999.png";
 
 interface ProductImageProps {
     className?: string;
