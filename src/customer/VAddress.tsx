@@ -9,18 +9,13 @@ import { xsOrIpad } from '../tools/browser';
 import { pageHTitle } from 'tools/pageHeaderTitle';
 
 export class VAddress extends VPage<CAddress> {
-    protected provinceId: number;
-    protected cityId: number;
-    protected countyId: number;
-    protected backLevel = 0;
-
     async open(param: any) {
         let provinces = await this.controller.getCountryProvince(GLOABLE.CHINA);
         this.openPage(this.page, { provinces: provinces });
     }
 
     private page = (param: any) => {
-        this.backLevel++;
+        this.controller.backLevel++;
         let header = this.titleHeader('选择所在省市');
         return <Page header={header}>
             <>
@@ -56,7 +51,7 @@ export class VAddress extends VPage<CAddress> {
     }
 
     onProvinceClick = async (provinceId: any) => {
-        this.provinceId = provinceId;
+        this.controller.provinceId = provinceId;
         let cities = await this.controller.getProvinceCities(provinceId);
         if (cities) {
             let len = cities.length;
@@ -65,7 +60,7 @@ export class VAddress extends VPage<CAddress> {
                 return;
             }
             if (len > 1) {
-                this.backLevel++;
+                this.controller.backLevel++;
                 let header = this.titleHeader('选择所在城市');
                 this.openPageElement(<Page header={header}>
                     <>
@@ -78,16 +73,16 @@ export class VAddress extends VPage<CAddress> {
                 return;
             }
         } else {
-            this.closePage(this.backLevel);
+            this.closePage(this.controller.backLevel);
             this.saveAddress();
         }
     }
 
     onCityClick = async (cityId: any) => {
-        this.cityId = cityId;
+        this.controller.cityId = cityId;
         let counties = await this.controller.getCityCounties(cityId);
         if (counties && counties.length > 0) {
-            this.backLevel++;
+            this.controller.backLevel++;
             let header = this.titleHeader('选择所在区县');
             this.openPageElement(<Page header={header}>
                 <>
@@ -98,27 +93,28 @@ export class VAddress extends VPage<CAddress> {
                 </>
             </Page>);
         } else {
-            this.closePage(this.backLevel);
+            this.closePage(this.controller.backLevel);
             this.saveAddress();
         }
     }
 
     onCountyClick = async (countyId: any) => {
-        this.countyId = countyId;
-        this.closePage(this.backLevel);
+        this.controller.countyId = countyId;
+        this.closePage(this.controller.backLevel);
         this.saveAddress();
     }
-
+	/*
     saveAddress = async () => {
         await this.controller.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
         // await this.controller.cApp.cAddress.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
     }
+	*/
 }
 
 
 export class VAddressRW extends VAddress {
     onProvinceClick = async (provinceId: any) => {
-        this.provinceId = provinceId;
+        this.controller.provinceId = provinceId;
         let cities = await this.controller.cApp.cAddress.getProvinceCities(provinceId);
         if (cities) {
             let { cOrder } = this.controller.cApp;
@@ -129,7 +125,7 @@ export class VAddressRW extends VAddress {
                 return;
             }
             if (len > 1) {
-                this.backLevel++;
+                this.controller.backLevel++;
                 cOrder.cities = cities;
                 cOrder.modalTitle = 'cityChoice';
                 cOrder.modalTitleS['countyChoice'].preLevel = 'cityChoice';
@@ -141,10 +137,10 @@ export class VAddressRW extends VAddress {
     }
 
     onCityClick = async (cityId: any) => {
-        this.cityId = cityId;
+        this.controller.cityId = cityId;
         let counties = await this.controller.cApp.cAddress.getCityCounties(cityId);
         if (counties && counties.length > 0) {
-            this.backLevel++;
+            this.controller.backLevel++;
             this.controller.cApp.cOrder.counties = counties;
             this.controller.cApp.cOrder.modalTitle = 'countyChoice';
         } else {
@@ -153,13 +149,15 @@ export class VAddressRW extends VAddress {
     }
 
     onCountyClick = async (countyId: any) => {
-        this.countyId = countyId;
+        this.controller.countyId = countyId;
         this.saveAddress();
     }
 
+	/*
     saveAddress = async () => {
         await this.controller.cApp.cOrder.saveAddress(GLOABLE.CHINA, this.provinceId, this.cityId, this.countyId);
     }
+	*/
 }
 
 export class VProvince extends VAddressRW{

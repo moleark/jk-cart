@@ -2,6 +2,11 @@ import { VAddress } from './VAddress';
 import { CUqBase } from 'uq-app';
 
 export class CAddress extends CUqBase {
+    provinceId: number;
+    cityId: number;
+    countyId: number;
+    backLevel = 0;
+
     protected async internalStart() {
         this.openVPage(VAddress);
     }
