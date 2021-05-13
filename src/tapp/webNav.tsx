@@ -53,8 +53,8 @@ export class NavHeaderView extends View<CApp> {
         }));
 
         let vCartLabel = React.createElement(observer(() => {
-            let { store } = this.controller;
-            let count = store.cartCount;
+            let store = this?.controller?.store;
+            let count = store?.cartCount;
             let vCount: any;
             if (count) vCount = <u className="position-absolute d-flex align-items-center justify-content-center text-white text-right text-decoration-none ml-2"
                 style={{ top: "0.2rem", fontSize: "0.6rem", backgroundColor: "red", minWidth: "1rem", padding: "0 3px", height: "1.0rem", borderRadius: '0.6rem' }}>{count}</u>;
