@@ -91,7 +91,7 @@ export class VPageList extends VPage<CProduct> {
                 </div>
                 <div className="col-lg-9 product-introduct">
                     <List before={''} none={none} items={esproductsPager} className="bg-white"
-                        item={{ render: this.renderProduct, onClick: this.onProductClick, className: "py-3 border-bottom" }} />
+                        item={{ render: this.renderProduct,/*  onClick: this.onProductClick, */ className: "py-3 border-bottom" }} />
                     <div className="text-center mt-lg-65">
                         <Pagination onChange={(v) => {
                             document.body.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
