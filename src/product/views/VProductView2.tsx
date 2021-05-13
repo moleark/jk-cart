@@ -7,16 +7,23 @@ import { renderBrand, renderPropItem } from '../renders';
 import { VFavorite } from './VFavorite';
 import { VPriceWithTr } from './VPrice';
 import classNames from 'classnames';
+import { Product } from 'store';
 
 export class VProuductView2 extends View<CProduct> {
 	// @observable product: any;
 	// @observable discount: number;
+	private onProductClick = async (product: Product) => {
+        let { id } = product;
+        let url = "/product/" + id;
+        this.navigate(url);
+    }
+
 	render(param: any): JSX.Element {
 		return React.createElement(observer(() => {
 			let { product, dataSource, callback } = param;
 			let productListSource = dataSource ? true : false;
-			let { brand, chemical, props } = product;
-			let { description, descriptionC, origin, imageUrl, id } = props;
+			let { brand, chemical, props, id } = product;
+			let { description, descriptionC, origin, imageUrl } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
 			let eName = <div className="pr-5"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
@@ -24,45 +31,43 @@ export class VProuductView2 extends View<CProduct> {
 				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
 			return <div className="row mx-0 my-lg-2">
-				<div className="col-lg-2">
+				<div className="col-lg-2" onClick={()=>{this.onProductClick(product)}}>
 					<div className="img-wrap">
 						<ProductImage chemicalId={imageUrl} className="mx-auto" style={{ maxHeight: 192 }} />
 					</div>
 				</div>
 				<div className="col-lg-10 each-product">
-					<div onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}>
-						<div>{this.renderVm(VFavorite, { product, callback: callback })}</div>
+					<div onClick={()=>{this.onProductClick(product)}}>
+						{this.renderVm(VFavorite, { product, callback: callback })}
+						<h3 className="ml-lg-3">
+							{eName}
+							{cName}
+						</h3>
+						{
+							!productListSource
+								? <div className="row p-0 mx-0">
+									{renderPropItem('产品编号', origin)}
+									{renderPropItem('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}}  href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
+									{renderPropItem('纯度', purity || props.purity)}
+									{renderPropItem('分子式', molecularFomula || props.molecularFomula)}
+									{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
+									{renderBrand(brand)}
+								</div>
+								: <p className="ml-lg-3">
+									{renderPropItemC('产品编号', origin, null, false)}
+									{renderPropItemC('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}} href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
+									{brand && renderPropItemC('品牌', brand.name)}
+								</p>
+						}
 					</div>
-					<h3 className="ml-lg-3">
-						{eName}
-						{cName}
-					</h3>
-					{
-						!productListSource
-							? <div className="row p-0 mx-0">
-								{renderPropItem('产品编号', origin)}
-								{renderPropItem('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}}  href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
-								{renderPropItem('纯度', purity || props.purity)}
-								{renderPropItem('分子式', molecularFomula || props.molecularFomula)}
-								{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
-								{renderBrand(brand)}
-							</div>
-							: <p className="ml-lg-3">
-								{renderPropItemC('产品编号', origin, null, false)}
-								{renderPropItemC('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}} href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
-								{brand && renderPropItemC('品牌', brand.name)}
-							</p>
-					}
-					{!this.controller.showFavorites &&
-						<div className="text-right">
-							<a className="button collapsed" data-toggle="collapse" href={`#description${id}`}
-								role="button" aria-expanded="false" aria-controls="jk" 
-								target="_blank" rel="noreferrer" 
-								style={{position:"absolute",marginBottom:"-10px"}}	
-								onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
-							>{''}</a>
-						</div>
-					}
+					<div className="text-right">
+						<a className="button collapsed" data-toggle="collapse" href={`#description${id}`}
+							role="button" aria-expanded="false" aria-controls="jk" 
+							/* target="_blank" */ rel="noreferrer" 
+							style={{position:"absolute",marginBottom:"-10px"}}	
+						// onClick={(event: React.MouseEvent) => { event.stopPropagation(); return false; }}
+						>{''}</a>
+					</div>
 				</div>
 
 				<div className="col-lg-12 mt-lg-2 collapse" id={`description${id}`}
