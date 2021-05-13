@@ -3,19 +3,17 @@ import { VPage, Page, BoxId } from 'tonva-react';
 import { tv } from 'tonva-react';
 import { FA } from 'tonva-react';
 import { CAddress } from './CAddress';
-import { GLOABLE } from 'global';
 import { observer } from 'mobx-react';
 import { xsOrIpad } from '../tools/browser';
 import { pageHTitle } from 'tools/pageHeaderTitle';
 
 export class VAddress extends VPage<CAddress> {
     async open(param: any) {
-        let provinces = await this.controller.getCountryProvince(GLOABLE.CHINA);
-        this.openPage(this.page, { provinces: provinces });
+        this.controller.backLevel++;
+        this.openPage(this.page, { provinces: param });
     }
 
     private page = (param: any) => {
-        this.controller.backLevel++;
         let header = this.titleHeader('选择所在省市');
         return <Page header={header}>
             <>
@@ -74,7 +72,7 @@ export class VAddress extends VPage<CAddress> {
             }
         } else {
             this.closePage(this.controller.backLevel);
-            this.saveAddress();
+            this.controller.saveAddress();
         }
     }
 
@@ -94,14 +92,14 @@ export class VAddress extends VPage<CAddress> {
             </Page>);
         } else {
             this.closePage(this.controller.backLevel);
-            this.saveAddress();
+            this.controller.saveAddress();
         }
     }
 
     onCountyClick = async (countyId: any) => {
         this.controller.countyId = countyId;
         this.closePage(this.controller.backLevel);
-        this.saveAddress();
+        this.controller.saveAddress();
     }
 	/*
     saveAddress = async () => {
@@ -132,7 +130,7 @@ export class VAddressRW extends VAddress {
                 return;
             }
         } else {
-            this.saveAddress();
+            await this.controller.saveAddress();
         }
     }
 
@@ -144,13 +142,13 @@ export class VAddressRW extends VAddress {
             this.controller.cApp.cOrder.counties = counties;
             this.controller.cApp.cOrder.modalTitle = 'countyChoice';
         } else {
-            this.saveAddress();
+            await this.controller.saveAddress();
         }
     }
 
     onCountyClick = async (countyId: any) => {
         this.controller.countyId = countyId;
-        this.saveAddress();
+		await this.controller.saveAddress();
     }
 
 	/*

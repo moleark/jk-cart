@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { IObservableArray, computed, makeObservable } from 'mobx';
 import { PageItems } from '../../tool/pageItems';
 import {List} from './index';
