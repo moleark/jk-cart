@@ -228,7 +228,7 @@
     body iframe:last-child {
         display: none !important;
     }
-    .test-iframe-d-n {
+    .test-iframe-d-n,.class_qidian_wpa {
         height: 0 !important;
         display: none !important;
     }
