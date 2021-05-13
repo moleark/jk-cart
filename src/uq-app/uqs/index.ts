@@ -1,19 +1,19 @@
-//=== UqApp builder created on Tue May 11 2021 19:43:01 GMT-0400 (GMT-04:00) ===//
-import * as BizDevHelloTonva from './BizDevHelloTonva';
-import * as 百灵威系统工程部Order from './百灵威系统工程部Order';
-import {UQs as appUQs} from '../appUQs';
+///+++import AppUQs+++///
+import {UQs as AppUQs} from '../appUQs';
+///###import AppUQs###///
+//=== UqApp builder created on Thu May 13 2021 13:34:38 GMT-0400 (GMT-04:00) ===//
+import * as BzHelloTonva from './BzHelloTonva';
+import * as JkOrder from './JkOrder';
 
-export interface UQs extends appUQs {
-	BizDevHelloTonva: BizDevHelloTonva.UqExt;
-	百灵威系统工程部Order: 百灵威系统工程部Order.UqExt;
+export interface UQs extends AppUQs {
+	BzHelloTonva: BzHelloTonva.UqExt;
+	JkOrder: JkOrder.UqExt;
 }
 
-export * as BizDevHelloTonva from './BizDevHelloTonva';
-export * as 百灵威系统工程部Order from './百灵威系统工程部Order';
+export * as BzHelloTonva from './BzHelloTonva';
+export * as JkOrder from './JkOrder';
 
 export function setUI(uqs:UQs) {
-	BizDevHelloTonva.setUI(uqs.BizDevHelloTonva);
-	百灵威系统工程部Order.setUI(uqs.百灵威系统工程部Order);
+	BzHelloTonva.setUI(uqs.BzHelloTonva);
+	JkOrder.setUI(uqs.JkOrder);
 }
-
-export * from '../appUQs';

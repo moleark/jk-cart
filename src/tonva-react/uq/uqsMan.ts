@@ -65,14 +65,14 @@ export class UQsMan {
 		uqsMan.id = id;
 		//console.error(uqAppData);
 		//let ownerProfixMap: {[owner: string]: string};
-		return uqsMan.buildUqs(uqs, version);
+		return await uqsMan.buildUqs(uqs, version);
 	}
 
 	// 返回 errors, 每个uq一行
 	private static async loadUqs(uqConfigs: UqConfig[], version:string, tvs:TVs):Promise<string[]> {
 		let uqsMan = UQsMan.value = new UQsMan(tvs);
 		let uqs = await loadUqs(uqConfigs);
-		return uqsMan.buildUqs(uqs, version, uqConfigs);
+		return await uqsMan.buildUqs(uqs, version, uqConfigs);
 	}
 
 	private uqMans: UqMan[] = [];
@@ -101,7 +101,8 @@ export class UQsMan {
 
         let retErrors = await this.load();
 		if (retErrors.length > 0) return retErrors;
-		retErrors.push(...this.setTuidImportsLocal());
+		// buildUqs仅仅用于生成代码。这时候，不要tuidImport
+		// retErrors.push(...this.setTuidImportsLocal());
 		if (retErrors.length > 0) return retErrors;
 		if (uqConfigs) {
 			for (let uqConfig of uqConfigs) {

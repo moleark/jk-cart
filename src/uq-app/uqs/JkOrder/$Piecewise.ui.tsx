@@ -1,31 +1,49 @@
 import { Res, setRes, TFunc, UI } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { CustomerTag } from "./BizDevHelloTonva";
+import { $Piecewise } from "./JkOrder";
 
 /*--fields--*/
 const fields = {
-	ix: {
-		"name": "ix",
-		"type": "id",
-		"isKey": false,
-		"label": "Ix"
-	} as FieldItemId,
 	id: {
 		"name": "id",
 		"type": "id",
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
+	name: {
+		"name": "name",
+		"isKey": true,
+		"label": "Name"
+	} as undefined,
+	ratio: {
+		"name": "ratio",
+		"type": "number",
+		"isKey": false,
+		"widget": "number",
+		"label": "Ratio"
+	} as FieldItemNum,
+	offset: {
+		"name": "offset",
+		"type": "number",
+		"isKey": false,
+		"widget": "number",
+		"label": "Offset"
+	} as FieldItemNum,
+	asc: {
+		"name": "asc",
+		"isKey": false,
+		"label": "Asc"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	
+	fields.name, fields.ratio, fields.offset, fields.asc, 
 ];
 
 export const ui: UI = {
-	label: "CustomerTag",
+	label: "$Piecewise",
 	fieldArr,
 	fields,
 };
@@ -43,6 +61,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: CustomerTag):JSX.Element {
+export function render(item: $Piecewise):JSX.Element {
 	return <>{JSON.stringify(item)}</>;
 };

@@ -24,6 +24,18 @@ const fields = {
 		"isKey": false,
 		"label": "Customer"
 	} as FieldItemId,
+	$owner: {
+		"name": "$owner",
+		"type": "integer",
+		"isKey": false,
+		"widget": "updown",
+		"label": "$owner"
+	} as FieldItemInt,
+	$create: {
+		"name": "$create",
+		"isKey": false,
+		"label": "$create"
+	} as undefined,
 };
 /*==fields==*/
 

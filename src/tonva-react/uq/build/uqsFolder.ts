@@ -24,6 +24,34 @@ export async function buildUqsFolder(uqsFolder:string, appConfig: AppConfig) {
 	}
 	await Promise.all(promiseArr);
 
+	let tsUqsIndexHeader = '';
+	let tsUqsIndexContent;
+	let uqsIndexFile = `${uqsFolder}/index.ts`;
+	if (fs.existsSync(uqsIndexFile) === true) {
+		let indexText = fs.readFileSync(uqsIndexFile, 'utf8');
+		// let p0 = indexText.indexOf('///+++import AppUQs+++///');
+		let p1 = indexText.indexOf('///###import AppUQs###///');
+		let pe = indexText.indexOf('\n', p1);
+		tsUqsIndexHeader = indexText.substring(0, pe + 1);
+		tsUqsIndexContent = `\n\nexport interface UQs extends AppUQs {`;
+	}
+	else {
+		tsUqsIndexContent = `\n\nexport interface UQs {`;
+	}
+	tsUqsIndexHeader += buildTsHeader();
+	let tsUqsIndexReExport = '\n';
+	let tsUqsUI = `\n\nexport function setUI(uqs:UQs) {`;
+	for (let uq of uqMans) {
+		let {devName:o1, uqName:n1} = getNameFromUq(uq);
+		let uqAlias = o1 + n1;
+		buildTsUqFolder(uq, uqsFolder, uqAlias);
+
+		tsUqsIndexHeader += `\nimport * as ${uqAlias} from './${uqAlias}';`;
+		tsUqsIndexContent += `\n\t${uqAlias}: ${uqAlias}.UqExt;`; 
+		tsUqsIndexReExport += `\nexport * as ${uqAlias} from './${uqAlias}';`;
+		tsUqsUI += `\n\t${uqAlias}.setUI(uqs.${uqAlias});`;
+	}
+
 	if (!fs.existsSync(uqsFolder)) {
 		fs.mkdirSync(uqsFolder);
 	}
@@ -41,23 +69,8 @@ export async function buildUqsFolder(uqsFolder:string, appConfig: AppConfig) {
 			throw err;
 		}
 	}
-	let tsUqsIndexHeader = buildTsHeader();
-	let tsUqsIndexContent = `\n\nexport interface UQs {`;
-	let tsUqsIndexReExport = '\n';
-	let tsUqsUI = `\n\nexport function setUI(uqs:UQs) {`;
-	for (let uq of uqMans) {
-		let {devName:o1, uqName:n1} = getNameFromUq(uq);
-		let uqAlias = o1 + n1;
-		buildTsUqFolder(uq, uqsFolder, uqAlias);
-		//overrideTsFile(uqsFolder, uqAlias, tsUq);
 
-		tsUqsIndexHeader += `\nimport * as ${uqAlias} from './${uqAlias}';`;
-		tsUqsIndexContent += `\n\t${uqAlias}: ${uqAlias}.UqExt;`; 
-		tsUqsIndexReExport += `\nexport * as ${uqAlias} from './${uqAlias}';`;
-		tsUqsUI += `\n\t${uqAlias}.setUI(uqs.${uqAlias});`;
-	}
-
-	overrideTsFile(`${uqsFolder}/index.ts`, 
+	overrideTsFile(uqsIndexFile, 
 		tsUqsIndexHeader + tsUqsIndexContent + '\n}' + tsUqsIndexReExport + tsUqsUI + '\n}\n');
 }
 
