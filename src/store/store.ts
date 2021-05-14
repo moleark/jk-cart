@@ -1,6 +1,6 @@
 import { WebUser } from "CurrentUser";
 import { Product } from "./Product";
-import { BoxId } from "tonva";
+import { BoxId, nav } from "tonva";
 import { UQs } from "uqs";
 import { Cart } from "./Cart";
 
@@ -40,7 +40,11 @@ export class Store {
         return product;
 	};
 
-	get isLogined(): boolean {return false;}
+    get isLogined(): boolean {
+        let { user } = nav;
+        if (user === undefined) return false;
+        return user.id > 0;
+    }
 
 	get cartCount(): number {return this.cart.count;}
 

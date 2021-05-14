@@ -417,7 +417,7 @@ export class CApp extends CUqApp {
             this.initNotLogined();
         }
         await this.initUQs();
-        this.store.initCart();
+        await this.store.initCart();
     }
 
     private async initLogined(user: User) {
