@@ -70,10 +70,10 @@ export class VProuductView2 extends View<CProduct> {
 						<table id="table" className="table article-product-table" style={{marginBottom:2}}>
 							<thead>
 								<tr className="article-product-list text-right">
-									<th>包装</th>
-									<th>库存</th>
-									<th>价格(RMB)</th>
-									<th>数量</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>包装</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>库存</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>价格(RMB)</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>数量</th>
 								</tr>
 							</thead>
 							<tbody>
