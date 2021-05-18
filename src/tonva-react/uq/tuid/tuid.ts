@@ -425,11 +425,14 @@ export class TuidImport extends Tuid {
     readonly from: SchemaFrom;
     isImport = true;
 
-    useId(id:number) {this.tuidLocal.useId(id);}
-    boxId(id:number):BoxId {return this.tuidLocal.boxId(id);}
-    valueFromId(id:number) {return this.tuidLocal.valueFromId(id)}
+    useId(id:number) {this.tuidLocal?.useId(id);}
+    boxId(id:number):BoxId {
+		if (!this.tuidLocal) debugger;
+		return this.tuidLocal?.boxId(id);
+	}
+    valueFromId(id:number) {return this.tuidLocal?.valueFromId(id)}
 	resetCache(id:number|BoxId):void {
-		this.tuidLocal.resetCache(id);
+		this.tuidLocal?.resetCache(id);
 	}
     async assureBox<T>(id:number):Promise<T> {
         await this.tuidLocal.assureBox(id);

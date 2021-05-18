@@ -12,6 +12,7 @@ export interface TVs {
 }
 
 export class UQsMan {
+	private static isBuildingUQ: boolean = false;
 	static _uqs: any;
 	static value: UQsMan;
 
@@ -35,6 +36,7 @@ export class UQsMan {
 		let {uqs, tvs, version} = uqsConfig;
 		let retErrors:string[];
 		if (uqs) {
+			UQsMan.isBuildingUQ = true;
 			retErrors = await UQsMan.loadUqs(uqs, version, tvs);
 		}
 		else {
@@ -101,8 +103,9 @@ export class UQsMan {
 
         let retErrors = await this.load();
 		if (retErrors.length > 0) return retErrors;
-		// buildUqs仅仅用于生成代码。这时候，不要tuidImport
-		// retErrors.push(...this.setTuidImportsLocal());
+		if (UQsMan.isBuildingUQ === false) {
+			retErrors.push(...this.setTuidImportsLocal());
+		}
 		if (retErrors.length > 0) return retErrors;
 		if (uqConfigs) {
 			for (let uqConfig of uqConfigs) {
