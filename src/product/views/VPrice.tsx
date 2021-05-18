@@ -5,6 +5,7 @@ import { MinusPlusWidget } from 'tools';
 import { Product } from '../../store';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { MinusPlusWidgetTable } from 'tools/minusPlusWidget';
 
 /**
  * 显示产品包装价格，配合CProduct.renderProductPrice使用
@@ -56,7 +57,7 @@ export class VPrice extends View<CProduct> {
 					widget: 'custom',
 					label: null,
 					className: 'text-center',
-					WidgetClass: MinusPlusWidget,
+					WidgetClass: !this.isShowTable ? MinusPlusWidget : MinusPlusWidgetTable,
 					onChanged: onQuantityChanged
 				} as UiCustom
 			}
@@ -96,7 +97,7 @@ export class VPrice extends View<CProduct> {
                     </div>
                 </td>
                 <td data-title="数量">
-                    <div className="d-flex justify-content-md-center justify-content-sm-end justify-content-end">
+                    <div className="d-flex justify-content-end">{/* d-flex justify-content-md-center justify-content-sm-end justify-content-end */}
                         <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
                     </div>
                 </td>
@@ -187,7 +188,7 @@ export class VPriceWithTr extends VPrice {
             return  <>{prices?.map((v: any, index: number) => {
             let { pack } = v;
             
-            return <tr className="article-product-list">
+            return <tr className="article-product-list text-right">
                     <td data-title="包装">
                         {tv(pack)}
                     </td>

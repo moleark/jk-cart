@@ -18,7 +18,7 @@ export class VProuductView2 extends View<CProduct> {
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="pr-5"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+			let eName = <div className="pr-5 en-font-family"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
 				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
@@ -69,10 +69,10 @@ export class VProuductView2 extends View<CProduct> {
 					<div className="table-responsive-vertical shadow-z-1">
 						<table id="table" className="table article-product-table" style={{marginBottom:2}}>
 							<thead>
-								<tr className="article-product-list">
+								<tr className="article-product-list text-right">
 									<th>包装</th>
 									<th>库存</th>
-									<th>价格</th>
+									<th>价格(RMB)</th>
 									<th>数量</th>
 								</tr>
 							</thead>
