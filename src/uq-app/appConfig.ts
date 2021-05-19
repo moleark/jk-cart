@@ -14,18 +14,20 @@ const jk: DevConfig = {
 }
 
 export const appConfig: AppConfig = {
-	version: '0.1.0',
+	version: '0.1.3',
 	app: {
 		dev: jk,
 		name: 'cart',
 	},
 	uqs: [
+		/*
 		{
 			dev: bz,
 			name: 'hello-tonva',
 			alias: 'HelloTonva',
 			version: '0.1.0',
 		},
+		*/
 		{
 			dev: jk,
 			name: 'order',

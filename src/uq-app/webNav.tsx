@@ -163,6 +163,7 @@ export class NavHeaderView extends View<CApp> {
                                     会员<b className="caret"></b>
                                 </a>
                                 <div className="dropdown-menu dropdown-menu-right m-0" aria-labelledby="navbarDropdownBlog">
+									{this.isDev && <a className="dropdown-item text-center" href="/trial">测试代码</a>}
                                     <a className="dropdown-item text-center" href="/password">修改密码</a>
                                     <a className="dropdown-item text-center" href="/meInfo">账户信息</a>
                                     <a className="dropdown-item text-center" href="/contact">地址管理</a>

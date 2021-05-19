@@ -1,6 +1,6 @@
-//=== UqApp builder created on Thu May 13 2021 13:34:38 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Tue May 18 2021 18:31:57 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX } from "tonva-react";
 
 
 //===============================
@@ -364,9 +364,116 @@ export interface $Piecewise {
 	asc: number;
 }
 
+export interface OrderDetail {
+	id?: number;
+	parent: number;
+	row?: number;
+	product: number;
+	pack: number;
+	quantity: number;
+	amount: number;
+	price: number;
+}
+
+export interface OrderMain {
+	id?: number;
+	no?: string;
+	customer: number;
+	sumQuanity: number;
+	sumAmount: number;
+	couponNo: string;
+	sheetId: number;
+	shippingContact: number;
+}
+
+export interface DxOrderDraft {
+	id: number;
+	salesPerson?: number;
+	$act?: number;
+}
+
+export interface DxOrderReturning {
+	id: number;
+	$act?: number;
+}
+
+export interface DxOrderDetail {
+	id: number;
+	deliveredQuantity?: number;
+	paidAmount?: number;
+	invoicedAmount?: number;
+	askReturnBeforeDeliverQuantity?: number;
+	askReturnDeforeDeliverAmount?: number;
+	askReturnAfterDeliverQuantity?: number;
+	askReturnAfterDeliverAmount?: number;
+	returnedQuantity?: number;
+	refundAmount?: number;
+	$act?: number;
+}
+
+export interface DxOrderProcessing {
+	id: number;
+	deliveredQuantity?: number;
+	paidAmount?: number;
+	invoicedAmount?: number;
+	$act?: number;
+}
+
+export interface DxDone {
+	id: number;
+	flag?: number;
+	$act?: number;
+}
+
+export interface ActParamDxOrderDraft {
+	id: number|IDXValue;
+	salesPerson?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxOrderReturning {
+	id: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxOrderDetail {
+	id: number|IDXValue;
+	deliveredQuantity?: number|IDXValue;
+	paidAmount?: number|IDXValue;
+	invoicedAmount?: number|IDXValue;
+	askReturnBeforeDeliverQuantity?: number|IDXValue;
+	askReturnDeforeDeliverAmount?: number|IDXValue;
+	askReturnAfterDeliverQuantity?: number|IDXValue;
+	askReturnAfterDeliverAmount?: number|IDXValue;
+	returnedQuantity?: number|IDXValue;
+	refundAmount?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxOrderProcessing {
+	id: number|IDXValue;
+	deliveredQuantity?: number|IDXValue;
+	paidAmount?: number|IDXValue;
+	invoicedAmount?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxDone {
+	id: number|IDXValue;
+	flag?: number|IDXValue;
+	$act?: number;
+}
+
 export interface ParamActs {
 	$PiecewiseDetail?: $PiecewiseDetail[];
 	$Piecewise?: $Piecewise[];
+	orderDetail?: OrderDetail[];
+	orderMain?: OrderMain[];
+	dxOrderDraft?: ActParamDxOrderDraft[];
+	dxOrderReturning?: ActParamDxOrderReturning[];
+	dxOrderDetail?: ActParamDxOrderDetail[];
+	dxOrderProcessing?: ActParamDxOrderProcessing[];
+	dxDone?: ActParamDxDone[];
 }
 
 
@@ -415,4 +522,11 @@ export interface UqExt extends Uq {
 	OrderReceivable: UqPending<any, any>;
 	$PiecewiseDetail: UqID<any>;
 	$Piecewise: UqID<any>;
+	OrderDetail: UqID<any>;
+	OrderMain: UqID<any>;
+	DxOrderDraft: UqIDX<any>;
+	DxOrderReturning: UqIDX<any>;
+	DxOrderDetail: UqIDX<any>;
+	DxOrderProcessing: UqIDX<any>;
+	DxDone: UqIDX<any>;
 }

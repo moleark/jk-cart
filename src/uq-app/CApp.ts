@@ -88,6 +88,7 @@ import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectC
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
+// import { CTrial } from '../trial';
 
 export class CApp extends CUqApp {
     store: Store;
@@ -473,10 +474,17 @@ export class CApp extends CUqApp {
             '/favorites': this.navFavorites,
             '/password': this.navPassword,
             '/meInfo': this.navMeInfo,
+			'/trial': this.startTrial,
 
             '/quickOrder': this.navQuickOrder,
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();
     }
+
+	startTrial = async () => {
+		let trial = await import('../trial');
+		let cTrial = this.newC(trial.CTrial);
+		await cTrial.start();
+	}
 }

@@ -110,6 +110,12 @@ export class VMe extends VPage<CMe> {
 	footer():JSX.Element {return null;}
 
     private page = observer(() => {
+		let vDebug: any;
+		if (this.isDev) {
+			vDebug = <div>
+				<button className="btn btn-sm btn-success my-3" onClick={this.controller.trial}>试验代码</button>
+			</div>;
+		}
         const { user } = nav;
         let aboutRows: Prop[] = [
             '',
@@ -215,7 +221,8 @@ export class VMe extends VPage<CMe> {
         }
 
         if (xs || browser.versions.iPad) return <>
-            <PropGrid rows={rows} values={{}} />
+			{vDebug}
+            <PropGrid rows={rows} values={{}} />			
         </>;
         else {
             if (user === undefined) {
@@ -233,6 +240,7 @@ export class VMe extends VPage<CMe> {
             };
             let meLib = MeLib;
             return <div className="container mt-lg-2 py-3">
+				{vDebug}
                 <div className="row">
                     {
                         meLib.map((v: any,index:number) => {

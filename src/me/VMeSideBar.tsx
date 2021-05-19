@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View, IconText, Ax } from 'tonva-react';
 import { CMe } from './CMe';
 
