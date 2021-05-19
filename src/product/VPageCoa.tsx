@@ -95,6 +95,6 @@ function renderCOAItem(caption: string, value: any, captionClass?: string, valCl
     return <>
         <div className={classNames("col-lg-2 col-sm-5 col-5", capClass)}> {caption}</div>
         <span className="mx-2">:</span>
-        <div className={classNames("col-lg-2 col-sm-5 col-5", valClass)}>{value}</div>
+        <div className={classNames("col-lg-2 col-sm-5 col-5", valClass)} style={{wordWrap:'break-word'}}>{value}</div>
     </>;
 }

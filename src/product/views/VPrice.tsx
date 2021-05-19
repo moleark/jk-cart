@@ -123,13 +123,13 @@ export class VPrice extends View<CProduct> {
 		return <>{prices?.map((v: any, index: number) => {
 			let { pack, retail } = v;
 			if (!retail) return <small key={0}>请询价</small>;
-			return <div className="px-2" key={pack.id}>
-				<div className="row">
-					<div className="col-5 d-flex flex-column justify-content-center mb-2 pb-1">
+			return <div className="" key={pack.id}>
+				<div className="row mx-0 w-100">
+					<div className="col-5 d-flex flex-column mb-2 pb-1 pl-0">
 						<div><b>{tv(pack)}</b></div>
 						<div>{renderDeliveryTime(pack)}</div>
 					</div>
-					<div className="col-7 mb-0">
+					<div className="col-7 mb-0 pr-0">
 						{this.renderPrice(product, v)}
 					</div>
 				</div>

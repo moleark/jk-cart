@@ -18,12 +18,12 @@ export class VProuductView2 extends View<CProduct> {
 			let { brand, chemical, props } = product;
 			let { description, descriptionC, origin, imageUrl, id } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="pr-5 en-font-family"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+			let eName = <div className="pr-5 en-font-family" style={{wordWrap:'break-word'}}><strong  dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
 				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
-			return <div className="row mx-0 my-lg-2">
+			return <div className="row mx-0 my-lg-2 w-100">
 				<div className="col-lg-2">
 					<div className="img-wrap">
 						<ProductImage chemicalId={imageUrl} className="mx-auto" style={{ maxHeight: 192 }} />
@@ -54,7 +54,7 @@ export class VProuductView2 extends View<CProduct> {
 							</p>
 					}
 					{!this.controller.showFavorites &&
-						<div className="text-right">
+						<div className="text-right pt-3">
 							<a className="button collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
 								style={{position:"absolute",marginBottom:"-10px"}}	
 								onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}

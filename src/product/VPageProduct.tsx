@@ -237,7 +237,7 @@ export class VPageProduct extends VPage<CProduct> {
                 <div className="accordion background-grey mt-lg-1">
                     <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#descriptionpost"
                         role="button" aria-expanded="false" aria-controls="jk" target="_blank">
-                        产品应用&emsp;<i className="fa fa-chevron-down"></i>
+                        产品描述&emsp;<i className="fa fa-chevron-down"></i>
                     </a>
                 </div>
                 <div dangerouslySetInnerHTML={{ __html: descriptionPost || "" }}

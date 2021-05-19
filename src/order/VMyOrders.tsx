@@ -98,7 +98,7 @@ export class VMyOrders extends VPage<COrder> {
 
 	header() {
 		if (!xs) return '';
-		return '我的订单';
+		return '订单管理';
 	}
 
 	content(): JSX.Element {
