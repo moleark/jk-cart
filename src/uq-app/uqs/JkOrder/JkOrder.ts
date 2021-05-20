@@ -1,6 +1,6 @@
-//=== UqApp builder created on Tue May 18 2021 18:31:57 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Wed May 19 2021 23:34:22 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -388,12 +388,14 @@ export interface OrderMain {
 
 export interface DxOrderDraft {
 	id: number;
+	draft?: number;
 	salesPerson?: number;
 	$act?: number;
 }
 
 export interface DxOrderReturning {
 	id: number;
+	returning?: number;
 	$act?: number;
 }
 
@@ -413,26 +415,26 @@ export interface DxOrderDetail {
 
 export interface DxOrderProcessing {
 	id: number;
-	deliveredQuantity?: number;
-	paidAmount?: number;
-	invoicedAmount?: number;
+	processing?: number;
 	$act?: number;
 }
 
-export interface DxDone {
+export interface DxOrderDone {
 	id: number;
-	flag?: number;
+	done?: number;
 	$act?: number;
 }
 
 export interface ActParamDxOrderDraft {
 	id: number|IDXValue;
+	draft?: number|IDXValue;
 	salesPerson?: number|IDXValue;
 	$act?: number;
 }
 
 export interface ActParamDxOrderReturning {
 	id: number|IDXValue;
+	returning?: number|IDXValue;
 	$act?: number;
 }
 
@@ -452,16 +454,29 @@ export interface ActParamDxOrderDetail {
 
 export interface ActParamDxOrderProcessing {
 	id: number|IDXValue;
-	deliveredQuantity?: number|IDXValue;
-	paidAmount?: number|IDXValue;
-	invoicedAmount?: number|IDXValue;
+	processing?: number|IDXValue;
 	$act?: number;
 }
 
-export interface ActParamDxDone {
+export interface ActParamDxOrderDone {
 	id: number|IDXValue;
-	flag?: number|IDXValue;
+	done?: number|IDXValue;
 	$act?: number;
+}
+
+export interface IxCustomerPendingDeliver {
+	ix: number;
+	xi: number;
+}
+
+export interface IxCustomerPendingReceive {
+	ix: number;
+	xi: number;
+}
+
+export interface IxCustomerPendingInvoice {
+	ix: number;
+	xi: number;
 }
 
 export interface ParamActs {
@@ -473,7 +488,10 @@ export interface ParamActs {
 	dxOrderReturning?: ActParamDxOrderReturning[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
 	dxOrderProcessing?: ActParamDxOrderProcessing[];
-	dxDone?: ActParamDxDone[];
+	dxOrderDone?: ActParamDxOrderDone[];
+	ixCustomerPendingDeliver?: IxCustomerPendingDeliver[];
+	ixCustomerPendingReceive?: IxCustomerPendingReceive[];
+	ixCustomerPendingInvoice?: IxCustomerPendingInvoice[];
 }
 
 
@@ -528,5 +546,8 @@ export interface UqExt extends Uq {
 	DxOrderReturning: UqIDX<any>;
 	DxOrderDetail: UqIDX<any>;
 	DxOrderProcessing: UqIDX<any>;
-	DxDone: UqIDX<any>;
+	DxOrderDone: UqIDX<any>;
+	IxCustomerPendingDeliver: UqIX<any>;
+	IxCustomerPendingReceive: UqIX<any>;
+	IxCustomerPendingInvoice: UqIX<any>;
 }

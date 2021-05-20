@@ -4,8 +4,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import './App.css';
 import 'antd/dist/antd.css';
-import 'css/style.css';
-import 'css/rst.css';
+//import 'css/style.css';
+//import 'css/rst.css';
 import reportWebVitals from './reportWebVitals';
 import { CApp } from 'uq-app';
 import { CWeb } from 'uq-app/CWeb';
@@ -19,14 +19,14 @@ import { GLOABLE } from 'global';
 	let onLogined: () => Promise<void>;
 
 	if (env.isMobile || window.location.pathname.endsWith('/app')) {
-		//require('style-loader!./css/style.css');
-		//require('style-loader!./css/rst.css');
+		// require('./css/style.css');
+		require('./css/rst.css');
 		onLogined = async () => {
 			await start(CApp, appConfig);
 		}
 	}
 	else {
-		//require('style-loader!./css/style.css');
+		require('./css/style.css');
 		//loadQQScript();
 		onLogined = async () => {
 			await startPage(CWeb, appConfig);

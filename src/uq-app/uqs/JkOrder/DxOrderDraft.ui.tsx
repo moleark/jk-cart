@@ -11,6 +11,11 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
+	draft: {
+		"name": "draft",
+		"isKey": false,
+		"label": "Draft"
+	} as undefined,
 	salesPerson: {
 		"name": "salesPerson",
 		"type": "id",
@@ -21,7 +26,7 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.salesPerson, 
+	fields.draft, fields.salesPerson, 
 ];
 
 export const ui: UI = {

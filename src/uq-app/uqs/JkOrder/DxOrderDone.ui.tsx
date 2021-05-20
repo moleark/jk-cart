@@ -1,7 +1,7 @@
 import { Res, setRes, TFunc, UI } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxOrderProcessing } from "./JkOrder";
+import { DxOrderDone } from "./JkOrder";
 
 /*--fields--*/
 const fields = {
@@ -11,20 +11,20 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	processing: {
-		"name": "processing",
+	done: {
+		"name": "done",
 		"isKey": false,
-		"label": "Processing"
+		"label": "Done"
 	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.processing, 
+	fields.done, 
 ];
 
 export const ui: UI = {
-	label: "DxOrderProcessing",
+	label: "DxOrderDone",
 	fieldArr,
 	fields,
 };
@@ -42,6 +42,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: DxOrderProcessing):JSX.Element {
+export function render(item: DxOrderDone):JSX.Element {
 	return <>{JSON.stringify(item)}</>;
 };

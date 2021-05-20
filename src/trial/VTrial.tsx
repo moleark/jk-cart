@@ -8,8 +8,14 @@ export class VTrial extends VPage<CTrial> {
 	header() {return '试验代码';}
 	content() {
 		const cmds:[string, (cmd:any)=>void][] = [
-			['订单列表', this.controller.showOrderList],
-			['试验', this.showCmd],
+			['全部订单', this.controller.showOrderMainList],
+			['待批订单', this.controller.showOrderDraftList],
+			['待处理订单', this.controller.showOrderProcessingList],
+			['完成订单', this.controller.showOrderDoneList],
+			['待退货订单', this.controller.showOrderReturningList],
+			['发货', this.controller.showDeliver],
+			['收款', this.controller.showReceive],
+			['开票', this.controller.showInvoice],
 		];
 		let right = <FA name="angle-right" className="align-self-center" />;
 		return <div>
@@ -21,9 +27,5 @@ export class VTrial extends VPage<CTrial> {
 				</LMR>
 			})}
 		</div>
-	}
-
-	private showCmd = (caption:string) => {
-		alert(caption);
 	}
 }
