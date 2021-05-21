@@ -88,6 +88,7 @@ import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectC
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
+import { setUI } from './uqs';
 // import { CTrial } from '../trial';
 
 export class CApp extends CUqApp {
@@ -155,6 +156,7 @@ export class CApp extends CUqApp {
     }
 
 	protected async internalStart(params: any) {
+		setUI(this.uqs);
 		nav.onNavRoute(this.navHome);
 		/*
         let promises: PromiseLike<void>[] = [];

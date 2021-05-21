@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed May 19 2021 23:34:22 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Thu May 20 2021 23:33:47 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -270,6 +270,17 @@ interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
+export interface ParamGetCustomerPendingDeliver {
+}
+export interface ReturnGetCustomerPendingDeliverRet {
+	customer: number;
+	quantity: number;
+	$id: number;
+}
+interface ResultGetCustomerPendingDeliver {
+	ret: ReturnGetCustomerPendingDeliverRet[];
+}
+
 export interface ParamCart {
 	user: number;
 	product: number;
@@ -533,6 +544,7 @@ export interface UqExt extends Uq {
 	GetPendingPayment: UqQuery<ParamGetPendingPayment, ResultGetPendingPayment>;
 	GetPendingAuditOrders: UqQuery<ParamGetPendingAuditOrders, ResultGetPendingAuditOrders>;
 	$poked: UqQuery<Param$poked, Result$poked>;
+	GetCustomerPendingDeliver: UqQuery<ParamGetCustomerPendingDeliver, ResultGetCustomerPendingDeliver>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
 	OrderTransportation: UqMap;

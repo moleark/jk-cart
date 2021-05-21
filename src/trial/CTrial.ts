@@ -1,13 +1,13 @@
-import { makeObservable, observable } from "mobx";
-import { CApp, CUqBase } from "uq-app";
+import { CUqBase } from "uq-app";
 import { OrderDetail, OrderMain } from "uq-app/uqs/JkOrder";
 import { DonePageList, DraftPageList, OrderAllPageList, OrderPageList, ProcessingPageList, ReturningPageList } from "./orderPageList";
-import { VDeliver } from "./VDeliver";
+import { VDeliver } from "./deliver/VDeliver";
 import { VInvoice } from "./VInvoice";
 import { VOrder } from "./VOrder";
 import { VOrderDoneList, VOrderDraftList, VOrderMainList, VOrderProcessingList, VOrderReturningList } from "./VOrderMainList";
 import { VReceive } from "./VReceive";
 import { VTrial } from "./VTrial";
+import { CDeliver } from "./deliver";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -63,7 +63,9 @@ export class CTrial extends CUqBase {
 	}
 
 	showDeliver = async () => {
-		this.openVPage(VDeliver);
+		let cDeliver = this.newSub(CDeliver);
+		//this.openVPage(VDeliver);
+		await cDeliver.start();
 	}
 
 	showReceive = async () => {
