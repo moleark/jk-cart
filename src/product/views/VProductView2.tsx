@@ -7,21 +7,28 @@ import { renderBrand, renderPropItem, renderUnsold } from '../renders';
 import { VFavorite } from './VFavorite';
 import { VPriceWithTr } from './VPrice';
 import classNames from 'classnames';
+import { Product } from 'store';
 
 export class VProuductView2 extends View<CProduct> {
 	// @observable product: any;
 	// @observable discount: number;
+	onProductClick = async (product: Product) => {
+        let { id } = product;
+        let url = "/product/" + id;
+        this.navigate(url);
+    }
+
 	render(param: any): JSX.Element {
 		return React.createElement(observer(() => {
 			let { product, dataSource, callback } = param;
 			let productListSource = dataSource ? true : false;
-			let { brand, chemical, props } = product;
-			let { description, descriptionC, origin, imageUrl, id } = props;
+			let { brand, chemical, props, id } = product;
+			let { description, descriptionC, origin, imageUrl } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="pr-5 en-font-family" style={{wordWrap:'break-word'}}><strong  dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+			let eName = <div className="pr-5 en-font-family" style={{wordWrap:'break-word'}}><strong className="cursor-pointer" onClick={()=> this.onProductClick(product)}   dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
-				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
+				cName = <div className="d-inline-block cursor-pointer" onClick={()=> this.onProductClick(product)} dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
 			return <div className="row mx-0 my-lg-2 w-100">
 				<div className="col-lg-2">
@@ -53,14 +60,12 @@ export class VProuductView2 extends View<CProduct> {
 								{brand && renderPropItemC('品牌', brand.name)}
 							</p>
 					}
-					{!this.controller.showFavorites &&
-						<div className="text-right pt-3">
-							<a className="button collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
-								style={{position:"absolute",marginBottom:"-10px"}}	
-								onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
-							></a>
-						</div>
-					}
+					<div className="text-right pt-3">
+						<a className="button collapsed" data-toggle="collapse" href={`#description${id}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank"
+							style={{position:"absolute",marginBottom:"-10px"}}	
+							onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
+						></a>
+					</div>
 				</div>
 
 				<div className="col-lg-12 mt-lg-2 collapse" id={`description${id}`}

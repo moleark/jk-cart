@@ -324,3 +324,7 @@
 .dark-333{
     color: #333 !important;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}
