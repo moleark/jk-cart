@@ -31,7 +31,7 @@ export abstract class Entity {
     readonly uq: UqMan;
     readonly name: string;
     readonly typeId: number;
-    readonly cache: LocalCache;
+    readonly schemaLocal: LocalCache;
     readonly uqApi: UqApi;
     abstract get typeName(): string;
     get sName():string {return this.jName || this.name}
@@ -44,7 +44,7 @@ export abstract class Entity {
         this.name = name;
         this.typeId = typeId;
         this.sys = this.name.indexOf('$') >= 0;
-        this.cache = this.uq.localMap.item(this.name); // new EntityCache(this);
+        this.schemaLocal = this.uq.localMap.item(this.name); // new EntityCache(this);
         this.uqApi = this.uq.uqApi;
     }
 
@@ -77,7 +77,7 @@ export abstract class Entity {
 
     public async loadSchema():Promise<void> {
         if (this.schema !== undefined) return;
-        let schema = this.cache.get();
+        let schema = this.schemaLocal.get();
         if (!schema) {
             schema = await this.uq.loadEntitySchema(this.name);
         }
@@ -105,7 +105,7 @@ export abstract class Entity {
         let {name, version} = schema;
         this.ver = version || 0;		
 		this.setJName(name);
-        this.cache.set(schema);
+        this.schemaLocal.set(schema);
 		this.schema = schema;
 		this.buildFieldsTuid();
 	}

@@ -146,12 +146,12 @@ function buildReturns(entity:Entity, returns:ArrFields[]):string {
 	let ts = '';
 	for (let ret of returns) {
 		let retName = capitalCase(ret.name);
-		ts += `interface Return${sName}${retName} {`;
+		ts += `export interface Return${sName}${retName} {`;
 		ts += buildFields(ret.fields);
 		ts += '\n}\n';
 	}
 
-	ts += `interface Result${sName} {\n`;
+	ts += `export interface Result${sName} {\n`;
 	for (let ret of returns) {
 		let retName = capitalCase(ret.name);
 		ts += `\t${ret.name}: Return${sName}${retName}[];\n`;

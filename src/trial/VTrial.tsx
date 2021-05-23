@@ -16,6 +16,7 @@ export class VTrial extends VPage<CTrial> {
 			['发货', this.controller.showDeliver],
 			['收款', this.controller.showReceive],
 			['开票', this.controller.showInvoice],
+			['纯试验代码', this.controller.showCodeTrial],
 		];
 		let right = <FA name="angle-right" className="align-self-center" />;
 		return <div>

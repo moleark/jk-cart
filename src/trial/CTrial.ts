@@ -1,13 +1,13 @@
 import { CUqBase } from "uq-app";
 import { OrderDetail, OrderMain } from "uq-app/uqs/JkOrder";
 import { DonePageList, DraftPageList, OrderAllPageList, OrderPageList, ProcessingPageList, ReturningPageList } from "./orderPageList";
-import { VDeliver } from "./deliver/VDeliver";
 import { VInvoice } from "./VInvoice";
 import { VOrder } from "./VOrder";
 import { VOrderDoneList, VOrderDraftList, VOrderMainList, VOrderProcessingList, VOrderReturningList } from "./VOrderMainList";
 import { VReceive } from "./VReceive";
 import { VTrial } from "./VTrial";
 import { CDeliver } from "./deliver";
+import { VCodeTrial } from "./VCodeTrial";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -74,6 +74,10 @@ export class CTrial extends CUqBase {
 
 	showInvoice = async () => {
 		this.openVPage(VInvoice);
+	}
+
+	showCodeTrial = async () => {
+		this.openVPage(VCodeTrial);
 	}
 	
 	order: Order;

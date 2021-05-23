@@ -17,6 +17,9 @@ import { Entity } from './entity';
 import { UqConfig } from '../app';
 import { ID, IX, IDX } from './ID';
 import { nav } from '../components';
+import { IDCache } from './IDCache';
+import React from 'react';
+import { observer } from 'mobx-react';
 
 export type FieldType = 'id' | 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'float' | 'double' | 'char' | 'text'
     | 'datetime' | 'date' | 'time' | 'timestamp';
@@ -257,6 +260,9 @@ export interface Uq {
 	IDxID<T,T2> (param: ParamIDxID): Promise<[T[],T2[]]>; // ID list with IX 对应的子集
 	IDinIX<T>(param:ParamIDinIX): Promise<T&{$in:boolean}[]>;
 	IDTree<T>(param:ParamIDTree): Promise<T[]>;
+
+	IDTv(ids: number[]): Promise<any[]>;
+	IDRender(id: number, render?:(value:any) => JSX.Element): JSX.Element;
 }
 
 export class UqMan {
@@ -277,6 +283,7 @@ export class UqMan {
     private readonly tuidsCache: TuidsCache;
     private readonly localEntities: LocalCache;
     private readonly tvs:{[entity:string]:(values:any)=>JSX.Element};
+	private idCache: IDCache;
 	proxy: any;
     readonly localMap: LocalMap;
     readonly localModifyMax: LocalCache;
@@ -711,6 +718,7 @@ export class UqMan {
 					case 'ActIX': return this.ActIX;
 					case 'ActIXSort': return this.ActIXSort;
 					case 'QueryID': return this.QueryID;
+					case 'IDTv': return this.IDTv;
 					case 'IDDetail': return this.ActDetail;
 					case 'IDNO': return this.IDNO;
 					case 'IDDetailGet': return this.IDDetailGet;
@@ -724,6 +732,7 @@ export class UqMan {
 					case 'IDinIX': return this.IDinIX;
 					case 'IDxID': return this.IDxID;
 					case 'IDTree': return this.IDTree;
+					case 'IDRender': return this.IDRender;
 				}
 				let err = `entity ${this.name}.${String(key)} not defined`;
 				console.error(err);
@@ -732,6 +741,7 @@ export class UqMan {
 			}
 		});
 		this.proxy = ret;
+		this.idCache = new IDCache(this.proxy);
 		return ret;
 	}
 
@@ -859,6 +869,33 @@ export class UqMan {
 		return ret;
 	}
 
+	private IDTv = async (ids: number[]): Promise<any[]> => {
+		let ret = await this.uqApi.post(IDPath('id-tv'), ids);
+		let retValues: any[] = [];
+		for (let row of ret) {
+			let {$type, $tv} = row;
+			if (!$tv) continue;
+			let ID = this.ids[$type];
+			if (!ID) continue;
+			let {schema} = ID;
+			if (!schema) {
+				await ID.loadSchema();
+				schema = ID.schema;
+			}
+			let {nameNoVice} = schema;
+			if (!nameNoVice) continue;
+			let values = ($tv as string).split('\n');
+			let len = nameNoVice.length;
+			for (let i=0; i<len; i++) {
+				let p = nameNoVice[i];
+				row[p] = values[i];
+			}
+			delete row.$tv;
+			retValues.push(row);
+		}
+		return retValues;
+	}
+
 	private IDNO = async (param: ParamIDNO): Promise<string> => {
 		let {ID} = param;
 		let ret = await this.uqApi.post(IDPath('id-no'), {ID: entityName(ID)});
@@ -982,6 +1019,24 @@ export class UqMan {
 			ID: entityName(ID),
 		});
 		return ret;
+	}
+
+	private IDRender = (id: number, render?:(value:any) => JSX.Element): JSX.Element => {
+		return React.createElement(observer(() => {
+			let ret = this.idCache.getValue(id);
+			if (ret === undefined) {
+				return React.createElement('span', {props:{className: 'text-muted'},  children: ['id='+id]});
+			}
+			let {$type} = ret as any;
+			if (!$type) return this.renderIDUnknownType(id);
+			let IDType = this.ids[$type];
+			if (!IDType) return this.renderIDUnknownType(id);
+			return (render ?? IDType.render)(ret);
+		}));
+	}
+
+	private renderIDUnknownType(id: number) {
+		return React.createElement('span', {props:{className: 'text-muted'},  children: [`id=${id} type undefined`]});
 	}
 }
 

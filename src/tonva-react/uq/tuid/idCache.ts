@@ -22,7 +22,7 @@ export class IdCache {
     }
 
     protected initLocalArr() {
-        this.localArr = this.tuidInner.cache.arr(this.tuidInner.name + '.ids');
+        this.localArr = this.tuidInner.schemaLocal.arr(this.tuidInner.name + '.ids');
     }
 
     useId(id:number, defer?:boolean) {
@@ -191,8 +191,8 @@ export class IdCache {
         this.cacheIdValues(ret);
     }
 
-	protected async loadTuidIds(netIds: number[]):Promise<any[]> {
-		let netRet = await this.tuidInner.loadTuidIds(undefined, netIds);
+	protected async loadValuesFromIds(netIds: number[]):Promise<any[]> {
+		let netRet = await this.tuidInner.loadValuesFromIds(undefined, netIds);
 		return netRet;
 	}
 
@@ -211,7 +211,7 @@ export class IdCache {
         let len = netIds.length;
         if (len === 0) return ret;
 
-		let netRet = await this.loadTuidIds(netIds);
+		let netRet = await this.loadValuesFromIds(netIds);
 		for (let i=0; i<len; i++) {
 			//有些id可能没有内容，不会返回
 			//let id = netIds[i]; 
@@ -240,7 +240,7 @@ export class IdDivCache extends IdCache {
         super(tuidLocal);
         this.div = div;
         this.divName = div.name;
-        this.localArr = tuidLocal.cache.arr(tuidLocal.name + '.ids.' + this.divName);
+        this.localArr = tuidLocal.schemaLocal.arr(tuidLocal.name + '.ids.' + this.divName);
     }
 
     protected initLocalArr() {
@@ -255,8 +255,8 @@ export class IdDivCache extends IdCache {
     protected cacheTuidFieldValues(tuidValue: any) {
         this.div.cacheTuidFieldValues(tuidValue);
     }
-	protected async loadTuidIds(netIds: number[]):Promise<any[]> {
-		let netRet = await this.tuidInner.loadTuidIds(this.divName, netIds);
+	protected async loadValuesFromIds(netIds: number[]):Promise<any[]> {
+		let netRet = await this.tuidInner.loadValuesFromIds(this.divName, netIds);
 		return netRet;
 	}
 }

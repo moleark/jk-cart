@@ -1,15 +1,22 @@
 import { TFunc } from "../res";
 import { Entity } from "./entity";
 import { Render, UI } from '../ui';
+import React from "react";
+import { observer } from "mobx-react";
+import { IDCache } from "./IDCache";
+import { Uq } from "./uqMan";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export abstract class IDXEntity<M> extends Entity {
+export interface IDXEntity<M> {
 	readonly ui: UI;
 	readonly render: Render<M>;
 	readonly t: TFunc;
 }
 
-export class UqID<M> extends IDXEntity<M> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export class UqID<M extends {id:number}> extends Entity implements IDXEntity<M> {
+	readonly ui: UI;
+	readonly render: Render<M>;
+	readonly t: TFunc;
 	get typeName() {return 'id'}
 	create: boolean;
 	update: boolean;
@@ -18,13 +25,27 @@ export class UqID<M> extends IDXEntity<M> {
 		let ret = await this.uqApi.post('id-no', {ID:this.name});
 		return ret;
 	};
+	getIdFromObj(value: any): number {return value['id'];}
+	cacheTuids(defer: number): void {}
+	async loadValuesFromIds(divName: string, ids:number[]): Promise<M[]> {
+		let ret = await (this.uq as unknown as Uq).QueryID<M>({
+			IDX: [this],
+			id: ids
+		});
+        return ret;
+	}
+	cacheTuidFieldValues(value: any): void {}
+	unpackTuidIds(values:string[]): any[] {return;}
 }
 
 export class ID extends UqID<any> {	
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class UqIDX<M> extends IDXEntity<M> {
+export class UqIDX<M> extends Entity implements IDXEntity<M> {
+	readonly ui: UI;
+	readonly render: Render<M>;
+	readonly t: TFunc;
 	get typeName() {return 'idx'}
 }
 
@@ -32,7 +53,10 @@ export class IDX extends UqIDX<any> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class UqIX<M> extends IDXEntity<M> {
+export class UqIX<M> extends Entity implements IDXEntity<M> {
+	readonly ui: UI;
+	readonly render: Render<M>;
+	readonly t: TFunc;
 	get typeName() {return 'ix'}
 }
 

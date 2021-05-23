@@ -20,7 +20,7 @@ export abstract class UqTuid<M> extends Entity {
     protected noCache: boolean;
     readonly typeName:string = 'tuid';
     protected idName: string;
-    cached: boolean;
+    //cached: boolean;
     unique: string[];
 
     public setSchema(schema:any) {
@@ -94,7 +94,7 @@ export class TuidInner extends Tuid {
     constructor(uq:UqMan, name:string, typeId:number) {
         super(uq, name, typeId);
         this.idCache = new IdCache(this);
-        this.localArr = this.cache.arr(this.name + '.whole');
+        this.localArr = this.schemaLocal.arr(this.name + '.whole');
         if (uq.newVersion === true) this.localArr.removeAll();
     }
 
@@ -151,9 +151,9 @@ export class TuidInner extends Tuid {
     div(name:string):TuidDiv {
         return this.divs && this.divs[name];
     }
-    async loadTuidIds(divName:string, ids:number[]):Promise<any[]> {
+    async loadValuesFromIds(divName:string, ids:number[]):Promise<any[]> {
         let ret:any[] = await new IdsCaller(this, {divName:divName, ids:ids}, false).request();
-        if (ret.length > 0) this.cached = true;
+        //if (ret.length > 0) this.cached = true;
         return ret;
     }
     async loadMain(id:number|BoxId):Promise<any> {
