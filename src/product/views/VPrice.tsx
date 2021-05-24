@@ -56,7 +56,7 @@ export class VPrice extends View<CProduct> {
 				quantity: {
 					widget: 'custom',
 					label: null,
-					className: 'text-center',
+					className: `text-center ${this.isShowTable ? "form-control-sm" :""}`,
 					WidgetClass: !this.isShowTable ? MinusPlusWidget : MinusPlusWidgetTable,
 					onChanged: onQuantityChanged
 				} as UiCustom
@@ -70,7 +70,7 @@ export class VPrice extends View<CProduct> {
             let retailUI: any;
             if (price) {
                 if (this.isShowTable) {
-                    retailUI = <del className="text-danger"><span className="text-muted">¥{retail}</span></del>;
+                    retailUI = <del className="text-danger"><span className="text-muted">{retail}</span></del>;
                 } else {
                     retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
                 }
@@ -92,12 +92,12 @@ export class VPrice extends View<CProduct> {
                 right = <>
                 <td data-title="价格" className=" red">
                     <div className="item-product-price">
-                        <small className="text-muted">{retailUI}</small>&nbsp;{retailUI ? '/' : ''} &nbsp;
-                        <span className="text-danger">¥ <span>{price}</span></span>
+                        <small className="text-muted">{retailUI}</small>&nbsp;{retailUI ? '/' : ''}
+                        <span className="text-danger"> <span>{price}</span></span>
                     </div>
                 </td>
                 <td data-title="数量">
-                    <div className="d-flex justify-content-end">{/* d-flex justify-content-md-center justify-content-sm-end justify-content-end */}
+                    <div className="d-flex justify-content-end input-group-sm">{/* d-flex justify-content-md-center justify-content-sm-end justify-content-end */}
                         <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
                     </div>
                 </td>

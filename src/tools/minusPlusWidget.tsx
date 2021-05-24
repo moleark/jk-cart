@@ -81,13 +81,15 @@ export class MinusPlusWidget extends UpdownWidget {
         else {
             minusClick = this.minusClick;
             plusClick = this.plusClick;
-            minusColor = 'text-danger-2'; //'text-black-50';
-            plusColor = 'text-danger';
+            // minusColor = 'text-danger-2'; //'text-black-50';
+            // plusColor = 'text-danger';
+            minusColor = 'text-info';
+            plusColor = 'text-info';
         }
         let minus = <i className={classNames('fa',
-            'fa-minus-circle', 'fa-lg', minusColor, cursorPointer,
+            'fa-minus-square', 'fa-lg', minusColor, cursorPointer,
             { invisible: !(hasFocus === true || (hasAction === true && hasValue === true)) })}
-            onClick={minusClick} />;
+            onClick={minusClick} />;/* fa-minus-circle */
         let input = <input ref={this.ref}
             className={classNames(this.className, cn, 'mx-1 w-4c form-control',
                 { invisible: !(hasFocus === true || hasValue === true) })}
@@ -102,7 +104,7 @@ export class MinusPlusWidget extends UpdownWidget {
             onBlur={(evt: React.FocusEvent<any>) => this.onBlur(evt)}
             maxLength={10} />;
 
-        let plus = <i className={classNames('fa fa-plus-circle fa-lg',
+        let plus = <i className={classNames('fa fa-plus-square fa-lg',
             plusColor, cursorPointer,
             { invisible: !(hasAction === true) })}
             onClick={plusClick} />;
