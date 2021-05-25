@@ -1,5 +1,4 @@
 import { observable } from 'mobx';
-import _ from 'lodash';
 import { Uq } from '../uqMan';
 
 const maxCacheSize = 1000;

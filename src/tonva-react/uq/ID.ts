@@ -1,9 +1,6 @@
 import { TFunc } from "../res";
 import { Entity } from "./entity";
 import { Render, UI } from '../ui';
-import React from "react";
-import { observer } from "mobx-react";
-import { IDCache } from "./IDCache";
 import { Uq } from "./uqMan";
 
 export interface IDXEntity<M> {

@@ -1,11 +1,10 @@
-import { List, VPage } from "tonva-react";
-import { OrderDetail } from "uq-app/uqs/JkOrder";
-import { CDeliver } from "./CDeliver";
+import { Context, Form, IntSchema, List, LMR, NumSchema, Schema, UiNumberItem, UiSchema, VPage } from "tonva-react";
+import { CDeliver, DeliverDetail } from "./CDeliver";
 
 export class VDeliverForCustomer extends VPage<CDeliver> {
 	header() {return '发货给客户'}
 	content() {
-		let {customer, deliversForCustomer} = this.controller;
+		let {customer, deliverDetails, saveDeliverSheet} = this.controller;
 		return <div>
 			<div className="p-3">
 				<div><b>下一步实现：</b></div>
@@ -22,11 +21,39 @@ export class VDeliverForCustomer extends VPage<CDeliver> {
 			<div className="p-3">
 				customer: {customer}
 			</div>
-			<List items={deliversForCustomer} item={{render: this.renderItem}} />
+			<List items={deliverDetails} item={{render: this.renderItem}} />
+			<div className="p-3">
+				<button className="btn btn-primary" onClick={saveDeliverSheet}>生成发货单</button>
+			</div>
 		</div>;
 	}
 
-	private renderItem = (item:OrderDetail, index:number) => {
-		return <div className="px-3 py-2">{this.controller.uqs.JkOrder.OrderDetail.render(item)}</div>;
+	private renderItem = (item: DeliverDetail, index:number) => {
+		let {product, pack, quantity} = item.orderDetail;
+		let schema:Schema = [
+			{name: 'deliverQuantity', type: 'integer', min: 0, max: quantity} as IntSchema
+		];
+		let onChanged = (context:Context, value:any, prev:any):Promise<void> => {
+			item.deliverQuantity = value;
+			return;
+		}
+		let uiSchema: UiSchema = {
+			items: {
+				deliverQuantity: {
+					label: null,
+					placeholder: '实发数量',
+					defaultValue: quantity,
+					className: 'text-right',
+					onChanged,
+				} as UiNumberItem
+			}
+		}
+		let FieldContainer = (label:any, content:JSX.Element): JSX.Element => {
+			return <div>{content}</div>;
+		}
+		let right = <Form schema={schema} uiSchema={uiSchema} FieldContainer={FieldContainer}/>
+		return <LMR className="px-3 py-2" right={right}>
+			product:{product} pack:{pack} 应发:{quantity}
+		</LMR>;
 	}
 }

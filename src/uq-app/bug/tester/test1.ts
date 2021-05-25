@@ -41,7 +41,7 @@ export const testItem1:DebugItem = {
 
 		let b = await uqs.BzTest.IDDetail<BzTest.OrderMaster, BzTest.OrderDetail>
 		({
-			master: {
+			main: {
 				ID: uqs.BzTest.OrderMaster,
 				value: {customer: 1 },
 			},
@@ -58,7 +58,7 @@ export const testItem1:DebugItem = {
 
 		let c = await uqs.BzTest.IDDetailGet<BzTest.OrderMaster, BzTest.OrderDetail>({
 			id: 8716325,
-			master: uqs.BzTest.OrderMaster,
+			main: uqs.BzTest.OrderMaster,
 			detail: uqs.BzTest.OrderDetail,
 		});
 

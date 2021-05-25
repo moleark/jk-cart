@@ -82,7 +82,7 @@ export class CTester extends CBase<CApp,UQs> {
 					}
 				}
 				let sheetUI:SheetUI = {
-					master: {
+					main: {
 						ID: uq.OrderMaster,
 						fieldCustoms: {
 							customer: {ID: uq.Customer},

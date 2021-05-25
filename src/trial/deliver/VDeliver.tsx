@@ -18,3 +18,13 @@ export class VDeliver extends VPage<CDeliver> {
 		</div>;
 	}
 }
+
+export class VDeliverSuccess extends VPage<CDeliver> {
+	header() {return '发货完成'}
+	get back(): 'close' | 'back' | 'none' {return 'close';}
+	content() {
+		return <div className="p-3">
+			发货完成！
+		</div>
+	}
+}

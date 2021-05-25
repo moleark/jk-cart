@@ -3,6 +3,8 @@ import * as $PiecewiseDetail from './$PiecewiseDetail.ui';
 import * as $Piecewise from './$Piecewise.ui';
 import * as OrderDetail from './OrderDetail.ui';
 import * as OrderMain from './OrderMain.ui';
+import * as DeliverDetail from './DeliverDetail.ui';
+import * as DeliverMain from './DeliverMain.ui';
 import * as DxOrderDraft from './DxOrderDraft.ui';
 import * as DxOrderReturning from './DxOrderReturning.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
@@ -17,6 +19,8 @@ export function setUI(uq: Uq) {
 	Object.assign(uq.$Piecewise, $Piecewise);
 	Object.assign(uq.OrderDetail, OrderDetail);
 	Object.assign(uq.OrderMain, OrderMain);
+	Object.assign(uq.DeliverDetail, DeliverDetail);
+	Object.assign(uq.DeliverMain, DeliverMain);
 	Object.assign(uq.DxOrderDraft, DxOrderDraft);
 	Object.assign(uq.DxOrderReturning, DxOrderReturning);
 	Object.assign(uq.DxOrderDetail, DxOrderDetail);

@@ -7,7 +7,7 @@ import { VOrderDoneList, VOrderDraftList, VOrderMainList, VOrderProcessingList, 
 import { VReceive } from "./VReceive";
 import { VTrial } from "./VTrial";
 import { CDeliver } from "./deliver";
-import { VCodeTrial } from "./VCodeTrial";
+import { VTestIDV } from "./VTestIDV";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -76,8 +76,8 @@ export class CTrial extends CUqBase {
 		this.openVPage(VInvoice);
 	}
 
-	showCodeTrial = async () => {
-		this.openVPage(VCodeTrial);
+	showTestIDV = async () => {
+		this.openVPage(VTestIDV);
 	}
 	
 	order: Order;

@@ -105,7 +105,7 @@ export interface ParamActDetail<M,D> {
 }
 
 export interface RetActDetail {
-	master: number;
+	main: number;
 	detail: number[];
 }
 
@@ -263,6 +263,7 @@ export interface Uq {
 
 	IDTv(ids: number[]): Promise<any[]>;
 	IDRender(id: number, render?:(value:any) => JSX.Element): JSX.Element;
+	IDV<T>(id: number): T;
 }
 
 export class UqMan {
@@ -717,9 +718,10 @@ export class UqMan {
 					case 'Acts': return this.Acts;
 					case 'ActIX': return this.ActIX;
 					case 'ActIXSort': return this.ActIXSort;
+					case 'ActDetail': return this.ActDetail;
+					case 'IDDetail': return this.ActDetail;
 					case 'QueryID': return this.QueryID;
 					case 'IDTv': return this.IDTv;
-					case 'IDDetail': return this.ActDetail;
 					case 'IDNO': return this.IDNO;
 					case 'IDDetailGet': return this.IDDetailGet;
 					case 'ID': return this.ID;
@@ -733,6 +735,7 @@ export class UqMan {
 					case 'IDxID': return this.IDxID;
 					case 'IDTree': return this.IDTree;
 					case 'IDRender': return this.IDRender;
+					case 'IDV': return this.IDV;
 				}
 				let err = `entity ${this.name}.${String(key)} not defined`;
 				console.error(err);
@@ -824,7 +827,7 @@ export class UqMan {
 	private ActDetail = async (param: ParamActDetail<any, any>): Promise<any> => {
 		let {main, detail, detail2, detail3} = param as unknown as ParamActDetail3<any, any, any, any>;
 		let postParam:any = {
-			master: {
+			main: {
 				name: entityName(main.ID),
 				value: toScalars(main.value),
 			},
@@ -850,7 +853,7 @@ export class UqMan {
 		let parts = val.split('\n');
 		let items = parts.map(v => v.split('\t'));
 		ret = {
-			master: ids(items[0])[0],
+			main: ids(items[0])[0],
 			detail: ids(items[1]),
 			detail2: ids(items[2]),
 			detail3: ids(items[3]),
@@ -1033,6 +1036,11 @@ export class UqMan {
 			if (!IDType) return this.renderIDUnknownType(id);
 			return (render ?? IDType.render)(ret);
 		}));
+	}
+
+	private IDV = <T extends object>(id: number): T => {
+		let ret = this.idCache.getValue(id);
+		return ret as T;
 	}
 
 	private renderIDUnknownType(id: number) {

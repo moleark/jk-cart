@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu May 20 2021 23:33:47 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Mon May 24 2021 23:44:20 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -163,7 +163,7 @@ export interface ParamSetCart {
 	currency: number;
 	quantity: number;
 }
-interface ResultSetCart {
+export interface ResultSetCart {
 }
 
 export interface ParamRemoveFromCart {
@@ -173,7 +173,7 @@ export interface ParamRemoveFromCart {
 	}[];
 
 }
-interface ResultRemoveFromCart {
+export interface ResultRemoveFromCart {
 }
 
 export interface ParamMergeCart {
@@ -184,7 +184,29 @@ export interface ParamMergeCart {
 	}[];
 
 }
-interface ResultMergeCart {
+export interface ResultMergeCart {
+}
+
+export interface ParamSaveDeliver {
+	customer: number;
+	detail: {
+		orderDetailId: number;
+		deliverQuantity: number;
+	}[];
+
+}
+export interface ReturnSaveDeliverRet {
+	no: string;
+	$id: number;
+}
+export interface ResultSaveDeliver {
+	ret: ReturnSaveDeliverRet[];
+}
+
+export interface ParamDelivered {
+	deliverMainId: number;
+}
+export interface ResultDelivered {
 }
 
 export interface SheetOrder {
@@ -222,7 +244,7 @@ export interface VerifyOrder {
 
 export interface ParamGetCart {
 }
-interface ReturnGetCart$page {
+export interface ReturnGetCart$page {
 	date: any;
 	product: number;
 	pack: number;
@@ -230,13 +252,13 @@ interface ReturnGetCart$page {
 	currency: number;
 	quantity: number;
 }
-interface ResultGetCart {
+export interface ResultGetCart {
 	$page: ReturnGetCart$page[];
 }
 
 export interface ParamGetPendingPayment {
 }
-interface ReturnGetPendingPaymentRet {
+export interface ReturnGetPendingPaymentRet {
 	id: number;
 	no: string;
 	description: string;
@@ -244,29 +266,29 @@ interface ReturnGetPendingPaymentRet {
 	amount: number;
 	amountPayed: number;
 }
-interface ResultGetPendingPayment {
+export interface ResultGetPendingPayment {
 	ret: ReturnGetPendingPaymentRet[];
 }
 
 export interface ParamGetPendingAuditOrders {
 	webUser: number;
 }
-interface ReturnGetPendingAuditOrdersRet {
+export interface ReturnGetPendingAuditOrdersRet {
 	id: number;
 	no: string;
 	description: string;
 	date: any;
 }
-interface ResultGetPendingAuditOrders {
+export interface ResultGetPendingAuditOrders {
 	ret: ReturnGetPendingAuditOrdersRet[];
 }
 
 export interface Param$poked {
 }
-interface Return$pokedRet {
+export interface Return$pokedRet {
 	poke: number;
 }
-interface Result$poked {
+export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
@@ -275,9 +297,8 @@ export interface ParamGetCustomerPendingDeliver {
 export interface ReturnGetCustomerPendingDeliverRet {
 	customer: number;
 	quantity: number;
-	$id: number;
 }
-interface ResultGetCustomerPendingDeliver {
+export interface ResultGetCustomerPendingDeliver {
 	ret: ReturnGetCustomerPendingDeliverRet[];
 }
 
@@ -285,40 +306,40 @@ export interface ParamCart {
 	user: number;
 	product: number;
 }
-interface ReturnCart$page {
+export interface ReturnCart$page {
 	pack: number;
 	price: number;
 	currency: number;
 	quantity: number;
 	date: any;
 }
-interface ResultCart {
+export interface ResultCart {
 	$page: ReturnCart$page[];
 }
 
 export interface ParamWebUserAccount {
 	webUser: number;
 }
-interface ReturnWebUserAccount$page {
+export interface ReturnWebUserAccount$page {
 	currency: number;
 	总订单金额: number;
 	总到货金额: number;
 	总开票金额: number;
 	总付款金额: number;
 }
-interface ResultWebUserAccount {
+export interface ResultWebUserAccount {
 	$page: ReturnWebUserAccount$page[];
 }
 
 export interface ParamOrderState {
 }
-interface ReturnOrderState$page {
+export interface ReturnOrderState$page {
 	Order: number;
 	总金额: number;
 	已付金额: number;
 	发货完成: number;
 }
-interface ResultOrderState {
+export interface ResultOrderState {
 	$page: ReturnOrderState$page[];
 }
 
@@ -336,7 +357,7 @@ export interface ParamOrderHistory {
 	currency: number;
 	salesRegion: number;
 }
-interface ReturnOrderHistory$page {
+export interface ReturnOrderHistory$page {
 	date: any;
 	webUser: number;
 	product: number;
@@ -355,13 +376,13 @@ interface ReturnOrderHistory$page {
 	row: number;
 	user: number;
 }
-interface ResultOrderHistory {
+export interface ResultOrderHistory {
 	$page: ReturnOrderHistory$page[];
 }
 
 export interface $PiecewiseDetail {
 	id?: number;
-	parent: number;
+	master: number;
 	row?: number;
 	sec: number;
 	value: number;
@@ -377,7 +398,7 @@ export interface $Piecewise {
 
 export interface OrderDetail {
 	id?: number;
-	parent: number;
+	main?: number;
 	row?: number;
 	product: number;
 	pack: number;
@@ -395,6 +416,20 @@ export interface OrderMain {
 	couponNo: string;
 	sheetId: number;
 	shippingContact: number;
+}
+
+export interface DeliverDetail {
+	id?: number;
+	main?: number;
+	row?: number;
+	orderDetailId: number;
+	deliverQuantity: number;
+}
+
+export interface DeliverMain {
+	id?: number;
+	no?: string;
+	customer: number;
 }
 
 export interface DxOrderDraft {
@@ -495,6 +530,8 @@ export interface ParamActs {
 	$Piecewise?: $Piecewise[];
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
+	deliverDetail?: DeliverDetail[];
+	deliverMain?: DeliverMain[];
 	dxOrderDraft?: ActParamDxOrderDraft[];
 	dxOrderReturning?: ActParamDxOrderReturning[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
@@ -536,6 +573,8 @@ export interface UqExt extends Uq {
 	SetCart: UqAction<ParamSetCart, ResultSetCart>;
 	RemoveFromCart: UqAction<ParamRemoveFromCart, ResultRemoveFromCart>;
 	MergeCart: UqAction<ParamMergeCart, ResultMergeCart>;
+	SaveDeliver: UqAction<ParamSaveDeliver, ResultSaveDeliver>;
+	Delivered: UqAction<ParamDelivered, ResultDelivered>;
 	Order: UqSheet<SheetOrder, VerifyOrder>;
 	Cart: UqBook<ParamCart, ResultCart>;
 	WebUserAccount: UqBook<ParamWebUserAccount, ResultWebUserAccount>;
@@ -554,6 +593,8 @@ export interface UqExt extends Uq {
 	$Piecewise: UqID<any>;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
+	DeliverDetail: UqID<any>;
+	DeliverMain: UqID<any>;
 	DxOrderDraft: UqIDX<any>;
 	DxOrderReturning: UqIDX<any>;
 	DxOrderDetail: UqIDX<any>;

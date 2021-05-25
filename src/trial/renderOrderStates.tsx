@@ -16,7 +16,7 @@ export function renderOrderStates(order: Order) {
 			let cn = 'small text-info bg-white border border-warning rounded-pill px-2';
 			if (count>0) cn += ' ml-3';
 			++count;
-			return <div key={index} className="small text-info bg-white border border-warning rounded-pill px-2 mx-1">{caption}</div>;
+			return <div key={index} className={cn}>{caption}</div>;
 		})}
 	</>;
 }
