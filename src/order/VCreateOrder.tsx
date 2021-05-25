@@ -144,7 +144,7 @@ export class VCreateOrder extends VPage<COrder> {
     private onSubmit = async () => {
         let { orderData } = this.controller;
         // 必填项验证
-		let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
+        let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
 		let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
         if (!shippingContact) {
 			this.shippingAddressTip.set(renderTip('必须填写收货地址'));
@@ -152,9 +152,9 @@ export class VCreateOrder extends VPage<COrder> {
             //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
         }
-        if (!invoiceContact) {
+        /* if (!invoiceContact) {
             if (this.useShippingAddress) {
-				orderData.invoiceContact = shippingContact; //contactBox;
+				this.controller.orderData.invoiceContact = shippingContact; //contactBox;
 				this.invoiceAddressTip.set(null);
                 //this.invoiceAddressIsBlank = false;
             } else {
@@ -163,7 +163,14 @@ export class VCreateOrder extends VPage<COrder> {
 				this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
                 return;
             }
-        }
+        } */
+        if (!invoiceContact && !this.useShippingAddress) {
+            this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
+            return;
+        };
+        if (this.useShippingAddress) {
+            this.controller.orderData.invoiceContact = shippingContact; this.invoiceAddressTip.set(null);
+        };
         if (!invoiceType || !invoiceInfo) {
             //this.invoiceIsBlank = true;
 			//setTimeout(() => this.invoiceIsBlank = false, GLOABLE.TIPDISPLAYTIME);
