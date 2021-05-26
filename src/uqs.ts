@@ -81,11 +81,16 @@ export interface UqCustomer {
     CustomerSetting: Map;
     CustomerContractor: Map;
     getCustomerOrganization: Query;
+    CustomerBuyerAccount: Map;
+    Buyeraccount: Tuid;
+    Customer: Tuid;
 }
 
 export interface UqCustomerDiscount {
     GetDiscount: Query;
     GetDiscountByOrganization: Query;
+    CustomerDiscount: Map;
+    OrganizationDiscount: Map;
 }
 
 export interface UqPromotion {

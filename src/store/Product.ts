@@ -157,6 +157,12 @@ export class Product {
 		//线上客户是否是线下客户 协议折扣  discount
 		if (currentUser) {
 			if (currentUser.hasCustomer) {
+				let { Discounts } = currentUser?.currentCustomer;
+				let discountSetting = Discounts.find((el: any) => el.brand?.id === this.brand?.id);
+				if (discountSetting && discountSetting.discount)
+					discount = discountSetting.discount;
+			};
+			/* if (currentUser.hasCustomer) {
 				let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand?.id, customer: currentUser?.currentCustomer });
 				if (discountSetting && discountSetting.discount)
 					discount = discountSetting.discount;
@@ -166,7 +172,7 @@ export class Product {
 						if (discountSetting && discountSetting.discount) discount = discountSetting.discount;
 					}
 				}
-			}
+			} */
 
 			// 协议客户与vip客户不同存
 			if (currentUser.webUserVIPCard !== undefined) {
