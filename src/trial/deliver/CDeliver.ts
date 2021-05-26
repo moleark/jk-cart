@@ -1,7 +1,7 @@
 import { CTrial } from "../";
 import { CApp, CUqSub, JkOrder } from "uq-app"
 import { UQs } from "uq-app";
-import { OrderDetail, ReturnGetCustomerPendingDeliverRet } from 'uq-app/uqs/JkOrder';
+import { DxOrderDetail, OrderDetail, ReturnGetCustomerPendingDeliverRet } from 'uq-app/uqs/JkOrder';
 import { VDeliver, VDeliverSuccess } from "./VDeliver";
 import { VDeliverForCustomer } from "./VDeliverForCustomer";
 import { makeObservable, observable } from "mobx";
@@ -27,12 +27,19 @@ export class CDeliver extends CUqSub<CApp, UQs, CTrial> {
 	onCustomer = async (customerDeliver: ReturnGetCustomerPendingDeliverRet) => {
 		let {JkOrder} = this.uqs;
 		this.customer = customerDeliver.customer;
-		let ret = await JkOrder.QueryID<OrderDetail>({
+		let ret = await JkOrder.QueryID<OrderDetail & DxOrderDetail>({
 			IX: [JkOrder.IxCustomerPendingDeliver],
-			IDX: [JkOrder.OrderDetail],
+			IDX: [JkOrder.OrderDetail, JkOrder.DxOrderDetail],
 			ix: this.customer,
 		});
-		this.deliverDetails = ret.map(v => ({orderDetail:v, deliverQuantity:v.quantity}));
+		let delivers = ret.map(v => {
+			let {quantity, deliveredQuantity, returnQuantity} = v;
+			return {
+				orderDetail:v, 
+				deliverQuantity:quantity - (returnQuantity ?? 0)  - (deliveredQuantity ?? 0)
+			};
+		});
+		this.deliverDetails = delivers.filter(v => v.deliverQuantity > 0);
 		this.openVPage(VDeliverForCustomer);
 	}
 

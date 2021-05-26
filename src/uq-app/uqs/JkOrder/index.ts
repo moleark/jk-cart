@@ -10,6 +10,7 @@ import * as DxOrderReturning from './DxOrderReturning.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
 import * as DxOrderProcessing from './DxOrderProcessing.ui';
 import * as DxOrderDone from './DxOrderDone.ui';
+import * as DxOrderDetailReturn from './DxOrderDetailReturn.ui';
 import * as IxCustomerPendingDeliver from './IxCustomerPendingDeliver.ui';
 import * as IxCustomerPendingReceive from './IxCustomerPendingReceive.ui';
 import * as IxCustomerPendingInvoice from './IxCustomerPendingInvoice.ui';
@@ -26,6 +27,7 @@ export function setUI(uq: Uq) {
 	Object.assign(uq.DxOrderDetail, DxOrderDetail);
 	Object.assign(uq.DxOrderProcessing, DxOrderProcessing);
 	Object.assign(uq.DxOrderDone, DxOrderDone);
+	Object.assign(uq.DxOrderDetailReturn, DxOrderDetailReturn);
 	Object.assign(uq.IxCustomerPendingDeliver, IxCustomerPendingDeliver);
 	Object.assign(uq.IxCustomerPendingReceive, IxCustomerPendingReceive);
 	Object.assign(uq.IxCustomerPendingInvoice, IxCustomerPendingInvoice);

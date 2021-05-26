@@ -32,53 +32,32 @@ const fields = {
 		"widget": "number",
 		"label": "InvoicedAmount"
 	} as FieldItemNum,
-	askReturnBeforeDeliverQuantity: {
-		"name": "askReturnBeforeDeliverQuantity",
+	returnQuantity: {
+		"name": "returnQuantity",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "AskReturnBeforeDeliverQuantity"
+		"label": "ReturnQuantity"
 	} as FieldItemNum,
-	askReturnDeforeDeliverAmount: {
-		"name": "askReturnDeforeDeliverAmount",
+	returnAmount: {
+		"name": "returnAmount",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "AskReturnDeforeDeliverAmount"
+		"label": "ReturnAmount"
 	} as FieldItemNum,
-	askReturnAfterDeliverQuantity: {
-		"name": "askReturnAfterDeliverQuantity",
+	returnInvoiceAmount: {
+		"name": "returnInvoiceAmount",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "AskReturnAfterDeliverQuantity"
-	} as FieldItemNum,
-	askReturnAfterDeliverAmount: {
-		"name": "askReturnAfterDeliverAmount",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "AskReturnAfterDeliverAmount"
-	} as FieldItemNum,
-	returnedQuantity: {
-		"name": "returnedQuantity",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "ReturnedQuantity"
-	} as FieldItemNum,
-	refundAmount: {
-		"name": "refundAmount",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "RefundAmount"
+		"label": "ReturnInvoiceAmount"
 	} as FieldItemNum,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.deliveredQuantity, fields.paidAmount, fields.invoicedAmount, fields.askReturnBeforeDeliverQuantity, fields.askReturnDeforeDeliverAmount, fields.askReturnAfterDeliverQuantity, fields.askReturnAfterDeliverAmount, fields.returnedQuantity, fields.refundAmount, 
+	fields.deliveredQuantity, fields.paidAmount, fields.invoicedAmount, fields.returnQuantity, fields.returnAmount, fields.returnInvoiceAmount, 
 ];
 
 export const ui: UI = {

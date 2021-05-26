@@ -1,7 +1,7 @@
 import { Res, setRes, TFunc, UI } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { $PiecewiseDetail } from "./JkOrder";
+import { DxOrderDetailReturn } from "./JkOrder";
 
 /*--fields--*/
 const fields = {
@@ -11,42 +11,43 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	main: {
-		"name": "main",
-		"type": "id",
-		"isKey": true,
-		"label": "Main"
-	} as FieldItemId,
-	row: {
-		"name": "row",
-		"type": "integer",
-		"isKey": true,
-		"widget": "updown",
-		"label": "Row"
-	} as FieldItemInt,
-	sec: {
-		"name": "sec",
+	askQuantity: {
+		"name": "askQuantity",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "Sec"
+		"label": "AskQuantity"
 	} as FieldItemNum,
-	value: {
-		"name": "value",
+	askAmount: {
+		"name": "askAmount",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "Value"
+		"label": "AskAmount"
+	} as FieldItemNum,
+	returnedQuantity: {
+		"name": "returnedQuantity",
+		"type": "number",
+		"isKey": false,
+		"widget": "number",
+		"label": "ReturnedQuantity"
+	} as FieldItemNum,
+	refundAmount: {
+		"name": "refundAmount",
+		"type": "number",
+		"isKey": false,
+		"widget": "number",
+		"label": "RefundAmount"
 	} as FieldItemNum,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.main, fields.row, fields.sec, fields.value, 
+	fields.askQuantity, fields.askAmount, fields.returnedQuantity, fields.refundAmount, 
 ];
 
 export const ui: UI = {
-	label: "$PiecewiseDetail",
+	label: "DxOrderDetailReturn",
 	fieldArr,
 	fields,
 };
@@ -64,6 +65,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: $PiecewiseDetail):JSX.Element {
+export function render(item: DxOrderDetailReturn):JSX.Element {
 	return <>{JSON.stringify(item)}</>;
 };
