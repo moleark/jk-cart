@@ -630,7 +630,6 @@ export class COrder extends CUqBase {
         let addressId = newAddress && Address.boxId(newAddress.id);
         this.modalTitle = 'contactInfo';
         this.addressId = addressId;
-        this.cApp.cSelectShippingContact.TIT = true;
     }
 
     saveContact = async (contact: any) => {

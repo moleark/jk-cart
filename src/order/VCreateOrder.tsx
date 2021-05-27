@@ -24,6 +24,12 @@ export class VCreateOrder extends VPage<COrder> {
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
+        let { orderData } = this.controller;
+        if (orderData?.invoiceContact?.id !== orderData?.shippingContact?.id) {
+            this.useShippingAddress = false;
+        } else {
+            this.useShippingAddress = true;
+        };
         this.openPage(this.page);
     }
 
@@ -216,7 +222,8 @@ export class VCreateOrder extends VPage<COrder> {
         let divInvoiceContact: any = null;
         if (this.useShippingAddress === false) {
             if (orderData.invoiceContact !== undefined) {
-                divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex">
+                divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex"
+                    onClick={() => { xs ? onSelectInvoiceContact() : this.saveShowModal('invoiceContact') }}>
                     {tv(orderData.invoiceContact, undefined, undefined, this.nullContact)}
                     <div>{chevronRight}</div>
                 </div>
