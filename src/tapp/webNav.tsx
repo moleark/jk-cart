@@ -253,7 +253,10 @@ export class NavFooterView extends View<CApp> {
                             | <a href="/privacy-cn" target="_blank">隐私政策</a>
                         </div>
                         <div className="col-sm-7">
-                            京公安网备11010502027473 | <a href="https://beian.miit.gov.cn" target="_blank">京ICP备09071033号-3</a>&nbsp;
+                            <img className="align-top" src="/images/gongan.png" alt="" />
+                            <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502044888" target="_blank">京公安网备 11010502044888</a>&nbsp;
+                            {/* 京公安网备11010502027473 */}
+                            | <a href="https://beian.miit.gov.cn" target="_blank">京ICP备09071033号-3</a>&nbsp;
                             | <a href="/images/上海百灵威营业执照副本.pdf" target="_blank">上海工商</a>&nbsp;
                             | <a href="/images/危险化学品经营许可证副本.jpg" target="_blank">危险化学品经营许可证</a>
                             | <a href="/images/营业执照副本.jpg" target="_blank"> 营业执照(三证合一)</a>
