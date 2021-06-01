@@ -63,6 +63,14 @@ export class COrder extends CUqBase {
     protected async internalStart(param: any) {
     }
 
+    initOrderFreightFee = () => {// 运费和运费减免
+        this.orderData.freightFee = FREIGHTFEEFIXED;
+        if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
+            this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
+        else
+            this.orderData.freightFeeRemitted = 0;
+    }
+
     createOrderFromCart = async (cartItems: CartItem[]) => {
         let { cApp, uqs } = this;
         let { currentUser, currentSalesRegion, cCoupon } = cApp;
@@ -108,11 +116,7 @@ export class COrder extends CUqBase {
             });
 
             // 运费和运费减免
-            this.orderData.freightFee = FREIGHTFEEFIXED;
-            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
-                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
-            else
-                this.orderData.freightFeeRemitted = 0;
+            this.initOrderFreightFee();
         }
 
         /*
@@ -208,7 +212,7 @@ export class COrder extends CUqBase {
         let { uqs, store, currentUser } = this.cApp;
         let { order, webuser, 积分商城 } = uqs;
         let { orderItems } = this.orderData;
-
+        this.initOrderFreightFee();
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
         let { id: orderId, no, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
@@ -390,11 +394,7 @@ export class COrder extends CUqBase {
             }
             */
             // 运费和运费减免
-            this.orderData.freightFee = FREIGHTFEEFIXED;
-            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
-                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
-            else
-                this.orderData.freightFeeRemitted = 0;
+            this.initOrderFreightFee();
         }
     }
 
