@@ -3611,10 +3611,12 @@ table.product-table th {
     border-left: 1px solid #bbb9b9;
     border-radius: 0 0 4px 4px;
     position: absolute;
+    right: 15px;
+    left: 15px;
     bottom: 0;
     background-color: #000000b8;
     padding: 10px 15px 0 15px;
-    width: calc(100% - 30px);
+    /* width: calc(100% - 30px); */
 }
 
 .position-re.home-main-pic .home-main-pic-info a {
@@ -4312,7 +4314,7 @@ table.product-table th {
         height: 239px;
     }
     .index .banner-info {
-        text-shadow: 2px -2px 2px #7d7d7d;
+        /* text-shadow: 2px -2px 2px #7d7d7d; */
         width: 55%;
         padding-top: 3.5em;
         padding-bottom: 4.5em;

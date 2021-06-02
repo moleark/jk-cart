@@ -221,7 +221,9 @@ export class NavFooterView extends View<CApp> {
                         </ul>
                     </div>
                     <div className="col-lg-3 col-6">
-                        <div className="footer-title">联系我们</div>
+                        <div className="footer-title">
+                            <a href="/ch/contact" target="_blank">联系我们</a>
+                        </div>
                         <div className="contact">
                             电话：400-666-7788<br />+86 10 8284 8833
                         </div>
