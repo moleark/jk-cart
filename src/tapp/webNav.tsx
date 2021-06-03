@@ -256,7 +256,7 @@ export class NavFooterView extends View<CApp> {
                         </div>
                         <div className="col-sm-7">
                             <img className="align-top" src="/images/gongan.png" alt="" />
-                            <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502044888" target="_blank">京公安网备 11010502044888</a>&nbsp;
+                            <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502044888" target="_blank">京公网安备 11010502044888</a>&nbsp;
                             {/* 京公安网备11010502027473 */}
                             | <a href="https://beian.miit.gov.cn" target="_blank">京ICP备09071033号-3</a>&nbsp;
                             | <a href="/images/上海百灵威营业执照副本.pdf" target="_blank">上海工商</a>&nbsp;
