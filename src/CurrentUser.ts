@@ -100,7 +100,9 @@ export class WebUser {
             this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
             if (this.webUserVIPCard !== undefined) {
                 // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
-                this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
+                if (this.webUserVIPCard.expiredDate > Date.now())
+                    this.VIPDiscount = await salesTask.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
+                else this.VIPDiscount = [];
             }
 
             await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
@@ -292,14 +294,16 @@ export class Customer {
      * 获取customer折扣表
      */
     async getcustomerDiscount(customer: BoxId | number) {
-        return await this.uqs.customerDiscount.CustomerDiscount.table({ customer: customer });
+        let discounts = await this.uqs.customerDiscount.CustomerDiscount.table({ customer: customer });
+        return discounts.filter((el: any) => el.endDate > Date.now());
     }
 
     /**
      * 获取所属组织折扣表
      */
     async getOrganizationDiscount(organization: BoxId | number) {
-        return await this.uqs.customerDiscount.OrganizationDiscount.table({ organization: organization });
+        let discounts = await this.uqs.customerDiscount.OrganizationDiscount.table({ organization: organization });
+        return discounts.filter((el: any) => el.endDate > Date.now());
     }
     /* 获取用户的折扣表(个人-->个人所属组织-->关联老师-->老师所属组织) */
     async getcustomerDiscountArr() {

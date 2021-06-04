@@ -96,9 +96,9 @@ export class VOrderDetail extends VPage<COrder> {
             <div className="text-right w-100 px-3">
                 {orderTransUI}
                 <Ax className="mx-2 text-info font-weight-bold" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
-                <div className="btn btn-sm btn-info float-left float-lg-right"
+                <div className="btn btn-sm btn-info float-left float-lg-right cursor-pointer"
                     style={{ background: "#17a2b8" }} onClick={() => { this.againCreatOrder([orderItem]) }}>
-                    立即购买
+                    再次购买
                 </div>
             </div>
         </div>
@@ -147,10 +147,10 @@ export class VOrderDetail extends VPage<COrder> {
             }
         }
         let orderAgainUI = <div className="px-3 py-2 border-bottom" style={{userSelect: "none"}}>
-            <span className="align-middle">您若想购买订单中所有产品,请 </span>
+            <span className="align-middle">若需再次购买该订单中所有产品，请 </span>
             <button className="btn btn-sm btn-secondary cursor-pointer" title='可直接下单再次购买订单中产品'
                 style={{ background: "#6c757d" }}
-                onClick={() => { this.againCreatOrder(orderItems) }}>立即下单</button>
+                onClick={() => { this.againCreatOrder(orderItems) }}>再次下单</button>
             {/* <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button> */}
         </div>
 

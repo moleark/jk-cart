@@ -177,7 +177,7 @@ export class Product {
 			// 协议客户与vip客户不同存
 			if (currentUser.webUserVIPCard !== undefined) {
 				let brandDiscounts = currentUser.VIPDiscount;
-				let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand?.id);
+				let brandDiscount = brandDiscounts.find((e: any) => e.brand.id === this.brand?.id);
 				// 协议与vip折扣比较 取其大值  (两者不可同存)
 				if (brandDiscount && brandDiscount.discount > discount)
 					discount = brandDiscount && brandDiscount.discount;
