@@ -5,6 +5,7 @@ import { Ax, List, EasyDate } from 'tonva';
 import { observable } from 'mobx';
 import { xs } from 'tools/browser';
 import { ListTable } from 'tools/listTable';
+import { GLOABLE } from 'global';
 
 export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -16,7 +17,7 @@ export class VMyOrders extends VPage<COrder> {
     @observable private completedOrders: any[];
 	@observable private allOrders: any[];
 	*/
-	@observable private list: any[];
+	@observable private list: any[] = [];
 	private currentState: string;
 	private tabs: TabProp[];
 
@@ -72,8 +73,8 @@ export class VMyOrders extends VPage<COrder> {
 				<td data-title={columns[1].name}><EasyDate date={date} /></td>
 				<td data-title={columns[2].name}>{os[state !=='all'? state : OState]}</td>
 				<td data-title={columns[3].name}>
-					<Ax href={"/orderDetail/" + id} className='w-100 m-3' target="_blank">
-						<button type='button' className="btn-primary w-4c">详情</button>
+					<Ax href={"/orderDetail/" + id} className='w-100' target="_blank">
+						<button type='button' className="btn-primary w-4c rounded-sm">详情</button>
 					</Ax>
 				</td>
 			</tr>
@@ -108,7 +109,12 @@ export class VMyOrders extends VPage<COrder> {
 					{this.controller.cApp.cMe.renderMeSideBar()}
 				</div>
 				<div className={`col-lg-9 px-0 mx-auto ${!xs ? 'px-2' :''}`} style={{maxWidth:!xs ? 800 :'none'}}>
-					{title}
+				{title}
+				<div className="alert alert-info alert-signin my-2">
+						<div>原官网历史订单
+							<a className="text-primary" href={ GLOABLE.CONTENTSITE + "/Member/Center/SaleOrderList.aspx?language=zh-CN" }
+							target="_blank"><b>查询</b></a></div>
+					</div>
 					<div className="mb-5 reset-z-header-boxS">
 						<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
 					</div>
