@@ -75,7 +75,7 @@ serviceWorker.unregister();
 	if (!elRoot) {
 		elRoot = document.createElement('div');
 		elRoot.style.display = 'none';
-		document.body.append(elRoot);
+		document.body.appendChild(elRoot);
 	}
 	ReactDOM.render(
 		<React.StrictMode>
