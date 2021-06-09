@@ -110,14 +110,15 @@ export class VMyOrders extends VPage<COrder> {
 				</div>
 				<div className={`col-lg-9 px-0 mx-auto ${!xs ? 'px-2' :''}`} style={{maxWidth:!xs ? 800 :'none'}}>
 				{title}
+				<div className="mb-5 reset-z-header-boxS">
+					<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
+				</div>
 				<div className="alert alert-info alert-signin my-2">
-						<div>原官网历史订单
-							<a className="text-primary" href={ GLOABLE.CONTENTSITE + "/Member/Center/SaleOrderList.aspx?language=zh-CN" }
-							target="_blank"><b>查询</b></a></div>
+					<div>原官网历史订单
+						<a className="text-primary" href={ GLOABLE.CONTENTSITE + "/Member/Center/SaleOrderList.aspx?language=zh-CN" }
+							target="_blank"><b>查询</b></a>
 					</div>
-					<div className="mb-5 reset-z-header-boxS">
-						<Tabs tabs={this.tabs} tabPosition="top" tabBg={!xs ? 'bg-light' : ''} />
-					</div>
+				</div>
 				</div>
 			</div>
 	}
