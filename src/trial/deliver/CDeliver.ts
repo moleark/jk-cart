@@ -1,10 +1,9 @@
 import { CTrial } from "../";
 import { CApp, CUqSub, JkOrder } from "uq-app"
 import { UQs } from "uq-app";
-import { DxOrderDetail, OrderDetail, ReturnGetCustomerPendingDeliverRet } from 'uq-app/uqs/JkOrder';
+import { DxOrderDetail, OrderDetail } from 'uq-app/uqs/JkOrder';
 import { VDeliver, VDeliverSuccess } from "./VDeliver";
 import { VDeliverForCustomer } from "./VDeliverForCustomer";
-import { makeObservable, observable } from "mobx";
 
 
 export interface DeliverDetail {
@@ -13,17 +12,19 @@ export interface DeliverDetail {
 }
 
 export class CDeliver extends CUqSub<CApp, UQs, CTrial> {
-	customerPendingDeliver: ReturnGetCustomerPendingDeliverRet[];
+	//customerPendingDeliver: ReturnGetCustomerPendingDeliverRet[];
 	//deliversForCustomer: OrderDetail[];
 	deliverDetails: DeliverDetail[];
 	customer: number;
 
 	protected async internalStart() {
+		/*
 		let result = await this.uqs.JkOrder.GetCustomerPendingDeliver.query({});
 		this.customerPendingDeliver = result.ret;
+		*/
 		this.openVPage(VDeliver);
 	}
-
+/*
 	onCustomer = async (customerDeliver: ReturnGetCustomerPendingDeliverRet) => {
 		let {JkOrder} = this.uqs;
 		this.customer = customerDeliver.customer;
@@ -42,8 +43,9 @@ export class CDeliver extends CUqSub<CApp, UQs, CTrial> {
 		this.deliverDetails = delivers.filter(v => v.deliverQuantity > 0);
 		this.openVPage(VDeliverForCustomer);
 	}
-
+*/
 	saveDeliverSheet = async () => {
+		/*
 		let {JkOrder} = this.uqs;
 		let ret = await JkOrder.ActDetail<JkOrder.DeliverMain, JkOrder.DeliverDetail>({
 			main: {
@@ -60,6 +62,7 @@ export class CDeliver extends CUqSub<CApp, UQs, CTrial> {
 			},
 		});
 		let retAct = await JkOrder.Delivered.submit({deliverMainId: ret.main});
+		*/
 		this.closePage();
 		this.openVPage(VDeliverSuccess);
 	}

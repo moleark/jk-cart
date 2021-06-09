@@ -1,5 +1,5 @@
 import { CUqBase } from "uq-app";
-import { OrderDetail, OrderMain } from "uq-app/uqs/JkOrder";
+import { OrderDetail, OrderMain, ParamSaveOrder } from "uq-app/uqs/JkOrder";
 import { DonePageList, DraftPageList, OrderAllPageList, OrderPageList, ProcessingPageList, ReturningPageList } from "./orderPageList";
 import { VInvoice } from "./VInvoice";
 import { VOrder } from "./VOrder";
@@ -97,6 +97,8 @@ export class CTrial extends CUqBase {
 	}
 
 	acceptOrder = async () => {
+		// 暂时屏蔽
+		/*
 		let jkOrder = this.uqs.JkOrder;
 		let {id, customer, details} = this.order;
 		await jkOrder.Acts({
@@ -106,6 +108,7 @@ export class CTrial extends CUqBase {
 		});
 		(this.orderList as DraftPageList).acceptOrder(this.order);
 		this.closePage();
+		*/
 	}
 
 	payOrder = async () => {
@@ -122,5 +125,32 @@ export class CTrial extends CUqBase {
 
 	returnOrder = async () => {
 		alert('return');
+	}
+
+	mockOrder = async () => {
+		let data: ParamSaveOrder = {
+			id: undefined,
+			no: undefined,
+			customer: 65695, 
+			sumQuanity: undefined,
+			sumAmount: undefined,
+			couponNo: undefined,
+			sheetId: undefined,
+			shippingContact: undefined,
+			detail: [
+				{
+					id: undefined,
+					main: undefined,
+					warehouse: 1,
+					item: 29514,
+					product: 12686,
+					quantity: 10,
+					amount: 10*310,
+					price: 310.00,
+				}
+			],	
+		}
+		let ret = await this.uqs.JkOrder.SaveOrder.submit(data);
+		alert('data mocked: ' + JSON.stringify(data) + '\n returned: ' + JSON.stringify(ret));
 	}
 }

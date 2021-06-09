@@ -11,53 +11,53 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	deliveredQuantity: {
-		"name": "deliveredQuantity",
+	deliver: {
+		"name": "deliver",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "DeliveredQuantity"
+		"label": "Deliver"
 	} as FieldItemNum,
-	paidAmount: {
-		"name": "paidAmount",
+	deliverDone: {
+		"name": "deliverDone",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "PaidAmount"
+		"label": "DeliverDone"
 	} as FieldItemNum,
-	invoicedAmount: {
-		"name": "invoicedAmount",
+	receive: {
+		"name": "receive",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "InvoicedAmount"
+		"label": "Receive"
 	} as FieldItemNum,
-	returnQuantity: {
-		"name": "returnQuantity",
+	receiveDone: {
+		"name": "receiveDone",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "ReturnQuantity"
+		"label": "ReceiveDone"
 	} as FieldItemNum,
-	returnAmount: {
-		"name": "returnAmount",
+	invoice: {
+		"name": "invoice",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "ReturnAmount"
+		"label": "Invoice"
 	} as FieldItemNum,
-	returnInvoiceAmount: {
-		"name": "returnInvoiceAmount",
+	invoiceDone: {
+		"name": "invoiceDone",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "ReturnInvoiceAmount"
+		"label": "InvoiceDone"
 	} as FieldItemNum,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.deliveredQuantity, fields.paidAmount, fields.invoicedAmount, fields.returnQuantity, fields.returnAmount, fields.returnInvoiceAmount, 
+	fields.deliver, fields.deliverDone, fields.receive, fields.receiveDone, fields.invoice, fields.invoiceDone, 
 ];
 
 export const ui: UI = {

@@ -17,6 +17,7 @@ export class VTrial extends VPage<CTrial> {
 			['收款', this.controller.showReceive],
 			['开票', this.controller.showInvoice],
 			['Test IDV', this.controller.showTestIDV],
+			['Mock Order', this.controller.mockOrder]
 		];
 		let right = <FA name="angle-right" className="align-self-center" />;
 		return <div>

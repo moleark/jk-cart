@@ -14,27 +14,26 @@ const fields = {
 	main: {
 		"name": "main",
 		"type": "id",
-		"isKey": true,
+		"isKey": false,
 		"label": "Main"
 	} as FieldItemId,
-	row: {
-		"name": "row",
-		"type": "integer",
-		"isKey": true,
-		"widget": "updown",
-		"label": "Row"
-	} as FieldItemInt,
+	warehouse: {
+		"name": "warehouse",
+		"type": "id",
+		"isKey": false,
+		"label": "Warehouse"
+	} as FieldItemId,
+	item: {
+		"name": "item",
+		"type": "id",
+		"isKey": false,
+		"label": "Item"
+	} as FieldItemId,
 	product: {
 		"name": "product",
 		"type": "id",
 		"isKey": false,
 		"label": "Product"
-	} as FieldItemId,
-	pack: {
-		"name": "pack",
-		"type": "id",
-		"isKey": false,
-		"label": "Pack"
 	} as FieldItemId,
 	quantity: {
 		"name": "quantity",
@@ -61,7 +60,7 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.main, fields.row, fields.product, fields.pack, fields.quantity, fields.amount, fields.price, 
+	fields.main, fields.warehouse, fields.item, fields.product, fields.quantity, fields.amount, fields.price, 
 ];
 
 export const ui: UI = {

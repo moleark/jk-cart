@@ -697,10 +697,14 @@ export class UqMan {
 
 	getUqKey() {
 		let uqKey:string = this.uqName.split(/[-._]/).join('').toLowerCase();
-		if (this.config) {
-			let {dev, alias} = this.config;
-			uqKey = capitalCase(dev.alias || dev.name) + capitalCase(alias??uqKey);
-		}
+		return uqKey;
+	}
+
+	getUqKeyWithConfig() {
+		if (!this.config) return;
+		let uqKey:string = this.uqName.split(/[-._]/).join('').toLowerCase();
+		let {dev, alias} = this.config;
+		uqKey = capitalCase(dev.alias || dev.name) + capitalCase(alias??uqKey);
 		return uqKey;
 	}
 

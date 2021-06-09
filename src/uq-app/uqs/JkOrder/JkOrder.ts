@@ -1,6 +1,6 @@
-//=== UqApp builder created on Tue May 25 2021 22:58:14 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Mon Jun 07 2021 20:33:13 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX } from "tonva-react";
 
 
 //===============================
@@ -187,25 +187,71 @@ export interface ParamMergeCart {
 export interface ResultMergeCart {
 }
 
-export interface ParamSaveDeliver {
-	customer: number;
+export interface ParamOrderPaid {
+	id: number;
+	amount: number;
+}
+export interface ReturnOrderPaidRet {
+	ok: number;
+	$id: number;
+}
+export interface ResultOrderPaid {
+	ret: ReturnOrderPaidRet[];
+}
+
+export interface ParamSaveOrderReturn {
+	id: number;
+	orderMain: number;
 	detail: {
-		orderDetailId: number;
-		deliverQuantity: number;
+		id: number;
+		main: number;
+		orderDetail: number;
+		quantity: number;
+		amount: number;
 	}[];
 
 }
-export interface ReturnSaveDeliverRet {
-	no: string;
+export interface ReturnSaveOrderReturnRet {
+	id: number;
+	$id: number;
 }
-export interface ResultSaveDeliver {
-	ret: ReturnSaveDeliverRet[];
+export interface ResultSaveOrderReturn {
+	ret: ReturnSaveOrderReturnRet[];
 }
 
-export interface ParamDelivered {
-	deliverMainId: number;
+export interface ParamOrderConfirm {
+	id: number;
 }
-export interface ResultDelivered {
+export interface ResultOrderConfirm {
+}
+
+export interface ParamSaveOrder {
+	id: number;
+	no: string;
+	customer: number;
+	sumQuanity: number;
+	sumAmount: number;
+	couponNo: string;
+	sheetId: number;
+	shippingContact: number;
+	detail: {
+		id: number;
+		main: number;
+		warehouse: number;
+		item: number;
+		product: number;
+		quantity: number;
+		amount: number;
+		price: number;
+	}[];
+
+}
+export interface ReturnSaveOrderRet {
+	id: number;
+	$id: number;
+}
+export interface ResultSaveOrder {
+	ret: ReturnSaveOrderRet[];
 }
 
 export interface SheetOrder {
@@ -289,16 +335,6 @@ export interface Return$pokedRet {
 }
 export interface Result$poked {
 	ret: Return$pokedRet[];
-}
-
-export interface ParamGetCustomerPendingDeliver {
-}
-export interface ReturnGetCustomerPendingDeliverRet {
-	customer: number;
-	quantity: number;
-}
-export interface ResultGetCustomerPendingDeliver {
-	ret: ReturnGetCustomerPendingDeliverRet[];
 }
 
 export interface ParamCart {
@@ -398,9 +434,9 @@ export interface $Piecewise {
 export interface OrderDetail {
 	id?: number;
 	main?: number;
-	row?: number;
+	warehouse: number;
+	item: number;
 	product: number;
-	pack: number;
 	quantity: number;
 	amount: number;
 	price: number;
@@ -431,109 +467,67 @@ export interface DeliverMain {
 	customer: number;
 }
 
-export interface DxOrderDraft {
-	id: number;
-	draft?: number;
-	salesPerson?: number;
-	$act?: number;
+export interface DeliverCenter {
+	id?: number;
 }
 
-export interface DxOrderReturning {
-	id: number;
-	returning?: number;
-	$act?: number;
+export interface ReturnDetail {
+	id?: number;
+	main?: number;
+	orderDetail: number;
+	quantity: number;
+	amount: number;
+}
+
+export interface ReturnMain {
+	id?: number;
+	orderMain: number;
 }
 
 export interface DxOrderDetail {
 	id: number;
-	deliveredQuantity?: number;
-	paidAmount?: number;
-	invoicedAmount?: number;
-	returnQuantity?: number;
-	returnAmount?: number;
-	returnInvoiceAmount?: number;
+	deliver?: number;
+	deliverDone?: number;
+	receive?: number;
+	receiveDone?: number;
+	invoice?: number;
+	invoiceDone?: number;
 	$act?: number;
 }
 
-export interface DxOrderProcessing {
+export interface DxReturnDetail {
 	id: number;
-	processing?: number;
-	$act?: number;
-}
-
-export interface DxOrderDone {
-	id: number;
-	done?: number;
-	$act?: number;
-}
-
-export interface DxOrderDetailReturn {
-	id: number;
-	askQuantity?: number;
-	askAmount?: number;
-	returnedQuantity?: number;
-	refundAmount?: number;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDraft {
-	id: number|IDXValue;
-	draft?: number|IDXValue;
-	salesPerson?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxOrderReturning {
-	id: number|IDXValue;
-	returning?: number|IDXValue;
+	orderDetail?: number;
+	deliver?: number;
+	deliverDone?: number;
+	receive?: number;
+	receiveDone?: number;
+	invoice?: number;
+	invoiceDone?: number;
 	$act?: number;
 }
 
 export interface ActParamDxOrderDetail {
 	id: number|IDXValue;
-	deliveredQuantity?: number|IDXValue;
-	paidAmount?: number|IDXValue;
-	invoicedAmount?: number|IDXValue;
-	returnQuantity?: number|IDXValue;
-	returnAmount?: number|IDXValue;
-	returnInvoiceAmount?: number|IDXValue;
+	deliver?: number|IDXValue;
+	deliverDone?: number|IDXValue;
+	receive?: number|IDXValue;
+	receiveDone?: number|IDXValue;
+	invoice?: number|IDXValue;
+	invoiceDone?: number|IDXValue;
 	$act?: number;
 }
 
-export interface ActParamDxOrderProcessing {
+export interface ActParamDxReturnDetail {
 	id: number|IDXValue;
-	processing?: number|IDXValue;
+	orderDetail?: number|IDXValue;
+	deliver?: number|IDXValue;
+	deliverDone?: number|IDXValue;
+	receive?: number|IDXValue;
+	receiveDone?: number|IDXValue;
+	invoice?: number|IDXValue;
+	invoiceDone?: number|IDXValue;
 	$act?: number;
-}
-
-export interface ActParamDxOrderDone {
-	id: number|IDXValue;
-	done?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetailReturn {
-	id: number|IDXValue;
-	askQuantity?: number|IDXValue;
-	askAmount?: number|IDXValue;
-	returnedQuantity?: number|IDXValue;
-	refundAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface IxCustomerPendingDeliver {
-	ix: number;
-	xi: number;
-}
-
-export interface IxCustomerPendingReceive {
-	ix: number;
-	xi: number;
-}
-
-export interface IxCustomerPendingInvoice {
-	ix: number;
-	xi: number;
 }
 
 export interface ParamActs {
@@ -543,15 +537,11 @@ export interface ParamActs {
 	orderMain?: OrderMain[];
 	deliverDetail?: DeliverDetail[];
 	deliverMain?: DeliverMain[];
-	dxOrderDraft?: ActParamDxOrderDraft[];
-	dxOrderReturning?: ActParamDxOrderReturning[];
+	deliverCenter?: DeliverCenter[];
+	returnDetail?: ReturnDetail[];
+	returnMain?: ReturnMain[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
-	dxOrderProcessing?: ActParamDxOrderProcessing[];
-	dxOrderDone?: ActParamDxOrderDone[];
-	dxOrderDetailReturn?: ActParamDxOrderDetailReturn[];
-	ixCustomerPendingDeliver?: IxCustomerPendingDeliver[];
-	ixCustomerPendingReceive?: IxCustomerPendingReceive[];
-	ixCustomerPendingInvoice?: IxCustomerPendingInvoice[];
+	dxReturnDetail?: ActParamDxReturnDetail[];
 }
 
 
@@ -585,8 +575,10 @@ export interface UqExt extends Uq {
 	SetCart: UqAction<ParamSetCart, ResultSetCart>;
 	RemoveFromCart: UqAction<ParamRemoveFromCart, ResultRemoveFromCart>;
 	MergeCart: UqAction<ParamMergeCart, ResultMergeCart>;
-	SaveDeliver: UqAction<ParamSaveDeliver, ResultSaveDeliver>;
-	Delivered: UqAction<ParamDelivered, ResultDelivered>;
+	OrderPaid: UqAction<ParamOrderPaid, ResultOrderPaid>;
+	SaveOrderReturn: UqAction<ParamSaveOrderReturn, ResultSaveOrderReturn>;
+	OrderConfirm: UqAction<ParamOrderConfirm, ResultOrderConfirm>;
+	SaveOrder: UqAction<ParamSaveOrder, ResultSaveOrder>;
 	Order: UqSheet<SheetOrder, VerifyOrder>;
 	Cart: UqBook<ParamCart, ResultCart>;
 	WebUserAccount: UqBook<ParamWebUserAccount, ResultWebUserAccount>;
@@ -595,7 +587,6 @@ export interface UqExt extends Uq {
 	GetPendingPayment: UqQuery<ParamGetPendingPayment, ResultGetPendingPayment>;
 	GetPendingAuditOrders: UqQuery<ParamGetPendingAuditOrders, ResultGetPendingAuditOrders>;
 	$poked: UqQuery<Param$poked, Result$poked>;
-	GetCustomerPendingDeliver: UqQuery<ParamGetCustomerPendingDeliver, ResultGetCustomerPendingDeliver>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
 	OrderTransportation: UqMap;
@@ -607,13 +598,9 @@ export interface UqExt extends Uq {
 	OrderMain: UqID<any>;
 	DeliverDetail: UqID<any>;
 	DeliverMain: UqID<any>;
-	DxOrderDraft: UqIDX<any>;
-	DxOrderReturning: UqIDX<any>;
+	DeliverCenter: UqID<any>;
+	ReturnDetail: UqID<any>;
+	ReturnMain: UqID<any>;
 	DxOrderDetail: UqIDX<any>;
-	DxOrderProcessing: UqIDX<any>;
-	DxOrderDone: UqIDX<any>;
-	DxOrderDetailReturn: UqIDX<any>;
-	IxCustomerPendingDeliver: UqIX<any>;
-	IxCustomerPendingReceive: UqIX<any>;
-	IxCustomerPendingInvoice: UqIX<any>;
+	DxReturnDetail: UqIDX<any>;
 }

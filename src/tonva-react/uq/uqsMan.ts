@@ -215,12 +215,26 @@ export class UQsMan {
     buildUQs(): any {
         //let that = this;
         let uqs:any = {};
-        for (let uqMan of this.uqMans) {
-            let uqKey = uqMan.getUqKey();
+		function setUq(uqKey: string, proxy: any):void {
+			if (!uqKey) return;
 			let lower = uqKey.toLowerCase();
-			let proxy = uqMan.createProxy();			
 			uqs[uqKey] = proxy;
 			if (lower !== uqKey) uqs[lower] = proxy;
+		}
+		for (let uqMan of this.uqMans) {
+			let proxy = uqMan.createProxy();
+			setUq(uqMan.getUqKey(), proxy);
+			setUq(uqMan.getUqKeyWithConfig(), proxy);
+			/*
+			let uqKey = uqMan.getUqKey();
+			let lower = uqKey.toLowerCase();
+			uqs[uqKey] = proxy;
+			if (lower !== uqKey) uqs[lower] = proxy;
+            let uqKeyWithConfig = uqMan.getUqKeyWithConfig();
+			let lowerWithConfig = uqKeyWithConfig.toLowerCase();
+			uqs[uqKeyWithConfig] = proxy;
+			if (lowerWithConfig !== uqKeyWithConfig) uqs[lowerWithConfig] = proxy;
+			*/
         }
         return new Proxy(uqs, {
             get: (target, key, receiver) => {

@@ -27,8 +27,8 @@ export abstract class OrderPageList extends PageItems<Order> {
 
 export class OrderAllPageList extends OrderPageList {
 	protected get IDX(): IDX[] {
-		let {OrderMain, DxOrderDraft, DxOrderProcessing, DxOrderReturning, DxOrderDone} = this.uqs.JkOrder;
-		return [OrderMain, DxOrderDraft, DxOrderProcessing, DxOrderReturning, DxOrderDone];
+		let {OrderMain} = this.uqs.JkOrder;
+		return [OrderMain];
 	}
 
 	acceptOrder(order: Order) {
@@ -44,8 +44,8 @@ export class OrderAllPageList extends OrderPageList {
 
 export class DraftPageList extends OrderPageList {
 	protected get IDX(): IDX[] {
-		let {DxOrderDraft, OrderMain} = this.uqs.JkOrder;
-		return [DxOrderDraft, OrderMain];
+		let {OrderMain} = this.uqs.JkOrder;
+		return [OrderMain];
 	}
 	acceptOrder(order: Order) {
 		let {id} = order;
@@ -58,21 +58,21 @@ export class DraftPageList extends OrderPageList {
 
 export class ProcessingPageList extends OrderPageList {
 	protected get IDX(): IDX[] {
-		let {DxOrderProcessing, OrderMain} = this.uqs.JkOrder;
-		return [DxOrderProcessing, OrderMain];
+		let {OrderMain} = this.uqs.JkOrder;
+		return [OrderMain];
 	}
 }
 
 export class DonePageList extends OrderPageList {
 	protected get IDX(): IDX[] {
-		let {DxOrderDone, OrderMain} = this.uqs.JkOrder;
-		return [DxOrderDone, OrderMain];
+		let {OrderMain} = this.uqs.JkOrder;
+		return [OrderMain];
 	}
 }
 
 export class ReturningPageList extends OrderPageList {
 	protected get IDX(): IDX[] {
-		let {DxOrderReturning, OrderMain} = this.uqs.JkOrder;
-		return [DxOrderReturning, OrderMain];
+		let {OrderMain} = this.uqs.JkOrder;
+		return [OrderMain];
 	}
 }

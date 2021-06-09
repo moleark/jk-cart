@@ -1,4 +1,4 @@
-import { Context, Form, IntSchema, List, LMR, NumSchema, Schema, UiNumberItem, UiSchema, VPage } from "tonva-react";
+import { Context, Form, IntSchema, List, LMR, Schema, UiNumberItem, UiSchema, VPage } from "tonva-react";
 import { CDeliver, DeliverDetail } from "./CDeliver";
 
 export class VDeliverForCustomer extends VPage<CDeliver> {
@@ -28,13 +28,13 @@ export class VDeliverForCustomer extends VPage<CDeliver> {
 		</div>;
 	}
 
-	private renderItem = (item: DeliverDetail, index:number) => {
-		let {product, pack, quantity} = item.orderDetail;
+	private renderItem = (row: DeliverDetail, index:number) => {
+		let {product, item, quantity} = row.orderDetail;
 		let schema:Schema = [
 			{name: 'deliverQuantity', type: 'integer', min: 0, max: quantity} as IntSchema
 		];
 		let onChanged = (context:Context, value:any, prev:any):Promise<void> => {
-			item.deliverQuantity = value;
+			row.deliverQuantity = value;
 			return;
 		}
 		let uiSchema: UiSchema = {
@@ -53,7 +53,7 @@ export class VDeliverForCustomer extends VPage<CDeliver> {
 		}
 		let right = <Form schema={schema} uiSchema={uiSchema} FieldContainer={FieldContainer}/>
 		return <LMR className="px-3 py-2" right={right}>
-			product:{product} pack:{pack} 应发:{quantity}
+			product:{product} pack:{item} 应发:{quantity}
 		</LMR>;
 	}
 }
