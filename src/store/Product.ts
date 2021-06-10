@@ -52,7 +52,7 @@ export class Product {
 	@observable.ref brand: MainBrand;
 	@observable.ref chemical: Chemical;
 	@observable favorite: boolean;
-	@observable warningSigns: string;
+	@observable warnings: any[] = [];
 	@observable extention: any;
 	@observable descriptionPost: any;
 	@observable.shallow packs: ProductPackRow[];
@@ -92,7 +92,7 @@ export class Product {
 			this.loadDescriptionPost()
 		];
 		await Promise.all(promises);
-		await this.getProductWarningSigns();
+		await this.loadProductWarnings();
 	}
 
 	async loadListItem() {
@@ -201,15 +201,12 @@ export class Product {
 
 		let promises: PromiseLike<any>[] = [];
 		let promises1: PromiseLike<any>[] = [];
-		// let promises2: PromiseLike<any>[] = [];/* 收藏夹 暂时不做 */
 		this.prices.forEach(v => {
 			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
 			promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
-			// promises2.push(this.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id, pack: v.pack.id }));
 		});
 		let results = await Promise.all(promises);
 		let results2 = await Promise.all(promises1);
-		// let resultsFavorite = await Promise.all(promises2);
 
 		let newPacks = [];
 		for (let i = 0; i < this.prices.length; i++) {
@@ -292,30 +289,35 @@ export class Product {
 		};
 	}
 
-	/**
-	 * 产品警示标示
-	 */
+	loadProductWarnings = async () => {
+		let warnings: PromiseLike<any>[] = [
+			this.getProductWarningSigns(),
+			this.getProductEmbargo(),
+		];
+		let res = await Promise.all(warnings);
+		this.warnings = res.filter((el: any) => el);
+	};
+
+	/* 产品警示标示 */
 	getProductWarningSigns = async () => {
-		let JNKRestrictByChemical = await this.getChemicalJNKRestrict();
-		this.warningSigns = '';
+		let JNKRestrictByChemical = await this.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
 		if (!JNKRestrictByChemical) return;
-		else {
-			let { jnkRestrict } = JNKRestrictByChemical;
-			let jnkRestrictObj = await this.loadJNKRestrict(jnkRestrict?.id);
-			if (jnkRestrictObj) {
-				let { no } = jnkRestrictObj;
-				if (no.indexOf('WX') > -1) this.warningSigns = '危化品';
-			}
-		}
+		let { jnkRestrict } = JNKRestrictByChemical;
+		let jnkRestrictObj = await this.uqs.chemicalSecurity.JNKRestrict.load(jnkRestrict?.id);
+		let warningSign: string = "";
+		if (jnkRestrictObj) {
+			let { no } = jnkRestrictObj;
+			if (no.indexOf('WX') > -1) warningSign = '危化品';
+		};
+		return warningSign;
 	}
 
-	getChemicalJNKRestrict = async () => {
-		return await this.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
-	}
-
-	loadJNKRestrict = async (id: number) => {
-		return await this.uqs.chemicalSecurity.JNKRestrict.load(id);
-	}
+	/* 产品禁运信息 */
+	getProductEmbargo = async () => {
+		return "";
+		/* let embargo = "夏季禁运产品,8月31日后发运(限1.00L以上包装)";
+		return embargo; */
+	};
 
 	/**
 	 * 获取PDF文件流

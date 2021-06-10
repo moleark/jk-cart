@@ -284,7 +284,7 @@ export class VPageProduct extends VPage<CProduct> {
     }
 
     private renderProduct = (product: Product) => {
-        let { id, brand, props, chemical, warningSigns } = product;
+        let { id, brand, props, chemical, warnings } = product;
         let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber } = props;
         let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
         let cName: any;
@@ -314,7 +314,11 @@ export class VPageProduct extends VPage<CProduct> {
                         {renderBrand(brand)}
                         {renderPropItem('MDL', (mdlnumber|| chemical.mdlnumber) ? <Ax href={`/search/${ mdlnumber|| chemical.mdlnumber }` } className="text-primary">{mdlnumber|| chemical.mdlnumber}</Ax> : null)}
                     </div>
-                    <div className="text-danger px-3 mx-3">{ warningSigns }</div>
+                    <div className="text-danger row mx-3">{
+                        warnings.map((el: any) => {
+                            return <div key={el} className="col-sm-6">{el}</div>;
+                        })
+                    }</div>
                 </div>
                 {this.renderVm(VFavorite, { product })}
                 {this.renderVm(VPrice, product)}
