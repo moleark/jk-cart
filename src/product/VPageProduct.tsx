@@ -58,17 +58,14 @@ export class VPageProduct extends VPage<CProduct> {
         //let page = xs ? this.page : this.lpage;
         this.openPage(observer(() => {
             let { cApp, product, openMaterial } = this.controller;
-            let { MSDSFiles, specFiles, data, id } = product;
+            let { id } = product;
             /* let CurrentUA = browser.versions.mobile;
             let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
-            let header: any, cartLabel: any, material: any;
+            let header: any, cartLabel: any;
 
             if (xs) {
                 header = cApp.cHome.renderSearchHeader();
                 cartLabel = cApp.renderCartLabel();
-                material = <div className="col-lg-9 mt-lg-2 mb-lg-2">
-                    {this.renderProductMaterial()}
-                </div>;
             }
             /* let viewProduct = new ViewMainSubs<MainProductChemical, ProductPackRow>(this.renderProduct, this.renderPack);
             viewProduct.model = product; */
@@ -291,7 +288,7 @@ export class VPageProduct extends VPage<CProduct> {
         if (descriptionC !== description) {
             cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
         }
-        // imageUrl = imageUrl || props.chemical.toString();
+
         return <>
             <div className="col-lg-4 ">
                 <div className="">
@@ -346,42 +343,6 @@ export class VPageProduct extends VPage<CProduct> {
         //     {this.renderVm(VFavorite, { product })/*this.controller.renderFavoritesLabel(product)*/}
         //     {this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
         // </div>;
-        /*
-        let NewProductPropItem = (caption: string, value: any, captionClass?: string,isSplit?:boolean) => {
-            if (value === null || value === undefined || value === '0') return null;
-            let Class = captionClass ? classNames(captionClass) : "";
-            let Split = isSplit === undefined || isSplit  ? ' | ' : '';
-            return <span className={classNames(Class)}>{Split} {caption}：{value}</span>
-        }
-        return <>
-            <div className="col-lg-4 product-left-card ">
-                <div className="preview">
-                    <ProductImage chemicalId={imageUrl} className="border" />
-                    <div className="left-below display-desktop mt-1">
-                        {this.renderProductMaterial()}
-                    </div>
-                </div>
-            </div>
-            <div className="col-lg-8">
-                <div className="details">
-                    <h5 className="product-title">{description} <b><br />{descriptionC}</b></h5>
-                    <p>
-                        {NewProductPropItem('产品编号',origin,'',false)}
-                        {NewProductPropItem('CAS',CAS)}
-                        {NewProductPropItem('纯度',purity)}
-                        {NewProductPropItem('分子式',molecularFomula)}
-                        {NewProductPropItem('分子式',molecularWeight)}
-                        {NewProductPropItem('品牌',brand.name)}
-                    </p>
-                    {false && <p>产品编号：{origin} | CAS： {CAS} { brand ? `|  品牌：${brand.name}`:''}</p> }
-                </div>
-                {this.controller.renderFavoritesLabel(id)}
-                <div className="mt-lg-2">
-                    {packs.map((v: any) => <div key={v.pack.id}>{this.renderPack(v)}</div> )}
-                </div>
-            </div>
-        </>
-        */
         // { this.renderVm(VProductFavirateLabel, this.productBox) }
     }
 
@@ -460,52 +421,52 @@ export class VPageProduct extends VPage<CProduct> {
         </>;
     }
 
-    private dealWithPDF = (fileName: string) => {
-        let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
-        let lang = shiftArr[1];
-        let caption = languageCaptions[lang];
-        if (!caption) caption = languageCaptions['CN'];
-        return caption;
-    }
+    // private dealWithPDF = (fileName: string) => {
+    //     let shiftArr = fileName ? fileName.replace(/\.pdf/ig, '').split('_') : [];
+    //     let lang = shiftArr[1];
+    //     let caption = languageCaptions[lang];
+    //     if (!caption) caption = languageCaptions['CN'];
+    //     return caption;
+    // }
 
-    private renderPDF = (content: any) => {
-        let { fileName } = content;
-        let language = this.dealWithPDF(fileName);
-        let { ToVerifyPdf, product } = this.controller;
-        return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product }) }}>
-            <img src={pdfIcon} alt="" style={{ width: 24 }} />
-            <div className="small">{language}</div>
-        </div>
-    }
+    // private renderPDF = (content: any) => {
+    //     let { fileName } = content;
+    //     let language = this.dealWithPDF(fileName);
+    //     let { ToVerifyPdf, product } = this.controller;
+    //     return <div className="mx-2 d-flex flex-column text-center" onClick={() => { ToVerifyPdf({ content, product }) }}>
+    //         <img src={pdfIcon} alt="" style={{ width: 24 }} />
+    //         <div className="small">{language}</div>
+    //     </div>
+    // }
 
-    private renderProductMaterial = () => {
-        let { MSDSFiles, specFiles, data } = this.controller.product;
-        let MaterialArr = [
-            { type: '化学品安全技术说明书(SDS)', content: MSDSFiles },
-            { type: '技术规格说明书(SPEC)', content: specFiles }
-        ];
+    // private renderProductMaterial = () => {
+    //     let { MSDSFiles, specFiles, data } = this.controller.product;
+    //     let MaterialArr = [
+    //         { type: '化学品安全技术说明书(SDS)', content: MSDSFiles },
+    //         { type: '技术规格说明书(SPEC)', content: specFiles }
+    //     ];
 
-        let renderListItemPDF = (Material: any, index: number) => {
-            let { type, content } = Material;
-            if (content.length) {
-                /* return <div className="d-flex pt-2 border-bottom">
-                    <div className="w-3c align-self-center mr-2 mb-2" >{type}</div>
-                    <List items={content} item={{ render: this.renderPDF, className: 'px-2 border-left' }} className="d-flex bg-light mb-1" />
-                </div> */
-                return <>
-                    <div className="accordion background-grey w-100" style={{ background: '#F2F2F2' }}>
-                        <a className="w-100 btn text-left collapsed" data-toggle="collapse" href={`#description${index}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank">
-                            {type}&emsp;<i className="fa fa-chevron-down"></i>
-                        </a>
-                    </div>
-                    <div className="container collapse show w-100 pt-2 px-0 border border-top-0" id={`description${index}`}>
-                        <List items={content} item={{ render: this.renderPDF, className: 'px-2' }} className="d-flex bg-light mb-1" />
-                    </div>
-                </>
-            } else {
-                return null;
-            }
-        };
-        return <List items={MaterialArr} item={{ render: renderListItemPDF, className: "d-block pb-2" }} />;
-    }
+    //     let renderListItemPDF = (Material: any, index: number) => {
+    //         let { type, content } = Material;
+    //         if (content.length) {
+    //             /* return <div className="d-flex pt-2 border-bottom">
+    //                 <div className="w-3c align-self-center mr-2 mb-2" >{type}</div>
+    //                 <List items={content} item={{ render: this.renderPDF, className: 'px-2 border-left' }} className="d-flex bg-light mb-1" />
+    //             </div> */
+    //             return <>
+    //                 <div className="accordion background-grey w-100" style={{ background: '#F2F2F2' }}>
+    //                     <a className="w-100 btn text-left collapsed" data-toggle="collapse" href={`#description${index}`} role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+    //                         {type}&emsp;<i className="fa fa-chevron-down"></i>
+    //                     </a>
+    //                 </div>
+    //                 <div className="container collapse show w-100 pt-2 px-0 border border-top-0" id={`description${index}`}>
+    //                     <List items={content} item={{ render: this.renderPDF, className: 'px-2' }} className="d-flex bg-light mb-1" />
+    //                 </div>
+    //             </>
+    //         } else {
+    //             return null;
+    //         }
+    //     };
+    //     return <List items={MaterialArr} item={{ render: renderListItemPDF, className: "d-block pb-2" }} />;
+    // }
 }

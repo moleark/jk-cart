@@ -49,18 +49,18 @@ export class Product {
 	id: number;
 	@observable.ref props: ProductProps;
 
-	@observable.ref brand: MainBrand;
-	@observable.ref chemical: Chemical;
-	@observable favorite: boolean;
-	@observable warnings: any[] = [];
-	@observable extention: any;
-	@observable descriptionPost: any;
-	@observable.shallow packs: ProductPackRow[];
+	@observable.ref brand: MainBrand;	/* 品牌 */
+	@observable.ref chemical: Chemical;	/* 化学属性 */
+	@observable favorite: boolean;		/* 是否收藏 */
+	@observable warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
+	@observable extention: any;			/* 基本信息、安全信息 */
+	@observable descriptionPost: any;	/* 产品描述 */
+	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
 	@observable prices: any[];				// 包含价格和折扣信息
 	@observable futureDeliveryTimeDescription: string;
-	@observable MSDSFiles: any;
-	@observable specFiles: any;
-	@observable data: any;
+	// @observable MSDSFiles: any;
+	// @observable specFiles: any;
+	// @observable data: any;
 	@observable discount: any;
 
 	constructor(store: Store, id: number | BoxId) {
@@ -85,8 +85,8 @@ export class Product {
 			this.loadChemical(),
 			this.loadFavorite(),
 			this.loadPrices(),
-			this.loadMSDSFile(),
-			this.loadSpecFile(),
+			/* this.loadMSDSFile(),
+			this.loadSpecFile(), */
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
 			this.loadDescriptionPost()
@@ -133,22 +133,22 @@ export class Product {
 		this.favorite = (ret !== undefined);
 	}
 
-	/**
-	 * 获取产品MSDS文件
-	 */
-	private async loadMSDSFile() {
-		if (this.MSDSFiles) return;
-		let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
-		this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
-	}
+	// /**
+	//  * 获取产品MSDS文件
+	//  */
+	// private async loadMSDSFile() {
+	// 	if (this.MSDSFiles) return;
+	// 	let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
+	// 	this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
+	// }
 
-	/**
-	 * 获取产品Spec文件
-	 */
-	private async loadSpecFile() {
-		if (this.specFiles) return;
-		this.specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
-	}
+	// /**
+	//  * 获取产品Spec文件
+	//  */
+	// private async loadSpecFile() {
+	// 	if (this.specFiles) return;
+	// 	this.specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
+	// }
 
 	private async loadPrices() {
 		let { customerDiscount, product, promotion, warehouse } = this.uqs;
