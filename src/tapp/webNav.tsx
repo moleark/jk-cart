@@ -249,12 +249,12 @@ export class NavFooterView extends View<CApp> {
             <div className="footer-bottom mt-2 py-1">
                 <div className="container">
                     <div className="row text-center">
-                        <div className="col-sm-5">
+                        <div className="col-sm-5 pr-0">
                             严禁在未经同意的情况下使用本网站所有信息
                             | <a href="/legal" target="_blank">法律声明</a>
                             | <a href="/privacy-cn" target="_blank">隐私政策</a>
                         </div>
-                        <div className="col-sm-7">
+                        <div className="col-sm-7 pl-0">
                             <img className="align-top" src="/images/gongan.png" alt="" />
                             <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502044888" target="_blank">京公网安备 11010502044888号</a>&nbsp;
                             {/* 京公安网备11010502027473 */}
