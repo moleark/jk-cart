@@ -277,7 +277,8 @@ export class Product {
 
 	getProductExtention = async () => {
 		if (this.extention) return;
-		this.extention = await this.uqs.product.ProductExtention.obj({ product: this.id });
+		let extention = await this.uqs.product.ProductExtention.obj({ product: this.id });
+		this.extention = extention?.content;
 	}
 
 	loadDescriptionPost = async () => {

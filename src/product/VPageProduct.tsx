@@ -47,6 +47,38 @@ const SymbolSrcs:any[] = [
     { name: "LT", src: "GHS08.gif" },
 ];
 
+const basicInfoKey = [
+    // { insideKey: "MF", webKey: "MF" },
+    // { insideKey: "MW", webKey: "MW" },
+    { insideKey: "Synonymity", webKey: "英文别名" },
+    { insideKey: "SynonymityC", webKey: "中文别名" },
+    { insideKey: "MP", webKey: "MP" },
+    { insideKey: "BP", webKey: "BP" },
+    { insideKey: "FP", webKey: "FP" },
+    { insideKey: "Density", webKey: "Density" },
+    { insideKey: "n20D", webKey: "n20D" },
+    { insideKey: "[a]20D", webKey: "[a]20D" },
+    { insideKey: "pH", webKey: "pH" },
+    { insideKey: "MDL", webKey: "MDL编码" },
+    { insideKey: "Beilstein", webKey: "Reaxys-RN (Beilstein)" },
+    { insideKey: "Merck", webKey: "Merck Index" },
+    { insideKey: "EINECS", webKey: "EC No." },
+];
+const securityInfoKey = [
+    { insideKey: "SpecialRequirement", webKey: "存储条件" },
+    { insideKey: "Hazard", webKey: "Symbol" },
+    { insideKey: "RiskSign", webKey: "Signal Word" },
+    { insideKey: "HValue", webKey: "Hazard Statements" },
+    { insideKey: "PValue", webKey: "Precautionary Statements" },
+    { insideKey: "UN", webKey: "UN" },
+    { insideKey: "HazardClass", webKey: "Hazard Class" },
+    { insideKey: "subrisk", webKey: "SubRisk" },
+    { insideKey: "PackingG", webKey: "Packing Group" },
+    { insideKey: "WGK", webKey: "WGK Germany" },
+    { insideKey: "RTECS", webKey: "RTECS" },
+    { insideKey: "TSCA", webKey: "TSCA" },
+];
+
 export class VPageProduct extends VPage<CProduct> {
     //private productBox: BoxId;
     //private discount: number;
@@ -122,75 +154,41 @@ export class VPageProduct extends VPage<CProduct> {
     }
     */
     renderAssistInfo = (product: Product) => {
-        let basicInfoKey = [
-            // { insideKey: "MF", webKey: "MF" },
-            // { insideKey: "MW", webKey: "MW" },
-            { insideKey: "Synonymity", webKey: "英文别名" },
-            { insideKey: "SynonymityC", webKey: "中文别名" },
-            { insideKey: "MP", webKey: "MP" },
-            { insideKey: "BP", webKey: "BP" },
-            { insideKey: "FP", webKey: "FP" },
-            { insideKey: "Density", webKey: "Density" },
-            { insideKey: "n20D", webKey: "n20D" },
-            { insideKey: "[a]20D", webKey: "[a]20D" },
-            { insideKey: "pH", webKey: "pH" },
-            { insideKey: "MDL", webKey: "MDL编码" },
-            { insideKey: "Beilstein", webKey: "Reaxys-RN (Beilstein)" },
-            { insideKey: "Merck", webKey: "Merck Index" },
-            { insideKey: "EINECS", webKey: "EC No." },
-        ];
-        let securityInfoKey = [
-            { insideKey: "SpecialRequirement", webKey: "存储条件" },
-            { insideKey: "Hazard", webKey: "Symbol" },
-            { insideKey: "RiskSign", webKey: "Signal Word" },
-            { insideKey: "HValue", webKey: "Hazard Statements" },
-            { insideKey: "PValue", webKey: "Precautionary Statements" },
-            { insideKey: "UN", webKey: "UN" },
-            { insideKey: "HazardClass", webKey: "Hazard Class" },
-            { insideKey: "subrisk", webKey: "SubRisk" },
-            { insideKey: "PackingG", webKey: "Packing Group" },
-            { insideKey: "WGK", webKey: "WGK Germany" },
-            { insideKey: "RTECS", webKey: "RTECS" },
-            { insideKey: "TSCA", webKey: "TSCA" },
-        ];
-
-
         let { extention, descriptionPost } = product;
         let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element;
         if (extention) {
-            let { content } = extention;
-            content = content ? JSON.parse(content.replace(/(\t|\n|\r)*/g, "")) : {};
-            let allContent = Object.keys(content);
-            let arr1: any[] = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
-            let arr2: any[] = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
-            let arr2Restrict: boolean = true;
-            arr2.forEach((el: any) => { if (el.insideKey === 'TSCA' && content[el.insideKey] == 0) arr2Restrict = false;});
+            extention = JSON.parse(extention.replace(/(\t|\n|\r)*/g, ""));
+            let allContent = Object.keys(extention).map((el: any) => {
+                if (!extention[el] && extention[el].replace(/\s*/g, '') == 'N/A') return;
+                if (el === 'TSCA') {
+                    let TSCAs: { [typeNum: number]: string } = { 0: '', 1: "是", 2: "否" };
+                    extention[el] = TSCAs[extention[el]] || "";
+                };
+                if (el === 'Hazard') {
+                    extention[el] = SymbolSrcs.map((o: any, ind: number) => {
+                        if (extention[el].indexOf(o.name) > -1) {
+                            return <img key={ind} className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
+                        }
+                        return '';
+                    });
+                };
+                return el;
+            }).filter((el: any) => extention[el]);
+            let basicInfos: any[] = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
+            let securityInfos: any[] = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
             let tableInfo = (data: any[]) => {
-                if (data.length === 0 && !content) return;
+                if (data.length === 0) return;
                 return <table className="product-table w-100">
                     <tbody>
                         {data.map((v: any, index: number) => {
-                            let value = content[v.insideKey];
-                            if (!value || value.replace(/\s*/g, '') === 'N/A') return null;
-                            if (v.insideKey === 'Hazard') {
-                                value = SymbolSrcs.map((o: any, ind: number) => {
-                                    if (value.indexOf(o.name) > -1) {
-                                        return <img key={ind} className="w-3c mr-1" src={"/images/security/" + o.src} alt="" />;
-                                    }
-                                    return '';
-                                });
-                            };
-                            if (v.insideKey === 'TSCA') {
-                                let TSCAs: { [typeNum: number]: string } = { 0: '', 1: "是", 2: "否" };
-                                value = TSCAs[value] || "";
-                            };
+                            let value = extention[v.insideKey];
                             if (!value) return null;
                             return <tr key={index}><th className="w-50">{v.webKey}</th><td className="w-50">{value}</td></tr>
                         })}
                     </tbody>
                 </table>
             };
-            if (arr1.length) {
+            if (basicInfos.length) {
                 basicInfoUI = <>
                     <div className="accordion background-grey mt-lg-1">
                         <div className="w-100 btn text-left collapsed" data-toggle="collapse" data-target="#description1"
@@ -199,12 +197,12 @@ export class VPageProduct extends VPage<CProduct> {
                         </div>
                     </div>
                     <div className="container mt-lg-2 collapse show" id="description1">
-                        {tableInfo(arr1.slice(0, 6))}
+                        {tableInfo(basicInfos.slice(0, 6))}
                         <div className="container collapse px-0" id="description2">
-                            {tableInfo(arr1.slice(6))}
+                            {tableInfo(basicInfos.slice(6))}
                         </div>
                         {
-                            arr1.length > 6
+                            basicInfos.length > 6
                                 ? <p className="text-right">
                                     <a className="btn text-left collapsed" onClick={() => this.p = !this.p}
                                         data-toggle="collapse" href="#description2" role="button" aria-expanded="false" aria-controls="description2">
@@ -215,7 +213,7 @@ export class VPageProduct extends VPage<CProduct> {
                     </div>
                 </>;
             };
-            if (arr2.length && arr2Restrict) {
+            if (securityInfos.length) {
                 securityInfoUI = <>
                     <div className="accordion background-grey mt-lg-1">
                         <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#description4"
@@ -224,7 +222,7 @@ export class VPageProduct extends VPage<CProduct> {
                         </a>
                     </div>
                     <div className="container mt-lg-2 mb-lg-2 collapse show" id="description4">
-                        {tableInfo(arr2)}
+                        {tableInfo(securityInfos)}
                     </div>
                 </>;
             };
