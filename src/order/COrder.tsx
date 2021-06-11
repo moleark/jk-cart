@@ -6,7 +6,7 @@ import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';
 import { OrderSuccess } from './OrderSuccess';
 import { CSelectShippingContact, CSelectInvoiceContact } from '../customer/CSelectContact';
-import { VMyOrders } from './VMyOrders';
+import { OrdersPageSize, VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct, groupByProduct1 } from '../tools/groupByProduct';
@@ -29,6 +29,8 @@ const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
+    @observable orderPageStart: number = 1000000000;    /* 订单历史记录分页 pageStart */
+    @observable getUserOrders: any[] = [];  /* 获取用户所有订单 */
     @observable orderData: Order = new Order();
     /**
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
@@ -414,7 +416,8 @@ export class COrder extends CUqBase {
     * 打开我的订单列表（在“我的”界面使用）
     */
     openMyOrders = async (state: string) => {
-
+        this.getUserOrders = await this.uqs.order.Order.mySheets("#", 1000000000, -1000000000);
+        this.orderPageStart = (this.getUserOrders[0]?.id || 0) + 1;
         this.openVPage(VMyOrders, state);
     }
 
@@ -429,16 +432,16 @@ export class COrder extends CUqBase {
             case 'processing':
                 return await order.Order.mySheets(undefined, 1, -20);
             case 'completed':
-                return await order.Order.mySheets("#", 1, -20)
+                return await order.Order.mySheets("#", this.orderPageStart, (-1 * OrdersPageSize))
             case 'all':
                 let promises: PromiseLike<any>[] = [];
                 promises.push(order.Order.mySheets(undefined, 1, -20));
-                promises.push(order.Order.mySheets("#", 1, -20));
+                promises.push(order.Order.mySheets("#", this.orderPageStart, (-1 * OrdersPageSize)));
                 let presult = await Promise.all(promises);
                 presult[0].forEach((el: any) => { el.OState = 'processing'; });
                 presult[1].forEach((el: any) => { el.OState = 'completed'; });
 
-                return presult[0].concat(presult[1]).sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+                return this.orderPageStart === (this.getUserOrders[0]?.id || 0) + 1 ? presult[0].concat(presult[1]) : presult[1];//.sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
             default:
                 break;
         }
