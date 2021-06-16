@@ -315,9 +315,12 @@ export class Product {
 
 	/* 产品禁运信息 */
 	getProductEmbargo = async () => {
-		return "";
-		/* let embargo = "夏季禁运产品,8月31日后发运(限1.00L以上包装)";
-		return embargo; */
+		let { currentSalesRegion } = this.store;
+		let getProductEmbargo = await this.uqs.product.ProductEmbargo.obj({ product: this.id, salesRegion: currentSalesRegion });
+		if (!getProductEmbargo || getProductEmbargo.beginDate > Date.now() || getProductEmbargo.endDate < Date.now()) return;
+		let { type, packDescription, endDate } = getProductEmbargo;
+		let dateTime = moment(endDate).format("MM月DD日");
+		return `${type}产品,${dateTime}后发运(限${packDescription || "1L"}以上包装)`;
 	};
 
 	/**
@@ -355,7 +358,10 @@ export class Product {
 
 	private async loadFDTimeDescription() {
 		let { currentSalesRegion } = this.store;
-		let futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		let futureDeliveryTime = await this.uqs.product.ProductDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		if (!futureDeliveryTime.length) {
+			futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		};
 		if (futureDeliveryTime.length > 0) {
 			let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
 			this.futureDeliveryTimeDescription = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
