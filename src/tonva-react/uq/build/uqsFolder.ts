@@ -29,11 +29,15 @@ export async function buildUqsFolder(uqsFolder:string, appConfig: AppConfig) {
 	let uqsIndexFile = `${uqsFolder}/index.ts`;
 	if (fs.existsSync(uqsIndexFile) === true) {
 		let indexText = fs.readFileSync(uqsIndexFile, 'utf8');
-		// let p0 = indexText.indexOf('///+++import AppUQs+++///');
 		let p1 = indexText.indexOf('///###import AppUQs###///');
-		let pe = indexText.indexOf('\n', p1);
-		tsUqsIndexHeader = indexText.substring(0, pe + 1);
-		tsUqsIndexContent = `\n\nexport interface UQs extends AppUQs {`;
+		if (p1 >= 0) {
+			let pe = indexText.indexOf('\n', p1);
+			tsUqsIndexHeader = indexText.substring(0, pe + 1);
+			tsUqsIndexContent = `\n\nexport interface UQs extends AppUQs {`;
+		}
+		else {
+			tsUqsIndexContent = `\n\nexport interface UQs {`;
+		}
 	}
 	else {
 		tsUqsIndexContent = `\n\nexport interface UQs {`;

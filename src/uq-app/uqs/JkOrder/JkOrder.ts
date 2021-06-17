@@ -1,4 +1,4 @@
-//=== UqApp builder created on Mon Jun 07 2021 20:33:13 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Sun Jun 13 2021 10:57:36 GMT-0400 (GMT-04:00) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX } from "tonva-react";
 
@@ -213,7 +213,6 @@ export interface ParamSaveOrderReturn {
 }
 export interface ReturnSaveOrderReturnRet {
 	id: number;
-	$id: number;
 }
 export interface ResultSaveOrderReturn {
 	ret: ReturnSaveOrderReturnRet[];
@@ -229,6 +228,7 @@ export interface ParamSaveOrder {
 	id: number;
 	no: string;
 	customer: number;
+	contact: number;
 	sumQuanity: number;
 	sumAmount: number;
 	couponNo: string;
@@ -446,6 +446,7 @@ export interface OrderMain {
 	id?: number;
 	no?: string;
 	customer: number;
+	contact: number;
 	sumQuanity: number;
 	sumAmount: number;
 	couponNo: string;
