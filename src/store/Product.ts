@@ -54,6 +54,7 @@ export class Product {
 	@observable favorite: boolean;		/* 是否收藏 */
 	@observable warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
 	@observable extention: any;			/* 基本信息、安全信息 */
+	@observable productCrumbs: any[] = [];	/* 产品目录 */
 	@observable descriptionPost: any;	/* 产品描述 */
 	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
 	@observable prices: any[];				// 包含价格和折扣信息
@@ -89,7 +90,8 @@ export class Product {
 			this.loadSpecFile(), */
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
-			this.loadDescriptionPost()
+			this.loadDescriptionPost(),
+			this.loadProductCrumbs()
 		];
 		await Promise.all(promises);
 		await this.loadProductWarnings();
@@ -288,6 +290,34 @@ export class Product {
 			let content = await result.text();
 			this.descriptionPost = content;
 		};
+	}
+
+	loadProductCrumbs = async () => {
+		let { ProductProductCategory, ProductCategory } = this.uqs.product;
+		let arr: any[] = [];
+		let getProductCategorys: any[] = await ProductProductCategory.table({ product: this.id });
+		if (getProductCategorys.length) {
+			let promise: PromiseLike<any>[] = [];
+			for (let key of getProductCategorys) {
+				promise.push(ProductCategory.load(key?.category));
+			};
+			let result: any[] = await Promise.all(promise);
+			if (result.length) {
+				let value: any;
+				for (let key of result) {
+					let keyArr: any[] = [];
+					keyArr.unshift(key.productcategorylanguage.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+					value = key.parent;
+					while (value) {
+						let productCategoryByParent: any = await ProductCategory.load(value);
+						value = productCategoryByParent.parent;
+						keyArr.unshift(productCategoryByParent?.productcategorylanguage?.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+					};
+					arr.push(keyArr);
+				};
+			};
+		};
+		this.productCrumbs = arr;
 	}
 
 	loadProductWarnings = async () => {

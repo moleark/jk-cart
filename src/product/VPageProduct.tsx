@@ -154,8 +154,8 @@ export class VPageProduct extends VPage<CProduct> {
     }
     */
     renderAssistInfo = (product: Product) => {
-        let { extention, descriptionPost } = product;
-        let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element;
+        let { extention, descriptionPost, productCrumbs } = product;
+        let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element,productCrumbsUI:JSX.Element;
         if (extention) {
             extention = JSON.parse(extention.replace(/(\t|\n|\r)*/g, ""));
             let allContent = Object.keys(extention).map((el: any) => {
@@ -240,24 +240,31 @@ export class VPageProduct extends VPage<CProduct> {
                 </div>
             </>;
         };
+        if (productCrumbs.length && productCrumbs.some((el: any[]) => el.length)) {
+            productCrumbsUI = <><div className="mt-lg-1">
+                <div className="bg-nobackground-one">产品分类</div>
+                </div>
+                <div className="mt-lg-1">
+                    {productCrumbs.map((v: any[],index:number) => {
+                        if (!v.length) return;
+                        return <div key={index}>
+                            <Ax className="mint" href={"/product-catalog"}>产品分类</Ax> <span style={{color:"#a5a8ab"}}>/</span>
+                            {v.map((el: any,i:number) => {
+                                return <span key={el.name}>
+                                    &nbsp;<Ax className="mint" href={"/product-catalog/" + el.owner}>{el.name}</Ax>&nbsp;
+                                    { i !== v.length-1 ? <span style={{color:"#a5a8ab"}}>/</span> : "" }</span>
+                            })}
+                        </div>
+                    })}
+                </div>
+            </>;
+        };
         
         return <div className="col-lg-12 mt-lg-2">{/* col-lg-9 */}
             {basicInfoUI}
             {descriptionPostUI}
             {securityInfoUI}
-            {/* <div className="mt-lg-1">
-                <div className="bg-nobackground-one">产品分类</div>
-            </div>
-            <div className="mt-lg-1">
-                <Ax className="mint" href={"/product-catalog/" + 1}>有机化学</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>分子砌块</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>含氮化合物</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>氰或晴</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>材料化学</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>高分子化学</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>单体</Ax>,
-                <Ax className="mint" href={"/product-catalog/" + 1}>乙烯类单体</Ax>
-            </div> */}
+            {productCrumbsUI}
         </div>
     }
 
