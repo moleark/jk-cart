@@ -6,6 +6,7 @@ import { xs } from '../tools/browser';
 export class VEpecOrderError extends VPage<COrder> {
 
     async open(error: any) {
+        document.body.scrollIntoView();
         this.openPage(this.page, error);
     }
 
@@ -17,7 +18,7 @@ export class VEpecOrderError extends VPage<COrder> {
         if (xs)
             header = '下单失败';
         return <Page header={header}>
-            <div className="alert alert-warning">
+            <div className="alert alert-warning mt-3">
                 <h3>下单失败</h3>
                 <p>失败原因:{message}</p>
             </div>
