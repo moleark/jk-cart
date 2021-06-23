@@ -225,7 +225,10 @@ export class NavFooterView extends View<CApp> {
                             <a href="/ch/contact" target="_blank">联系我们</a>
                         </div>
                         <div className="contact">
-                            电话：400-666-7788<br />+86 10 8284 8833
+                            电话1 (QQ): 400 666 7788
+                        </div>
+                        <div className="contact">
+                            电话2：(86) 10 59309000
                         </div>
                         <div className="contact">
                             传真：<br />+86 10 8284 9933
@@ -234,9 +237,6 @@ export class NavFooterView extends View<CApp> {
                             电子邮件：<br />
                             <a href="mailto:jkinfo@jkchemical.com">jkinfo@jkchemical.com</a><br />
                             <a href="mailto:jkinfo@jk-sci.com">jkinfo@jk-sci.com</a>
-                        </div>
-                        <div className="contact">
-                            QQ：4006667788
                         </div>
                         {/* <div className="contact">
                             <a href="/ch/contact" target="_blank">更多...</a>
