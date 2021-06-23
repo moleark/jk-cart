@@ -307,11 +307,12 @@ export class Product {
 				for (let key of result) {
 					let keyArr: any[] = [];
 					keyArr.unshift(key.productcategorylanguage.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
-					value = key.parent;
+					value = key?.parent;
 					while (value) {
 						let productCategoryByParent: any = await ProductCategory.load(value);
-						value = productCategoryByParent.parent;
-						keyArr.unshift(productCategoryByParent?.productcategorylanguage?.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+						value = productCategoryByParent?.parent;
+						if (value)
+							keyArr.unshift(productCategoryByParent?.productcategorylanguage?.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
 					};
 					arr.push(keyArr);
 				};
