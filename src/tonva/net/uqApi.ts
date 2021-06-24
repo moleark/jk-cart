@@ -366,7 +366,7 @@ export interface RegisterParameter {
 export class UserApi extends CenterApiBase {
     async login(params: {user: string, pwd: string, guest: number}): Promise<any> {
         //(params as any).device = nav.local.device.get();
-        let ret = await this.get('user/login', params);
+        let ret = await this.post('user/login', params);
         switch (typeof ret) {
             default: return;
             case 'string': return decodeUserToken(ret);
