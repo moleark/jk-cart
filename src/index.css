@@ -319,6 +319,49 @@
     .each-product .favorite {
         margin-top: 10px;
     }
+
+    .product-container .container{
+        padding: 0;
+    }
+
+    .standardSampleTable thead{
+        display: none;
+    }
+    .standardSampleTable tr{
+        display: block;
+        border: none !important;
+        padding: 0 !important;
+    }
+    .standardSampleTable tr td{
+        width: 100%;
+        display: block;
+        padding-left: 34% !important;
+        padding-right:0 !important;
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        position: relative;
+    }
+
+    .standardSampleTable tr td:nth-child(1){
+        background: #eee;
+    }
+
+    .standardSampleTable>tbody>tr>td[data-title]:before {
+        content: attr(data-title);
+        position: absolute;
+        left: 0;
+        font-size: inherit;
+        word-wrap: break-word;
+        display: inline-block;
+        font-weight: 600;
+        background-color: #eee;
+        width: 33%;
+        height: 100%;
+        padding-left: 5px;
+        text-align: left;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
 }
 
 .dark-333{

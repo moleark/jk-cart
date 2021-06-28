@@ -154,8 +154,9 @@ export class VPageProduct extends VPage<CProduct> {
     }
     */
     renderAssistInfo = (product: Product) => {
-        let { extention, descriptionPost, productCrumbs } = product;
-        let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element,productCrumbsUI:JSX.Element;
+        let { extention, descriptionPost, productCrumbs, standardSample } = product;
+        let basicInfoUI: JSX.Element, securityInfoUI: JSX.Element, descriptionPostUI: JSX.Element,
+            productCrumbsUI: JSX.Element, standardSampleUI: JSX.Element;
         if (extention) {
             extention = JSON.parse(extention.replace(/(\t|\n|\r)*/g, ""));
             let allContent = Object.keys(extention).map((el: any) => {
@@ -240,6 +241,44 @@ export class VPageProduct extends VPage<CProduct> {
                 </div>
             </>;
         };
+        if (standardSample) {
+            let type = standardSample.compoments.some((el: any) => el?.matrix || el?.unit) ? "Set Components" : "Analytes";
+            let thead = type === "Analytes" ? ["Analyte", "CAS Number", "Target Concentration"] : ["Catalog Number", "Description", "Matrix", "Unit"];
+            standardSampleUI = <>
+                <div className="accordion background-grey mt-lg-1">
+                    <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#standardSample"
+                        role="button" aria-expanded="false" aria-controls="jk" target="_blank">
+                        { type }&emsp;<i className="fa fa-chevron-down"></i>
+                    </a>
+                </div>
+                <div className="container mt-lg-2 mb-lg-2 collapse show" id="standardSample">
+                    <table className="w-100 text-break standardSampleTable">
+                        <thead>
+                            <tr className="border-bottom">
+                                {thead.map((el: any) => { return <th key={el}>{el}</th>})}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {standardSample.compoments.map((el: any, index: number) => {
+                                let { origin, description, cas, concentration, matrix, unit } = el;
+                                let tds: JSX.Element;
+                                if (type === "Analytes") {
+                                    tds = <><td data-title="Analyte">{description}</td>
+                                        <td data-title="CAS">{cas}</td>
+                                        <td data-title="Conc">{concentration}</td></>;
+                                } else {
+                                    tds = <><td data-title="Cat"><Ax style={{ color: "#781515" }} href={`/search/${origin}`}>{origin}</Ax></td>
+                                        <td data-title="Description">{description}</td>
+                                        <td data-title="Matrix">{matrix}</td>
+                                        <td data-title="Unit">{unit}</td></>;
+                                };
+                                return <tr key={index} className="py-2 border-bottom">{tds}</tr>
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </>;
+        };
         if (productCrumbs.length && productCrumbs.some((el: any[]) => el.length)) {
             productCrumbsUI = <><div className="mt-lg-1">
                 <div className="bg-nobackground-one">产品分类</div>
@@ -260,9 +299,10 @@ export class VPageProduct extends VPage<CProduct> {
             </>;
         };
         
-        return <div className="col-lg-12 mt-lg-2">{/* col-lg-9 */}
+        return <div className="col-lg-12 mt-lg-2 product-container">{/* col-lg-9 */}
             {basicInfoUI}
             {descriptionPostUI}
+            {standardSampleUI}
             {securityInfoUI}
             {productCrumbsUI}
         </div>

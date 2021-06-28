@@ -54,6 +54,7 @@ export class Product {
 	@observable favorite: boolean;		/* 是否收藏 */
 	@observable warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
 	@observable extention: any;			/* 基本信息、安全信息 */
+	@observable standardSample: any;	/* 标样信息 */
 	@observable productCrumbs: any[] = [];	/* 产品目录 */
 	@observable descriptionPost: any;	/* 产品描述 */
 	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
@@ -91,7 +92,8 @@ export class Product {
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
 			this.loadDescriptionPost(),
-			this.loadProductCrumbs()
+			this.loadProductCrumbs(),
+			this.loadStandardSample()
 		];
 		await Promise.all(promises);
 		await this.loadProductWarnings();
@@ -290,6 +292,11 @@ export class Product {
 			let content = await result.text();
 			this.descriptionPost = content;
 		};
+	}
+
+	loadStandardSample = async () => {
+		let standardSample: any = await this.uqs.product.Productstandardsample.obj({ product: this.id });
+		this.standardSample = standardSample ? JSON.parse(standardSample.content.replace(/\t\n\r*/g, "")) : undefined;
 	}
 
 	loadProductCrumbs = async () => {

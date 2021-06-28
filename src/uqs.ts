@@ -32,6 +32,7 @@ export interface UqProduct {
     ProductSpecFile: Map;
     ProductProductCategory: Map;
     ProductEmbargo: Map;
+    Productstandardsample: Map;
     ProductDeliveryTime: Map;
     COA: Map;
     ProductExtention: Map;
