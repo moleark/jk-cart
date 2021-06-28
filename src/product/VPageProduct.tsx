@@ -242,7 +242,7 @@ export class VPageProduct extends VPage<CProduct> {
             </>;
         };
         if (standardSample) {
-            let type = standardSample.compoments.some((el: any) => el?.matrix || el?.unit) ? "Set Components" : "Analytes";
+            let type = standardSample.components.some((el: any) => el?.matrix || el?.unit) ? "Set Components" : "Analytes";
             let thead = type === "Analytes" ? ["Analyte", "CAS Number", "Target Concentration"] : ["Catalog Number", "Description", "Matrix", "Unit"];
             standardSampleUI = <>
                 <div className="accordion background-grey mt-lg-1">
@@ -259,7 +259,7 @@ export class VPageProduct extends VPage<CProduct> {
                             </tr>
                         </thead>
                         <tbody>
-                            {standardSample.compoments.map((el: any, index: number) => {
+                            {standardSample.components.map((el: any, index: number) => {
                                 let { origin, description, cas, concentration, matrix, unit } = el;
                                 let tds: JSX.Element;
                                 if (type === "Analytes") {
