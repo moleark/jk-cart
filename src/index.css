@@ -371,3 +371,24 @@
 .cursor-pointer{
     cursor: pointer;
 }
+
+.input-group-sel {
+    right: 58px;
+    outline: none;
+}
+
+.custom-search-input .search-query {
+    padding-right: 168px !important;
+}
+
+@media (max-width: 991px){
+    .input-group-sel {
+        right: 57px;
+    }
+}
+
+@media (max-width: 576px){
+    .input-group-sel {
+        right: 51px;
+    }
+}

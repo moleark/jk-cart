@@ -84,3 +84,14 @@ export class productCatalogUrlGen extends UrlGen {
         return url;
     }
 }
+
+export class productStandardUrlGen extends UrlGen {
+
+    generateUrl(keyWord: string, pageNumber: number): string {
+        let url = '/' + keyWord;
+        if (pageNumber > 1) {
+            url += "/" + pageNumber;
+        }
+        return url;
+    }
+}

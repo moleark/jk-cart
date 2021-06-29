@@ -269,11 +269,15 @@ export class CApp extends CUqApp {
     }
 
     private navSearch: NavPage = async (params: any) => {
+        let { search } = document.location;
+        let query: any = { type: 1 };
+        if (search) query = qs.parse(search.toLowerCase());
+        let type = (query?.type && Number(query.type) === 2) ? query.type : 1;
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);
         await this.store.buildCartItems();
-        this.cProduct.start(params?.key);
+        this.cProduct.start({ key: params?.key, type: type });
     }
 
     private navProduct: NavPage = async (params: any) => {
