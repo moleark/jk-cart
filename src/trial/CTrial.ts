@@ -137,6 +137,7 @@ export class CTrial extends CUqBase {
 			couponNo: undefined,
 			sheetId: undefined,
 			shippingContact: undefined,
+			contact: undefined,
 			detail: [
 				{
 					id: undefined,
