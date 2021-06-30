@@ -9,7 +9,7 @@ import { languageCaptions } from './VPageProduct';
 import { VPageCoa } from './VPageCoa';
 
 const materialCaptions: { [type: string]: any } = {
-	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Material Safety Data Sheet (SDS)' },
+	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Safety Data Sheet (SDS)' },
 	'spec': { type: 'SPEC', CName: "技术规格说明书", EName: 'Specifications (SPEC)' },
 	'coa': { type: 'COA', CName: "质检报告", EName: 'Certificate of Analysis (COA)' },
 }
