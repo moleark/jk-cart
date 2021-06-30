@@ -81,8 +81,8 @@ export class NavHeaderView extends View<CApp> {
         }));
 
         let searchPhlderVal = (type: number) => {
-            if (type === 1) return "产品CAS、产品名称、组分CAS、组分名称....";
-            else return "试剂、耗材";
+            if (type === 1) return "品名、编号、CAS...";
+            else return "产品CAS、名称、组分CAS、名称....";
         };
 
         let { search } = document.location;
@@ -96,8 +96,8 @@ export class NavHeaderView extends View<CApp> {
             </form>
                 <select onChange={() => { this.searchPhlder = searchPhlderVal(Number(this.searchType?.value || 1)) }} onClick={(e: any) => { e.preventDefault(); return false }} ref={(v) => this.searchType = v} defaultValue={query?.type || 1}
                     className="h-100 align-middle p-0 position-absolute input-group-sel" style={{ border: "1px solid lightgray", zIndex: 99 }} >
-                    <option value="1">标准品</option>
-                    <option value="2">试剂/耗材</option>
+                    <option value="1">试剂/耗材</option>
+                    <option value="2">标准品</option>
                 </select>
             </>
         }));
