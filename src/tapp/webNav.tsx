@@ -4,6 +4,7 @@ import { VPage, Ax, FA, View, A, Image, nav, env } from 'tonva';
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
 import * as qs from 'querystringify';
+import { observable } from 'mobx';
 
 interface PCategoryId {
     id: number | string,
@@ -28,6 +29,7 @@ export class VMainWebNav extends VPage<CApp> {
 export class NavHeaderView extends View<CApp> {
     private searchKey: HTMLInputElement;
     private searchType: HTMLSelectElement;
+    @observable searchPhlder: string;
 
     searchClick = () => {
         let url = "/search/" + encodeURIComponent(this.searchKey.value);
@@ -78,15 +80,26 @@ export class NavHeaderView extends View<CApp> {
             </div>
         }));
 
+        let searchPhlderVal = (type: number) => {
+            if (type === 1) return "产品CAS、产品名称、组分CAS、组分名称....";
+            else return "试剂、耗材";
+        };
+
+        let { search } = document.location;
+        let query: any = { type: 1 };
+        if (search) query = qs.parse(search.toLowerCase());
+        this.searchPhlder = searchPhlderVal(Number(query?.type || 1));
+
         let searchTypeUI = React.createElement(observer(() => {
-            let { search } = document.location;
-            let query: any = { type: 1 };
-            if (search) query = qs.parse(search.toLowerCase());
-            return <select onClick={(e: any) => { e.preventDefault(); return false }} ref={(v) => this.searchType = v} defaultValue={query?.type || 1}
-                className="h-100 align-middle py-0 position-absolute input-group-sel" style={{ border: "1px solid lightgray", zIndex: 99 }} >
-                <option value="1">常规查询</option>
-                <option value="2">标样查询</option>
-            </select>
+            return <><form className="w-100" onSubmit={(e: any) => { e.preventDefault(); this.searchClick(); }}>
+                <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder={this.searchPhlder} />
+            </form>
+                <select onChange={() => { this.searchPhlder = searchPhlderVal(Number(this.searchType?.value || 1)) }} onClick={(e: any) => { e.preventDefault(); return false }} ref={(v) => this.searchType = v} defaultValue={query?.type || 1}
+                    className="h-100 align-middle p-0 position-absolute input-group-sel" style={{ border: "1px solid lightgray", zIndex: 99 }} >
+                    <option value="1">标准品</option>
+                    <option value="2">试剂/耗材</option>
+                </select>
+            </>
         }));
 
         return <header>
@@ -122,9 +135,7 @@ export class NavHeaderView extends View<CApp> {
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
-                                <form className="w-100" onSubmit={(e: any) => { e.preventDefault(); this.searchClick(); }}>
-                                    <input type="text" ref={v => this.searchKey = v} className="search-query form-control" placeholder="Search" />
-                                </form>
+                                
                                 {searchTypeUI}
                                 <span className="input-group-btn" onClick={(e: any) => { this.searchClick();return false }}>
                                     <button className="btn" type="button">
