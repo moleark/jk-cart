@@ -60,6 +60,7 @@ export class Product {
 	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
 	@observable prices: any[];				// 包含价格和折扣信息
 	@observable futureDeliveryTimeDescription: string;
+	@observable productDocs: any = { msds: false, spec: false, coa: false };
 	// @observable MSDSFiles: any;
 	// @observable specFiles: any;
 	// @observable data: any;
@@ -87,8 +88,9 @@ export class Product {
 			this.loadChemical(),
 			this.loadFavorite(),
 			this.loadPrices(),
-			/* this.loadMSDSFile(),
-			this.loadSpecFile(), */
+			this.loadMSDSFile(),
+			this.loadSpecFile(),
+			this.loadCOAFile(),
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
 			this.loadDescriptionPost(),
@@ -137,22 +139,29 @@ export class Product {
 		this.favorite = (ret !== undefined);
 	}
 
-	// /**
-	//  * 获取产品MSDS文件
-	//  */
-	// private async loadMSDSFile() {
-	// 	if (this.MSDSFiles) return;
-	// 	let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
-	// 	this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
-	// }
+	/**
+	 * 获取产品MSDS文件(是否存在)
+	 */
+	private async loadMSDSFile() {
+		let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
+		this.productDocs.msds = productMSDSFiles.length ? true : false;
+	}
 
-	// /**
-	//  * 获取产品Spec文件
-	//  */
-	// private async loadSpecFile() {
-	// 	if (this.specFiles) return;
-	// 	this.specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
-	// }
+	/**
+	 * 获取产品Spec文件(是否存在)
+	 */
+	private async loadSpecFile() {
+		let specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
+		this.productDocs.spec = specFiles.length ? true : false;
+	}
+
+	/**
+	 * 获取产品COA(是否存在)
+	 */
+	private async loadCOAFile() {
+		let coaFile = await this.uqs.product.getProductLotNumber.table({ product: this.id });
+		this.productDocs.coa = coaFile.length ? true : false;
+	}
 
 	private async loadPrices() {
 		let { customerDiscount, product, promotion, warehouse } = this.uqs;

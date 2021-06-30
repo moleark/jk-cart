@@ -108,7 +108,7 @@ export class VPageProduct extends VPage<CProduct> {
                         {this.renderProduct(product)}
                         <div className="d-block d-sm-none px-2 ml-2 my-3 w-100" style={{ lineHeight: 1.8 }}>
                             {TopicDivision('产品资料')}
-                            {this.material(id, true)}
+                            {this.material(product, true)}
                         </div>
                         {this.renderAssistInfo(product)}
                     </div>
@@ -308,15 +308,17 @@ export class VPageProduct extends VPage<CProduct> {
         </div>
     }
 
-    private material = (id: any, showMob?: boolean) => {
+    private material = (product: Product, showMob?: boolean) => {
+        let { id, productDocs } = product;
         let Materials = [
             { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
             { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
             { id: 3, name: "质检报告 (COA)", type: "coa" },
         ];
+        let effectArr: any[] = Materials.filter((el: any) => productDocs[el.type]);
         return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}
             {
-                Materials.map((v: any) => {
+                effectArr.map((v: any) => {
                     return <Ax key={v.name} href={'/product/mscu/' + v.type + '/' + id}>
                         <div className="mint" >{v.name}</div>
                     </Ax>
@@ -340,7 +342,7 @@ export class VPageProduct extends VPage<CProduct> {
                     <div className="border px-1">
                         <ProductImage chemicalId={imageUrl} className="w-100 mb-2" />
                     </div>
-                    <div className="d-none d-sm-block">{this.material(id)}</div>
+                    <div className="d-none d-sm-block">{this.material(product)}</div>
                 </div>
             </div>
             <div className="col-lg-8">

@@ -48,6 +48,7 @@ export interface UqProduct {
     GetAvailableProductById: Query;
     GetProductPackByOrigin: Query;
     GetProductPrices: Query;
+    getProductLotNumber: Query;
 }
 
 export interface UqCommon {
@@ -155,6 +156,11 @@ export interface UqWebBuilder {
     GetSlideShow: Query;
 }
 
+export interface UqPlatformjoint {
+    NeoTridentUser: Map;
+}
+
+
 
 export interface UQs {
     order: UqOrder;
@@ -171,4 +177,5 @@ export interface UQs {
     member: UqMember;
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
+    platformjoint: UqPlatformjoint;
 }
