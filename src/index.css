@@ -381,6 +381,17 @@
     padding-right: 150px !important;
 }
 
+.search-query::-webkit-input-placeholder {
+    color: #aab2bd;
+    font-size: 14px;
+}
+
+@media (min-width: 991px){
+    .custom-search-input {
+        width: 422px !important;
+    }
+}
+
 @media (max-width: 991px){
     .input-group-sel {
         right: 57px;
