@@ -381,7 +381,7 @@
     padding-right: 150px !important;
 }
 
-.search-query::-webkit-input-placeholder {
+.search-query::placeholder {
     color: #aab2bd;
     font-size: 14px;
 }
