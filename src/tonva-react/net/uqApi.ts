@@ -30,27 +30,19 @@ interface UqLocal {
 }
 
 export class UqApi extends ApiBase {
-    //private access:string[];
-    //appOwner:string;
-    //appName:string;
     uqOwner: string;
     uqName: string;
     uq: string;
 
-    constructor(basePath:string, /*appOwner:string, appName:string, */uqOwner:string, uqName:string/*, access:string[]*/, showWaiting?: boolean) {
+    constructor(basePath:string, uqOwner:string, uqName:string, showWaiting?: boolean) {
         super(basePath, showWaiting);
-        //this.appOwner = appOwner;
-        //this.appName = appName;
         if (uqName) {
             this.uqOwner = uqOwner;
             this.uqName = uqName;
             this.uq = uqOwner + '/' + uqName;
         }
-        //this.access = access;
         this.showWaiting = showWaiting;
     }
-
-    //setUqVersion(uqVersion:number) {this.uqVersion = undefined}
 
     async init() {
         await buildAppUq(this.uq, this.uqOwner, this.uqName);
@@ -162,7 +154,7 @@ export function logoutUnitxApis() {
 export class UnitxApi extends UqApi {
     private unitId:number;
     constructor(unitId:number) {
-        super('tv/', /*undefined, undefined, */undefined, undefined/*, undefined*/, true);
+        super('tv/', undefined, undefined, true);
         this.unitId = unitId;
     }
 

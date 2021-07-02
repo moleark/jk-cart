@@ -41,6 +41,7 @@ export abstract class UqTuid<M> extends Entity {
     getIdFromObj(obj:any):number {return obj[this.idName]}
     stopCache():void {this.noCache = true}
 	abstract tv(id:number, render?:Render<M>):JSX.Element;
+    abstract getObj(id:number):M;
     abstract useId(id:number):void;
     abstract boxId(id:number):BoxId;
     abstract valueFromId(id:number):any;
@@ -119,6 +120,13 @@ export class TuidInner extends Tuid {
         }
     }
     
+    getObj(id:number):any {
+        let obj = this.valueFromId(id);
+        if (obj) return obj;
+        this.useId(id);
+        return {id};
+    }
+
 	tv(id:number, render?:Render<any>):JSX.Element {
 		return React.createElement(observer(() => {
 			let obj = this.valueFromId(id);
@@ -448,6 +456,7 @@ export class TuidImport extends Tuid {
     readonly from: SchemaFrom;
     isImport = true;
 
+    getObj(id:number): any {return this.tuidLocal?.getObj(id)}
 	tv(id:number, render?:Render<any>):JSX.Element {
 		return this.tuidLocal?.tv(id, render);
 	}

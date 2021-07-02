@@ -335,8 +335,7 @@ export class UqMan {
             this.uqApi = new UnitxApi(env.unit);
         }
         else {
-            //let {appOwner, appName} = uqs;
-            this.uqApi = new UqApi(baseUrl, /*appOwner, appName, */uqOwner, uqName/*, acc*/, true);
+            this.uqApi = new UqApi(baseUrl, uqOwner, uqName, true);
         }
         this.tuidsCache = new TuidsCache(this);
     }

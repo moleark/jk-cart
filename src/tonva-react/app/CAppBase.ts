@@ -30,13 +30,10 @@ export interface UqsConfig {
 		name: string;
 		version?: string;
 	};
-	//devs?: DevConfig[];
 	uqs?: UqConfig[];
 }
 
 export interface AppConfig extends UqsConfig {
-	
-	
 	/*
 	app?: {
 		name: string;
