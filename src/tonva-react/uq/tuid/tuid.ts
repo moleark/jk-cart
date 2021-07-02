@@ -5,6 +5,10 @@ import { UqMan, ArrFields, Field, SchemaFrom } from '../uqMan';
 import { EntityCaller } from '../caller';
 import { BoxId } from './boxId';
 import { IdCache, IdDivCache } from './idCache';
+import { Render } from '../../ui';
+import React from 'react';
+import { observer } from 'mobx-react';
+import { uqStringify } from './reactBoxId';
 
 export interface TuidSaveResult {
     id: number;
@@ -22,6 +26,7 @@ export abstract class UqTuid<M> extends Entity {
     protected idName: string;
     //cached: boolean;
     unique: string[];
+	render: Render<M>;
 
     public setSchema(schema:any) {
         super.setSchema(schema);
@@ -35,6 +40,7 @@ export abstract class UqTuid<M> extends Entity {
 
     getIdFromObj(obj:any):number {return obj[this.idName]}
     stopCache():void {this.noCache = true}
+	abstract tv(id:number, render?:Render<M>):JSX.Element;
     abstract useId(id:number):void;
     abstract boxId(id:number):BoxId;
     abstract valueFromId(id:number):any;
@@ -113,6 +119,23 @@ export class TuidInner extends Tuid {
         }
     }
     
+	tv(id:number, render?:Render<any>):JSX.Element {
+		return React.createElement(observer(() => {
+			let obj = this.valueFromId(id);
+			if (!obj) {
+				this.useId(id);
+				return React.createElement(React.Fragment, undefined, [
+					`${this.sName}:${id}`
+				]);
+			}
+			return (render ?? this.render ?? (() => {
+				return React.createElement(React.Fragment, undefined, [
+					this.sName + ':' + uqStringify(obj)
+				]);
+			}))(obj);
+		}));
+	}
+
     useId(id:number, defer?:boolean) {
         if (this.noCache === true) return;
         if (!id) return;
@@ -424,6 +447,10 @@ export class TuidImport extends Tuid {
     
     readonly from: SchemaFrom;
     isImport = true;
+
+	tv(id:number, render?:Render<any>):JSX.Element {
+		return this.tuidLocal?.tv(id, render);
+	}
 
     useId(id:number) {this.tuidLocal?.useId(id);}
     boxId(id:number):BoxId {
