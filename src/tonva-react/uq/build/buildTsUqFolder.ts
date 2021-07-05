@@ -15,22 +15,21 @@ export function buildTsUqFolder(uq: UqMan, uqsFolder:string, uqAlias:string) {
 	let tsUq = buildTsHeader();
 	tsUq += buildUQ(uq, uqAlias);
 	overrideTsFile(`${uqFolder}/${uqAlias}.ts`, tsUq);
-	saveTuidTsIndexAndRender(uqFolder, uq, uqAlias);
-	saveIDTsIndexAndRender(uqFolder, uq, uqAlias);
+	saveTuidAndIDTsIndexAndRender(uqFolder, uq, uqAlias);
 }
 
-function saveTuidTsIndexAndRender(uqFolder:string, uq: UqMan, uqAlias:string) {
+function saveTuidAndIDTsIndexAndRender(uqFolder:string, uq: UqMan, uqAlias:string) {
 	let imports = '', sets = '';
-	let {tuidArr} = uq;
+	let {idArr, idxArr, ixArr, tuidArr} = uq;
+
 	for (let i of tuidArr) {
 		let cName = capitalCase(i.sName);
 		if (cName[0] === '$') continue;
 		imports += `\nimport * as ${cName} from './${cName}.ui';`;
 		sets += `\n	Object.assign(uq.${cName}, ${cName});`;
 
-		let tsUI = `import { Res, setRes, TFunc, UI } from "tonva-react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId } from "tonva-react";
+		let tsUI = `// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Res, setRes, TFunc, FieldItem, FieldItemNumber, FieldItemString, FieldItemId, UI } from "tonva-react";
 import { Tuid${cName} } from "./${uqAlias}";
 
 const resRaw: Res<any> = {
@@ -54,11 +53,7 @@ export function render(item: Tuid${cName}):JSX.Element {
 		let path = `${uqFolder}/${cName}.ui.tsx`;
 		saveTsFileIfNotExists(path, tsUI);
 	}
-}
 
-function saveIDTsIndexAndRender(uqFolder:string, uq: UqMan, uqAlias:string) {
-	let imports = '', sets = '';
-	let {idArr, idxArr, ixArr} = uq;
 	for (let i of [...idArr, ...idxArr, ...ixArr]) {
 		let cName = capitalCase(i.name);
 		if (cName[0] === '$') continue;

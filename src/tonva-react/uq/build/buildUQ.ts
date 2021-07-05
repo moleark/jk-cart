@@ -167,6 +167,7 @@ function buildTuid(tuid: Tuid) {
 
 function buildTuidInterface(tuid: Tuid) {
 	let ts = `export interface Tuid${capitalCase(tuid.sName)} {`;
+	ts += `\n\tid?: number;`;
 	ts += buildFields(tuid.fields);
 	ts += '\n}';
 	return ts;

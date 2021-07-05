@@ -142,12 +142,32 @@ export class CTrial extends CUqBase {
 				{
 					id: undefined,
 					main: undefined,
-					warehouse: 1,
+					warehouse: 14,
 					item: 29514,
 					product: 12686,
 					quantity: 10,
 					amount: 10*310,
 					price: 310.00,
+				},
+				{
+					id: undefined,
+					main: undefined,
+					warehouse: 14,
+					item: 2422,
+					product: 1003,
+					quantity: 9,
+					amount: 9*1605.00,
+					price: 1605.00,
+				},
+				{
+					id: undefined,
+					main: undefined,
+					warehouse: 14,
+					item: 2423,
+					product: 1003,
+					quantity: 9,
+					amount: 9*4466.00,
+					price: 4466.00,
 				}
 			],	
 		}
