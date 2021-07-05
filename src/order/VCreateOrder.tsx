@@ -19,6 +19,7 @@ export class VCreateOrder extends VPage<COrder> {
 	private shippingAddressTip = observable.box();
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
+	private comBininvoiceTip = observable.box();
     @observable orderNotes: HTMLTextAreaElement;
     @observable submitOrderEd: boolean = false;
 
@@ -152,11 +153,13 @@ export class VCreateOrder extends VPage<COrder> {
         // 必填项验证
         let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
 		let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
+        let combinTip: string = "";
         if (!shippingContact) {
-			this.shippingAddressTip.set(renderTip('必须填写收货地址'));
+            this.shippingAddressTip.set(renderTip('必须填写收货地址'));
+            combinTip = "必须填写收货地址;";
             //this.shippingAddressIsBlank = true;
             //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
-            return;
+            // return;
         }
         /* if (!invoiceContact) {
             if (this.useShippingAddress) {
@@ -172,7 +175,8 @@ export class VCreateOrder extends VPage<COrder> {
         } */
         if (!invoiceContact && !this.useShippingAddress) {
             this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
-            return;
+            combinTip += "必须填写发票地址;";
+            // return;
         };
         if (this.useShippingAddress) {
             this.controller.orderData.invoiceContact = shippingContact; this.invoiceAddressTip.set(null);
@@ -180,7 +184,12 @@ export class VCreateOrder extends VPage<COrder> {
         if (!invoiceType || !invoiceInfo) {
             //this.invoiceIsBlank = true;
 			//setTimeout(() => this.invoiceIsBlank = false, GLOABLE.TIPDISPLAYTIME);
-			this.invoiceTip.set(renderTip('必须填写发票信息'));
+            this.invoiceTip.set(renderTip('必须填写发票信息'));
+            combinTip += "必须填写发票信息;";
+            // return;
+        }
+        if (combinTip !== "") {
+            this.comBininvoiceTip.set(renderTip(combinTip));
             return;
         }
         let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
@@ -201,6 +210,7 @@ export class VCreateOrder extends VPage<COrder> {
         let { allowOrdering } = currentUser;
         let disableOrderBtn = () => { this.submitOrderEd = true; setTimeout(() => this.submitOrderEd = false, 5000); };
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
+            {autoHideTips(this.comBininvoiceTip)}
             <div className="d-flex justify-content-left">
                 <div className="text-danger flex-grow-1 align-self-center" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"
