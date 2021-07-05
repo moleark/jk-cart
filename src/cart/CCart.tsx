@@ -5,6 +5,8 @@ import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
 import { Product, CartPackRow, CartItem } from '../store';
+import { CApp } from 'tapp';
+import { GLOABLE } from '../global';
 
 export class CCart extends CUqBase {
 	//cart: Cart;
@@ -13,7 +15,8 @@ export class CCart extends CUqBase {
     private selectedCartItems: CartItem[];
 
     protected async internalStart(param: any) {
-        this.openVPage(VCart);
+        let punchOutXML = await this.generatePunchOutXML();
+        this.openVPage(VCart, { punchOutXML: punchOutXML });
     }
 
 	showCart = async () => {
@@ -21,6 +24,31 @@ export class CCart extends CUqBase {
         nav.navigate("/cart");
     }
 
+    generatePunchOutXML = async () => {
+        let { currentUser } = this.cApp;
+        let punchOutXML: any;
+        try {
+            if (currentUser && currentUser.thirdPartyOrg) {
+                if (currentUser.thirdPartyOrg === "3") {
+                    let webuserId = currentUser.id;
+                    let result = await fetch(GLOABLE.PUNCHOUT.PUNCHOUTXML + "?webuser=" + webuserId, {
+                        method: "post",
+                        headers: { "Content-Type":"application/json" }
+                    });
+                    if (result.ok) {
+                        let content: any = await result.json();
+                        punchOutXML = {
+                            url: content?.url,
+                            cxmlBase64: content["cxml-base64"]
+                        };
+                    };
+                };
+            };
+            return punchOutXML;
+        } catch (error) {
+            return undefined;
+        };
+    }
 
 	//get count(): number {return this.cart?.count.get();}
 
@@ -126,6 +154,18 @@ export class CCart extends CUqBase {
         // })
     }
 
+    punchOut = async () => {
+        /* 清除购物车 */
+        let param: [{ productId: number, packId: number }] = [] as any;
+        this.cApp.store.cart.cartItems.forEach((e: any) => {
+            e.packs.forEach((v: any) => {
+                param.push({ productId: e.product.id, packId: v.pack.id });
+            });
+        });
+        await this.cApp.store.cart.removeItem(param);
+        return true;
+    }
+
     checkOut = async () => {
         let { cart } = this.cApp.store;
         this.selectedCartItems = cart.getSelectedItems();
@@ -187,4 +227,39 @@ export class CCart extends CUqBase {
     }
 
     tabPage: VCart = new VCart(this);
+}
+
+export class CartBtnMatch {
+    private cApp: CApp;
+    private organization: any;
+
+    constructor(res: any) {
+        this.cApp = res;
+        this.organization = this.cApp.currentUser?.thirdPartyOrg;
+    }
+
+    get displayBtn():boolean {
+        return this.organization && !["3"].includes(this.organization);
+    }
+
+    getCartButtonTip = () => {
+        switch (this.organization) {
+            case "3":
+                return "punchOut";
+            default:
+                return "去结算";
+        };
+    }
+
+    CartButtonClick = async () => {
+        let { cCart } = this.cApp;
+        switch (this.organization) {
+            case "3":
+                await cCart.punchOut();
+                break;
+            default:
+                await cCart.checkOut();
+                break;
+        };
+    }
 }

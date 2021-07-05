@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv, Ax } from 'tonva';
 import { MinusPlusWidget } from '../tools';
-import { CCart } from './CCart';
+import { CartBtnMatch, CCart } from './CCart';
 import { CartPackRow, CartItem } from '../store';
 import { xs } from 'tools/browser';
 
@@ -27,47 +27,44 @@ const cartSchema = [
 ];
 
 export class VCart extends VPage<CCart> {
+    punchOutXML: any;
+    cartBtnMatch: CartBtnMatch;
     /*
     async open() {
         this.openPage(this.page);
     }
     */
+    init(param: any) {
+        let { punchOutXML } = param;
+        this.punchOutXML = punchOutXML;
+        this.cartBtnMatch = new CartBtnMatch(this.controller.cApp);
+    }
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cApp, editButton } = this.controller;
+        let { checkOut, strikeOut, cApp } = this.controller;
 		let { cart } = cApp.store;
         let amount = cart.amount;
-		/*
-        let check = editButton ? '删除' : "去结算";
-        let content = editButton ? <>{check}</> : amount > 0 ?
+        let check = this.cartBtnMatch.getCartButtonTip();
+        let content = amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-		*/
-        if (editButton) {
-			let check = editButton ? '删除' : "去结算";
-			let content = editButton ? <>{check}</> : amount > 0 ?
-				<>{check} (¥{amount})</> :
-				<>{check}</>;
-			return <div className="d-flex justify-content-end">
-                <button className="btn btn-success w-25 mx-5" style={{ background: '#28a745' }}
-                    type="button"
-                    onClick={strikeOut}>
-                    {content}
-                </button>
-            </div>;
-        } else {
-			let check = editButton ? '删除' : "去结算";
-			let content = editButton ? <>{check}</> : amount > 0 ?
-				<>{check} (¥{amount})</> :
-				<>{check}</>;
-			return <div className="d-flex justify-content-center">
-                <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
-                    type="button"
-                    onClick={checkOut} disabled={amount <= 0}>
-                    {content}
-                </button>
-            </div>;
-        }
+        if (check === "punchOut")
+            return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { this.cartBtnMatch.CartButtonClick(); return true; }}
+                encType="application/x-www-form-urlencoded" method="post">
+                <input name="cxml-base64" defaultValue={ this.punchOutXML?.cxmlBase64 || "" } style={{visibility: "hidden", position: "absolute"}} type="text"  />
+                <div className="d-flex justify-content-center">
+                    <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
+                        type="submit" disabled={amount <= 0 || !this.punchOutXML}>
+                        {content}
+                    </button>
+                </div>
+            </form>;
+        return <div className="d-flex justify-content-center">
+            <button className="btn btn-success mx-5" style={{ background: '#28a745' }} type="button"
+                onClick={this.cartBtnMatch.CartButtonClick} disabled={amount <= 0}>
+                {content}
+            </button>
+        </div>;
     });
 
     render(params: any): JSX.Element {
@@ -209,7 +206,7 @@ export class VCart extends VPage<CCart> {
             let { cApp } = this.controller;
 			let { cart } = cApp.store;
             let footer: any;
-            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && this.cartBtnMatch.displayBtn) {
                 footer = undefined;
             }
             else {

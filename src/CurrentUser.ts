@@ -57,6 +57,7 @@ export class WebUser {
     zipCode: string;
     VIPDiscount: any;
     webUserVIPCard: any;
+    thirdPartyOrg: any;
     @computed get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
@@ -87,7 +88,7 @@ export class WebUser {
         let { id, _user } = this;
         if (_user === undefined) return;
 
-        let { webuser: webUserTuid, salesTask } = this.uqs;
+        let { webuser: webUserTuid, salesTask, platformjoint } = this.uqs;
         let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
         let webUser = await WebUser.load(this.id);
         if (webUser) {
@@ -106,6 +107,8 @@ export class WebUser {
             }
 
             await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
+            let thirdPartyOrg: any = await platformjoint.NeoTridentUser.obj({ webUser: this });
+            this.thirdPartyOrg = thirdPartyOrg?.organization;
         }
 
 

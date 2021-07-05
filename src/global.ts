@@ -93,6 +93,9 @@ interface Global {
 		AUTOLOGIN: string;
 		PUSHORDERURL: string;
 	},
+	PUNCHOUT: {
+		PUNCHOUTXML: string;
+	},
 	LOGISTIC: {
 		ORDERTRANS: string;
 	},
@@ -111,10 +114,12 @@ const GLOABLE_PRODUCTION: Global = {
 		AUTOLOGIN: "https://web.jkchemical.com/api/joint/clientLogin",
 		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
 	},
+	PUNCHOUT: {
+		PUNCHOUTXML: "https://joint.jkchemical.com/punchout/generatePunchOutXML"
+	},
 	LOGISTIC: {
 		ORDERTRANS: "https://joint.jkchemical.com/logistics/getTravelInformation"
 	},
-
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -129,6 +134,9 @@ const GLOABLE_TEST: Global = {
 	EPEC: {
 		AUTOLOGIN: "https://test.jkchemical.com/api/joint/clientLogin",
 		PUSHORDERURL: "https://test.jkchemical.com/joint/epec/pushOrder"
+	},
+	PUNCHOUT: {
+		PUNCHOUTXML: "https://test.jkchemical.com/joint/punchout/generatePunchOutXML"
 	},
 	LOGISTIC: {
 		ORDERTRANS: "https://test.jkchemical.com/joint/logistics/getTravelInformation"
