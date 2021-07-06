@@ -187,7 +187,16 @@ export class VCreateOrder extends VPage<COrder> {
             this.invoiceTip.set(renderTip('必须填写发票信息'));
             combinTip += "必须填写发票信息;";
             // return;
-        }
+        };
+        if (invoiceType && invoiceInfo) {
+            let invoiceInfoO: any = await invoiceInfo.assure();
+            let { taxNo, address, telephone, bank, accountNo } = invoiceInfoO.obj;
+            let validInvoice = invoiceType.id === 1 ? !taxNo : (!taxNo || !address || !telephone || !bank || !accountNo);
+            if (validInvoice) {
+                this.invoiceTip.set(renderTip('必须填写发票信息'));
+                combinTip += "必须填写发票信息;";
+            };
+        };
         if (combinTip !== "") {
             this.comBininvoiceTip.set(renderTip(combinTip));
             return;
