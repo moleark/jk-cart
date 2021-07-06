@@ -38,9 +38,16 @@ export class Order {
     //     return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
     // };
     /**
-     * 商品总额(未应用券的价格) -----> 已修 应用目录价计算(总额恒定)
+     * 商品总额 -----> 已修 应用现价计算（参与运费减免计算）
      */
     @computed get productAmount() {
+        return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
+    };
+
+    /**
+     * 商品总额(未应用券的价格) -----> 已修 应用目录价计算(总额恒定) 预览页展示所需
+     */
+    @computed get productAmounts() {
         return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subListAmount, 0).toFixed(2));
     };
     currency: BoxId;

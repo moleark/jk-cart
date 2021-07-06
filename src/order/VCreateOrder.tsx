@@ -350,7 +350,7 @@ export class VCreateOrder extends VPage<COrder> {
             <List items={orderData.orderItems} item={{ render: this.renderOrderItem,className:"w-100", key: this.orderItemKey as any }} />
             <div className="px-2">
                 <div className="row mx-0 py-3 pr-3 bg-white my-1">
-					{labeled('商品总额:', renderPrice(orderData.productAmount))}
+					{labeled('商品总额:', renderPrice(orderData.productAmounts))}
                     {freightFeeUI}
                     {freightFeeRemittedUI}
                 </div >
