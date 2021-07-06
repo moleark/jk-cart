@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv, Ax } from 'tonva';
 import { MinusPlusWidget } from '../tools';
-import { CartBtnMatch, CCart } from './CCart';
+import { CCart } from './CCart';
 import { CartPackRow, CartItem } from '../store';
 import { xs } from 'tools/browser';
 
@@ -28,7 +28,6 @@ const cartSchema = [
 
 export class VCart extends VPage<CCart> {
     punchOutXML: any;
-    cartBtnMatch: CartBtnMatch;
     /*
     async open() {
         this.openPage(this.page);
@@ -37,19 +36,18 @@ export class VCart extends VPage<CCart> {
     init(param: any) {
         let { punchOutXML } = param;
         this.punchOutXML = punchOutXML;
-        this.cartBtnMatch = new CartBtnMatch(this.controller.cApp);
     }
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cApp } = this.controller;
+        let { checkOut, strikeOut, cApp, cartBtnMatch } = this.controller;
 		let { cart } = cApp.store;
         let amount = cart.amount;
-        let check = this.cartBtnMatch.getCartButtonTip();
+        let check = cartBtnMatch.getCartButtonTip();
         let content = amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
         if (check === "punchOut")
-            return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { this.cartBtnMatch.CartButtonClick(); return true; }}
+            return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { cartBtnMatch.CartButtonClick(); return true; }}
                 encType="application/x-www-form-urlencoded" method="post">
                 <input name="cxml-base64" defaultValue={ this.punchOutXML?.cxmlBase64 || "" } style={{visibility: "hidden", position: "absolute"}} type="text"  />
                 <div className="d-flex justify-content-center">
@@ -61,7 +59,7 @@ export class VCart extends VPage<CCart> {
             </form>;
         return <div className="d-flex justify-content-center">
             <button className="btn btn-success mx-5" style={{ background: '#28a745' }} type="button"
-                onClick={this.cartBtnMatch.CartButtonClick} disabled={amount <= 0}>
+                onClick={cartBtnMatch.CartButtonClick} disabled={amount <= 0}>
                 {content}
             </button>
         </div>;
@@ -203,10 +201,10 @@ export class VCart extends VPage<CCart> {
     }
     footer() {
         return  React.createElement(observer(() => {
-            let { cApp } = this.controller;
+            let { cApp, cartBtnMatch } = this.controller;
 			let { cart } = cApp.store;
             let footer: any;
-            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && this.cartBtnMatch.displayBtn) {
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && cartBtnMatch.displayBtn) {
                 footer = undefined;
             }
             else {

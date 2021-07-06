@@ -11,7 +11,7 @@ import { GLOABLE } from '../global';
 export class CCart extends CUqBase {
 	//cart: Cart;
     @observable editButton: boolean = false; // = observable.box<boolean>(false);
-
+    @observable cartBtnMatch: CartBtnMatch = new CartBtnMatch(this.cApp);
     private selectedCartItems: CartItem[];
 
     protected async internalStart(param: any) {
