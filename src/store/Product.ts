@@ -348,15 +348,27 @@ export class Product {
 
 	/* 产品警示标示 */
 	getProductWarningSigns = async () => {
-		let JNKRestrictByChemical = await this.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
-		if (!JNKRestrictByChemical) return;
-		let { jnkRestrict } = JNKRestrictByChemical;
+		let JNKRestrictByChemical: any[] = await this.uqs.chemical.ChemicalJNKRestrict.table({ chemical: this.chemical?.chemical });
+		if (!JNKRestrictByChemical.length) return;
+		let promise: PromiseLike<any>[] = [];
+		for (let key of JNKRestrictByChemical) {
+			promise.push(this.uqs.chemicalSecurity.JNKRestrict.load(key?.jnkRestrict?.id));
+		};
+		let result = await Promise.all(promise);
+		let warningSign: string = "";
+		for (let key of result) {
+			if (key) {
+				let { no } = key;
+				if (no.indexOf('WX') > -1) warningSign = '危化品';
+			};
+		};
+		/* let { jnkRestrict } = JNKRestrictByChemical;
 		let jnkRestrictObj = await this.uqs.chemicalSecurity.JNKRestrict.load(jnkRestrict?.id);
 		let warningSign: string = "";
 		if (jnkRestrictObj) {
 			let { no } = jnkRestrictObj;
 			if (no.indexOf('WX') > -1) warningSign = '危化品';
-		};
+		}; */
 		return warningSign;
 	}
 
