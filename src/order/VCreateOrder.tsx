@@ -264,7 +264,7 @@ export class VCreateOrder extends VPage<COrder> {
             <div className="px-2">
                 <div className="row py-3 pr-3 bg-white my-1">
                     <div className="col-4 col-sm-2 pb-2 text-muted">商品总额:</div>
-                    <div className="col-8 col-sm-10 text-right"><small>¥</small>{orderData.productAmount}</div>
+                    <div className="col-8 col-sm-10 text-right"><small>¥</small>{orderData.productAmounts}</div>
                     {freightFeeUI}
                     {freightFeeRemittedUI}
                 </div >
