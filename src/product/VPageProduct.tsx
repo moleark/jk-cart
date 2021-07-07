@@ -89,7 +89,7 @@ export class VPageProduct extends VPage<CProduct> {
         //let { getProductSpecFile, getProductMSDSFile } = this.controller;
         //let page = xs ? this.page : this.lpage;
         this.openPage(observer(() => {
-            let { cApp, product, openMaterial } = this.controller;
+            let { cApp, product } = this.controller;
             let { id } = product;
             /* let CurrentUA = browser.versions.mobile;
             let productPdfM = CurrentUA && (productMSDSFiles.length || productSpecFiles.length) ? true : false; */
@@ -314,6 +314,7 @@ export class VPageProduct extends VPage<CProduct> {
             { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
             { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
             { id: 3, name: "质检报告 (COA)", type: "coa" },
+            { id: 4, name: "用户手册（UserManual）", type: "um" },
         ];
         let effectArr: any[] = Materials.filter((el: any) => productDocs[el.type]);
         return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}

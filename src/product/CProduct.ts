@@ -3,7 +3,7 @@ import { BoxId, QueryPager } from 'tonva';
 import { CUqBase } from '../tapp/CBase';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
-import { VPageSkillSearch } from './VPageSkillSearch';
+import { VPageSkillSearch, docTypeWithCaptcha } from './VPageSkillSearch';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../store';
 import { GLOABLE } from 'global';
@@ -26,7 +26,7 @@ export class CProduct extends CUqBase {
     @observable currentFileName: any;
     @observable currentLanguage: any;
     @observable currentProduct: any;
-    @observable productMsdsVersions: any[] = [];
+    @observable productMscuVersions: any[] = [];
     @observable showFavorites: Boolean = false;
     @observable searchUrl: string;
 
@@ -272,6 +272,8 @@ export class CProduct extends CUqBase {
         let { origin, captcha, lang, lot } = row;
         if (this.materialType === 'msds')
             return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
+        if (this.materialType === 'um')
+            return await this.fetchPdf('/partial/productUserManualFileByOrigin/' + `${lang}/${origin}/${captcha}`);
         if (this.materialType === 'spec')
             return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
         if (this.materialType === 'coa') {
@@ -334,22 +336,25 @@ export class CProduct extends CUqBase {
      */
     openMaterial = async (type?: string, id?: string) => {
         type = type !== undefined ? type.toLowerCase() : type;
-        if (type === 'msds' || type === 'spec') await this.getCaptcha();
+        if (docTypeWithCaptcha.includes(type)) await this.getCaptcha();
         this.materialType = type;
         let origin: string;
         if (!isNaN(Number(id))) {
             this.product = this.cApp.getProduct(Number(id));
-            await this.product.loadDetail();
+            await this.product.loadBase();
         }
         if (this.product && this.product.props) {
             origin = this.product.props.origin;
-            if (origin && type === 'msds') {
-                let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productMsdsVersion/' + origin);
-                if (result.ok) {
-                    this.productMsdsVersions = await result.json();
-                }
-                else this.productMsdsVersions = [];
-            }
+            if (origin && (type === 'msds' || type === 'um')) {
+                let urls: { [type: string]: string } = {
+                    "msds": "/partial/productMsdsVersion/",
+                    "um": "/partial/productUserManualVersion/",
+                };
+                let url: string = urls[type] || "/partial/productMsdsVersion/";
+                let result = await window.fetch(GLOABLE.CONTENTSITE + url + origin);
+                if (result && result.ok) this.productMscuVersions = await result.json();
+                else this.productMscuVersions = [];
+            };
         }
         this.openVPage(VPageSkillSearch, origin);
     }

@@ -30,6 +30,7 @@ export interface UqProduct {
     ProductChemical: Map;
     ProductMSDSFile: Map;
     ProductSpecFile: Map;
+    ProductUserManualFile: Map;
     ProductProductCategory: Map;
     ProductEmbargo: Map;
     Productstandardsample: Map;

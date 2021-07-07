@@ -60,7 +60,7 @@ export class Product {
 	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
 	@observable prices: any[];				// 包含价格和折扣信息
 	@observable futureDeliveryTimeDescription: string;
-	@observable productDocs: any = { msds: false, spec: false, coa: false };
+	@observable productDocs: any = { msds: false, spec: false, coa: false, um: false };
 	// @observable MSDSFiles: any;
 	// @observable specFiles: any;
 	// @observable data: any;
@@ -91,6 +91,7 @@ export class Product {
 			this.loadMSDSFile(),
 			this.loadSpecFile(),
 			this.loadCOAFile(),
+			this.loadUserManualFile(),
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
 			this.loadDescriptionPost(),
@@ -113,7 +114,7 @@ export class Product {
 		await Promise.all(promises);
 	}
 
-	private async loadBase() {
+	async loadBase() {
 		if (this.props) return;
 		let { currentSalesRegion } = this.store;
 		let ret = await this.uqs.product.GetAvailableProductById.obj({ product: this.id, salesRegion: currentSalesRegion });
@@ -161,6 +162,14 @@ export class Product {
 	private async loadCOAFile() {
 		let coaFile = await this.uqs.product.getProductLotNumber.table({ product: this.id });
 		this.productDocs.coa = coaFile.length ? true : false;
+	}
+
+	/**
+	 * 获取用户手册(是否存在)
+	 */
+	private async loadUserManualFile() {
+		let userManualFile = await this.uqs.product.ProductUserManualFile.table({ product: this.id });
+		this.productDocs.um = userManualFile.length ? true : false;
 	}
 
 	private async loadPrices() {
