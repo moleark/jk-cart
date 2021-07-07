@@ -73,7 +73,7 @@ const uiSchema: UiSchema = {
                 // if (value && !/^([1-9]{1})(\d{14}|\d{17}|\d{18}|\d{15})$/.test(value))
                 /* 银行卡位数校验 现已开放 11-30位,后期可针对具体银行进行细化校验 */
                 /* 二次修改  客户银行卡号存在 0开头,暂时只校验数字及数位 */
-                if (value && !/^\d{11,30}$/.test(value.replace(/\s*/g, "")))
+                if (value && !/^\d{8,30}$/.test(value.replace(/\s*/g, "")))
                     // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
                 else
