@@ -10,14 +10,14 @@ export class VSearchHeader extends View<CHome> {
         if (param !== 'home') {
             nav.popTo(topKey);
         }
-
-        cProduct.start(key);
+        cProduct.start({ key: key, type: 1 });
     }
 
     render(param: 'home' | 'insearch' | 'productdetail') {
         let size: any = param === 'home' ? "md" : 'sm';
         return <SearchBox className="w-100"
             size={size}
+            allowEmptySearch = {true}
             onSearch={(key: string) => this.onSearch(key, param)}
             placeholder="搜索品名、编号、CAS、MDL等" />
     }
