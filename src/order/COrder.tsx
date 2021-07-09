@@ -152,7 +152,7 @@ export class COrder extends CUqBase {
 
     private defaultSetting: any;
     private async getDefaultSetting() {
-        // if (this.defaultSetting) return this.defaultSetting;
+        if (this.defaultSetting) return this.defaultSetting;
         let { currentUser } = this.cApp;
         return this.defaultSetting = await currentUser.getSetting() || {};
     }

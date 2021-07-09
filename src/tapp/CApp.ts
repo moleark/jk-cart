@@ -441,6 +441,8 @@ export class CApp extends CUqApp {
     private initNotLogined() {
         // 退出的话把购物车清掉？
         this.currentUser = undefined;
+        /* 切换账户,cOrder内容未清空,快捷方式 直击实例赋值 */
+        this.cOrder = this.newC(COrder);
         /*
         localStorage.removeItem(LOCALCARTNAME);
         this.cart.count.set(0);
