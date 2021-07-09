@@ -335,9 +335,9 @@ export class Product {
 					value = key?.parent;
 					while (value) {
 						let productCategoryByParent: any = await ProductCategory.load(value);
-						value = productCategoryByParent?.parent;
-						if (value)
+						if (productCategoryByParent)
 							keyArr.unshift(productCategoryByParent?.productcategorylanguage?.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+						value = productCategoryByParent?.parent;
 					};
 					arr.push(keyArr);
 				};
