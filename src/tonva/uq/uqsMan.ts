@@ -150,7 +150,7 @@ export class UQsMan {
                     if (ret !== undefined) return ret;
 					debugger;
 					let err = `entity ${uqName}.${String(key)} not defined`;
-                    console.error(err);
+                    //console.error(err);
                     that.showReload('UQ错误：' + err);
                     return undefined;
                 }
@@ -170,7 +170,7 @@ export class UQsMan {
                     }
                 }*/
                 debugger;
-                console.error('error in uqs');
+                //console.error('error in uqs');
                 that.showReload(`代码错误：新增 uq ${String(key)}`);
                 return undefined;
             },
@@ -181,9 +181,27 @@ export class UQsMan {
 		return this.collection;
 	}
 
+	/*
     private showReload(msg: string) {
-        this.localMap.removeAll();
-        nav.showReloadPage(msg);
+		this.localMap.removeAll();
+		nav.showReloadPage(msg);
+    }
+	*/
+
+    private showReload(msg: string) {
+		let cache = this.localMap.child('$reload-tick');
+		let reloadTick = cache.get();
+		if (!reloadTick) reloadTick = 0;
+		console.error(msg);
+		this.localMap.removeAll();
+		let tick = Date.now();
+		cache.set(tick);
+		if (tick - reloadTick  < 60*1000)  {
+			nav.showReloadPage(msg);
+		}
+		else {
+			nav.reload();
+		}
     }
 
     setTuidImportsLocal():string[] {
