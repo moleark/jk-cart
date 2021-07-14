@@ -119,7 +119,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		if (!currtCaptcha) this.captchaTip.set('验证码不可为空');
 
 		if (!productOrigin || !productLot || !currtCaptcha) return;
-		let { getPDFFileUrl } = this.controller;
+		let { getPDFFileUrl, getCaptcha } = this.controller;
 		let content: any = await getPDFFileUrl({
 			origin: productOrigin, captcha: currtCaptcha,
 			lang: this.selectVal ? this.selectVal.value : undefined, lot: productLot
@@ -127,7 +127,10 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		if (content === undefined) return;
 		if (content.status) {
 			if (this.controller.materialType === 'coa') this.productLotTipNone.set(content.msg);
-			else this.captchaTip.set(content.msg);
+			else {
+				this.captchaTip.set(content.msg);
+				await getCaptcha();
+			};
 		} else {
 			if (this.captchaInput) this.captchaInput.value = '';
 			if (this.productLot) this.productLot.value = '';
