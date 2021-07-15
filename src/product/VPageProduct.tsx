@@ -243,7 +243,7 @@ export class VPageProduct extends VPage<CProduct> {
         };
         if (standardSample) {
             let type = standardSample.components.some((el: any) => el?.matrix || el?.unit) ? "Set Components" : "Analytes";
-            let thead = type === "Analytes" ? ["Analyte", "CAS Number", "Target Concentration"] : ["Catalog Number", "Description", "Matrix", "Unit"];
+            let thead = type === "Analytes" ? ["Analyte", "Chinese Alias", "CAS Number", "Target Concentration"] : ["Catalog Number", "Description", "Chinese Alias", "Matrix", "Unit"];
             standardSampleUI = <>
                 <div className="accordion background-grey mt-lg-1">
                     <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#standardSample"
@@ -260,15 +260,18 @@ export class VPageProduct extends VPage<CProduct> {
                         </thead>
                         <tbody>
                             {standardSample.components.map((el: any, index: number) => {
-                                let { origin, description, cas, concentration, matrix, unit } = el;
+                                let { origin, description, descriptionC: descriptionCC, descriptionc, cas, concentration, matrix, unit } = el;
+                                let descriptionC = descriptionCC || descriptionc;
                                 let tds: JSX.Element;
                                 if (type === "Analytes") {
                                     tds = <><td data-title="Analyte">{description}</td>
+                                        <td data-title="Chinese">{descriptionC}</td>
                                         <td data-title="CAS">{cas}</td>
                                         <td data-title="Conc">{concentration}</td></>;
                                 } else {
                                     tds = <><td data-title="Cat"><Ax style={{ color: "#781515" }} href={`/search/${origin}`}>{origin}</Ax></td>
                                         <td data-title="Description">{description}</td>
+                                        <td data-title="Chinese">{descriptionC}</td>
                                         <td data-title="Matrix">{matrix}</td>
                                         <td data-title="Unit">{unit}</td></>;
                                 };
