@@ -243,12 +243,12 @@ export class VPageProduct extends VPage<CProduct> {
         };
         if (standardSample) {
             let type = standardSample.components.some((el: any) => el?.matrix || el?.unit) ? "Set Components" : "Analytes";
-            let thead = type === "Analytes" ? ["Analyte", "Chinese Alias", "CAS Number", "Target Concentration"] : ["Catalog Number", "Description", "Chinese Alias", "Matrix", "Unit"];
+            let thead = type === "Analytes" ? ["英文名称", "中文名称", "CAS", "目标浓度"] : ["产品编号", "英文名称", "中文名称", "浓度", "单位"];
             standardSampleUI = <>
                 <div className="accordion background-grey mt-lg-1">
                     <a className="w-100 btn text-left collapsed" data-toggle="collapse" href="#standardSample"
                         role="button" aria-expanded="false" aria-controls="jk" target="_blank">
-                        { type }&emsp;<i className="fa fa-chevron-down"></i>
+                        组分&emsp;<i className="fa fa-chevron-down"></i>
                     </a>
                 </div>
                 <div className="container mt-lg-2 mb-lg-2 collapse show" id="standardSample">
@@ -264,16 +264,16 @@ export class VPageProduct extends VPage<CProduct> {
                                 let descriptionC = descriptionCC || descriptionc;
                                 let tds: JSX.Element;
                                 if (type === "Analytes") {
-                                    tds = <><td data-title="Analyte">{description}</td>
-                                        <td data-title="Chinese">{descriptionC}</td>
+                                    tds = <><td data-title="英文名称">{description}</td>
+                                        <td data-title="中文名称">{descriptionC}</td>
                                         <td data-title="CAS">{cas}</td>
-                                        <td data-title="Conc">{concentration}</td></>;
+                                        <td data-title="目标浓度">{concentration}</td></>;
                                 } else {
-                                    tds = <><td data-title="Cat"><Ax style={{ color: "#781515" }} href={`/search/${origin}`}>{origin}</Ax></td>
-                                        <td data-title="Description">{description}</td>
-                                        <td data-title="Chinese">{descriptionC}</td>
-                                        <td data-title="Matrix">{matrix}</td>
-                                        <td data-title="Unit">{unit}</td></>;
+                                    tds = <><td data-title="产品编号"><Ax style={{ color: "#781515" }} href={`/search/${origin}?type=2`}>{origin}</Ax></td>
+                                        <td data-title="英文名称">{description}</td>
+                                        <td data-title="中文名称">{descriptionC}</td>
+                                        <td data-title="浓度">{matrix}</td>
+                                        <td data-title="单位">{unit}</td></>;
                                 };
                                 return <tr key={index} className="py-2 border-bottom">{tds}</tr>
                             })}
