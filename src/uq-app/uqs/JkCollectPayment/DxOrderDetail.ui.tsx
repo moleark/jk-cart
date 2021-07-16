@@ -1,7 +1,7 @@
 import { Res, setRes, TFunc, UI } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxOrderDetail } from "./JkOrder";
+import { DxOrderDetail } from "./JkCollectPayment";
 
 /*--fields--*/
 const fields = {
@@ -11,39 +11,6 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	deliver: {
-		"name": "deliver",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "Deliver"
-	} as FieldItemNum,
-	deliverDone: {
-		"name": "deliverDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "DeliverDone"
-	} as FieldItemNum,
-	deliverTime: {
-		"name": "deliverTime",
-		"isKey": false,
-		"label": "DeliverTime"
-	} as undefined,
-	deliverReturn: {
-		"name": "deliverReturn",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "DeliverReturn"
-	} as FieldItemNum,
-	deliverReturnDone: {
-		"name": "deliverReturnDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "DeliverReturnDone"
-	} as FieldItemNum,
 	receive: {
 		"name": "receive",
 		"type": "number",
@@ -58,11 +25,6 @@ const fields = {
 		"widget": "number",
 		"label": "ReceiveDone"
 	} as FieldItemNum,
-	receiveTime: {
-		"name": "receiveTime",
-		"isKey": false,
-		"label": "ReceiveTime"
-	} as undefined,
 	receiveReturn: {
 		"name": "receiveReturn",
 		"type": "number",
@@ -91,11 +53,6 @@ const fields = {
 		"widget": "number",
 		"label": "InvoiceDone"
 	} as FieldItemNum,
-	invoiceTime: {
-		"name": "invoiceTime",
-		"isKey": false,
-		"label": "InvoiceTime"
-	} as undefined,
 	invoiceReturn: {
 		"name": "invoiceReturn",
 		"type": "number",
@@ -114,7 +71,7 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.deliver, fields.deliverDone, fields.deliverTime, fields.deliverReturn, fields.deliverReturnDone, fields.receive, fields.receiveDone, fields.receiveTime, fields.receiveReturn, fields.receiveReturnDone, fields.invoice, fields.invoiceDone, fields.invoiceTime, fields.invoiceReturn, fields.invoiceReturnDone, 
+	fields.receive, fields.receiveDone, fields.receiveReturn, fields.receiveReturnDone, fields.invoice, fields.invoiceDone, fields.invoiceReturn, fields.invoiceReturnDone, 
 ];
 
 export const ui: UI = {

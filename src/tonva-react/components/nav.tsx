@@ -599,7 +599,7 @@ export class Nav {
         try {
 			window.onerror = this.windowOnError;
             window.onunhandledrejection = this.windowOnUnhandledRejection;
-			window.onfocus = this.reloadUser;
+            window.onfocus = this.reloadUser;
             if (env.isMobile === true) {
                 document.onselectstart = function() {return false;}
                 document.oncontextmenu = function() {return false;}

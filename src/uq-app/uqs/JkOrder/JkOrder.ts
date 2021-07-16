@@ -1,6 +1,6 @@
-//=== UqApp builder created on Sun Jun 13 2021 10:57:36 GMT-0400 (GMT-04:00) ===//
+//=== UqApp builder created on Thu Jul 15 2021 21:55:21 GMT-0400 (北美东部夏令时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -8,6 +8,7 @@ import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHist
 //===============================
 
 export interface Tuid$user {
+	id?: number;
 	name: string;
 	nick: string;
 	icon: string;
@@ -16,6 +17,7 @@ export interface Tuid$user {
 }
 
 export interface Tuid$sheet {
+	id?: number;
 	no: string;
 	user: number;
 	date: any;
@@ -30,6 +32,7 @@ export interface Tuid$sheet {
 }
 
 export interface TuidCoupon {
+	id?: number;
 	code: string;
 	user: number;
 	customer: number;
@@ -40,26 +43,31 @@ export interface TuidCoupon {
 }
 
 export interface TuidChemical {
+	id?: number;
 	CAS: string;
 }
 
 export interface TuidSalesRegion {
+	id?: number;
 	name: string;
 	currency: number;
 	no: string;
 }
 
 export interface TuidCurrency {
+	id?: number;
 	name: string;
 	suffix: string;
 }
 
 export interface TuidPackType {
+	id?: number;
 	name: string;
 	description: string;
 }
 
 export interface TuidAddress {
+	id?: number;
 	country: number;
 	province: number;
 	city: number;
@@ -68,6 +76,7 @@ export interface TuidAddress {
 }
 
 export interface TuidCountry {
+	id?: number;
 	code: string;
 	englishName: string;
 	chineseName: string;
@@ -75,6 +84,7 @@ export interface TuidCountry {
 }
 
 export interface TuidProvince {
+	id?: number;
 	country: number;
 	englishName: string;
 	chineseName: string;
@@ -82,6 +92,7 @@ export interface TuidProvince {
 }
 
 export interface TuidCity {
+	id?: number;
 	province: number;
 	englishName: string;
 	chineseName: string;
@@ -89,6 +100,7 @@ export interface TuidCity {
 }
 
 export interface TuidCounty {
+	id?: number;
 	city: number;
 	englishName: string;
 	chineseName: string;
@@ -96,18 +108,22 @@ export interface TuidCounty {
 }
 
 export interface TuidInvoiceType {
+	id?: number;
 	description: string;
 }
 
 export interface TuidCustomer {
+	id?: number;
 	name: string;
 }
 
 export interface TuidOrganization {
+	id?: number;
 	name: string;
 }
 
 export interface TuidContact {
+	id?: number;
 	name: string;
 	organizationName: string;
 	mobile: string;
@@ -118,6 +134,7 @@ export interface TuidContact {
 }
 
 export interface TuidInvoiceInfo {
+	id?: number;
 	title: string;
 	taxNo: string;
 	address: string;
@@ -127,19 +144,23 @@ export interface TuidInvoiceInfo {
 }
 
 export interface TuidBrand {
+	id?: number;
 	name: string;
 	no: string;
 }
 
 export interface TuidProductX {
+	id?: number;
 	brand: number;
 }
 
 export interface TuidWarehouse {
+	id?: number;
 	name: string;
 }
 
 export interface TuidWebUser {
+	id?: number;
 	name: string;
 	no: number;
 	password: string;
@@ -147,13 +168,16 @@ export interface TuidWebUser {
 }
 
 export interface TuidBuyerAccount {
+	id?: number;
 }
 
 export interface TuidCommonText {
+	id?: number;
 	content: string;
 }
 
 export interface TuidExpressLogistics {
+	id?: number;
 }
 
 export interface ParamSetCart {
@@ -193,7 +217,6 @@ export interface ParamOrderPaid {
 }
 export interface ReturnOrderPaidRet {
 	ok: number;
-	$id: number;
 }
 export interface ResultOrderPaid {
 	ret: ReturnOrderPaidRet[];
@@ -201,7 +224,6 @@ export interface ResultOrderPaid {
 
 export interface ParamSaveOrderReturn {
 	id: number;
-	orderMain: number;
 	detail: {
 		id: number;
 		main: number;
@@ -213,6 +235,7 @@ export interface ParamSaveOrderReturn {
 }
 export interface ReturnSaveOrderReturnRet {
 	id: number;
+	$id: number;
 }
 export interface ResultSaveOrderReturn {
 	ret: ReturnSaveOrderReturnRet[];
@@ -248,7 +271,6 @@ export interface ParamSaveOrder {
 }
 export interface ReturnSaveOrderRet {
 	id: number;
-	$id: number;
 }
 export interface ResultSaveOrder {
 	ret: ReturnSaveOrderRet[];
@@ -337,6 +359,39 @@ export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
+export interface ParamGetCustomerReturnable {
+	customer: number;
+}
+export interface ReturnGetCustomerReturnable$page {
+	id: number;
+	main: number;
+	warehouse: number;
+	item: number;
+	product: number;
+	quantity: number;
+	amount: number;
+	price: number;
+	deliver: number;
+	deliverDone: number;
+	deliverTime: any;
+	deliverReturn: number;
+	deliverReturnDone: number;
+	receive: number;
+	receiveDone: number;
+	receiveTime: any;
+	receiveReturn: number;
+	receiveReturnDone: number;
+	invoice: number;
+	invoiceDone: number;
+	invoiceTime: any;
+	invoiceReturn: number;
+	invoiceReturnDone: number;
+	$id: number;
+}
+export interface ResultGetCustomerReturnable {
+	$page: ReturnGetCustomerReturnable$page[];
+}
+
 export interface ParamCart {
 	user: number;
 	product: number;
@@ -418,7 +473,6 @@ export interface ResultOrderHistory {
 export interface $PiecewiseDetail {
 	id?: number;
 	main?: number;
-	row?: number;
 	sec: number;
 	value: number;
 }
@@ -454,24 +508,6 @@ export interface OrderMain {
 	shippingContact: number;
 }
 
-export interface DeliverDetail {
-	id?: number;
-	main?: number;
-	row?: number;
-	orderDetailId: number;
-	deliverQuantity: number;
-}
-
-export interface DeliverMain {
-	id?: number;
-	no?: string;
-	customer: number;
-}
-
-export interface DeliverCenter {
-	id?: number;
-}
-
 export interface ReturnDetail {
 	id?: number;
 	main?: number;
@@ -482,29 +518,31 @@ export interface ReturnDetail {
 
 export interface ReturnMain {
 	id?: number;
-	orderMain: number;
 }
 
 export interface DxOrderDetail {
 	id: number;
 	deliver?: number;
 	deliverDone?: number;
+	deliverTime?: any;
+	deliverReturn?: number;
+	deliverReturnDone?: number;
 	receive?: number;
 	receiveDone?: number;
+	receiveTime?: any;
+	receiveReturn?: number;
+	receiveReturnDone?: number;
 	invoice?: number;
 	invoiceDone?: number;
+	invoiceTime?: any;
+	invoiceReturn?: number;
+	invoiceReturnDone?: number;
 	$act?: number;
 }
 
 export interface DxReturnDetail {
 	id: number;
-	orderDetail?: number;
-	deliver?: number;
-	deliverDone?: number;
-	receive?: number;
-	receiveDone?: number;
-	invoice?: number;
-	invoiceDone?: number;
+	deliverReturnDone?: number;
 	$act?: number;
 }
 
@@ -512,23 +550,32 @@ export interface ActParamDxOrderDetail {
 	id: number|IDXValue;
 	deliver?: number|IDXValue;
 	deliverDone?: number|IDXValue;
+	deliverTime?: any|IDXValue;
+	deliverReturn?: number|IDXValue;
+	deliverReturnDone?: number|IDXValue;
 	receive?: number|IDXValue;
 	receiveDone?: number|IDXValue;
+	receiveTime?: any|IDXValue;
+	receiveReturn?: number|IDXValue;
+	receiveReturnDone?: number|IDXValue;
 	invoice?: number|IDXValue;
 	invoiceDone?: number|IDXValue;
+	invoiceTime?: any|IDXValue;
+	invoiceReturn?: number|IDXValue;
+	invoiceReturnDone?: number|IDXValue;
 	$act?: number;
 }
 
 export interface ActParamDxReturnDetail {
 	id: number|IDXValue;
-	orderDetail?: number|IDXValue;
-	deliver?: number|IDXValue;
-	deliverDone?: number|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
+	deliverReturnDone?: number|IDXValue;
 	$act?: number;
+}
+
+export interface IxCustomerReturnable {
+	ixx: number;
+	ix: number;
+	xi: number;
 }
 
 export interface ParamActs {
@@ -536,13 +583,11 @@ export interface ParamActs {
 	$Piecewise?: $Piecewise[];
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
-	deliverDetail?: DeliverDetail[];
-	deliverMain?: DeliverMain[];
-	deliverCenter?: DeliverCenter[];
 	returnDetail?: ReturnDetail[];
 	returnMain?: ReturnMain[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
 	dxReturnDetail?: ActParamDxReturnDetail[];
+	ixCustomerReturnable?: IxCustomerReturnable[];
 }
 
 
@@ -588,6 +633,7 @@ export interface UqExt extends Uq {
 	GetPendingPayment: UqQuery<ParamGetPendingPayment, ResultGetPendingPayment>;
 	GetPendingAuditOrders: UqQuery<ParamGetPendingAuditOrders, ResultGetPendingAuditOrders>;
 	$poked: UqQuery<Param$poked, Result$poked>;
+	GetCustomerReturnable: UqQuery<ParamGetCustomerReturnable, ResultGetCustomerReturnable>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
 	OrderTransportation: UqMap;
@@ -597,11 +643,9 @@ export interface UqExt extends Uq {
 	$Piecewise: UqID<any>;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
-	DeliverDetail: UqID<any>;
-	DeliverMain: UqID<any>;
-	DeliverCenter: UqID<any>;
 	ReturnDetail: UqID<any>;
 	ReturnMain: UqID<any>;
 	DxOrderDetail: UqIDX<any>;
 	DxReturnDetail: UqIDX<any>;
+	IxCustomerReturnable: UqIX<any>;
 }

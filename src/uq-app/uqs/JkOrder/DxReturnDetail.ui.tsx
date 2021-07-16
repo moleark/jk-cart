@@ -11,59 +11,18 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	orderDetail: {
-		"name": "orderDetail",
-		"type": "id",
-		"isKey": false,
-		"label": "OrderDetail"
-	} as FieldItemId,
-	deliver: {
-		"name": "deliver",
+	deliverReturnDone: {
+		"name": "deliverReturnDone",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "Deliver"
-	} as FieldItemNum,
-	deliverDone: {
-		"name": "deliverDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "DeliverDone"
-	} as FieldItemNum,
-	receive: {
-		"name": "receive",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "Receive"
-	} as FieldItemNum,
-	receiveDone: {
-		"name": "receiveDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "ReceiveDone"
-	} as FieldItemNum,
-	invoice: {
-		"name": "invoice",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "Invoice"
-	} as FieldItemNum,
-	invoiceDone: {
-		"name": "invoiceDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "InvoiceDone"
+		"label": "DeliverReturnDone"
 	} as FieldItemNum,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.orderDetail, fields.deliver, fields.deliverDone, fields.receive, fields.receiveDone, fields.invoice, fields.invoiceDone, 
+	fields.deliverReturnDone, 
 ];
 
 export const ui: UI = {

@@ -241,14 +241,8 @@ export class UQsMan {
                 let lk = (key as string).toLowerCase();
                 let ret = target[lk];
                 if (ret !== undefined) return ret;
-                /*
-                for (let i in uqs) {
-                    if (i.toLowerCase() === lk) {
-                        return uqs[i];
-                    }
-                }*/
                 debugger;
-                console.error('error in uqs');
+                //console.error('error in uqs');
                 this.showReload(`新增 uq ${String(key)}`);
                 return undefined;
             },
@@ -285,7 +279,9 @@ export class UQsMan {
         let uq = this.collection[fromName];
         if (uq === undefined) {
             //debugger;
-            console.error(`setInner(tuidImport: TuidImport): uq ${fromName} is not loaded`);
+			if (env.buildingUq === false) {
+            	console.error(`setInner(tuidImport: TuidImport): uq ${fromName} is not loaded`);
+			}
 			return;
         }
         let iName = tuidImport.name

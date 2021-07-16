@@ -298,7 +298,6 @@ export class UqMan {
 	readonly id: number;
 
     uqVersion: number;
-	//ownerProfix: string;
 	config: UqConfig;
 
     constructor(uqs:UQsMan, uqData: UqData, createBoxId:CreateBoxId, tvs:{[entity:string]:(values:any)=>JSX.Element}) {
@@ -314,21 +313,11 @@ export class UqMan {
         this.id = id;
         this.name = uqOwner + '/' + uqName;
         this.uqVersion = 0;
-		//this.localMap = uqs.localMap.map(this.name);
 		this.localMap = env.localDb.map(this.name);
         this.localModifyMax = this.localMap.child('$modifyMax');
         this.localEntities = this.localMap.child('$access');
         let baseUrl = 'tv/';
 
-		/*
-        let acc: string[];
-        if (access === null || access === undefined || access === '*') {
-            acc = [];
-        }
-        else {
-            acc = access.split(';').map(v => v.trim()).filter(v => v.length > 0);
-		}
-		*/
         if (this.name === '$$$/$unitx') {
             // 这里假定，点击home link之后，已经设置unit了
             // 调用 UnitxApi会自动搜索绑定 unitx service
@@ -741,7 +730,6 @@ export class UqMan {
 					case 'IDV': return this.IDV;
 				}
 				let err = `entity ${this.name}.${String(key)} not defined`;
-				console.error(err);
 				this.showReload('UQ错误：' + err);
 				return undefined;
 			}
@@ -752,8 +740,19 @@ export class UqMan {
 	}
 
     private showReload(msg: string) {
+		let cache = this.localMap.child('$reload-tick');
+		let reloadTick = cache.get();
+		if (!reloadTick) reloadTick = 0;
+		console.error(msg);
 		this.localMap.removeAll();
-		nav.showReloadPage(msg);
+		let tick = Date.now();
+		cache.set(tick);
+		if (tick - reloadTick  < 60*1000)  {
+			nav.showReloadPage(msg);
+		}
+		else {
+			nav.reload();
+		}
     }
 
 	//private coms:any;

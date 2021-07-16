@@ -2,10 +2,11 @@ import { from62 } from './62';
 import { LocalMap } from './localDb';
 
 export const env = (function () {
-	let {unit, testing, params, lang, district, timeZone, isMobile} = initEnv();
+	let {unit, testing, buildingUq, params, lang, district, timeZone, isMobile} = initEnv();
     return {
 		unit,
 		testing,
+		buildingUq, 
 		params,
 		lang, 
 		district,
@@ -32,6 +33,7 @@ export const env = (function () {
 function initEnv(): {
 	unit: number; 
 	testing: boolean; 
+	buildingUq: boolean;
 	params: {[key:string]: string}; 
 	lang: string; 
 	district: string;
@@ -125,7 +127,7 @@ function initEnv(): {
     'Opera Mini|IEMobile|Mobile' , 
     'i');
 	const isMobile = regEx.test(navigator.userAgent);
-	return {unit, testing, params, lang, district, timeZone, isMobile};
+	return {unit, testing, buildingUq:false, params, lang, district, timeZone, isMobile};
 }
 
 function detectBrowser() { 

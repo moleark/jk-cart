@@ -1,5 +1,5 @@
 import { CUqBase } from "uq-app";
-import { OrderDetail, OrderMain, ParamSaveOrder } from "uq-app/uqs/JkOrder";
+import { OrderDetail, OrderMain, ParamSaveOrder, ReturnGetCustomerReturnable$page } from "uq-app/uqs/JkOrder";
 import { DonePageList, DraftPageList, OrderAllPageList, OrderPageList, ProcessingPageList, ReturningPageList } from "./orderPageList";
 import { VInvoice } from "./VInvoice";
 import { VOrder } from "./VOrder";
@@ -8,6 +8,8 @@ import { VReceive } from "./VReceive";
 import { VTrial } from "./VTrial";
 import { CDeliver } from "./deliver";
 import { VTestIDV } from "./VTestIDV";
+import { VMockReturn } from "./VMockReturn";
+import { QueryPager } from "tonva-react";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -17,7 +19,11 @@ export interface Order extends OrderMain {
 	details: OrderDetail[];
 }
 
+const mockCustomer = 65695;
+
 export class CTrial extends CUqBase {
+	customerReturnablePager: QueryPager<ReturnGetCustomerReturnable$page>;
+
 	/*
 	constructor(cApp: CApp) {
 		super(cApp);
@@ -131,7 +137,7 @@ export class CTrial extends CUqBase {
 		let data: ParamSaveOrder = {
 			id: undefined,
 			no: undefined,
-			customer: 65695, 
+			customer: mockCustomer, 
 			sumQuanity: undefined,
 			sumAmount: undefined,
 			couponNo: undefined,
@@ -173,5 +179,15 @@ export class CTrial extends CUqBase {
 		}
 		let ret = await this.uqs.JkOrder.SaveOrder.submit(data);
 		alert('data mocked: ' + JSON.stringify(data) + '\n returned: ' + JSON.stringify(ret));
+	}
+
+	uqUpgrade = async () => {
+		//await this.uqs.JkOrder.QueryTest.query({});
+	}
+
+	mockOrderReturn = async () => {
+		this.customerReturnablePager = new QueryPager(this.uqs.JkOrder.GetCustomerReturnable, 10, 10);
+		await this.customerReturnablePager.first({customer: mockCustomer});
+		this.openVPage(VMockReturn);
 	}
 }

@@ -14,6 +14,7 @@ export async function build(appConfig: AppConfig, uqSrcPath: string) {
 	let buildContext = new BuildContext(uqSrcPath);
 	// 只从test 数据库构建uq ts
 	env.testing = true;
+	env.buildingUq = true;
 
 	if (lastBuildTime > 0) {
 		console.log(red, 'quit !');
