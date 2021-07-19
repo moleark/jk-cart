@@ -315,6 +315,38 @@
     }
 }
 
+.standardSampleTable tr.analytes th:nth-child(1){
+    width: 20rem;
+}
+
+.standardSampleTable tr.analytes th:nth-child(2){
+    width: 20rem;
+}
+
+.standardSampleTable tr.analytes th:nth-child(3){
+    width: 8rem;
+}
+
+.standardSampleTable tr.analytes th:nth-child(4){
+    width: 5rem;
+}
+
+.standardSampleTable tr.components th:nth-child(1){
+    width: 10rem;
+}
+
+.standardSampleTable tr.components th:nth-child(2){
+    width: 20rem;
+}
+
+.standardSampleTable tr.components th:nth-child(3){
+    width: 20rem;
+}
+
+.standardSampleTable tr.components th:nth-child(4){
+    width: 15rem;
+}
+
 @media (max-width: 768px){
     .each-product .favorite {
         margin-top: 10px;

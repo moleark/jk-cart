@@ -254,7 +254,7 @@ export class VPageProduct extends VPage<CProduct> {
                 <div className="container mt-lg-2 mb-lg-2 collapse show" id="standardSample">
                     <table className="w-100 text-break standardSampleTable">
                         <thead>
-                            <tr className="border-bottom">
+                            <tr className={classNames("border-bottom", type === "Analytes" ? "analytes" : "components" )}>
                                 {thead.map((el: any) => { return <th key={el}>{el}</th>})}
                             </tr>
                         </thead>
@@ -269,11 +269,11 @@ export class VPageProduct extends VPage<CProduct> {
                                         <td data-title="CAS">{cas}</td>
                                         <td data-title="目标浓度">{concentration}</td></>;
                                 } else {
-                                    tds = <><td data-title="产品编号"><Ax style={{ color: "#781515" }} href={`/search/${origin}?type=2`}>{origin}</Ax></td>
-                                        <td data-title="英文名称">{description}</td>
-                                        <td data-title="中文名称">{descriptionC}</td>
-                                        <td data-title="浓度">{matrix}</td>
-                                        <td data-title="单位">{unit}</td></>;
+                                    tds = <><td className="" data-title="产品编号"><Ax style={{ color: "#781515" }} href={`/search/${origin}?type=2`}>{origin}</Ax></td>
+                                        <td className="" data-title="英文名称">{description}</td>
+                                        <td className="" data-title="中文名称">{descriptionC}</td>
+                                        <td className="" data-title="浓度">{matrix}</td>
+                                        <td className="w-min-3c" data-title="单位">{unit}</td></>;
                                 };
                                 return <tr key={index} className="py-2 border-bottom">{tds}</tr>
                             })}
