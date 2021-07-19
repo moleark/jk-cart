@@ -14,7 +14,7 @@ const jk: DevConfig = {
 }
 
 export const appConfig: AppConfig = {
-	version: '0.1.4',
+	version: '0.1.5',
 	app: {
 		dev: jk,
 		name: 'cart',
@@ -37,6 +37,16 @@ export const appConfig: AppConfig = {
 			dev: jk,
 			name: 'collectPayment',
 			alias: 'CollectPayment',
+			version: '0.1.1',
+		},
+		{
+			dev: jk,
+			name: 'product',
+			version: '0.1.1',
+		},
+		{
+			dev: jk,
+			name: 'customer',
 			version: '0.1.1',
 		},
 	],

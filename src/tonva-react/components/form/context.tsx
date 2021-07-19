@@ -5,8 +5,9 @@ import { ArrSchema, ItemSchema } from '../schema';
 import { Widget } from './widgets/widget';
 //import { ArrRow } from './arrRow';
 import { observable, computed, makeObservable, runInAction } from 'mobx';
-import { ContextRule } from './rules';
 import { observer } from 'mobx-react';
+
+export type ContextRule = (context:Context)=>{[target:string]:string[]|string} | string[] | string;
 
 export abstract class Context {
     private subContexts:{[name:string]:{[rowKey:string]:Context}};

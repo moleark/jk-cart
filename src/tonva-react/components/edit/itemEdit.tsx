@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { ItemSchema, UiItem, UiSelectBase } from '../schema';
 import { nav } from '../nav';
 import { makeObservable, observable } from 'mobx';
-import { FieldRule } from '../form/rules';
 import { Image } from '../image';
 import { Edit } from './edit';
+import { FieldRule } from '../inputRules';
 
 export abstract class ItemEdit {
 	protected edit: Edit;

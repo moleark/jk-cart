@@ -5,7 +5,7 @@ import { Schema, ItemSchema, ArrSchema, UiSchema, TempletType } from '../schema'
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
 import { ContextContainer, FormContext, Context } from './context';
-import { FormRes, formRes, resLang } from '../../res';
+import { InputRes, inputRes, resLang } from '../../res';
 
 export type FormButtonClick = (name:string, context: Context) => Promise<any>;
 export type InputEnter = (name:string, context: Context) => Promise<any>;
@@ -21,7 +21,7 @@ export interface FormProps {
 	fieldLabelAlign?: 'left'|'center'|'right';
     requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
-    res?: FormRes;
+    res?: InputRes;
 
     Container?: (content:JSX.Element) => JSX.Element;
     FieldContainer?: (label:string|JSX.Element, content:JSX.Element) => JSX.Element;
@@ -33,7 +33,7 @@ export class Form extends React.Component<FormProps> {
     readonly schema: Schema;
     readonly itemSchemas: {[name:string]: ItemSchema};
     readonly uiSchema: UiSchema;
-    readonly res?: FormRes;
+    readonly res?: InputRes;
     formContext: FormContext;
     private disposer: IReactionDisposer;
     readonly data:any;
@@ -247,7 +247,7 @@ export class Form extends React.Component<FormProps> {
     }
     protected DefaultFieldClass:string = undefined;
     protected DefaultButtonClass = 'text-center py-2';
-    protected DefaultRes:FormRes = resLang<FormRes>(formRes);
+    protected DefaultRes:InputRes = resLang<InputRes>(inputRes);
 
     ArrContainer = (label:any, content:JSX.Element): JSX.Element => {
         return <div>

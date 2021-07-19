@@ -1,7 +1,7 @@
 //import _ from 'lodash';
 import { KeyValueRes, Res } from './res';
 
-export interface FormRes extends KeyValueRes {
+export interface InputRes extends KeyValueRes {
     required: string;
     number: string;
     integer: string;
@@ -10,7 +10,7 @@ export interface FormRes extends KeyValueRes {
 }
 
 /*eslint no-template-curly-in-string: 0*/
-export const formRes:Res<FormRes> = {
+export const inputRes:Res<InputRes> = {
     _: {
         required: 'required',
         number: 'not valid number',

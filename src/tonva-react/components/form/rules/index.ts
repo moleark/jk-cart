@@ -1,12 +1,15 @@
-import _ from 'lodash';
+//import _ from 'lodash';
 import { Context } from '../context';
-import { FormRes } from '../../../res/formRes';
+//import { InputRes } from '../../../res/inputRes';
 
+/*
 export abstract class Rule {
     abstract check(defy:string[], value:any):void;
 }
+*/
 
-export type ContextRule = (context:Context)=>{[target:string]:string[]|string} | string[] | string;
+
+/*
 export type FieldRule = (value:any) => string[] | string;
 
 export class RuleCustom extends Rule {
@@ -27,8 +30,8 @@ export class RuleCustom extends Rule {
 }
 
 export abstract class RulePredefined extends Rule {
-    protected res: FormRes;
-    constructor(res: FormRes) {
+    protected res: InputRes;
+    constructor(res: InputRes) {
         super();
         this.res = res;
     }
@@ -60,7 +63,7 @@ export class RuleNum extends RulePredefined {
     private maxMsg: _.TemplateExecutor;
     protected min: number;
     protected max: number
-    constructor(res: FormRes, min?: number, max?: number) {
+    constructor(res: InputRes, min?: number, max?: number) {
         super(res);
         this.minMsg = _.template(res.min);
         this.maxMsg = _.template(res.max);
@@ -96,3 +99,4 @@ export class RuleInt extends RuleNum {
         }
     }
 }
+*/

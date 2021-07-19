@@ -4,7 +4,7 @@ import { UiItem, ChangingHandler, ChangedHandler } from '../../schema';
 import { FieldProps } from '../field';
 import { Context } from '../context';
 import { ItemSchema } from '../../schema';
-import { Rule, RuleRequired, RuleCustom, FieldRule } from '../rules';
+import { Rule, RuleRequired, RuleCustom, FieldRule } from '../../inputRules';
 import { computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 

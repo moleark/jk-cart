@@ -19,3 +19,4 @@ export * from './userIcon';
 export * from './ax';
 export * from './autoHideTips';
 export * from './login';
+export * from './input';

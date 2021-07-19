@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu Jul 15 2021 21:55:21 GMT-0400 (北美东部夏令时间) ===//
+//=== UqApp builder created on Fri Jul 16 2021 23:48:12 GMT-0400 (北美东部夏令时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -223,19 +223,14 @@ export interface ResultOrderPaid {
 }
 
 export interface ParamSaveOrderReturn {
-	id: number;
 	detail: {
-		id: number;
-		main: number;
 		orderDetail: number;
 		quantity: number;
-		amount: number;
 	}[];
 
 }
 export interface ReturnSaveOrderReturnRet {
 	id: number;
-	$id: number;
 }
 export interface ResultSaveOrderReturn {
 	ret: ReturnSaveOrderReturnRet[];
@@ -386,10 +381,54 @@ export interface ReturnGetCustomerReturnable$page {
 	invoiceTime: any;
 	invoiceReturn: number;
 	invoiceReturnDone: number;
-	$id: number;
 }
 export interface ResultGetCustomerReturnable {
 	$page: ReturnGetCustomerReturnable$page[];
+}
+
+export interface ParamGetCustomerOrderReturn {
+	customer: number;
+	order: number;
+}
+export interface ReturnGetCustomerOrderReturnMain {
+	id: number;
+	no: string;
+	customer: number;
+	contact: number;
+	sumQuanity: number;
+	sumAmount: number;
+	couponNo: string;
+	sheetId: number;
+	shippingContact: number;
+}
+export interface ReturnGetCustomerOrderReturnDetail {
+	id: number;
+	main: number;
+	warehouse: number;
+	item: number;
+	product: number;
+	quantity: number;
+	amount: number;
+	price: number;
+	deliver: number;
+	deliverDone: number;
+	deliverTime: any;
+	deliverReturn: number;
+	deliverReturnDone: number;
+	receive: number;
+	receiveDone: number;
+	receiveTime: any;
+	receiveReturn: number;
+	receiveReturnDone: number;
+	invoice: number;
+	invoiceDone: number;
+	invoiceTime: any;
+	invoiceReturn: number;
+	invoiceReturnDone: number;
+}
+export interface ResultGetCustomerOrderReturn {
+	main: ReturnGetCustomerOrderReturnMain[];
+	detail: ReturnGetCustomerOrderReturnDetail[];
 }
 
 export interface ParamCart {
@@ -634,6 +673,7 @@ export interface UqExt extends Uq {
 	GetPendingAuditOrders: UqQuery<ParamGetPendingAuditOrders, ResultGetPendingAuditOrders>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	GetCustomerReturnable: UqQuery<ParamGetCustomerReturnable, ResultGetCustomerReturnable>;
+	GetCustomerOrderReturn: UqQuery<ParamGetCustomerOrderReturn, ResultGetCustomerOrderReturn>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
 	OrderTransportation: UqMap;

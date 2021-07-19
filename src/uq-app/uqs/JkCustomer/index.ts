@@ -1,0 +1,47 @@
+import { UqExt as Uq } from './JkCustomer';
+import * as Currency from './Currency.ui';
+import * as Contact from './Contact.ui';
+import * as Customer from './Customer.ui';
+import * as InvoiceType from './InvoiceType.ui';
+import * as Research from './Research.ui';
+import * as Province from './Province.ui';
+import * as Department from './Department.ui';
+import * as BuyerAccount from './BuyerAccount.ui';
+import * as Organization from './Organization.ui';
+import * as Country from './Country.ui';
+import * as InvoiceInfo from './InvoiceInfo.ui';
+import * as City from './City.ui';
+import * as Post from './Post.ui';
+import * as County from './County.ui';
+import * as SalesRegion from './SalesRegion.ui';
+import * as Employee from './Employee.ui';
+import * as Address from './Address.ui';
+import * as Domain from './Domain.ui';
+import * as ProductX from './ProductX.ui';
+import * as Brand from './Brand.ui';
+import * as CustomerSettingType from './CustomerSettingType.ui';
+
+export function setUI(uq: Uq) {
+	Object.assign(uq.Currency, Currency);
+	Object.assign(uq.Contact, Contact);
+	Object.assign(uq.Customer, Customer);
+	Object.assign(uq.InvoiceType, InvoiceType);
+	Object.assign(uq.Research, Research);
+	Object.assign(uq.Province, Province);
+	Object.assign(uq.Department, Department);
+	Object.assign(uq.BuyerAccount, BuyerAccount);
+	Object.assign(uq.Organization, Organization);
+	Object.assign(uq.Country, Country);
+	Object.assign(uq.InvoiceInfo, InvoiceInfo);
+	Object.assign(uq.City, City);
+	Object.assign(uq.Post, Post);
+	Object.assign(uq.County, County);
+	Object.assign(uq.SalesRegion, SalesRegion);
+	Object.assign(uq.Employee, Employee);
+	Object.assign(uq.Address, Address);
+	Object.assign(uq.Domain, Domain);
+	Object.assign(uq.ProductX, ProductX);
+	Object.assign(uq.Brand, Brand);
+	Object.assign(uq.CustomerSettingType, CustomerSettingType);
+}
+export * from './JkCustomer';

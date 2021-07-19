@@ -10,6 +10,7 @@ import { CDeliver } from "./deliver";
 import { VTestIDV } from "./VTestIDV";
 import { VMockReturn } from "./VMockReturn";
 import { QueryPager } from "tonva-react";
+import { VOrderReturn } from "./VOrderReturn";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -19,10 +20,10 @@ export interface Order extends OrderMain {
 	details: OrderDetail[];
 }
 
-const mockCustomer = 65695;
-
 export class CTrial extends CUqBase {
 	customerReturnablePager: QueryPager<ReturnGetCustomerReturnable$page>;
+	mockCustomer = 65695;
+
 
 	/*
 	constructor(cApp: CApp) {
@@ -137,7 +138,7 @@ export class CTrial extends CUqBase {
 		let data: ParamSaveOrder = {
 			id: undefined,
 			no: undefined,
-			customer: mockCustomer, 
+			customer: this.mockCustomer, 
 			sumQuanity: undefined,
 			sumAmount: undefined,
 			couponNo: undefined,
@@ -187,7 +188,19 @@ export class CTrial extends CUqBase {
 
 	mockOrderReturn = async () => {
 		this.customerReturnablePager = new QueryPager(this.uqs.JkOrder.GetCustomerReturnable, 10, 10);
-		await this.customerReturnablePager.first({customer: mockCustomer});
+		await this.customerReturnablePager.first({customer: this.mockCustomer});
 		this.openVPage(VMockReturn);
+	}
+
+	async showOrderReturn(customer: number, order: number) {
+		let orderReturn = await this.uqs.JkOrder.GetCustomerOrderReturn.query({
+			customer,
+			order,
+		});
+		this.openVPage(VOrderReturn, orderReturn);
+	} 
+
+	async applyReturn(detail: {orderDetail: number; quantity: number;}[]) {
+		await this.uqs.JkOrder.SaveOrderReturn.submit({detail});
 	}
 }

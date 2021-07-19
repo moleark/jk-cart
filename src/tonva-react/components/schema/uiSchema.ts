@@ -1,9 +1,9 @@
-import { Context } from '../form/context';
-import { FieldRule, ContextRule } from '../form/rules';
+import { Context, ContextRule } from '../form/context';
 import { ItemSchema } from './schema';
 import { FieldProps } from '../form/field';
 import { Widget } from '../form/widgets';
 import { IValuesView } from './IValuesView';
+import { FieldRule } from '../inputRules';
 
 export type TypeWidget = new (context:Context, itemSchema:ItemSchema, fieldProps:FieldProps, children: React.ReactNode) => Widget;
 
