@@ -159,6 +159,7 @@ export interface UqWebBuilder {
 
 export interface UqPlatformjoint {
     NeoTridentUser: Map;
+    EpecUser: Map;
 }
 
 

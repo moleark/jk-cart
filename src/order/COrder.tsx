@@ -24,6 +24,7 @@ import _ from 'lodash';
 import { VEpecOrderError } from './VEpecOrderError';
 import { VOrderTrans } from './VOrderTrans';
 import { VError } from '../tools/VError';
+import { acPushOrder } from './ActivePushOrder';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
@@ -32,6 +33,7 @@ export class COrder extends CUqBase {
     @observable orderPageStart: number = 1000000000;    /* 订单历史记录分页 pageStart */
     @observable getUserOrders: any[] = [];  /* 获取用户所有订单 */
     @observable orderData: Order = new Order();
+    @observable activePushOrder: any = acPushOrder(this.cApp);
     /**
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
@@ -246,42 +248,54 @@ export class COrder extends CUqBase {
         });
         store.cart.removeItem(param);
 
+        let { agtCustomerType } = this.activePushOrder;
+        if (agtCustomerType) {
+            let param: any;
+            if (agtCustomerType === "EPEC") {
+                param = { action: (message: any) => { this.openVPage(VEpecOrderError, { message: message }); } };
+            };
+            await this.activePushOrder.pushOrder(result, param);
+        };
+        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // epec客户下单后要求跳转到指定的url
-        let epecOrder = this.orderData.getDataForSave2();
-        epecOrder.id = orderId;
-        epecOrder.no = no;
-        epecOrder.type = 1;
-        try {
-            let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(epecOrder)
-            });
-            let { ok, status } = rep;
-            if (ok) {
-                let url = await rep.json();
-                if (url) {
-                    window.location.href = url;
-                    return;
-                }
-            } else {
-                switch (status) {
-                    case 500:
-                        let repContent = await rep.json();
-                        this.openVPage(VEpecOrderError, { message: repContent.message });
-                        return;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        } catch (error) {
+        // let epecOrder = this.orderData.getDataForSave2();
+        // epecOrder.id = orderId;
+        // epecOrder.no = no;
+        // epecOrder.type = 1;
+        // try {
+        //     let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
+        //         method: 'post',
+        //         mode:"cors",
+        //         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        //         body: JSON.stringify(epecOrder)
+        //     });
+        //     let { ok, status } = rep;
+        //     if (ok) {
+        //         let url = await rep.json();
+        //         if (url) {
+        //             window.location.href = url;
+        //             return;
+        //         }
+        //     } else {
+        //         switch (status) {
+        //             case 500:
+        //                 let repContent = await rep.json();
+        //                 this.openVPage(VEpecOrderError, { message: repContent.message });
+        //                 return;
+        //                 break;
+        //             default:
+        //                 break;
+        //         }
+        //     }
+        // } catch (error) {
 
-        }
-
-        // 打开下单成功显示界面
-        nav.popTo(this.cApp.topKey);
-        this.openVPage(OrderSuccess, result);
+        // }
+        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
+        if (this.activePushOrder.isToSuccessPage) {
+            // 打开下单成功显示界面
+            nav.popTo(this.cApp.topKey);
+            this.openVPage(OrderSuccess, result);
+        };
     }
 
     onSelectShippingContact = async () => {

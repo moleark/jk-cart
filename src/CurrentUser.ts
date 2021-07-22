@@ -58,6 +58,7 @@ export class WebUser {
     VIPDiscount: any;
     webUserVIPCard: any;
     thirdPartyOrg: any;
+    epecUser: any;
     @computed get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
@@ -109,6 +110,7 @@ export class WebUser {
             await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
             let thirdPartyOrg: any = await platformjoint.NeoTridentUser.obj({ webUser: this });
             this.thirdPartyOrg = thirdPartyOrg?.organization;
+            this.epecUser = await platformjoint.EpecUser.obj({ webUser: this });
         }
 
 

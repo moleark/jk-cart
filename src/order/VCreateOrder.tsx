@@ -149,7 +149,7 @@ export class VCreateOrder extends VPage<COrder> {
     })
 
     private onSubmit = async () => {
-        let { orderData } = this.controller;
+        let { orderData, activePushOrder } = this.controller;
         // 必填项验证
         let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
 		let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
@@ -203,6 +203,10 @@ export class VCreateOrder extends VPage<COrder> {
         }
         let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
         this.controller.orderData.comments = endComments;
+        if (!activePushOrder.maxAmountBol) {
+            this.comBininvoiceTip.set(renderTip("订单总金额超出协议上限,不可下单!"));
+            return;
+        };
         this.controller.submitOrder();
     }
 
