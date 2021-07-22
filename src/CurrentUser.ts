@@ -59,6 +59,11 @@ export class WebUser {
     webUserVIPCard: any;
     thirdPartyOrg: any;
     epecUser: any;
+
+    get agtCustomerType() {
+        if (this.epecUser) return 'EPEC';
+    };
+
     @computed get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||

@@ -203,7 +203,7 @@ export class VCreateOrder extends VPage<COrder> {
         }
         let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
         this.controller.orderData.comments = endComments;
-        if (!activePushOrder.maxAmountBol) {
+        if (!activePushOrder.maxAmount) {
             this.comBininvoiceTip.set(renderTip("订单总金额超出协议上限,不可下单!"));
             return;
         };

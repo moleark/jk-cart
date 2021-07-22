@@ -1,53 +1,39 @@
 import { GLOABLE } from "global";
-import { observable } from "mobx";
 import { CApp } from "tapp";
 
 export interface IActivePushOrder {
-    pushOrder(orderRes: any, param?: any): Promise<void>;
+    maxAmount: boolean;
+    pushOrder(orderRes: any): Promise<void>;
 }
 
-export function acPushOrder(cApp: CApp): IActivePushOrder {
-    let toPushOrder = new SubOrder(cApp);
-    let type = toPushOrder.agtCustomerType;
+export function ActivePushOrder(cApp: CApp): IActivePushOrder {
+    let type = cApp.currentUser?.agtCustomerType;
     switch (type) {
         case "EPEC":
-            return new SubOrderEpec(cApp);
+            return new PushOrderEpec(cApp);
         default:
-            return new SubOrder(cApp);
+            return new PushOrder(cApp);
     };
 }
 
-export class SubOrder {
+export class PushOrder {
     cApp: CApp;
-    @observable isToSuccessPage: boolean = true;
     constructor(res: any) {
         this.cApp = res;
     }
 
-    get agtCustomerType() {
-        if (!this.cApp.currentUser) return;
-        let type: string;
-        let { epecUser } = this.cApp.currentUser;
-        if (epecUser) type = 'EPEC';
-        return type;
+    get maxAmount() { return true };
+
+    pushOrder = async (orderRes: any) => {
+        this.cApp.cOrder.openOrderSuccess(orderRes);
     };
-
-    get maxAmountBol() {
-        return this.maxAmount();
-    };
-
-    protected maxAmount = (): boolean => { return true };
-
-    pushOrder = async (orderRes: any, param?: any) => { };
 };
 
-export class SubOrderEpec extends SubOrder {
+export class PushOrderEpec extends PushOrder {
 
-    maxAmount = () => {
-        return this.cApp.cOrder.orderData.amount <= 500000;
-    };
+    get maxAmount() { return this.cApp.cOrder.orderData.amount <= 500000; };
 
-    pushOrder = async (orderRes: any, param?: any) => {
+    pushOrder = async (orderRes: any) => {
         // epec客户下单后要求跳转到指定的url
         let { id: orderId, no } = orderRes;
         let epecOrder = this.cApp.cOrder.orderData.getDataForSave2();
@@ -66,16 +52,13 @@ export class SubOrderEpec extends SubOrder {
                 let url = await rep.json();
                 if (url) {
                     window.location.href = url;
-                    this.isToSuccessPage = false;
                     return;
                 };
             } else {
                 switch (status) {
                     case 500:
                         let repContent = await rep.json();
-                        param.action(repContent.message);
-                        this.isToSuccessPage = false;
-                        // this.openVPage(VEpecOrderError, { message: repContent.message });
+                        this.cApp.cOrder.openEpecOrderError(repContent.message);
                         return;
                     default:
                         break;
@@ -83,6 +66,7 @@ export class SubOrderEpec extends SubOrder {
             }
         } catch (error) {
 
-        }
+        };
+        this.cApp.cOrder.openOrderSuccess(orderRes);
     };
 }
