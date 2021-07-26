@@ -263,9 +263,9 @@ export class NavFooterView extends View<CApp> {
                             <a href="mailto:jkinfo@jkchemical.com">jkinfo@jkchemical.com</a><br />
                             <a href="mailto:jkinfo@jk-sci.com">jkinfo@jk-sci.com</a>
                         </div>
-                        {/* <div className="contact">
-                            <a href="/ch/contact" target="_blank">更多...</a>
-                        </div> */}
+                        <div className="contact">
+                            <a href="/ch/contact" target="_blank">更多联系方式</a>
+                        </div>
                         <div className="footer-social">
                         </div>
                     </div>
