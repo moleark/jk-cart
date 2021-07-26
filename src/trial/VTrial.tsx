@@ -20,6 +20,7 @@ export class VTrial extends VPage<CTrial> {
 			['Mock Order', this.controller.mockOrder],
 			['模拟退货', this.controller.mockOrderReturn],
 			['测试UQ升级', this.controller.uqUpgrade],
+			['测试InputForm', this.controller.showInputForm],
 		];
 		let right = <FA name="angle-right" className="align-self-center" />;
 		return <div>

@@ -1,5 +1,5 @@
-import { RuleInt, RuleNum } from "../inputRules";
-import { Input, InputProps } from "./input";
+import { RuleInt, RuleNum } from "../../inputRules";
+import { Input, InputProps } from "./../input";
 
 interface InputNumberProps extends InputProps {
     placeholder?: string;
@@ -8,9 +8,17 @@ interface InputNumberProps extends InputProps {
 }
 
 export class InputNumber<P extends InputNumberProps> extends Input<P, number> {
+    static defaultClassName = 'form-control w-8c d-inline text-right';
+
     protected get type(): 'text' | 'number' | 'checkbox' | 'radio' {return 'number'}
     protected get max(): number {return this.props.max;}
     protected get min(): number {return this.props.min;}
+    protected get className(): string {
+        let {className} = this.props;
+        if (className === null) return null;
+        if (!className) return InputNumber.defaultClassName;
+        return className;
+    }
 
     protected buildRules() {
         let {max, min} = this.props;

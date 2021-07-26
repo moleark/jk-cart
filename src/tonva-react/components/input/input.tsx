@@ -57,10 +57,20 @@ export abstract class Input<P extends InputProps, V> extends Component<P> {
     protected buildRules() {
     }
 
+    getValue(): V {return this.value;}
+    setValue(v: V) {
+        let p = this.value;
+        this.value = v;
+        this.checkRules();
+        let {onValueChange} = this.props;
+        if (!onValueChange) return;
+        if (v !== p) onValueChange(v, p, this.ruleMessage);
+    }
+
     render(): JSX.Element {
-        let {className, defaultValue, disabled, required} = this.props;
+        let {defaultValue, disabled, required} = this.props;
         let content = <input ref={inp => this.input = inp}
-            className={className} type={this.type}
+            className={this.className} type={this.type}
             placeholder={this.placeholder}
             defaultValue={defaultValue}
             defaultChecked={defaultValue}

@@ -11,6 +11,7 @@ import { VTestIDV } from "./VTestIDV";
 import { VMockReturn } from "./VMockReturn";
 import { QueryPager } from "tonva-react";
 import { VOrderReturn } from "./VOrderReturn";
+import { VInputForm } from "./VInputForm";
 
 export interface Order extends OrderMain {
 	draft: number;
@@ -23,16 +24,6 @@ export interface Order extends OrderMain {
 export class CTrial extends CUqBase {
 	customerReturnablePager: QueryPager<ReturnGetCustomerReturnable$page>;
 	mockCustomer = 65695;
-
-
-	/*
-	constructor(cApp: CApp) {
-		super(cApp);
-		makeObservable(this, {
-			orderList: observable,
-		});
-	}
-	*/
 
 	protected async internalStart() {
 		this.openVPage(VTrial);
@@ -202,5 +193,9 @@ export class CTrial extends CUqBase {
 
 	async applyReturn(detail: {orderDetail: number; quantity: number;}[]) {
 		await this.uqs.JkOrder.SaveOrderReturn.submit({detail});
+	}
+
+	showInputForm = () => {
+		this.openVPage(VInputForm)
 	}
 }
