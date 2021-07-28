@@ -7,7 +7,7 @@ export interface IActivePushOrder {
 }
 
 export function ActivePushOrder(cApp: CApp): IActivePushOrder {
-    let type = cApp.currentUser?.agtCustomerType;
+    let type: any = cApp.currentUser?.agtCustomerType;
     switch (type) {
         case "EPEC":
             return new PushOrderEpec(cApp);

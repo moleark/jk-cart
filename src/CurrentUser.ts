@@ -62,6 +62,7 @@ export class WebUser {
 
     get agtCustomerType() {
         if (this.epecUser) return 'EPEC';
+        return "";
     };
 
     @computed get allowOrdering() {

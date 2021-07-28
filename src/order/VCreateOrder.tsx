@@ -207,7 +207,7 @@ export class VCreateOrder extends VPage<COrder> {
             this.comBininvoiceTip.set(renderTip("订单总金额超出协议上限,不可下单!"));
             return;
         };
-        this.controller.submitOrder();
+        await this.controller.submitOrder();
     }
 
     saveShowModal = async (type: string) => {

@@ -148,7 +148,8 @@ export class COrder extends CUqBase {
                 }
                 this.applyCoupon(coupon);
             }
-        }
+        };
+        this.activePushOrder = ActivePushOrder(this.cApp);
         this.openVPage(VCreateOrder);
     }
 
