@@ -50,9 +50,10 @@ export class VCart extends VPage<CCart> {
             return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { cartBtnMatch.CartButtonClick(); return true; }}
                 encType="application/x-www-form-urlencoded" method="post">
                 <input name="cxml-base64" defaultValue={ this.punchOutXML?.cxmlBase64 || "" } style={{visibility: "hidden", position: "absolute"}} type="text"  />
+                {this.punchOutXML?.message && <div className="text-center text-danger py-2" >{this.punchOutXML?.message }</div>}
                 <div className="d-flex justify-content-center">
                     <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
-                        type="submit" disabled={amount <= 0 || !this.punchOutXML}>
+                        type="submit" disabled={amount <= 0 || !this.punchOutXML?.cxmlBase64}>
                         {content}
                     </button>
                 </div>

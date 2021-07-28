@@ -16,6 +16,7 @@ export class CCart extends CUqBase {
 
     protected async internalStart(param: any) {
         let punchOutXML = await this.generatePunchOutXML();
+        this.cartBtnMatch = new CartBtnMatch(this.cApp);
         this.openVPage(VCart, { punchOutXML: punchOutXML });
     }
 
@@ -35,13 +36,16 @@ export class CCart extends CUqBase {
                         method: "post",
                         headers: { "Content-Type":"application/json" }
                     });
+                    let content: any = await result.json();
                     if (result.ok) {
-                        let content: any = await result.json();
+                        // let content: any = await result.json();
                         punchOutXML = {
                             url: content?.url,
                             cxmlBase64: content["cxml-base64"]
                         };
-                    };
+                    } else {
+                        punchOutXML = content;
+                    }
                 };
             };
             return punchOutXML;
