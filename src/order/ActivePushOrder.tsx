@@ -35,12 +35,12 @@ export class PushOrderEpec extends PushOrder {
 
     pushOrder = async (orderRes: any) => {
         // epec客户下单后要求跳转到指定的url
-        let { id: orderId, no } = orderRes;
-        let epecOrder = this.cApp.cOrder.orderData.getDataForSave2();
-        epecOrder.id = orderId;
-        epecOrder.no = no;
-        epecOrder.type = 1;
         try {
+            let { id: orderId, no } = orderRes;
+            let epecOrder = this.cApp.cOrder.orderData.getDataForSave2();
+            epecOrder.id = orderId;
+            epecOrder.no = no;
+            epecOrder.type = 1;
             let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
                 method: 'post',
                 mode: "cors",
@@ -65,7 +65,7 @@ export class PushOrderEpec extends PushOrder {
                 }
             }
         } catch (error) {
-
+            console.log('epec-error', error.message);
         };
         this.cApp.cOrder.openOrderSuccess(orderRes);
     };

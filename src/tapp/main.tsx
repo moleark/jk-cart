@@ -20,7 +20,7 @@ export class VMain extends VPage<CApp> {
                 icon: 'shopping-cart',
                 //content: cCart.tab, 
                 page: cCart.tabPage,
-                notify: store.cartCount
+                // notify: store.cartCount
             },
             {
                 name: 'me',
