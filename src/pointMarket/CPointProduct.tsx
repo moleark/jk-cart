@@ -13,7 +13,7 @@ import { VRevenueExpenditure } from './VRevenueExpenditure';
 import { VPointProductDetail } from './VPointProductDetail';
 import { VSelectedLable } from './VSelectedLable';
 import { GLOABLE } from 'global';
-import { VDefaultPost } from './VDefaultPost';
+import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 
 export const topicClump = {

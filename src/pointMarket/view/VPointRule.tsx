@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Page } from 'tonva';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
-import { xs } from '../tools/browser';
+import { xs } from '../../tools/browser';
 
 export class VPointRule extends React.Component {
 

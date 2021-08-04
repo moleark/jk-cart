@@ -3,7 +3,7 @@ import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
 import { QueryPager } from 'tonva';
 import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
-import { VRevenueExpenditure } from './VRevenueExpenditure';
+import { VRevenueExpenditure } from '../VRevenueExpenditure';
 
 const pointBase: number = 3; /* 积分基数 */
 

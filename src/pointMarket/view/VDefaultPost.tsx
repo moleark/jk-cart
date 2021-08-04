@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'tonva';
-import { CPointProduct } from './CPointProduct';
+import { CPointProduct } from '../CPointProduct';
 import infb from 'images/infb.jpg'
 
 export class VDefaultPost extends View<CPointProduct> {

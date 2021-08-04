@@ -3,7 +3,7 @@ import { CUqBase } from 'tapp/CBase';
 import { VLottery } from './VLottery';
 import { observable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';
-import { VMyPrizeExchangeOrder } from './VExchangeOrder';
+import { VMyPrizeExchangeOrder } from '../VExchangeOrder';
 import { prizeOrder, prizeOrderItem } from './prizeOrder';
 
 export class CLottery extends CUqBase {

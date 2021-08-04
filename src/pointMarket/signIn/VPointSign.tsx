@@ -4,13 +4,13 @@ import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { signTopicMap, Homemadelogo } from 'tools/images';
 import { CSignIn } from './CSignIn';
-import { RevenueExpenditure } from './basicRefer';
+import { RevenueExpenditure } from '../basicRefer';
 import moment from 'moment';
 import 积分图标P from 'images/积分图标P.png'
 import 已签到 from 'images/已签到.png'
 import { xs } from 'tools/browser';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
-import { renderDropdownActions } from './VMyPoint';
+import { renderDropdownActions } from '../VMyPoint';
 
 export const daysAndMultipleByWelfare = [
     { id: 1, days: 7, multiple: 2 },
