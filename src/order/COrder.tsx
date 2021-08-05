@@ -248,46 +248,46 @@ export class COrder extends CUqBase {
             })
         });
         store.cart.removeItem(param);
-
-        await this.activePushOrder.pushOrder(result);
+        /* pushOrder 不同客户调用不同的pushOrder */
+        // await this.activePushOrder.pushOrder(result);
         /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // epec客户下单后要求跳转到指定的url
-        // let epecOrder = this.orderData.getDataForSave2();
-        // epecOrder.id = orderId;
-        // epecOrder.no = no;
-        // epecOrder.type = 1;
-        // try {
-        //     let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
-        //         method: 'post',
-        //         mode:"cors",
-        //         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        //         body: JSON.stringify(epecOrder)
-        //     });
-        //     let { ok, status } = rep;
-        //     if (ok) {
-        //         let url = await rep.json();
-        //         if (url) {
-        //             window.location.href = url;
-        //             return;
-        //         }
-        //     } else {
-        //         switch (status) {
-        //             case 500:
-        //                 let repContent = await rep.json();
-        //                 this.openVPage(VEpecOrderError, { message: repContent.message });
-        //                 return;
-        //                 break;
-        //             default:
-        //                 break;
-        //         }
-        //     }
-        // } catch (error) {
+        let epecOrder = this.orderData.getDataForSave2();
+        epecOrder.id = orderId;
+        epecOrder.no = no;
+        epecOrder.type = 1;
+        try {
+            let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
+                method: 'post',
+                mode:"cors",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(epecOrder)
+            });
+            let { ok, status } = rep;
+            if (ok) {
+                let url = await rep.json();
+                if (url) {
+                    window.location.href = url;
+                    return;
+                }
+            } else {
+                switch (status) {
+                    case 500:
+                        let repContent = await rep.json();
+                        this.openVPage(VEpecOrderError, { message: repContent.message });
+                        return;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (error) {
 
-        // }
+        }
         /* --------------- epec下单 已整理,中间部分弃用 --------------- */
-        // // 打开下单成功显示界面
-        // nav.popTo(this.cApp.topKey);
-        // this.openVPage(OrderSuccess, result);
+        // 打开下单成功显示界面
+        nav.popTo(this.cApp.topKey);
+        this.openVPage(OrderSuccess, result);
     }
 
     openOrderSuccess(result:any) {
