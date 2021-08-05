@@ -362,6 +362,14 @@ export class CApp extends CUqApp {
         this.cQuickOrder.openQuickOrder();
     }
 
+    private navPointProduct: NavPage = async (params: any) => {
+        this.cPointProduct.openPointProduct(params);
+    }
+
+    private navPointProductDetail: NavPage = async (params: any) => {
+        this.cPointProduct.openPointProductDetail(params);
+    }
+
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
             '/app': this.navHome,
@@ -389,6 +397,10 @@ export class CApp extends CUqApp {
             '/meInfo': this.navMeInfo,
 
             '/quickOrder': this.navQuickOrder,
+
+
+            "/pointshop/productLine/:id": this.navPointProduct,
+            "/pointshop/product/:id": this.navPointProductDetail,
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();
