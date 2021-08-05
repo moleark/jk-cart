@@ -730,7 +730,8 @@ export class UqMan {
 					case 'IDV': return this.IDV;
 				}
 				let err = `entity ${this.name}.${String(key)} not defined`;
-				this.showReload('UQ错误：' + err);
+				// this.showReload('UQ错误：' + err);
+				console.error('UQ错误：' + err);
 				return undefined;
 			}
 		});

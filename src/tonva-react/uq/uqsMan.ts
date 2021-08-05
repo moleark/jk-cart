@@ -334,6 +334,11 @@ async function loadUqs(uqConfigs: UqConfig[]): Promise<UqData[]> {
 	);
     let centerAppApi = new CenterAppApi('tv/', undefined);
     let ret:UqData[] = await centerAppApi.uqs(uqs);
+	if (ret.length < uqs.length) {
+		let err = `下列UQ：\n${uqs.map(v => `${v.owner}/${v.name}`).join('\n')}之一不存在`;
+		console.error(err);
+		throw Error(err);
+	}
 	for (let i=0; i<uqs.length; i++) {
 		let {ownerAlias, alias} = uqs[i];
 		ret[i].ownerAlias = ownerAlias;

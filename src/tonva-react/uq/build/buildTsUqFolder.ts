@@ -30,7 +30,7 @@ function saveTuidAndIDTsIndexAndRender(uqFolder:string, uq: UqMan, uqAlias:strin
 		let cName = capitalCase(sName);		
 		if (cName[0] === '$') continue;
 		imports += `\nimport * as ${cName} from './${cName}.ui';`;
-		sets += `\n	Object.assign(uq.${cName}, ${cName});`;
+		sets += `\n	assign(uq, '${cName}', ${cName});`;
 
 		let tsUI = `// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, FieldItem, FieldItemNumber, FieldItemString, FieldItemId, UI, uqStringify } from "tonva-react";
@@ -64,7 +64,7 @@ export function render(item: Tuid${cName}):JSX.Element {
 		let cName = capitalCase(sName);
 		if (cName[0] === '$') continue;
 		imports += `\nimport * as ${cName} from './${cName}.ui';`;
-		sets += `\n	Object.assign(uq.${cName}, ${cName});`;
+		sets += `\n	assign(uq, '${cName}', ${cName});`;
 
 		let tsUI = `import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -127,6 +127,13 @@ export function render(item: ${cName}):JSX.Element {
 
 	let tsIndex = `import { UqExt as Uq } from './${uqAlias}';${imports}
 
+function assign(uq:Uq, to:string, from:any): void {
+	try {
+		Object.assign((uq as any)[to], from);
+	}
+	catch {}
+}
+	
 export function setUI(uq: Uq) {${sets}
 }
 export * from './${uqAlias}';
