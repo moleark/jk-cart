@@ -119,7 +119,7 @@
     .r-font-size {
         font-size: 12px;
     }
-    .z-height,.z-height-more {
+    .z-height,.z-height-more,.cus-height  {
         height: 70px;
     }
 }
@@ -128,7 +128,7 @@
     .r-font-size {
         font-size: 12px;
     }
-    .z-height {
+    .z-height,.cus-height  {
         height: 120px;
     }
     .z-height-more {
@@ -137,7 +137,7 @@
 }
 
 @media (min-width: 375px) {
-    .z-height {
+    .z-height,.cus-height {
         height: 150px;
     }
     .z-height-more {
@@ -149,7 +149,7 @@
     .r-font-size {
         font-size: 16px;
     }
-    .z-height {
+    .z-height,.cus-height {
         height: 200px;
     }
     .z-height-more {
@@ -164,20 +164,40 @@
     .z-height-more {
         height: calc(1.5em + 8rem + 2px);
     }
+    .cus-height {
+        height: calc(1.4em + 13rem + 4px);
+    }
+}
+
+
+@media (min-width: 768px) {
+    .cus-height {
+        height: calc(0.8em + 8rem + 4px);
+    }
+    .z-height {
+        height: calc(0.8em + 12rem + 4px);
+    }
 }
 
 @media (min-width: 992px) {
     .r-font-size {
         font-size: 20px;
     }
+    .cus-height {
+        height: calc(0.9em + 8rem + 4px);
+    }
     .z-height,.z-height-more {
         height: calc(1.5em + 11rem + 2px);
     }
+    
 }
 
 @media (min-width: 1200px) {
     .r-font-size {
         font-size: 22px;
+    }
+    .cus-height {
+        height: calc(1.0em + 10rem + 4px);
     }
     .z-height,.z-height-more {
         height: calc(1.5em + 12rem + 2px);
@@ -188,6 +208,12 @@
     .z-height {
         height: calc(1.5em + 14rem + 2px);
     }
+}
+
+.cus-list li:hover {
+    background: #f5f5f5;
+    font-weight: bolder;
+    font-size: large;
 }
 
 @keyframes modal-dialog-show {

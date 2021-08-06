@@ -16,6 +16,7 @@ import { GLOABLE } from 'global';
 import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 import { nav } from '../tonva/components/nav';
+import { VShopSideBar } from './view/VShopSideBar';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -163,7 +164,12 @@ export class CPointProduct extends CUqBase {
             await this.setPointProductVisits(pointProduct.product?.obj);//生成浏览量
         };
         await this.refreshMypoint();
+        await this.getPointProductGenre();
         this.openVPage(VPointProductDetail);
+    }
+
+    renderShopSideBar = ()=>{
+        return this.renderView(VShopSideBar);
     }
 
     /**

@@ -13,6 +13,7 @@ import { randomColor } from 'tools/randomColor';
 import { pointIcon, triangleShadingO } from 'tools/images';
 import { topicClumps } from './CPointProduct';
 import { xs } from '../tools/browser';
+import classNames from 'classnames';
 
 export const renderHr = (HRCL?: any, HRST?: any) => {
     let styleObj = HRST ? HRST : { backgroundColor: '#007bff' };
@@ -66,7 +67,7 @@ export class VPointProduct extends VPage<CPointProduct> {
     init(param?:any) {
         if (param) this.themeName = param?.name;
         let { pointProductGenre } = this.controller;
-        this.Gengres = [{ id: 5002, name: "积分商城" }, ...pointProductGenre, ...Object.values(topicClumps)];
+        this.Gengres = [{ id: null, name: "商城首页" },{ id: 5002, name: "积分商城" }, ...pointProductGenre, ...Object.values(topicClumps)];
         
     };
 
@@ -138,11 +139,9 @@ export class VPointProduct extends VPage<CPointProduct> {
         let { product } = pointProduct;
         return <>
             {tv(product, (v) => {
-                return <div className="w-100 d-flex flex-column mb-4">
-                    <Ax href={"/pointshop/product/"+ v.id} >
-                    <div title={v.description} className="w-100 z-height">
-                        <PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} />
-                    </div>
+                let cProductUI: JSX.Element = <><div title={v.description} className={classNames("w-100 cus-height", this.isShowSelectForm ? "z-height" : "")}>
+                    <PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} />
+                </div>
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>
                         <>
@@ -159,8 +158,10 @@ export class VPointProduct extends VPage<CPointProduct> {
                                 <span className="text-danger h5 m-0 ml-1 align-self-end"> {v.point}</span>
                             </div>
                         </>
-                    </div>
-                    </Ax>
+                    </div></>;
+                let ProductUI: JSX.Element = this.isShowSelectForm ? cProductUI : <Ax href={"/pointshop/product/" + v.id} >{cProductUI}</Ax>;
+                return <div className="w-100 d-flex flex-column mb-4">
+                   {ProductUI}
                 </div>
             })}
         </>
@@ -212,28 +213,21 @@ export class VPointProduct extends VPage<CPointProduct> {
 
     protected page = observer(() => {
         this.getTabs();
-        let selectdefVal: any = this.Gengres.find((el: any) => el.name === this.themeName);
-        let selectTypeUI: JSX.Element = xs ? <></>
-            : <div className="my-2 row mx-3 justify-content-end">
-                <select onChange={(e: any) => nav.navigate("/pointshop/productLine/" + e.target.value)}
-                    defaultValue={selectdefVal?.id} className="form-control col-12 col-sm-6 col-lg-2 align-self-center">
-                    {this.Gengres.map((el: any) => {
-                        let { id, name } = el;
-                        return <option key={id} value={id}>{name}</option>;
-                    })}
-                </select>
+        return <div className="row mx-0 mt-1">
+            <div className="col-md-3 d-none d-md-block py-0 py-md-2 mb-0 mb-md-4">
+                {this.controller.renderShopSideBar()}
             </div>
-        return <>
-            {selectTypeUI}
-            {
-                this.themeName === '积分商城'
-                    ? <Tabs tabs={this.tabs} tabPosition="top" size="lg" />
-                    : <>
-                        {/* {TopicDivision(this.themeName)} */}
-                        {this.renderList()}
-                    </>
-            }
-        </ >;
+            <div className="col-md-9 px-0 px-md-1">
+                {
+                    this.themeName === '积分商城'
+                        ? <Tabs tabs={this.tabs} tabPosition="top" size="lg" />
+                        : <>
+                            {/* {TopicDivision(this.themeName)} */}
+                            {this.renderList()}
+                        </>
+                }
+            </div>
+        </div>
     });
 }
 

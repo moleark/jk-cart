@@ -103,7 +103,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 <div className="col-lg-3 d-none d-lg-block">
                     {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
-                <div className="col-lg-9 px-1">
+                <div className="col-lg-9 px-0 px-sm-1">
                     {pageHTitle(<div className="text-left">积分商城</div>)}
                     {renderDropdownActions(actions)}
                     <div>

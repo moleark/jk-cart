@@ -95,10 +95,15 @@ export class VPointProductDetail extends VPage<CPointProduct> {
     
     private page = observer(() => {
         let { pointProductsDetail } = this.controller;
-        return <>
-            <div className="">{this.renderPointProduct(pointProductsDetail)}</div>
-            <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
-        </>
+        return <div className="row mx-0 mt-1">
+            <div className="col-md-3 d-none d-md-block py-0 py-md-2 mb-0 mb-md-4">
+                {this.controller.renderShopSideBar()}
+            </div>
+            <div className="col-md-9 px-0 px-md-1">
+                <div className="">{this.renderPointProduct(pointProductsDetail)}</div>
+                <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
+            </div>
+        </div>
         // return <Page header='产品详情' right={right} footer={footer} className="bg-white">
         //     <div className="">{this.renderPointProduct(pointProductsDetail)}</div>{/* nav-tabs */}
         //     <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
