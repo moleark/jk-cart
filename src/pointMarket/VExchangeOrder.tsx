@@ -6,6 +6,8 @@ import { observable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
 import { randomColor } from 'tools/randomColor';
 import { pointIcon } from 'tools/images';
+import { xs } from 'tools/browser';
+import { VModalC } from './view/VModalC';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
 	//@observable protected shippingAddressIsBlank: boolean = false;
@@ -83,7 +85,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let { orderData, onSelectShippingContact, cApp } = this.controller;
         let data = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData.shippingContact : cApp.cLottery.prizeOrderData.shippingContact;
         return <div className="px-2">
-            <div className="row py-3 bg-white mb-1" onClick={() => onSelectShippingContact()}>
+            <div className="row py-3 bg-white mb-1" onClick={() => { xs ? onSelectShippingContact() : this.changeVisible(true) }}>
                 <div className="col-3 text-muted pr-0">收货地址:</div>
                 <div className="col-9">
 					<LMR className="w-100 align-items-center"
@@ -97,8 +99,12 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         </div>
     }
 
+    changeVisible = (visible?: boolean) => {
+        this.controller.visible = visible || false;
+    };
+
     protected page = observer(() => {
-        let { pointProductsSelected, pointToExchanging: pointsSum } = this.controller;
+        let { pointProductsSelected, pointToExchanging: pointsSum ,visible} = this.controller;
         let header = <div className="w-100 text-center">兑换确认</div>;
         let footer = <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
@@ -106,9 +112,15 @@ export class VExchangeOrder extends VPage<CPointProduct> {
                 <button type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.onSubmit}>确认兑换</button>
             </div>
         </div>;
-
+        let vModel = React.createElement(observer(() => {
+            return <VModalC title="地址管理" visible={visible} width={520}
+                onCancel={()=>{this.changeVisible()}} onClose={()=>{this.changeVisible()}} footer={null}>
+                {this.controller.renderContnet()}
+            </VModalC>
+        }))
         return <Page header={header} right={<></>} footer={footer}>
             {this.renderContact()}
+            {vModel}
             <List items={pointProductsSelected} item={{
                 render: this.renderPointProduct,
                 className: 'col-6 col-md-4 col-lg-3 px-3 bg-transparent'

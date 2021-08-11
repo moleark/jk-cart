@@ -71,6 +71,8 @@ export class CPointProduct extends CUqBase {
     @observable pagePointHistory: QueryPager<any>;     /* 积分详情 */
     @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
 
+    @observable visible: boolean = false;
+
     protected async internalStart(param?: any) { }
 
     /**
@@ -168,8 +170,17 @@ export class CPointProduct extends CUqBase {
         this.openVPage(VPointProductDetail);
     }
 
-    renderShopSideBar = ()=>{
+    renderShopSideBar = () => {
         return this.renderView(VShopSideBar);
+    }
+
+    onContactSelected = async (contact: BoxId) => {
+        this.orderData.shippingContact = contact;
+        this.visible = false;
+    }
+
+    renderContnet = () => {
+        return this.cApp.cSelectShippingContact.renderContentList("pointOrder");
     }
 
     /**
@@ -238,6 +249,7 @@ export class CPointProduct extends CUqBase {
             this.orderData.shippingContact = await this.getDefaultShippingContact();
         }
         this.pointProductsSelected = this.pointProductsSelected.filter(v => v.quantity !== 0);
+        await this.cApp.cSelectShippingContact.getContactList();
         this.openVPage(VExchangeOrder);
     }
 

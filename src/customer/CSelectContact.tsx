@@ -139,6 +139,10 @@ export abstract class CSelectContact extends CUqBase {
         if (source === 'createOrder') {
             await this.cApp.cOrder.onContactSelected(contact);
         }
+
+        if (source === 'pointOrder') {
+            await this.cApp.cPointProduct.onContactSelected(contact);
+        }
     }
 
     pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
