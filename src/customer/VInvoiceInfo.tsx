@@ -28,6 +28,7 @@ const uiSchema: UiSchema = {
             widget: 'text', label: '纳税人识别码', placeholder: '必填',
             rules: (value: string) => {
                 if (value) {
+                    value = value.trim();
                     var regArr = [/^[\da-z]{10,15}$/i, /^\d{6}[\da-z]{10,12}$/i, /^[a-z]\d{6}[\da-z]{9,11}$/i, /^[a-z]{2}\d{6}[\da-z]{8,10}$/i, /^\d{14}[\dx][\da-z]{4,5}$/i, /^\d{17}[\dx][\da-z]{1,2}$/i, /^[a-z]\d{14}[\dx][\da-z]{3,4}$/i, /^[a-z]\d{17}[\dx][\da-z]{0,1}$/i, /^[\d]{6}[\da-z]{13,14}$/i],
                         j = regArr.length;
                     for (var i = 0; i < j; i++) {
@@ -48,6 +49,7 @@ const uiSchema: UiSchema = {
         telephone: {
             widget: 'text', label: '注册电话', placeholder: '必填',
             rules: (value: string) => {
+                if(value) value = value.trim();
                 if (value && !/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(value))
                     return "注册电话格式不正确，请重新输入！";
                 else
@@ -63,7 +65,9 @@ const uiSchema: UiSchema = {
         accountNo: {
             widget: 'text', label: '银行账号', placeholder: '必填',
             rules: (value: string) => {
-                if (value && !/^([1-9]{1})(\d{14}|\d{18}|\d{15})$/.test(value))
+                if(value) value = value.trim();
+                if (value && !/^\d{8,30}$/.test(value.replace(/\s*/g, "")))
+                    // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
                 else
                     return undefined;
