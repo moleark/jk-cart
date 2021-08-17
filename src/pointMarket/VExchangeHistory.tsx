@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate } from 'tonva';
+import { VPage, Page, EasyDate, Ax } from 'tonva';
 import { CPointProduct } from './CPointProduct';
 import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
 import { ListTable } from 'tools/listTable';
+import { nav } from '../tonva/components/nav';
 
 export class VExchangeHistory extends VPage<CPointProduct> {
 
@@ -27,6 +28,7 @@ export class VExchangeHistory extends VPage<CPointProduct> {
         let header = CrPageHeaderTitle('兑换历史记录');
         return <Page header={header}>
             {pageHTitle('兑换历史记录')}
+            <div className="d-none d-lg-block p-2 mt-2 breadcrumbs"><Ax href="/pointshop" >商城首页 </Ax> 兑换记录</div>
             {/* <List items={this.exchangeHistory} item={{ render: this.renderExchangeHistory }} none="暂无记录"></List> */}
             {this.historyListTable()}
         </Page>;
@@ -43,7 +45,7 @@ export class VExchangeHistory extends VPage<CPointProduct> {
                     <td data-title={columns[0].name}>{no}</td>
                     <td data-title={columns[1].name}><EasyDate date={date} /></td>
                     <td data-title={columns[2].name}>
-                        <button onClick={() => this.controller.openOrderDetail(id)}
+                        <button onClick={() => nav.navigate("/pointshop/orderDetail/" + id) /* this.controller.openOrderDetail(id) */}
                             type='button' className="btn-primary w-4c">详情</button>
                     </td>
                 </tr>

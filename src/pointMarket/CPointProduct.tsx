@@ -17,6 +17,7 @@ import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 import { nav } from '../tonva/components/nav';
 import { VShopSideBar } from './view/VShopSideBar';
+import { VError } from 'tools/VError';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -229,7 +230,11 @@ export class CPointProduct extends CUqBase {
      * 历史兑换单详情页面
      */
     openOrderDetail = async (orderId: number) => {
-        let order = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
+        let order:any = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
+        if (!order || (this.user?.id !== order?.brief?.user)) {
+            this.openVPage(VError);
+            return;
+        };
         this.openVPage(VExchangeHistoryDetail, order);
     }
 

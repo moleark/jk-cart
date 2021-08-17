@@ -370,6 +370,15 @@ export class CApp extends CUqApp {
         this.cPointProduct.openPointProductDetail(params);
     }
 
+    private navPointProductOrder: NavPage = async (params: any) => {
+        this.cPointProduct.openExchangeHistory();
+    }
+
+    private navPointProductOrderDetail: NavPage = async (params: any) => {
+        let { id } = params;
+        this.cPointProduct.openOrderDetail(Number(id));
+    }
+
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
             '/app': this.navHome,
@@ -401,6 +410,8 @@ export class CApp extends CUqApp {
 
             "/pointshop/productLine/:id": this.navPointProduct,
             "/pointshop/product/:id": this.navPointProductDetail,
+            "/pointshop/order": this.navPointProductOrder,
+            "/pointshop/orderDetail/:id": this.navPointProductOrderDetail,
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();

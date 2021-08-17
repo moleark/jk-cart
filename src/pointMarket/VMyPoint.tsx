@@ -85,7 +85,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             {
                 icon: 'history',
                 caption: '兑换记录',
-                action: openExchangeHistory
+                action: ()=> nav.navigate("/pointshop/order")  /* openExchangeHistory */
             },
             {
                 icon: 'book',
