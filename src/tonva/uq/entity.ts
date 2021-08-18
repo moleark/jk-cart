@@ -285,7 +285,10 @@ export abstract class Entity {
 
     private packRow(result:string[], fields:Field[], data:any) {
         let len = fields.length;
-        if (len === 0) return;
+        if (len === 0) {
+            result.push(ln);
+            return;
+        }
         let ret = '';
         ret += this.escape(data, fields[0]);
         for (let i=1;i<len;i++) {
