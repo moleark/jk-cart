@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { User } from 'tonva';
+import { QueryPager, User } from 'tonva';
 import { BoxId } from 'tonva';
 import { observable, computed } from 'mobx';
 import { UQs } from './uqs';
@@ -271,6 +271,54 @@ export class WebUser {
 
     async getPoints() {
         return await this.uqs.积分商城.getPoints.table({ webuser: this.id });
+    }
+
+    async getValidCredits() {
+        let { customer, webuser } = this.uqs;
+        let creditsForWebUser: any[] = [];
+        if (this.hasCustomer) {
+            creditsForWebUser = await customer.CustomerCredits.table({ customer: this.currentCustomer });
+        } else {
+            creditsForWebUser = await webuser.WebUserCredits.table({ webUser: this.id });
+        };
+        return creditsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
+    }
+
+    async getValidCoupons() {
+        let { customer, webuser } = this.uqs;
+        let couponsForWebUser: any[] = [];
+        if (this.hasCustomer) {
+            couponsForWebUser = await customer.CustomerCoupon.table({ customer: this.currentCustomer });
+        } else {
+            couponsForWebUser = await webuser.WebUserCoupon.table({ webUser: this.id });
+        };
+        return couponsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
+    }
+
+    async getUserdCoupon() {
+        let { webuser, customer } = this.uqs;
+        let result: any;
+        if (this.hasCustomer) {
+            result = new QueryPager<any>(customer.getMyUsedCoupon, 10, 10);
+            await result.first({ customer: this.currentCustomer });
+        } else {
+            result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
+            await result.first({ webUser: this.id });
+        };
+        return result;
+    }
+
+    async getExpiredCoupon() {
+        let { webuser, customer } = this.uqs;
+        let result: any;
+        if (this.hasCustomer) {
+            result = new QueryPager<any>(customer.getMyExpiredCoupon, 10, 10);
+            await result.first({ customer: this.currentCustomer });
+        } else {
+            result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
+            await result.first({ webUser: this.id });
+        };
+        return result;
     }
 
 };

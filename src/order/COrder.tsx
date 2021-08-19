@@ -215,7 +215,7 @@ export class COrder extends CUqBase {
      */
     submitOrder = async () => {
         let { uqs, store, currentUser } = this.cApp;
-        let { order, webuser, 积分商城 } = uqs;
+        let { order, webuser, customer } = uqs;
         let { orderItems } = this.orderData;
         this.initOrderFreightFee();
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
@@ -229,12 +229,24 @@ export class COrder extends CUqBase {
             let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
             switch (types) {
                 case 'coupon':
-                    webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
-                    webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    if (currentUser.hasCustomer) {
+                        let customerId = currentUser.currentCustomer.id;
+                        customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
+                        customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    } else {
+                        webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
+                        webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    };
                     break;
                 case 'credits':
-                    积分商城.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
-                    积分商城.WebUserCreditsUsed.add({ webUser: currentUser.id, arr1: [{ credits: couponId, usedDate: usedDate }] });
+                    if (currentUser.hasCustomer) {
+                        let customerId = currentUser.currentCustomer.id;
+                        customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
+                        customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
+                    } else {
+                        webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
+                        webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
+                    };
                     break;
                 default:
                     break;
@@ -323,16 +335,18 @@ export class COrder extends CUqBase {
     }
 
     private hasCoupons = async (): Promise<boolean> => {
-        let { cCoupon, currentUser } = this.cApp;
-        let { id: currentUserId } = currentUser;
-        if (await cCoupon.getValidCreditsForWebUser(currentUserId))
+        let { /* cCoupon, */ currentUser } = this.cApp;
+        // let { id: currentUserId } = currentUser;
+        let getValidCredits = await currentUser.getValidCredits();
+        if (getValidCredits && getValidCredits.length > 0)
             return true;
-        let validCoupons = await cCoupon.getValidCouponsForWebUser(currentUserId);
+        let validCoupons = await currentUser.getValidCoupons();
+        // let validCoupons = await cCoupon.getValidCouponsForWebUser(currentUserId);
         if (validCoupons && validCoupons.length > 0)
             return true;
-        let validCredits = await cCoupon.getValidCreditsForWebUser(currentUserId);
+        /* let validCredits = await cCoupon.getValidCreditsForWebUser(currentUserId);
         if (validCredits && validCoupons.length > 0)
-            return true;
+            return true; */
         return false;
     }
 

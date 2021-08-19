@@ -74,6 +74,8 @@ export interface UqWebUser {
     WebUserVIPCard: Map;
     WebUserCoupon: Map;
     WebUserCouponUsed: Map;
+    WebUserCredits: Map;
+    WebUserCreditsUsed: Map;
     getMyUsedCoupon: Query,
     getMyExpiredCoupon: Query,
 
@@ -90,6 +92,12 @@ export interface UqCustomer {
     CustomerBuyerAccount: Map;
     Buyeraccount: Tuid;
     Customer: Tuid;
+    CustomerCoupon: Map;
+    CustomerCouponUsed: Map;
+    CustomerCredits: Map;
+    CustomerCreditsUsed: Map;
+    getMyUsedCoupon: Query,
+    getMyExpiredCoupon: Query,
 }
 
 export interface UqCustomerDiscount {
@@ -142,12 +150,12 @@ export interface UqPointShop {
     // GetPlatFormOrder: Query;
     // GetLastPlatFormOrder: Action;
     // AddPlatformOrderPoint: Action;
-    AddUsedCoupon: Action;
+    // AddUsedCoupon: Action;
 
     GetPointHistory: Query;
     GetPointSigninHistory: Query;
-    WebUserCredits: Map;
-    WebUserCreditsUsed: Map;
+    // WebUserCredits: Map;
+    // WebUserCreditsUsed: Map;
     SigninSheet: Sheet;
     checkIsSignin: Query;
     Signin: Action;

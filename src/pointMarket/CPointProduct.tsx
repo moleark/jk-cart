@@ -538,10 +538,11 @@ export class CPointProduct extends CUqBase {
      * TODO: delete
      */
     addUsedCoupon = async () => {
-        let { AddUsedCoupon } = this.uqs.积分商城;
+        /* let { AddUsedCoupon } = this.uqs.积分商城;
         let result = await AddUsedCoupon.submit({ couponId: this.couponId });
         let rtn = result.result;
-        return rtn;
+        return rtn; */
+        return;
     }
 
     private defaultSetting: any;
