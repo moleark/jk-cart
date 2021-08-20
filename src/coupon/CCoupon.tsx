@@ -58,12 +58,14 @@ export class CCoupon extends CUqBase {
                 result = await this.getValidCardForWebUser();
                 return this.getValidMusterForWebUser(result);
             case 'usageRecordForWebUser':
-                result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
-                await result.first({ webUser: currentUser });
+                result = await currentUser.getUserdCoupon();
+                // result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
+                // await result.first({ webUser: currentUser });
                 return result;
             case 'expiredForWebUser':
-                result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
-                await result.first({ webUser: currentUser });
+                result = await currentUser.getExpiredCoupon();
+                // result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
+                // await result.first({ webUser: currentUser });
                 return result;
             default:
                 break;
@@ -139,7 +141,7 @@ export class CCoupon extends CUqBase {
             validVIPCardForWebUser.coupon = await this.getCouponValidationResult(validVIPCardForWebUser.vipCardCode)
         }
 
-        let validCouponsForWebUser = await this.getValidCouponsForWebUser(currentUserId);
+        let validCouponsForWebUser = await currentUser.getValidCoupons(); //this.getValidCouponsForWebUser(currentUserId);
         if (validCouponsForWebUser.length > 0) {
             for (let i = 0; i < validCouponsForWebUser.length; i++) {
                 let e = validCouponsForWebUser[i];
@@ -147,7 +149,7 @@ export class CCoupon extends CUqBase {
             }
         }
 
-        let validCreditsForWebUser = await this.getValidCreditsForWebUser(currentUserId);
+        let validCreditsForWebUser = await currentUser.getValidCredits();// this.getValidCreditsForWebUser(currentUserId);
         if (validCreditsForWebUser.length > 0) {
             for (let i = 0; i < validCreditsForWebUser.length; i++) {
                 let e = validCreditsForWebUser[i];
@@ -223,6 +225,8 @@ export class CCoupon extends CUqBase {
     /**
      * 
      * @param currentUserId 
+     *  (更新至webuser--getValidCoupons)
+     * -- TODO : 废弃
      */
     getValidCouponsForWebUser = async (currentUserId: number): Promise<any[]> => {
         let { uqs } = this.cApp;
@@ -239,11 +243,13 @@ export class CCoupon extends CUqBase {
     /**
      * 
      * @param currentUserId 
+     *  (更新至webuser--getValidCredits)
+     * -- TODO : 废弃
      */
     getValidCreditsForWebUser = async (currentUserId: number): Promise<any[]> => {
         let { uqs } = this.cApp;
-        let { 积分商城 } = uqs;
-        let creditsForWebUser: any[] = await 积分商城.WebUserCredits.table({ webUser: currentUserId });
+        let { webuser  } = uqs;
+        let creditsForWebUser: any[] = await webuser.WebUserCredits.table({ webUser: currentUserId });
         let validCreditsForWebUser: any[] = [];
         if (creditsForWebUser) {
             validCreditsForWebUser = creditsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
@@ -363,41 +369,43 @@ export class CCoupon extends CUqBase {
         let { uqs, cApp } = this;
         let { currentUser } = cApp;
         let { id: currentUserId } = currentUser;
-        let { 积分商城, webuser } = uqs;
+        let { webuser, customer } = uqs;
         let { result, id: creditsId, code, validitydate, types } = credits;
         if (result !== 1)
             return;
         switch (types) {
             case 'credits':
-                let drawedResult = await 积分商城.WebUserCredits.obj({ webUser: currentUserId, credits: creditsId });
+                let drawedResult: any;
+                if(currentUser.hasCustomer)
+                    drawedResult = await customer.CustomerCredits.obj({ customer: currentUser.currentCustomer, credits: creditsId });
+                else drawedResult = await webuser.WebUserCredits.obj({ webUser: currentUserId, credits: creditsId });
                 if (!drawedResult) {
                     let now = new Date();
-
-                    await 积分商城.WebUserCredits.add({
-                        webUser: currentUserId,
-                        arr1: [{
-                            credits: creditsId,
-                            creditsCode: code,
-                            createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
-                            expiredDate: validitydate
-                        }]
-                    })
+                    let pramArr = [{
+                        credits: creditsId, creditsCode: code,
+                        createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate
+                    }];
+                    if (currentUser.hasCustomer)
+                        await customer.CustomerCredits.add({ customer: currentUser.currentCustomer, arr1: pramArr });
+                    else
+                        await webuser.WebUserCredits.add({ webUser: currentUserId, arr1: pramArr });
                 }
                 break;
             case 'coupon':
-                let drawedResult3 = await webuser.WebUserCoupon.obj({ webUser: currentUserId, coupon: creditsId });
+                let drawedResult3: any;
+                if(currentUser.hasCustomer)
+                    drawedResult3 = await customer.CustomerCoupon.obj({ customer: currentUser.currentCustomer, coupon: creditsId });
+                else drawedResult3 = await webuser.WebUserCoupon.obj({ webUser: currentUserId, coupon: creditsId });
                 if (!drawedResult3) {
                     let now = new Date();
-                    await webuser.WebUserCoupon.add({
-                        webUser: currentUserId,
-                        coupon: creditsId,
-                        arr1: [{
-                            couponType: 1,
-                            couponCode: code,
-                            createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
-                            expiredDate: validitydate,
-                        }]
-                    })
+                    let pramArr = [{
+                        couponType: 1, couponCode: code,
+                        createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate,
+                    }];
+                    if (currentUser.hasCustomer)
+                        await customer.CustomerCoupon.add({ customer: currentUser.currentCustomer, coupon: creditsId, arr1: pramArr });
+                    else
+                        await webuser.WebUserCoupon.add({ webUser: currentUserId, coupon: creditsId, arr1: pramArr });
                 }
                 break;
             case 'vipcard':
