@@ -152,7 +152,7 @@ export class VCreateOrder extends VPage<COrder> {
         let { orderData, activePushOrder } = this.controller;
         // 必填项验证
         let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
-		let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
+        let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
         let combinTip: string = "";
         if (!shippingContact) {
             this.shippingAddressTip.set(renderTip('必须填写收货地址'));
@@ -223,7 +223,7 @@ export class VCreateOrder extends VPage<COrder> {
         let { allowOrdering } = currentUser;
         let disableOrderBtn = () => { this.submitOrderEd = true; setTimeout(() => this.submitOrderEd = false, 5000); };
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
-            {autoHideTips(this.comBininvoiceTip)}
+            {autoHideTips(this.comBininvoiceTip, <div className="alert alert-danger">{this.comBininvoiceTip.get()}</div>,5000)}
             <div className="d-flex justify-content-left">
                 <div className="text-danger flex-grow-1 align-self-center" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"

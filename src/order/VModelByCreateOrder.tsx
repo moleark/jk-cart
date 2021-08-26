@@ -9,7 +9,7 @@ export class VModelByCreateOrder extends View<COrder>{
     render() {
         let { modalTitle, modalTitleS, renderModelContent } = this.controller;
         let showBack = modalTitle && modalTitleS[modalTitle].preLevel;
-        document.body.setAttribute("style", `overflow: ${modalTitle ? "hidden" : "auto"};`);
+        // document.body.setAttribute("style", `overflow: ${modalTitle ? "hidden" : "auto"};`);
         return <div className='modal modal-dialog-show' style={{ display: modalTitle ? 'block' : 'none', background: "rgba(0,0,0,.3)", }}>
             <div className="d-flex justify-content-center align-content-center w-100 h-100" >
                 <div className="border bg-light m-auto rounded pb-4 position-relative" style={{ maxWidth: 800 }}>
