@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { VPage } from 'tonva';
+import { VPage } from "tonva-react";
 import { CustomHeaderTemplate } from 'tools/CustomHeaderTemplate';
 import { CHome } from './CHome';
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage } from 'tonva';
+import { VPage } from "tonva-react";
 import { observer } from 'mobx-react';
 import { CApp } from '../tapp/CApp';
 

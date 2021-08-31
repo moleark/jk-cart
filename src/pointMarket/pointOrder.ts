@@ -1,4 +1,4 @@
-import { BoxId } from 'tonva';
+import { BoxId } from "tonva-react";
 import { observable, computed } from 'mobx';
 
 export class pointOrder {

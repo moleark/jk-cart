@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CPointProduct } from './CPointProduct';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page, FA } from "tonva-react";
 
 export class VReceivePointSuccess extends VPage<CPointProduct> {
 

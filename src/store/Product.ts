@@ -1,7 +1,7 @@
 import { GLOABLE } from 'global';
 import { observable } from 'mobx';
 import moment from 'moment';
-import { BoxId } from 'tonva';
+import { BoxId } from "tonva-react";
 import { MainBrand, Chemical } from './model';
 import { UQs } from '../uqs';
 import { Store } from './store';

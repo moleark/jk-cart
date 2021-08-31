@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CPointProduct } from 'pointMarket/CPointProduct';
 import {
     VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, autoHideTips, nav, Ax
-} from 'tonva';
+} from "tonva-react";
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';

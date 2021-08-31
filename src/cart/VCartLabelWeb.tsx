@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FA } from 'tonva';
+import { View, FA } from "tonva-react";
 import { CCart } from './CCart';
 
 export class VCartLabelWeb extends View<CCart> {

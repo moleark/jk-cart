@@ -1,25 +1,25 @@
 import { WebUser } from "CurrentUser";
 import { Product } from "./Product";
-import { BoxId, nav } from "tonva";
+import { BoxId, nav } from "tonva-react";
 import { UQs } from "uqs";
 import { Cart } from "./Cart";
 
 export class Store {
     private cache: Map<number, Product>;
 
-	uqs: UQs;
-	cart: Cart;
+    uqs: UQs;
+    cart: Cart;
     currentSalesRegion: any;
     currentLanguage: any;
     currentUser: WebUser;
 
-	constructor(uqs: UQs) {
-		this.uqs = uqs;
-		this.cart = new Cart(this);
-		this.cache = new Map();
-	}
+    constructor(uqs: UQs) {
+        this.uqs = uqs;
+        this.cart = new Cart(this);
+        this.cache = new Map();
+    }
 
-	getProduct(productId: number | BoxId): Product {
+    getProduct(productId: number | BoxId): Product {
         if (!productId) return;
         // region, language 改变的时候，直接清cache
         /*
@@ -38,7 +38,7 @@ export class Store {
             this.cache.set(productId, product);
         }
         return product;
-	};
+    };
 
     get isLogined(): boolean {
         let { user } = nav;
@@ -46,18 +46,18 @@ export class Store {
         return user.id > 0;
     }
 
-	get cartCount(): number {return this.cart.count;}
+    get cartCount(): number { return this.cart.count; }
 
-	async buildCartItems(): Promise<void> {
-		await this.cart.buildItems();
-	}
+    async buildCartItems(): Promise<void> {
+        await this.cart.buildItems();
+    }
 
-	async initCart() {
-		await this.cart.init();
-		//await this.buildCartItems();
-	}
+    async initCart() {
+        await this.cart.init();
+        //await this.buildCartItems();
+    }
 
-	dispose() {
-		this.cart.dispose();
-	}
+    dispose() {
+        this.cart.dispose();
+    }
 }

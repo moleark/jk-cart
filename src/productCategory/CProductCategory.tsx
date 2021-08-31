@@ -4,7 +4,7 @@ import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar, VRootCategorySideBarToSelect } from './VRootCategorySideBar';
 import { GLOABLE } from "global";
 import './cat.css';
-import { Ax, BoxId, Tuid, VPage } from 'tonva';
+import { Ax, BoxId, Tuid, VPage } from "tonva-react";
 import { VCategoryPage } from './VCategoryPage';
 import classNames from 'classnames';
 import { VCategoryHome } from './VCategoryHome';

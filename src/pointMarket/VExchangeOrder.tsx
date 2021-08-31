@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
+import { VPage, Page, LMR, FA, tv, List, autoHideTips } from "tonva-react";
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';

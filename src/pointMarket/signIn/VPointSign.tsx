@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, DropdownAction, DropdownActions, FA } from 'tonva';
+import { VPage, Page, DropdownAction, DropdownActions, FA } from "tonva-react";
 import { observer } from 'mobx-react-lite';
 import { observable } from 'mobx';
 import { signTopicMap, Homemadelogo } from 'tools/images';

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Page } from 'tonva';
+import { VPage, Page } from "tonva-react";
 import { CProductCategory, ProductCategory } from './CProductCategory';
 import { observer } from 'mobx-react';
 import { xs } from '../tools/browser';

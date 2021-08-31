@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { CHome } from './CHome';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

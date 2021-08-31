@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FA } from 'tonva';
+import { View, FA } from "tonva-react";
 import { CProduct } from '../CProduct';
 import { observer } from 'mobx-react';
 import { Product } from '../../store';

@@ -3,9 +3,9 @@ import * as React from 'react';
 //import Loadable from 'react-loadable';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FA } from 'tonva';
-import { Loading, nav } from 'tonva';
-import { BoxId } from 'tonva';
+import { FA } from "tonva-react";
+import { Loading, nav } from "tonva-react";
+import { BoxId } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VMember } from './VMember';
 

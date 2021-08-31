@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page, FA } from "tonva-react";
 import { COrder } from './COrder';
 import { xs } from '../tools/browser';
 

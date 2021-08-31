@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { observable } from 'mobx';
-import { ItemSchema, Page, VPage, FA, Form, Context, autoHideTips } from 'tonva';
+import { ItemSchema, Page, VPage, FA, Form, Context, autoHideTips } from "tonva-react";
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';

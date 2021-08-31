@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, Tabs, TabCaptionComponent, TabProp, Scroller } from 'tonva';
+import { VPage, Page, Tabs, TabCaptionComponent, TabProp, Scroller } from "tonva-react";
 import { COrder } from './COrder';
-import { Ax, List, EasyDate } from 'tonva';
+import { Ax, List, EasyDate } from "tonva-react";
 import { observable } from 'mobx';
 import { xs } from 'tools/browser';
 import { ListTable } from 'tools/listTable';

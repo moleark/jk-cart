@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, tv } from 'tonva';
+import { View, tv } from "tonva-react";
 import { CProduct } from '../CProduct';
 import {renderBrand, renderPropItem} from '../renders';
 import { ProductImage } from '../../tools/productImage';

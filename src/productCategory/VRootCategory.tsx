@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Ax, View } from 'tonva';
+import { Ax, View } from "tonva-react";
 import { CProductCategory } from './CProductCategory';
-import { FA } from 'tonva';
+import { FA } from "tonva-react";
 import { rootCategroyResFromId } from 'global';
 //import { observer } from 'mobx-react';
 

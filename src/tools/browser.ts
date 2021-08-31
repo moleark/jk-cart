@@ -33,3 +33,9 @@ export let xs = (function () {
 })();
 
 export let xsOrIpad = xs || browser.versions.iPad;
+
+const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
+    'BlackBerry|Windows Phone|' +
+    'Opera Mini|IEMobile|Mobile',
+    'i');
+export const isMobile = regEx.test(navigator.userAgent);

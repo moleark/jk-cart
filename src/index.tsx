@@ -5,13 +5,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 //import './css/style.css';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
-import { NavView, start, nav, startPage } from 'tonva';
-import { appConfig } from 'configuration';
+import { NavView, start, nav, startPage } from "tonva-react";
+import { appConfig } from 'uq-app/appConfig';
 import './App.css';
 import 'antd/dist/antd.css';
 import { CApp, CWeb } from './tapp';
 import * as qs from 'querystringify';
 import { GLOABLE } from 'global';
+import { isMobile } from 'tools';
 //import logo from './logo.svg';
 
 /*
@@ -37,7 +38,7 @@ serviceWorker.unregister();
     loadBaiduTongji();
     let onLogined: () => Promise<void>;
 
-    if (nav.isMobile || window.location.pathname.endsWith('/app')) {
+    if (isMobile || window.location.pathname.endsWith('/app')) {/* nav.isMobile */
         require('style-loader!./css/style.css');
         require('style-loader!./css/rst.css');
         onLogined = async () => {

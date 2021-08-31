@@ -1,8 +1,8 @@
-//import { Controller } from 'tonva';
+//import { Controller } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VInvoiceInfo } from './VInvoiceInfo';
 //import { CCartApp } from 'CCartApp';
-//import { Tuid } from 'tonva';
+//import { Tuid } from "tonva-react";
 
 export class CInvoiceInfo extends CUqBase {
     fromOrderCreation: boolean;

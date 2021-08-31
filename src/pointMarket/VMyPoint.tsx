@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from "tonva";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from "tonva-react";
 import { CPointProduct, topicClump, topicClumps } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './view/VPointRule';

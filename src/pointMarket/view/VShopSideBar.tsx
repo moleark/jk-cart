@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Ax, List } from 'tonva';
+import { View, Ax, List } from "tonva-react";
 import { CPointProduct, topicClumps } from '../CPointProduct';
 
 export class VShopSideBar extends View<CPointProduct> {

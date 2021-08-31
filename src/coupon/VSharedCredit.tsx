@@ -1,7 +1,7 @@
 import * as React from 'react';
 /*
 import { CCoupon } from './CCoupon';
-import { VPage, Page, List } from 'tonva';
+import { VPage, Page, List } from "tonva-react";
 import { observer } from 'mobx-react';
 import { VCredits } from './VVIPCard';
 export class VSharedCredit extends VPage<CCoupon> {

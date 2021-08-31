@@ -1,6 +1,6 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../tapp/CBase';
-import { QueryPager } from 'tonva';
+import { QueryPager } from "tonva-react";
 import { Product } from '../store';
 //import { VProductFavorateLabel } from './VProductFavorateLabel';
 

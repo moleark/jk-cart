@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as React from 'react';
 import classNames from 'classnames';
-import { View, nav } from 'tonva';
+import { View, nav } from "tonva-react";
 import { CCart } from './CCart';
 import { observer } from 'mobx-react';
 

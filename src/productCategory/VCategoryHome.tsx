@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { Ax, VPage } from 'tonva';
+import { Ax, VPage } from "tonva-react";
 import { CProductCategory } from './CProductCategory';
 import { xs } from '../tools/browser';
 import { rootCategroyResFromId } from 'global';

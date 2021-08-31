@@ -12,8 +12,8 @@
     "@types/marked": "^0.6.5",
     "@types/node": "^12.7.12",
     "@types/querystringify": "^2.0.0",
-    "@types/react": "^16.9.5",
-    "@types/react-dom": "^16.9.1",
+    "@types/react": "^16.14.8",
+    "@types/react-dom": "^16.9.13",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-slick": "^0.23.4",
     "antd": "^4.3.1",
@@ -25,20 +25,22 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.21",
     "marked": "^0.7.0",
-    "mobx": "^5.14.0",
-    "mobx-react": "^6.1.3",
+    "mobx": "^6.3.2",
+    "mobx-react": "^7.2.0",
     "moment": "^2.26.0",
     "pdfh5": "^1.3.19",
     "querystringify": "^2.1.1",
-    "react": "^16.10.2",
+    "react": "^17.0.2",
     "react-bootstrap-date-picker": "^5.1.0",
-    "react-dom": "^16.10.2",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^4.0.1",
     "react-slick": "^0.25.2",
     "slick-carousel": "^1.8.1",
+    "tonva-react": "^2.0.30",
+    "tonva-uqui": "^0.1.17",
     "tsc": "^1.20150623.0",
-    "typescript": "^3.9.3",
+    "typescript": "^4.3.2",
     "xlsx": "^0.16.9"
   },
   "scripts": {
@@ -50,12 +52,17 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app",
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
     "plugins": [
       "jsx-a11y"
     ],
     "rules": {
-      "jsx-a11y/anchor-is-valid": "off"
+      "jsx-a11y/anchor-is-valid": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off"
     }
   },
   "browserslist": {

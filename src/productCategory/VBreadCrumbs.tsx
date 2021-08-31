@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Ax, tv, View } from "tonva";
+import { Ax, tv, View } from "tonva-react";
 import { CProductCategory } from "./CProductCategory";
 
 export class VBrandCrumbs extends View<CProductCategory> {

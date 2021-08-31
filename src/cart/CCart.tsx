@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { RowContext, BoxId, nav } from 'tonva';
+import { RowContext, BoxId, nav } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';

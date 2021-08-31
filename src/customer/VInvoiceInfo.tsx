@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips } from 'tonva';
-import { Schema } from 'tonva';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips } from "tonva-react";
+import { Schema } from "tonva-react";
 import { CInvoiceInfo } from './CInvoiceInfo';
 import { xs } from 'tools/browser';
 import { VMeSideBar } from 'me/VMeSideBar';

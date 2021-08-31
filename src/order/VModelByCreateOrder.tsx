@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { COrder } from './COrder';
-import { FA } from 'tonva';
+import { FA } from "tonva-react";
 
 
 export class VModelByCreateOrder extends View<COrder>{

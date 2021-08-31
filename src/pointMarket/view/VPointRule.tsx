@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Page } from 'tonva';
+import { Page } from "tonva-react";
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
 import { xs } from '../../tools/browser';
 

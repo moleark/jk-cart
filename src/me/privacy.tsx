@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva';
+import { Page, VPage } from "tonva-react";
 import marked from 'marked';
 import { CMe } from './CMe';
 import { observable } from 'mobx';

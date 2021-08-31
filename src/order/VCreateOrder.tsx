@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, tv, List, LMR, FA, autoHideTips } from 'tonva';
+import { VPage, Page, tv, List, LMR, FA, autoHideTips } from "tonva-react";
 import { COrder } from './COrder';
 import { OrderItem } from './Order';
 import { CartPackRow } from '../store';

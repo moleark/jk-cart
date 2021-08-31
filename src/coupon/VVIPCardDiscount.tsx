@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, tv } from 'tonva';
+import { VPage, Page, List, tv } from "tonva-react";
 import { CrPageHeaderTitle } from 'tools/pageHeaderTitle';
 import { CCoupon } from './CCoupon';
 import { pageHTitle } from '../tools/pageHeaderTitle';

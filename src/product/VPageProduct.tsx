@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
     tv, VPage, Page, Form, ItemSchema, NumSchema, UiSchema,
     ObjectSchema, RowContext, UiCustom, FormField, List, Ax
-} from 'tonva';
+} from "tonva-react";
 import { CProduct } from './CProduct';
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
 import { ProductPackRow, Product } from '../store';

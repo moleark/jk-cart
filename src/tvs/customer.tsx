@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { tv } from 'tonva';
+import { tv } from "tonva-react";
 import { tvAddress, tvCountry } from './common';
 
 export const tvContact = (values: any) => {

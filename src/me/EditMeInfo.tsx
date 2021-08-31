@@ -4,7 +4,7 @@ import {
     userApi, ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem, nav, Page,
     Edit, UiSchema,
     VPage, UiRadio, IdSchema, UiIdItem, Context, BoxId, tv
-} from 'tonva';
+} from "tonva-react";
 import { CMe } from './CMe';
 import {
     faxValidation, emailValidation, mobileValidation, telephoneValidation,

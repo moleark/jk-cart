@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate, Ax } from 'tonva';
+import { VPage, Page, EasyDate, Ax, nav } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
-import { List } from 'tonva';
+import { List } from "tonva-react";
 import { observer } from 'mobx-react-lite';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
 import { ListTable } from 'tools/listTable';
-import { nav } from '../tonva/components/nav';
 
 export class VExchangeHistory extends VPage<CPointProduct> {
 

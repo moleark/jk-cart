@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, List, Scroller } from 'tonva';
+import { VPage, Page, BoxId, List, Scroller } from "tonva-react";
 import { CFavorites } from './CFavorites';
 import { xs } from '../tools/browser';
 import { pageHTitle } from 'tools/pageHeaderTitle';

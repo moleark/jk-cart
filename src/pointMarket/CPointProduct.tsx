@@ -1,4 +1,4 @@
-import { BoxId, RowContext, QueryPager } from 'tonva';
+import { BoxId, RowContext, QueryPager, nav } from "tonva-react";
 import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
@@ -15,7 +15,6 @@ import { VSelectedLable } from './VSelectedLable';
 import { GLOABLE } from 'global';
 import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
-import { nav } from '../tonva/components/nav';
 import { VShopSideBar } from './view/VShopSideBar';
 import { VError } from 'tools/VError';
 

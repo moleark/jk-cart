@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CCoupon } from './CCoupon';
-import { View, FA, LMR } from 'tonva';
+import { View, FA, LMR } from "tonva-react";
 import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
 import moment from 'moment';
 import { xs } from '../tools/browser';

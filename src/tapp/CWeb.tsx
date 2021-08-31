@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Elements, nav, User, WebNav } from 'tonva';
+import { Elements, nav, User, WebNav } from "tonva-react";
 import { CApp } from "./CApp";
 import { NavHeaderView, NavFooterView } from './webNav';
 import { VMainWebNav } from './webNav';
-
+import { isMobile } from "tools";
 
 export class CWeb extends CApp {
 
@@ -22,7 +22,7 @@ export class CWeb extends CApp {
     }
 
     protected afterInit() {
-        if (!nav.isMobile) {
+        if (!isMobile) {/* nav.isMobile */
             nav.pageWebNav = this.pageWebNav;
         }
     }

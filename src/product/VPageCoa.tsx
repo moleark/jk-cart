@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva';
+import { Page, VPage } from "tonva-react";
 import { CProduct } from './CProduct';
 import { observer } from 'mobx-react';
 import moment from 'moment';

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { tv } from 'tonva';
+import { tv } from "tonva-react";
 import { ProductImage } from 'tools/productImage';
 
 export const tvProduct = (values: any) => {

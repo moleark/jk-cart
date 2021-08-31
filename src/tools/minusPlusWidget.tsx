@@ -2,13 +2,13 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { UpdownWidget } from 'tonva';
+import { UpdownWidget } from "tonva-react";
 
 const keys = [107, 109, 110, 187, 189];
 
 export class MinusPlusWidget extends UpdownWidget {
-    @observable protected value: any;
-    @observable protected disabled: boolean;
+    // @observable protected value: any;
+    // @observable protected disabled: boolean;
     // @observable protected hasFocus: boolean;
 
     protected isValidKey(key: number): boolean {
@@ -96,7 +96,7 @@ export class MinusPlusWidget extends UpdownWidget {
             type="text"
             defaultValue={this.value}
             onChange={this.onChange}
-            placeholder={this.placeholder}
+            // placeholder={this.placeholder}
             readOnly={this.readOnly}
             disabled={this.disabled}
             onKeyDown={this.onKeyDown}
@@ -119,8 +119,8 @@ export class MinusPlusWidget extends UpdownWidget {
 }
 
 export class MinusPlusWidgetTable extends UpdownWidget {
-    @observable protected value: any;
-    @observable protected disabled: boolean;
+    // @observable protected value: any;
+    // @observable protected disabled: boolean;
     // @observable protected hasFocus: boolean;
 
     protected isValidKey(key: number): boolean {
@@ -194,7 +194,7 @@ export class MinusPlusWidgetTable extends UpdownWidget {
             type="text"
             defaultValue={this.value}
             onChange={this.onChange}
-            placeholder={this.placeholder}
+            // placeholder={this.placeholder}
             readOnly={this.readOnly}
             disabled={this.disabled}
             onKeyDown={this.onKeyDown}

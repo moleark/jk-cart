@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { VPage, Page, Form, Schema, UiSchema, Context, UiInputItem, UiIdItem, BoxId } from 'tonva';
-import { tv } from 'tonva';
+import { VPage, Page, Form, Schema, UiSchema, Context, UiInputItem, UiIdItem, BoxId } from "tonva-react";
+import { tv } from "tonva-react";
 import { CSelectContact } from './CSelectContact';
 import { addressDetailValidation, emailValidation, telephoneValidation, mobileValidation, organizationNameValidation, nameValidation } from 'tools/inputValidations';
 import { observer } from 'mobx-react';

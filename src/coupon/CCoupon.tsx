@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { QueryPager } from 'tonva';
+import { QueryPager } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VSharedCoupon } from './VSharedCoupon';
 import { VCoupleAvailable } from './VCouponAvailable';

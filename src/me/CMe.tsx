@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as React from 'react';
 import _ from 'lodash';
-import { Context, nav, VPage, User } from 'tonva';
+import { Context, nav, VPage, User } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';

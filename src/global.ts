@@ -10,7 +10,7 @@ import LifeScience_j from './images/LifeScience.jpg';
 import MaterialScience_j from './images/MaterialScience.jpg';
 import OrganicChemistry_j from './images/OrganicChemistry.jpg';
 
-import { env } from 'tonva';
+import { env } from "tonva-react";
 
 enum EnumCategory { OrganicChemistry = 1, AnalyticalChemistry = 2, LifeScience = 3, MaterialScience = 4, LabSupplies = 5 };
 const CategoryIds_Production: { [id: number]: EnumCategory } = {

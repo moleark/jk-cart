@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { nav, Image, VPage, Ax } from 'tonva';
-import { Prop, IconText, FA, PropGrid, LMR } from 'tonva';
+import { nav, Image, VPage, Ax } from "tonva-react";
+import { Prop, IconText, FA, PropGrid, LMR } from "tonva-react";
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 //import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
-import { appConfig } from 'configuration';
+import { appConfig } from 'uq-app/appConfig';
 //import { observable } from 'mobx';
 import { browser, xs } from 'tools/browser';
 import welcome from 'images/welcome.png';

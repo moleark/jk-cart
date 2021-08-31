@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { observer } from 'mobx-react';
 import { CPointProduct } from './CPointProduct';
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { FA, View } from 'tonva';
-import { CBase } from '../../tonva/app/CBase';
+import { FA, View } from "tonva-react";
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 

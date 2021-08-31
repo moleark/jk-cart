@@ -1,8 +1,8 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Scroller } from 'tonva';
+import { VPage, Scroller } from "tonva-react";
 import { CProduct } from './CProduct';
-import { List } from 'tonva';
+import { List } from "tonva-react";
 import { Product } from '../store';
 import Pagination from 'antd/lib/pagination/Pagination';
 import { observer } from 'mobx-react';

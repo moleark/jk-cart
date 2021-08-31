@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
-import { BoxId, Context, env } from 'tonva';
-import { nav } from 'tonva';
+import { BoxId, Context, env } from "tonva-react";
+import { nav } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';

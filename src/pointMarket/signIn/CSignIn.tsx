@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { CUqBase } from 'tapp/CBase';
 import { observable } from 'mobx';
-import { QueryPager } from 'tonva';
+import { QueryPager } from "tonva-react";
 import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
 import { VRevenueExpenditure } from '../VRevenueExpenditure';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import {renderBrand, renderPropItem} from '../renders';

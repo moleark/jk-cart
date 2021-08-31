@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager, autoHideTips } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager, autoHideTips } from "tonva-react";
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
 import { observable } from 'mobx';

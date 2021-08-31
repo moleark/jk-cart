@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { VPage, Page } from 'tonva';
+import { VPage, Page, nav } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
-import { nav } from '../tonva/components/nav';
 
 export class OrderSuccess extends VPage<CPointProduct> {
 

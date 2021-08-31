@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema, Tuid } from 'tonva';
+import { View, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, Context, Form, ItemSchema, Tuid } from "tonva-react";
 import { CProduct } from '../CProduct';
 import { MinusPlusWidget } from 'tools';
 import { Product } from '../../store';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage } from 'tonva';
+import { VPage } from "tonva-react";
 import { CHome } from './CHome';
 import { VSiteHeader } from './VSiteHeader';
 import { VSlider } from './VSlider';

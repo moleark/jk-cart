@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page } from 'tonva';
+import { VPage, Page } from "tonva-react";
 import { CSelectContact } from './CSelectContact';
-import { List, LMR, FA } from 'tonva';
-import { tv } from 'tonva';
+import { List, LMR, FA } from "tonva-react";
+import { tv } from "tonva-react";
 import { observer } from 'mobx-react';
 import { xs, xsOrIpad } from '../tools/browser';
 import classNames from 'classnames';

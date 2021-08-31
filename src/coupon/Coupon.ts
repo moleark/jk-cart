@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { UQs } from '../uqs';
-import { Tuid, BoxId } from 'tonva';
+import { Tuid, BoxId } from "tonva-react";
 import { Order } from 'order/Order';
 import moment from 'moment';
 
@@ -75,8 +75,8 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
                     let couponOffsetAmount = 0;
                     for (let i = 0; i < orderItems.length; i++) {
                         let oi = orderItems[i];
-						let { product, packs } = oi;
-						let { brand } = product;
+                        let { product, packs } = oi;
+                        let { brand } = product;
                         //let { ProductX } = uqsProduct;
                         //let productTuid: any = await ProductX.load(product)
                         // 获取品牌的折扣
@@ -183,8 +183,8 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
                 let couponOffsetAmount = 0;
                 for (let i = 0; i < orderItems.length; i++) {
                     let oi = orderItems[i];
-					let { product, packs } = oi;
-					let { brand } = product;
+                    let { product, packs } = oi;
+                    let { brand } = product;
                     // 获取明细中产品的VIP卡折扣
                     let thisDiscountSetting = this.discountSetting.find((e: any) => Tuid.equ(e.brand, brand));
                     let discount = (thisDiscountSetting && thisDiscountSetting.discount) || 0;

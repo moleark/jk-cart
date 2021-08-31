@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { BoxId, QueryPager } from 'tonva';
+import { BoxId, QueryPager } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';

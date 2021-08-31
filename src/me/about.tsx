@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage } from 'tonva';
+import { VPage } from "tonva-react";
 //import marked from 'marked';
 import logo from '../images/logo_mobi.png';
 import { CMe } from './CMe';

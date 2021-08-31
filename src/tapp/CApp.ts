@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { User, nav, NavPage, BoxId, PageWebNav } from 'tonva';
+import { User, nav, NavPage, BoxId, PageWebNav } from "tonva-react";
 //import { Cart/*, LOCALCARTNAME*/ } from "../cart/Cart";
 import { CHome } from "../home";
 import { CCart } from "../cart";

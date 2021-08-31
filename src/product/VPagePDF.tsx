@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
-import { VPage, Page } from 'tonva';
+import { VPage, Page } from "tonva-react";
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import Pdfh5 from 'pdfh5'

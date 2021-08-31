@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page, FA } from "tonva-react";
 import { CLottery } from './CLottery';
 import { PointProductImage } from 'tools/productImage';
 import { observable } from 'mobx';

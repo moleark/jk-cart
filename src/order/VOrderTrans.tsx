@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { Page, tv, VPage } from 'tonva';
+import { Page, tv, VPage } from "tonva-react";
 import { COrder } from './COrder';
 import { xs } from 'tools/browser';
 import classNames from 'classnames';

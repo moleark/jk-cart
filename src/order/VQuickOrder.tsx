@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { autoHideTips, LMR, FA, List, VPage } from 'tonva';
+import { autoHideTips, LMR, FA, List, VPage } from "tonva-react";
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import classNames from 'classnames';

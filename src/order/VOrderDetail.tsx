@@ -1,9 +1,9 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyDate, Ax, Tuid, nav } from 'tonva';
+import { VPage, Page, BoxId, EasyDate, Ax, Tuid, nav } from "tonva-react";
 import { COrder } from './COrder';
-import { tv } from 'tonva';
-import { List } from 'tonva';
+import { tv } from "tonva-react";
+import { List } from "tonva-react";
 import { OrderItem } from './Order';
 import { xs } from '../tools/browser';
 import classNames from 'classnames';

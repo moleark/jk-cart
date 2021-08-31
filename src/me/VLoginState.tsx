@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { View, nav, LMR, Image, FA, A, Ax } from 'tonva';
+import { View, nav, LMR, Image, FA, A, Ax } from "tonva-react";
 import { CMe } from './CMe';
 import { observer } from 'mobx-react';
 

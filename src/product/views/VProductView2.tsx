@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Ax, BoxId, nav, tv, View } from 'tonva';
+import { Ax, BoxId, nav, tv, View } from "tonva-react";
 import { CProduct } from '../CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';

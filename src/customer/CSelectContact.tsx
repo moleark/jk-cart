@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { Context, BoxId } from 'tonva';
+import { Context, BoxId } from "tonva-react";
 import { CUqBase } from '../tapp/CBase';
 import { VContactList } from './VContactList';
 import { VContact } from './VContact';

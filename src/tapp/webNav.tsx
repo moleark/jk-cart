@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Ax, FA, View, A, Image, nav, env } from 'tonva';
+import { VPage, Ax, FA, View, A, Image, nav, env } from "tonva-react";
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
 import * as qs from 'querystringify';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, FA, LMR, autoHideTips } from 'tonva';
+import { VPage, Page, List, FA, LMR, autoHideTips } from "tonva-react";
 import { CCoupon } from './CCoupon';
 import { observable } from 'mobx';
 import { VVIPCard, VCoupon, VCredits } from './VVIPCard';

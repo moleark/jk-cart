@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from 'tonva';
+import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';

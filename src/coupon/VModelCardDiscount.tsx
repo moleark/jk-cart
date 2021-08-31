@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FA } from 'tonva';
+import { View, FA } from "tonva-react";
 import { observer } from 'mobx-react';
 import { CCoupon } from './CCoupon';
 import { Modal } from 'antd';
