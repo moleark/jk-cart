@@ -109,6 +109,28 @@ export class CTrial extends CUqBase {
 		*/
 	}
 
+	saveOrderMain = async () => {
+		let ret = await this.uqs.JkOrder.Acts({
+			orderMain: [
+				{
+					id: undefined,
+					no: 'jk-old-102',
+				} as any,
+			],
+			/*
+			orderDetail: [
+				{
+					id: undefined,
+				} as any,
+				{
+					id: undefined,
+				} as any,
+			]
+			*/
+		});
+		alert(JSON.stringify(ret));
+	}
+
 	payOrder = async () => {
 		alert('accept');
 	}

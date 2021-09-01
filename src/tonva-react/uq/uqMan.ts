@@ -796,6 +796,13 @@ export class UqMan {
 		}
 		apiParam['$'] = arr;
 		let ret = await this.uqApi.post(IDPath('acts'), apiParam);
+
+		let {ret:text} = ret[0];
+        let rows = (text as string).split('\n');
+        let results = rows.map(v => v.split('\t'));
+		let id = Number(results[0][0]);
+        return {id};
+
 		let retArr = (ret[0].ret as string).split('\n');
 		let retActs:{[key:string]:number[]} = {};
 		for (let i=0; i<arr.length; i++) {
