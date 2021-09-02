@@ -42,20 +42,14 @@ export class VHome extends VPage<CHome> {
         return header;
     }
 
-    content():JSX.Element {
-        return <this.pageContent />;
+    content() {
+        return <this.pageContent />
     }
 
     private pageContent = () => {
-        let { controller, isWebNav } = this;
+        let { controller } = this;
         let { renderCategoryRootList } = controller;
-        let siteHeader: any;
-		if (isWebNav) {
-			siteHeader = <div className="mt-3"></div>;
-		}
-		else {
-			siteHeader = this.renderVm(VSiteHeader);
-		}
+        let siteHeader = this.renderVm(VSiteHeader);
         return <>
             {siteHeader}
             <div className="mb-3">

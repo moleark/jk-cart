@@ -1,4 +1,5 @@
 import { PageItems } from 'tonva-react';
+import * as _ from 'lodash';
 
 export class ElasticSearchPager<T extends any> extends PageItems<T>{
 
@@ -26,7 +27,7 @@ export class ElasticSearchPager<T extends any> extends PageItems<T>{
 
     protected async loadResults(param: any, pageStart: number, pageSize: number): Promise<{ [name: string]: any[] }> {
 
-        let { keyWord } = param;
+        let { keyWord, salesregion } = param;
         /*
         let url = this.searchUrl + '/' + keyWord;
         if (this.pageNumber > 1) {
@@ -74,6 +75,17 @@ export class productUrlGen extends UrlGen {
 }
 
 export class productCatalogUrlGen extends UrlGen {
+
+    generateUrl(keyWord: string, pageNumber: number): string {
+        let url = '/' + keyWord;
+        if (pageNumber > 1) {
+            url += "/" + pageNumber;
+        }
+        return url;
+    }
+}
+
+export class productStandardUrlGen extends UrlGen {
 
     generateUrl(keyWord: string, pageNumber: number): string {
         let url = '/' + keyWord;

@@ -14,12 +14,12 @@ export class VOrderTrans extends VPage<COrder> {
     }
 
     private page = (orderTrans: any) => {
-        let { transCompany, transNumber, orderTrackRult, expressLogistics } = orderTrans;
+        let { transNumber, orderTrackRult, expressLogistics } = orderTrans;
         let orderTrackUI: JSX.Element;
         if (orderTrackRult) {
             let { result, time:resTime, remark:resRemark, steps } = orderTrackRult;
             let { step } = steps;
-            if (!step?.length) { step = [{ time: resTime, remark: "查无结果" }]; };
+            if (!step?.length) { step = [{ time: resTime || Date.now(), remark: "查无结果" }]; };
             orderTrackUI = <ul className="list-unstyled mt-2">
                 {step.sort((a: any, b: any) => new Date(b.time).getTime() - new Date(a.time).getTime())
                 .map((el: any, index: number) => {

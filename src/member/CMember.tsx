@@ -2,20 +2,13 @@
 import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FA, Loading, nav, BoxId } from 'tonva-react';
-import { CApp, CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VMember } from './VMember';
 
 export class CMember extends CUqBase {
-    member: any;
+
+    @observable.ref member: any;
     private referrer: BoxId;
-
-    constructor(cApp: CApp) {
-        super(cApp);
-
-        makeObservable(this, {
-            member: observable.ref
-        });
-    }
 
     protected async internalStart(param: any) {
 		if (!this.isLogined) return;

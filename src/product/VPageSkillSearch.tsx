@@ -9,40 +9,34 @@ import { languageCaptions } from './VPageProduct';
 import { VPageCoa } from './VPageCoa';
 
 const materialCaptions: { [type: string]: any } = {
-	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Material Safety Data Sheet (SDS)' },
+	'msds': { type: 'MSDS', CName: "化学品安全技术说明书", EName: 'Safety Data Sheet (SDS)' },
 	'spec': { type: 'SPEC', CName: "技术规格说明书", EName: 'Specifications (SPEC)' },
 	'coa': { type: 'COA', CName: "质检报告", EName: 'Certificate of Analysis (COA)' },
+	'um': { type: 'um', CName: "用户手册", EName: 'User Manual (UM)' },
 }
 
 const defLangs = [{ language: "CN" }, { language: "EN" }, { language: "DE" }, { language: "EN-US" },];
 
+export const docTypeWithCaptcha: any[] = ["msds", "spec", "um"];
+
 export class VPageSkillSearch extends VPage<CProduct> {
-    private productOrigin: HTMLInputElement;
-    private productLot: HTMLInputElement;
-    private captchaInput: HTMLInputElement;
-    private selectVal: HTMLSelectElement;
-    private productOriginTip = observable.box<string>();
-    private productLotTip = observable.box<string>();
-    private productLotTipNone = observable.box<string>();
-    private captchaTip = observable.box<string>();
-    buttonDisable: boolean = false;
-
-    constructor(c: CProduct) {
-        super(c);
-
-        makeObservable(this, {
-            buttonDisable: observable
-        });
-    }
-
-    async open(param?: any) {
+	private productOrigin: HTMLInputElement;
+	private productLot: HTMLInputElement;
+	private captchaInput: HTMLInputElement;
+	private selectVal: HTMLSelectElement;
+	private productOriginTip = observable.box<string>();
+	private productLotTip = observable.box<string>();
+	private productLotTipNone = observable.box<string>();
+	private captchaTip = observable.box<string>();
+	@observable buttonDisable: boolean = false;
+	async open(param?: any) {
 		this.openPage(this.page, { origin: param });
 	}
 
-    page = observer((param?: any) => {
+	page = observer((param?: any) => {
 
 		let { materialType } = this.controller;
-		let assistContent = (materialType === 'msds' || materialType === 'spec') ? <>{this.captchaUI(materialType)}</> : <>{this.lots()}</>;
+		let assistContent = (docTypeWithCaptcha.includes(materialType)) ? <>{this.captchaUI(materialType)}</> : <>{this.lots()}</>;
 		let content = materialCaptions[materialType];
 		let header: any, right: any;
 		if (xs) {
@@ -81,7 +75,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		</Page>
 	})
 
-    private lots = () => {
+	private lots = () => {
 		return <div className="col-md-3">
 			<input ref={v => this.productLot = v} type="text"
 				className='form-control border-primary my-2'
@@ -90,12 +84,12 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		</div>
 	}
 
-    private captchaUI = (type: string) => {
-		let { captcha, productMsdsVersions, getCaptcha } = this.controller;
+	private captchaUI = (type: string) => {
+		let { captcha, productMscuVersions, getCaptcha } = this.controller;
 		let langUI: undefined | JSX.Element;
 
-		if (type === 'msds') {
-			let langArr: any[] = productMsdsVersions.length ? productMsdsVersions : defLangs;
+		if (type === 'msds' || type === 'um') {
+			let langArr: any[] = productMscuVersions.length ? productMscuVersions : defLangs;
 			langUI = <select ref={v => this.selectVal = v} defaultValue='CN' className="p-1 mr-2 mb-2 text-dark">
 				{langArr.map((v: any) => (<option key={v.language} value={v.language}>{languageCaptions[v.language]}</option>))}
 			</select>
@@ -115,7 +109,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		</>;
 	}
 
-    private onSubmit = async () => {
+	private onSubmit = async () => {
 		let productOrigin = this.productOrigin.value;
 		let productLot = this.productLot ? this.productLot.value : true;
 		let currtCaptcha = this.captchaInput ? this.captchaInput.value : true;
@@ -125,7 +119,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		if (!currtCaptcha) this.captchaTip.set('验证码不可为空');
 
 		if (!productOrigin || !productLot || !currtCaptcha) return;
-		let { getPDFFileUrl } = this.controller;
+		let { getPDFFileUrl, getCaptcha } = this.controller;
 		let content: any = await getPDFFileUrl({
 			origin: productOrigin, captcha: currtCaptcha,
 			lang: this.selectVal ? this.selectVal.value : undefined, lot: productLot
@@ -133,7 +127,10 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		if (content === undefined) return;
 		if (content.status) {
 			if (this.controller.materialType === 'coa') this.productLotTipNone.set(content.msg);
-			else this.captchaTip.set(content.msg);
+			else {
+				this.captchaTip.set(content.msg);
+				await getCaptcha();
+			};
 		} else {
 			if (this.captchaInput) this.captchaInput.value = '';
 			if (this.productLot) this.productLot.value = '';

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate } from 'tonva-react';
+import { VPage, Page, EasyDate, tv, List } from 'tonva-react';
 import { CPointProduct } from './CPointProduct';
-import { tv, List } from 'tonva-react';
 import { OrderItem } from './pointOrder';
 import { PointProductImage } from 'tools/productImage';
 import { xs } from 'tools/browser';

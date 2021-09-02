@@ -28,8 +28,8 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         this.openPage(this.page);
     }
 
-    private webUserData: any;
-    private webUserContactData: any;
+    @observable private webUserData: any;
+    @observable private webUserContactData: any;
 
     private ref = (f: Form) => {
         if (this.form === f) {
@@ -40,11 +40,6 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
 
     constructor(props: any) {
         super(props);
-
-        makeObservable<EditMeInfoFirstOrder, "webUserData" | "webUserContactData">(this, {
-            webUserData: observable,
-            webUserContactData: observable
-        });
 
         let { cApp } = this.controller;
         let { currentUser } = cApp;

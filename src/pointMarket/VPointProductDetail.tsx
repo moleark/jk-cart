@@ -7,24 +7,36 @@ import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { schema, TopicDivision } from './VPointProduct';
 import giftPlate from 'images/giftPlate.png';
-import { observable, makeObservable } from 'mobx';
+import { observable } from 'mobx';
 import 已下架 from 'images/已下架.png';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
-    DetailSource: number;
-
-    constructor(c: CPointProduct) {
-        super(c);
-
-        makeObservable(this, {
-            DetailSource: observable
-        });
-    }
-
-    async open(param?: any) {
-        this.DetailSource = param;
+    /* async open(param?: any) {
         this.openPage(this.page);
+    } */
+
+    header() {
+        return "产品详情";
     }
+
+    right() {
+        return this.controller.renderSelectedLable();
+    }
+
+    footer() {
+        return React.createElement(observer(() => {
+            let { pointToExchanging, myEffectivePoints } = this.controller;
+            let availablePoints = (myEffectivePoints - pointToExchanging) >= 0 ? (myEffectivePoints - pointToExchanging) : 0;
+            let pointsInsuffTip = availablePoints === 0 ? <span className="text-danger small">( <FA name="exclamation-circle" />积分不足 )</span> : null;
+            return <div className="d-flex justify-content-between m-2">
+                <div className="align-self-center">当前可用:<span className="text-danger h4" >{availablePoints}</span>分 {pointsInsuffTip}</div>
+            </div>;
+        }));
+    }
+
+    content() {
+        return <this.page />;
+    };
 
     private uiSchema: UiSchema = {
         items: {
@@ -80,26 +92,28 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             })}
         </>
     }
-
-    private page = observer((param: any) => {
-        let { pointToExchanging, myEffectivePoints, pointProductsDetail } = this.controller;
-        let availablePoints = (myEffectivePoints - pointToExchanging) >= 0 ? (myEffectivePoints - pointToExchanging) : 0;
-        let pointsInsuffTip = availablePoints === 0 ? <span className="text-danger small">( <FA name="exclamation-circle" />积分不足 )</span> : null;
-        let right = this.controller.renderSelectedLable(this.DetailSource);
-        let footer = <div className="d-flex justify-content-between m-2">
-            <div className="align-self-center">当前可用:<span className="text-danger h4" >{availablePoints}</span>分 {pointsInsuffTip}</div>
-        </div>;
-
-        return <Page header='产品详情' right={right} footer={footer} className="bg-white">
-            <div className="">{this.renderPointProduct(pointProductsDetail)}</div>{/* nav-tabs */}
-            <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
-            {/* {pointProductsDetail.htmlFragment
-                ? <div className="mx-2 mt-1">
-                    {TopicDivision('产品介绍')}
-                    <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment }} className="w-100"></div>
-                </div>
-                : <>{this.renderVDefaultPost()}</>
-            } */}
-        </Page>;
+    
+    private page = observer(() => {
+        let { pointProductsDetail } = this.controller;
+        return <div className="row mx-0 mt-1">
+            <div className="col-md-3 d-none d-md-block py-0 py-md-2 mb-0 mb-md-4">
+                {this.controller.renderShopSideBar()}
+            </div>
+            <div className="col-md-9 px-0 px-md-1">
+                <div className="">{this.renderPointProduct(pointProductsDetail)}</div>
+                <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
+            </div>
+        </div>
+        // return <Page header='产品详情' right={right} footer={footer} className="bg-white">
+        //     <div className="">{this.renderPointProduct(pointProductsDetail)}</div>{/* nav-tabs */}
+        //     <div className="d-flex mt-2"><img src={giftPlate} alt="" className="m-auto w-75" /></div>
+        //     {/* {pointProductsDetail.htmlFragment
+        //         ? <div className="mx-2 mt-1">
+        //             {TopicDivision('产品介绍')}
+        //             <div dangerouslySetInnerHTML={{ __html: pointProductsDetail.htmlFragment }} className="w-100"></div>
+        //         </div>
+        //         : <>{this.renderVDefaultPost()}</>
+        //     } */}
+        // </Page>;
     });
 }

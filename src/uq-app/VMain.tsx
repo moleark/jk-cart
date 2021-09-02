@@ -1,5 +1,5 @@
 import { VPage, TabCaptionComponent, TabsProps, TabProp } from 'tonva-react';
-import { CApp } from './CApp';
+import { CApp } from 'tapp';
 
 const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 function caption(label:string|JSX.Element, icon:string) {
@@ -15,14 +15,16 @@ export class VMain extends VPage<CApp> {
             { 
 				name: 'home', 
 				caption: caption('首页', 'home'),
-				content: cHome.tab, 
+				// content: cHome.tab,
+				content: ()=> <div>11</div>,
 				notify: undefined
 			},
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
             {
                 name: 'cart',
 				caption: caption('购物车', 'shopping-cart'),
-                content: cCart.tabPage, 
+                // content: cCart.tabPage, 
+				content: ()=> <div>22</div>,
                 //page: cCart.tabPage,
                 notify: store.cartCount
             },

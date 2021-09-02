@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { VPage, Page } from 'tonva-react';
+import { VPage, Page, List, LMR, FA, tv } from 'tonva-react';
 import { CSelectContact } from './CSelectContact';
-import { List, LMR, FA } from 'tonva-react';
-import { tv } from 'tonva-react';
 import { observer } from 'mobx-react';
 import { xs, xsOrIpad } from '../tools/browser';
 import classNames from 'classnames';
@@ -55,7 +53,6 @@ export class VContactList extends VPage<CSelectContact> {
         let footer = <div className="d-flex justify-content-center">
             <button type="button" className={classNames("btn btn-primary", !xs ? 'w-25' : ' w-100')} onClick={() => onNewContact()} >新增地址</button>
         </div>;
-		
         let contactList = <List items={userContacts} item={{ render: this.onContactRender }} none="无地址" />;
         let header: any, title = '地址管理';
         if (xsOrIpad) header = title;

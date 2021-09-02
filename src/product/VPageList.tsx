@@ -1,7 +1,6 @@
 /* eslint-disable */
-import { VPage, Scroller } from 'tonva-react';
+import { VPage, Scroller, List } from 'tonva-react';
 import { CProduct } from './CProduct';
-import { List } from 'tonva-react';
 import { Product } from '../store';
 import Pagination from 'antd/lib/pagination/Pagination';
 import { observer } from 'mobx-react';
@@ -80,8 +79,8 @@ export class VPageList extends VPage<CProduct> {
         let { productsPager, esproductsPager, cApp, searchKey, esProductsPagerMore, esProductsTotal, currentPage } = this.controller;
         let none = <div className="p-3 text-warning">[无]</div>;
         return <section className="container mt-lg-2">
-            <div className="breadcrumbs mb-4"><small className=" small text-muted">搜索: </small>{searchKey}</div>
-            <div className="container display-mobile">
+            <div className="breadcrumbs mb-1 mb-sm-2 mb-lg-4"><small className=" small text-muted">搜索: </small>{searchKey}</div>
+            <div className="container display-mobile px-0">
                 {cApp.cProductCategory.renderRootSideBarByMob()}
             </div>
             <div className="row">
@@ -89,7 +88,7 @@ export class VPageList extends VPage<CProduct> {
                     {/* col-lg-3 product-side display-desktop */}
                     {cApp.cProductCategory.renderRootSideBar()}
                 </div>
-                <div className="col-lg-9 product-introduct">
+                <div className="col-lg-9 product-introduct px-0">
                     <List before={''} none={none} items={esproductsPager} className="bg-white"
                         item={{ render: this.renderProduct,/*  onClick: this.onProductClick, */ className: "py-3 border-bottom" }} />
                     <div className="text-center mt-lg-65">

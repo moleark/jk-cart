@@ -5,7 +5,7 @@ import { MinusPlusWidget } from 'tools';
 import { Product } from '../../store';
 import { observer } from 'mobx-react';
 import { observable, makeObservable } from 'mobx';
-
+import { MinusPlusWidgetTable } from 'tools/minusPlusWidget';
 /**
  * 显示产品包装价格，配合CProduct.renderProductPrice使用
  * 需要的参数product必须是BoxId(或者object?)
@@ -55,8 +55,8 @@ export class VPrice extends View<CProduct> {
 				quantity: {
 					widget: 'custom',
 					label: null,
-					className: 'text-center',
-					WidgetClass: MinusPlusWidget,
+					className: `text-center ${this.isShowTable ? "form-control-sm" :""}`,
+					WidgetClass: !this.isShowTable ? MinusPlusWidget : MinusPlusWidgetTable,
 					onChanged: onQuantityChanged
 				} as UiCustom
 			}
@@ -68,7 +68,11 @@ export class VPrice extends View<CProduct> {
             let price: number = this.minPrice(vipPrice, promotionPrice);
             let retailUI: any;
             if (price) {
-                retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
+                if (this.isShowTable) {
+                    retailUI = <del className="text-danger"><span className="text-muted">{retail}</span></del>;
+                } else {
+                    retailUI = <small className="text-muted"><del>¥{retail}</del></small>;
+                }
             }
             else {
                 price = retail;
@@ -85,23 +89,14 @@ export class VPrice extends View<CProduct> {
 
             if (this.isShowTable) 
                 right = <>
-                {/* <td className="align-middle">
-                    <small className="text-muted">{retailUI}</small>&nbsp; &nbsp;
-                    <span className="text-danger">¥ <span className="h5">{price}</span></span>
-                </td>
-                <td className="align-middle">
-                    <div className="d-flex justify-content-center mt-2">
-                        <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
-                    </div>
-                </td> */}
                 <td data-title="价格" className=" red">
                     <div className="item-product-price">
-                        <small className="text-muted">{retailUI}</small>&nbsp;{retailUI ? '/' : ''} &nbsp;
-                        <span className="text-danger">¥ <span className="h5">{price}</span></span>
+                        <small className="text-muted">{retailUI}</small>&nbsp;{retailUI ? '/' : ''}
+                        <span className="text-danger"> <span>{price}</span></span>
                     </div>
                 </td>
                 <td data-title="数量">
-                    <div className="d-flex justify-content-md-center justify-content-sm-end justify-content-end">
+                    <div className="d-flex justify-content-end input-group-sm">{/* d-flex justify-content-md-center justify-content-sm-end justify-content-end */}
                         <Form schema={this.schema} uiSchema={uiSchema} formData={item} />
                     </div>
                 </td>
@@ -124,17 +119,16 @@ export class VPrice extends View<CProduct> {
         let { renderDeliveryTime } = this.controller;
 		//this.initPrices(product, SalesRegionId, discount);
 		let {prices} = product;
-		if (!prices) return null;
-		return <>{prices.map((v: any, index: number) => {
+		return <>{prices?.map((v: any, index: number) => {
 			let { pack, retail } = v;
 			if (!retail) return <small key={0}>请询价</small>;
-			return <div className="px-2" key={pack.id}>
-				<div className="row">
-					<div className="col-5 d-flex flex-column justify-content-center mb-2 pb-1">
+			return <div className="" key={pack.id}>
+				<div className="row mx-0 w-100">
+					<div className="col-5 d-flex flex-column mb-2 pb-1 pl-0">
 						<div><b>{tv(pack)}</b></div>
 						<div>{renderDeliveryTime(pack)}</div>
 					</div>
-					<div className="col-7 mb-0">
+					<div className="col-7 mb-0 pr-0">
 						{this.renderPrice(product, v)}
 					</div>
 				</div>
@@ -188,53 +182,19 @@ export class VPriceWithTr extends VPrice {
     isShowTable: boolean = true;
 
     render(product: Product): JSX.Element {
+		let {prices} = product;
         return React.createElement(observer(() => {
-			let {prices} = product;
-			if (!prices) return null;
-            return  <>{prices.map((v: any, index: number) => {
+            return  <>{prices?.map((v: any, index: number) => {
             let { pack } = v;
             
-            return <tr className="article-product-list">
-                    <td data-title="包装" className="mint">
+            return <tr className="article-product-list text-right">
+                    <td data-title="包装">
                         {tv(pack)}
-                        {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
                     </td>
-                <td data-title="库存"> <span className="mint">{this.controller.renderDeliveryTime(pack)}</span></td>
+                <td data-title="库存"> <span>{this.controller.renderDeliveryTime(pack,"dark-333")}</span></td>
                 {this.renderPrice(product, v)}
-                {/* <td data-title="价格" className=" red">
-                    <div className="item-product-price">
-                        {this.renderPrice(product, v)}
-                        <p className="inline subdescription">¥406<span  className="old-price"></span></p>   /
-                        <p className="inline price-num">¥300</p>
-                        <div></div>
-                    </div>
-                    
-                </td>
-                <td data-title="数量">
-                    <div className="quantity">
-                        <button className="minus-btn" type="button" name="button"><img src="img/minus.png" alt="" /></button>
-                        <input type="text" name="name" value="1" /><button className="plus-btn" type="button" name="button"><img src="img/plus.png" alt="" />
-                        </button>
-                    </div>
-                </td> */}
-                {/* <td data-title="加入购物车">
-                    <img src="/images/icon/cart.svg" width="25px" className="m-0" />
-                </td> */}
             </tr>
             })}</>;
-
-            // return  <>{prices?.map((v: any, index: number) => {
-            //     let { pack, retail } = v;
-            //     return <tr className="px-2 text-center" key={pack.id}>
-            //         <td className="align-middle"><b>{tv(pack)}</b>
-            //         <div>{this.controller.renderDeliveryTime(pack)}</div></td>
-            //         {this.renderPrice(product, v)}
-            //         {/* {retail
-            //             ? <td className="align-middle"><span className="d-flex justify-content-center">{this.renderVm(VFavorite, { product, curPack: v })}</span></td>
-            //             : <td></td>
-            //         } */}
-            //     </tr>;
-            // })}</>;
         }))
     }
 }
@@ -243,21 +203,11 @@ export class VPriceWithTr extends VPrice {
  * 根据产品编号/包装规格查询产品，在客户手动输入或提交excel表格下单的场景下使用
  */
 export class VPriceQuickOrder extends VPrice {
-    selectPack: any;
-
-    constructor(c: CProduct) {
-        super(c);
-
-        makeObservable(this, {
-            selectPack: observable
-        });
-    }
-
+    @observable selectPack: any;
     renderPrice(param: any, item: any) {
         let onQuantityChanged = async (context: Context, value: any, prev: any):Promise<void> => {
             let { data } = context;
-            //let { pack, retail, vipPrice, promotionPrice, currency } = data;
-			let { pack } = data;
+            let { pack, retail, vipPrice, promotionPrice, currency } = data;
             let { cApp } = this.controller;
             let { cQuickOrder } = cApp;
             await cQuickOrder.changeProductQuantity(param, pack, value);
@@ -280,7 +230,7 @@ export class VPriceQuickOrder extends VPrice {
 			}
 		}
 	
-        let { retail, vipPrice, promotionPrice } = item;
+        let { retail, vipPrice, promotionPrice, quantity } = item;
         // if (!quantity) return;
         let right = null;
         if (retail) {
@@ -311,7 +261,7 @@ export class VPriceQuickOrder extends VPrice {
     render(param: any): JSX.Element {
         return React.createElement(observer(() => {
 
-        let { product, QPacks, noPackTip, selectedPack } = param;
+        let { id, product, QPacks, noPackTip, selectedPack } = param;
         if (!product) return <></>;
         if (QPacks && !QPacks.length) return <div className="text-danger small align-self-center col-6">{noPackTip}</div>;
         let { cApp } = this.controller;
@@ -326,8 +276,7 @@ export class VPriceQuickOrder extends VPrice {
                 <div className="col-6 col-sm-5 d-flex flex-column justify-content-center">
                     <div>
                         <select defaultValue={this.selectPack?.pack?.id || ''} onChange={(e: any) => {
-							// id 是数字，e.target.value 是字符串，必须转换成数字之后，再比较
-                            this.selectPack = QPacks.find((i: any) => i.pack.id === Number(e.target.value));
+                            this.selectPack = QPacks.find((i: any) => i.pack.id == e.target.value);
                             cQuickOrder.selectedPack(param, this.selectPack);
                         }} name="" id="" className="form-control" >
                             <option hidden value="">选择包装</option>

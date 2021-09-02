@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { CApp, CUqBase } from 'uq-app';
+import { CApp, CUqBase } from 'tapp';
 import { VLottery } from './VLottery';
 import { observable, makeObservable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';

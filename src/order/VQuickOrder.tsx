@@ -17,23 +17,14 @@ const productOrderType: { [type:number]:string } = {
 
 
 export class VQuickOrder extends VPage<CQuickOrder> {
-    directOrderType: number = 1;/* 一键下单 类型 */
-    excelData: any[] = [];/* excel文件数据 */
-    execlFileName: string;/* excel文件名称 */
+
+    @observable directOrderType: number = 1;        /* 一键下单 类型 */
+    @observable excelData: any[] = [];              /* excel文件数据 */
+    @observable execlFileName: string;              /* excel文件名称 */
     private excelTip = observable.box<string>('');
 
-    constructor(c: CQuickOrder) {
-        super(c);
-
-        makeObservable(this, {
-            directOrderType: observable,
-            excelData: observable,
-            execlFileName: observable
-        });
-    }
-
     header() {
-        return this.isWebNav === true ? null : <>快速订购</>;
+        return this.isWebNav === true ? null : <>批量订购</>;
     }
 
     right() {
@@ -83,7 +74,7 @@ export class VQuickOrder extends VPage<CQuickOrder> {
         }));
     };
 
-    private renProduct = (product: Product) => {
+    renProduct = (product: Product) => {
         if (!product) return <></>;
         let { props, brand } = product;
         let { description, descriptionC, origin } = props;
@@ -161,7 +152,7 @@ export class VQuickOrder extends VPage<CQuickOrder> {
                 </a>
             </div>
             <div className="mt-lg-2 mb-lg-2 collapse" id="setMyFileC">
-                如何设置我的Excel文件以进行快速订购
+                如何设置我的Excel文件以进行批量订购
                 <div className="small">您的文件应按以下所示的列顺序包含以下信息。请不要在列中包含任何文本标题。</div>
                 <div className="text-center my-2"><img style={{ maxWidth: "100%" }} src="/images/Excel.gif" alt="" /></div>
                 <div className="small"><span className="text-danger">注意：</span>“产品编号”是输入文件中唯一需要的列。您可以根据需要省略包装尺寸和/或数量。上传文件后，您将可以编辑所有产品信息。</div>
@@ -173,7 +164,7 @@ export class VQuickOrder extends VPage<CQuickOrder> {
         let { quickOrderProducts, overOrder } = this.controller;
         let quickOrderDised = !quickOrderProducts.length || !quickOrderProducts.every((v: any) => v?.selectedPack && v?.selectedPack?.retail);
         return <div className="mb-5 row mx-0 ">
-            {!xs ? <h4 className="col-12 mt-5 mb-4 text-center">快速订购</h4> : null}
+            {!xs ? <h4 className="col-12 mt-5 mb-4 text-center">批量订购</h4> : null}
             <div className="px-2 px-lg-0">
                 <h5>按产品编号订购</h5>
                 <div className="small">输入商品编号,检索商品。下单时所有产品必须有效,且已选择包装的大小和数量。</div>

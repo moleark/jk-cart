@@ -1,4 +1,4 @@
-import { CUqBase } from "uq-app";
+import { CUqBase } from "tapp";
 import { OrderDetail, OrderMain, ParamSaveOrder, ReturnGetCustomerReturnable$page } from "uq-app/uqs/JkOrder";
 import { DonePageList, DraftPageList, OrderAllPageList, OrderPageList, ProcessingPageList, ReturningPageList } from "./orderPageList";
 import { VInvoice } from "./VInvoice";
@@ -77,7 +77,7 @@ export class CTrial extends CUqBase {
 	showTestIDV = async () => {
 		this.openVPage(VTestIDV);
 	}
-	
+
 	order: Order;
 	onClickOrder = async (order: Order) => {
 		let jkOrder = this.uqs.JkOrder;
@@ -151,7 +151,7 @@ export class CTrial extends CUqBase {
 		let data: ParamSaveOrder = {
 			id: undefined,
 			no: undefined,
-			customer: this.mockCustomer, 
+			customer: this.mockCustomer,
 			sumQuanity: undefined,
 			sumAmount: undefined,
 			couponNo: undefined,
@@ -166,7 +166,7 @@ export class CTrial extends CUqBase {
 					item: 29514,
 					product: 12686,
 					quantity: 10,
-					amount: 10*310,
+					amount: 10 * 310,
 					price: 310.00,
 				},
 				{
@@ -176,7 +176,7 @@ export class CTrial extends CUqBase {
 					item: 2422,
 					product: 1003,
 					quantity: 9,
-					amount: 9*1605.00,
+					amount: 9 * 1605.00,
 					price: 1605.00,
 				},
 				{
@@ -186,10 +186,10 @@ export class CTrial extends CUqBase {
 					item: 2423,
 					product: 1003,
 					quantity: 9,
-					amount: 9*4466.00,
+					amount: 9 * 4466.00,
 					price: 4466.00,
 				}
-			],	
+			],
 		}
 		let ret = await this.uqs.JkOrder.SaveOrder.submit(data);
 		alert('data mocked: ' + JSON.stringify(data) + '\n returned: ' + JSON.stringify(ret));
@@ -201,7 +201,7 @@ export class CTrial extends CUqBase {
 
 	mockOrderReturn = async () => {
 		this.customerReturnablePager = new QueryPager(this.uqs.JkOrder.GetCustomerReturnable, 10, 10);
-		await this.customerReturnablePager.first({customer: this.mockCustomer});
+		await this.customerReturnablePager.first({ customer: this.mockCustomer });
 		this.openVPage(VMockReturn);
 	}
 
@@ -211,10 +211,10 @@ export class CTrial extends CUqBase {
 			order,
 		});
 		this.openVPage(VOrderReturn, orderReturn);
-	} 
+	}
 
-	async applyReturn(detail: {orderDetail: number; quantity: number;}[]) {
-		await this.uqs.JkOrder.SaveOrderReturn.submit({detail});
+	async applyReturn(detail: { orderDetail: number; quantity: number; }[]) {
+		await this.uqs.JkOrder.SaveOrderReturn.submit({ detail });
 	}
 
 	showInputForm = () => {

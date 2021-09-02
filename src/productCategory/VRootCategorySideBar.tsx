@@ -49,14 +49,14 @@ export class VRootCategorySideBarToSelect extends View<CProductCategory>{
         		this.navigate(url);
 			}}>
 				{this.controller.rootCategories.map(v => {
-					let { productCategory, name, children } = v;
-					let pcId = productCategory; //(productCategory as any).id;
+						let { productCategory, name, children } = v;
+						let pcId = productCategory; //(productCategory as any).id;
 					let menuId = "Submenu" + pcId;
-					return <React.Fragment key={pcId}>
-						<option value={pcId} disabled>{ name }</option>
-						{this.renderChildren(children, menuId)}
-					</React.Fragment>
-				})}
+						return <>
+							<option key={pcId} value={pcId} disabled>{ name }</option>
+							<>{this.renderChildren(children, menuId)}</>
+						</>
+					})}
 				
 			</select>
 		</nav>

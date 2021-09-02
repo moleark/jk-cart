@@ -14,9 +14,13 @@ const BrandImg: { [brand: string]:string} = {
 export class VPageCoa extends VPage<CProduct> {
 
     async open(param?: any) {
-        let iframeList: any = document.querySelectorAll('body iframe');
-        if (iframeList && iframeList.length) iframeList[iframeList.length - 1].setAttribute('class', "test-iframe-d-n");
-		this.openPage(this.page,param);
+        // let iframeList: any = document.querySelectorAll('body iframe');
+        // if (iframeList && iframeList.length) iframeList[iframeList.length - 1].setAttribute('class', "test-iframe-d-n");
+        let iframeLists: any = document.querySelectorAll('.class_qidian_wpa');
+        if (iframeLists && iframeLists.length) {
+            for (let key of iframeLists) { key.setAttribute('class', "test-iframe-d-n"); };
+        };
+        this.openPage(this.page, param);
 	}
 
 	page = observer((param?: any) => {
@@ -91,6 +95,6 @@ function renderCOAItem(caption: string, value: any, captionClass?: string, valCl
     return <>
         <div className={classNames("col-lg-2 col-sm-5 col-5", capClass)}> {caption}</div>
         <span className="mx-2">:</span>
-        <div className={classNames("col-lg-2 col-sm-5 col-5", valClass)}>{value}</div>
+        <div className={classNames("col-lg-2 col-sm-5 col-5", valClass)} style={{wordWrap:'break-word'}}>{value}</div>
     </>;
 }

@@ -1,6 +1,6 @@
 import { observable, makeObservable } from 'mobx';
 import { BoxId, Tuid } from 'tonva-react';
-import { CApp, CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VQuickOrder } from './VQuickOrder';
 import { VPriceQuickOrder } from 'product/views';
 
@@ -10,21 +10,15 @@ export let minPrice = (vipPrice: any, promotionPrice: any) => {
 };
 
 export class CQuickOrder extends CUqBase {
-    quickOrderProducts: any[] = [
+
+    @observable quickOrderProducts: any[] = [
         // { id: 1, origin: "187351" },
         // { id: 2, origin: "102053" },
         // { id: 3, origin: "159262" },
         // { id: 4, origin: "160666" },
         // { id: 5, origin: "187351" },
     ];
-
-    constructor(cApp: CApp) {
-        super(cApp);
-        makeObservable(this, {
-            quickOrderProducts: observable
-        });
-    }
-
+    
     protected async internalStart(param?: any) { }
 
     /**
@@ -100,7 +94,7 @@ export class CQuickOrder extends CUqBase {
         resultArr = resultArr.map((el: any) => {
             el.packArr = el.packArr.map((v: any) => {
                 let packExistsFormPrices = el.product.prices.find((i: any) => Tuid.equ(i.pack, v));
-                if (!packExistsFormPrices || packExistsFormPrices.retail === 0.01) return undefined;
+                if (!packExistsFormPrices || packExistsFormPrices.retail === 0.01) return;
                 return { ...packExistsFormPrices, quantity: packExistsFormPrices.quantity || 1 };
             }).filter((i: any) => i);
             return el;

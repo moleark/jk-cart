@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { nav, Image, VPage, Ax } from 'tonva-react';
-import { Prop, IconText, FA, PropGrid, LMR } from 'tonva-react';
+import { nav, Image, VPage, Ax, Prop, IconText, FA, PropGrid, LMR } from 'tonva-react';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 //import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
-import { appConfig } from 'configuration';
+import { appConfig } from 'tapp';
 //import { observable } from 'mobx';
 import { browser, xs } from 'tools/browser';
 import welcome from 'images/welcome.png';
@@ -110,12 +109,6 @@ export class VMe extends VPage<CMe> {
 	footer():JSX.Element {return null;}
 
     private page = observer(() => {
-		let vDebug: any;
-		if (this.isDev) {
-			vDebug = <div>
-				<button className="btn btn-sm btn-success my-3" onClick={this.controller.trial}>试验代码</button>
-			</div>;
-		}
         const { user } = nav;
         let aboutRows: Prop[] = [
             '',
@@ -221,8 +214,7 @@ export class VMe extends VPage<CMe> {
         }
 
         if (xs || browser.versions.iPad) return <>
-			{vDebug}
-            <PropGrid rows={rows} values={{}} />			
+            <PropGrid rows={rows} values={{}} />
         </>;
         else {
             if (user === undefined) {
@@ -240,7 +232,6 @@ export class VMe extends VPage<CMe> {
             };
             let meLib = MeLib;
             return <div className="container mt-lg-2 py-3">
-				{vDebug}
                 <div className="row">
                     {
                         meLib.map((v: any,index:number) => {

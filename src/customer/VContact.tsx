@@ -19,6 +19,7 @@ const schema: Schema = [
     { name: 'address', type: 'id', required: true },
     { name: 'addressString', type: 'string', required: true },
     { name: 'isDefault', type: 'boolean', required: false },
+    { name: 'isDefaultInvoice', type: 'boolean', required: false },
 ];
 
 export class VContact extends VPage<CSelectContact> {
@@ -53,7 +54,8 @@ export class VContact extends VPage<CSelectContact> {
                 }
             } as UiIdItem,
             addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', className: "text-truncate", rules: addressDetailValidation } as UiInputItem,
-            isDefault: { widget: 'checkbox', label: '作为默认地址' },
+            isDefault: { widget: 'checkbox', label: '默认收货地址', className:"w-auto border-0" },
+            isDefaultInvoice: { widget: 'checkbox', label: '默认发票地址', className:"w-auto border-0" },
             submit: { widget: 'button', label: '提交' },
         }
     }
@@ -128,7 +130,7 @@ export class VContact extends VPage<CSelectContact> {
                 <div className="postion-img" style={{ left: "-33%", top: 200 }}>
                     <img src='/images/triangle.svg' />
                 </div>
-                <Form ref={v => this.form = v} className={classNames("my-3", !xsOrIpad ? 'w-lg-50 mx-auto' : '')}
+                <Form ref={v => this.form = v} className={classNames("my-3", !xsOrIpad ? 'w-50 mx-auto' : '')}
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={contactData}

@@ -45,7 +45,7 @@ export class VFavorites extends VPage<CFavorites> {
                 </div>
                 <div className="col-lg-9 product-introduct px-0">
                     {pageHTitle(<div className="text-left pl-3">商品收藏</div>)}
-                    <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct, /* onClick: this.onProductClick */ }} />
+                    <List before={''} none={none} items={productsFavorites} item={{ render: this.renderProduct/* , onClick: this.onProductClick */ ,className:"pb-3 pt-2"}} />
                 </div>
             </div>
         </Page>

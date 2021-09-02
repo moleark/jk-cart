@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { VPage } from 'tonva-react';
 import { observer } from 'mobx-react';
-import { CApp } from 'uq-app';
+import { CApp } from 'tapp';
 
 export class VError extends VPage<CApp> {
 

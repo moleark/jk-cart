@@ -1,12 +1,11 @@
 import { observable, makeObservable } from 'mobx';
-import { BoxId, Context } from 'tonva-react';
-import { nav } from 'tonva-react';
-import { CApp, CUqBase } from 'uq-app';
+import { BoxId, Context, env, nav } from 'tonva-react';
+import { CUqBase } from 'tapp';
 import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';
 import { OrderSuccess } from './OrderSuccess';
 import { CSelectShippingContact, CSelectInvoiceContact } from '../customer/CSelectContact';
-import { VMyOrders } from './VMyOrders';
+import { OrdersPageSize, VMyOrders } from './VMyOrders';
 import { VOrderDetail } from './VOrderDetail';
 import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct1 } from '../tools/groupByProduct';
@@ -21,20 +20,25 @@ import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 import { VEpecOrderError } from './VEpecOrderError';
 import { VOrderTrans } from './VOrderTrans';
 import { VError } from '../tools/VError';
+import _ from 'lodash';
+import { ActivePushOrder, IActivePushOrder } from './ActivePushOrder';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
-    orderData: Order = new Order();
+    @observable orderPageStart: number = 1000000000;    /* 订单历史记录分页 pageStart */
+    @observable getUserOrders: any[] = [];  /* 获取用户所有订单 */
+    @observable orderData: Order = new Order();
+    @observable activePushOrder: IActivePushOrder = ActivePushOrder(this.cApp);
     /**
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
-    couponAppliedData: any = {};
+    @observable couponAppliedData: any = {};
 
-    replyToContactType: string;
-    modalTitle: any;
-    modalTitleS: { [desc: string]: any } = {
+    @observable replyToContactType: string;
+    @observable modalTitle: any;
+    @observable modalTitleS: { [desc: string]: any } = {
         'contactList': { id: 1, title: '地址管理', preLevel: '' },
         'contactInfo': { id: 2, title: '地址信息', preLevel: 'contactList' },
         'provinceChoice': { id: 3, title: '所在省市', preLevel: 'contactInfo' },
@@ -44,39 +48,28 @@ export class COrder extends CUqBase {
         'validCard': { id: 7, title: '可用优惠', preLevel: '' },
     };
 
-    editContact: any;
-    provinces: any[] = [];
-    cities: any[] = [];
-    counties: any[] = [];
-    addressId: any;
+    @observable editContact: any;
+    @observable provinces: any[] = [];
+    @observable cities: any[] = [];
+    @observable counties: any[] = [];
+    @observable addressId: any;
 
     hasAnyCoupon: boolean;
     /**
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
      */
-    buyerAccounts: any[] = [];
-    validCardForWebUser: any;
-
-    constructor(cApp: CApp) {
-        super(cApp);
-
-        makeObservable(this, {
-            orderData: observable,
-            couponAppliedData: observable,
-            replyToContactType: observable,
-            modalTitle: observable,
-            modalTitleS: observable,
-            editContact: observable,
-            provinces: observable,
-            cities: observable,
-            counties: observable,
-            addressId: observable,
-            buyerAccounts: observable,
-            validCardForWebUser: observable
-        });
-    }
+    @observable buyerAccounts: any[] = [];
+    @observable validCardForWebUser: any;
 
     protected async internalStart(param: any) {
+    }
+
+    initOrderFreightFee = () => {// 运费和运费减免
+        this.orderData.freightFee = FREIGHTFEEFIXED;
+        if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
+            this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
+        else
+            this.orderData.freightFeeRemitted = 0;
     }
 
     createOrderFromCart = async (cartItems: CartItem[]) => {
@@ -124,11 +117,7 @@ export class COrder extends CUqBase {
             });
 
             // 运费和运费减免
-            this.orderData.freightFee = FREIGHTFEEFIXED;
-            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
-                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
-            else
-                this.orderData.freightFeeRemitted = 0;
+            this.initOrderFreightFee();
         }
 
         /*
@@ -156,7 +145,8 @@ export class COrder extends CUqBase {
                 }
                 this.applyCoupon(coupon);
             }
-        }
+        };
+        this.activePushOrder = ActivePushOrder(this.cApp);
         this.openVPage(VCreateOrder);
     }
 
@@ -164,7 +154,7 @@ export class COrder extends CUqBase {
     private async getDefaultSetting() {
         if (this.defaultSetting) return this.defaultSetting;
         let { currentUser } = this.cApp;
-        return this.defaultSetting = (await currentUser.getSetting()) || {};
+        return this.defaultSetting = await currentUser.getSetting() || {};
     }
 
     private contact0: BoxId;
@@ -182,12 +172,12 @@ export class COrder extends CUqBase {
 
     private async getDefaultShippingContact() {
         let defaultSetting = await this.getDefaultSetting();
-        return defaultSetting.shippingContact || (await this.getContact());
+        return defaultSetting.shippingContact || await this.getContact();
     }
 
     private async getDefaultInvoiceContact() {
         let defaultSetting = await this.getDefaultSetting();
-        return defaultSetting.invoiceContact || (await this.getContact());
+        return defaultSetting.invoiceContact || await this.getContact();
     }
 
     private async getDefaultInvoiceType() {
@@ -222,9 +212,9 @@ export class COrder extends CUqBase {
      */
     submitOrder = async () => {
         let { uqs, store, currentUser } = this.cApp;
-        let { order, webuser, 积分商城 } = uqs;
+        let { order, webuser, customer } = uqs;
         let { orderItems } = this.orderData;
-
+        this.initOrderFreightFee();
         let result: any = await order.Order.save("order", this.orderData.getDataForSave());
         let { id: orderId, no, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
@@ -236,12 +226,24 @@ export class COrder extends CUqBase {
             let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
             switch (types) {
                 case 'coupon':
-                    webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
-                    webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    if (currentUser.hasCustomer) {
+                        let customerId = currentUser.currentCustomer.id;
+                        customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
+                        customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    } else {
+                        webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
+                        webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                    };
                     break;
                 case 'credits':
-                    积分商城.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
-                    积分商城.WebUserCreditsUsed.add({ webUser: currentUser.id, arr1: [{ credits: couponId, usedDate: usedDate }] });
+                    if (currentUser.hasCustomer) {
+                        let customerId = currentUser.currentCustomer.id;
+                        customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
+                        customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
+                    } else {
+                        webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
+                        webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
+                    };
                     break;
                 default:
                     break;
@@ -255,7 +257,9 @@ export class COrder extends CUqBase {
             })
         });
         store.cart.removeItem(param);
-
+        /* pushOrder 不同客户调用不同的pushOrder */
+        // await this.activePushOrder.pushOrder(result);
+        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // epec客户下单后要求跳转到指定的url
         let epecOrder = this.orderData.getDataForSave2();
         epecOrder.id = orderId;
@@ -264,6 +268,7 @@ export class COrder extends CUqBase {
         try {
             let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
                 method: 'post',
+                mode:"cors",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(epecOrder)
             });
@@ -280,6 +285,7 @@ export class COrder extends CUqBase {
                         let repContent = await rep.json();
                         this.openVPage(VEpecOrderError, { message: repContent.message });
                         return;
+                        break;
                     default:
                         break;
                 }
@@ -287,11 +293,20 @@ export class COrder extends CUqBase {
         } catch (error) {
 
         }
-
+        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(OrderSuccess, result);
     }
+
+    openOrderSuccess(result:any) {
+        nav.popTo(this.cApp.topKey);
+        this.openVPage(OrderSuccess, result);
+    };
+
+    openEpecOrderError(message:any) {
+        this.openVPage(VEpecOrderError, { message: message });
+    };
 
     onSelectShippingContact = async () => {
         let cSelect = this.newC(CSelectShippingContact);
@@ -317,16 +332,18 @@ export class COrder extends CUqBase {
     }
 
     private hasCoupons = async (): Promise<boolean> => {
-        let { cCoupon, currentUser } = this.cApp;
-        let { id: currentUserId } = currentUser;
-        if (await cCoupon.getValidCreditsForWebUser(currentUserId))
+        let { /* cCoupon, */ currentUser } = this.cApp;
+        // let { id: currentUserId } = currentUser;
+        let getValidCredits = await currentUser.getValidCredits();
+        if (getValidCredits && getValidCredits.length > 0)
             return true;
-        let validCoupons = await cCoupon.getValidCouponsForWebUser(currentUserId);
+        let validCoupons = await currentUser.getValidCoupons();
+        // let validCoupons = await cCoupon.getValidCouponsForWebUser(currentUserId);
         if (validCoupons && validCoupons.length > 0)
             return true;
-        let validCredits = await cCoupon.getValidCreditsForWebUser(currentUserId);
+        /* let validCredits = await cCoupon.getValidCreditsForWebUser(currentUserId);
         if (validCredits && validCoupons.length > 0)
-            return true;
+            return true; */
         return false;
     }
 
@@ -405,11 +422,7 @@ export class COrder extends CUqBase {
             }
             */
             // 运费和运费减免
-            this.orderData.freightFee = FREIGHTFEEFIXED;
-            if (this.orderData.productAmount > FREIGHTFEEREMITTEDSTARTPOINT)
-                this.orderData.freightFeeRemitted = FREIGHTFEEFIXED * -1;
-            else
-                this.orderData.freightFeeRemitted = 0;
+            this.initOrderFreightFee();
         }
     }
 
@@ -429,7 +442,8 @@ export class COrder extends CUqBase {
     * 打开我的订单列表（在“我的”界面使用）
     */
     openMyOrders = async (state: string) => {
-
+        this.getUserOrders = await this.uqs.order.Order.mySheets("#", 1000000000, -1000000000);
+        this.orderPageStart = (this.getUserOrders[0]?.id || 0) + 1;
         this.openVPage(VMyOrders, state);
     }
 
@@ -444,16 +458,16 @@ export class COrder extends CUqBase {
             case 'processing':
                 return await order.Order.mySheets(undefined, 1, -20);
             case 'completed':
-                return await order.Order.mySheets("#", 1, -20)
+                return await order.Order.mySheets("#", this.orderPageStart, (-1 * OrdersPageSize))
             case 'all':
                 let promises: PromiseLike<any>[] = [];
                 promises.push(order.Order.mySheets(undefined, 1, -20));
-                promises.push(order.Order.mySheets("#", 1, -20));
+                promises.push(order.Order.mySheets("#", this.orderPageStart, (-1 * OrdersPageSize)));
                 let presult = await Promise.all(promises);
                 presult[0].forEach((el: any) => { el.OState = 'processing'; });
                 presult[1].forEach((el: any) => { el.OState = 'completed'; });
 
-                return presult[0].concat(presult[1]).sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+                return this.orderPageStart === (this.getUserOrders[0]?.id || 0) + 1 ? presult[0].concat(presult[1]) : presult[1];//.sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
             default:
                 break;
         }
@@ -490,7 +504,7 @@ export class COrder extends CUqBase {
             promise.push(this.getOrderTransportation(orderId, index + 1));
         });
         let res = await Promise.all(promise);
-        data.orderTrans = res.filter((v:any)=> v);
+        data.orderTrans = res.filter((v: any) => v);
         this.openVPage(VOrderDetail, order);
     }
 
@@ -512,10 +526,16 @@ export class COrder extends CUqBase {
     }
 
     openOrderTrans = async (orderTrans: any) => {
-        let { transCompany, transNumber } = orderTrans;
+        let { transNumber, expressLogistics } = orderTrans;
         /* 入驻的快递（可查物流） */
-        let settledTrans = ["Y", "ST"];
-        if (settledTrans.includes(transCompany)) {
+        let settledTrans: any = [
+            { transCompany: "Y", transCompanyId: 1, transCompanyIdTest: 25 },
+            { transCompany: "ST", transCompanyId: 22, transCompanyIdTest: 21 },
+        ];
+        let currTransBoxId: any = settledTrans.find((v: any) =>
+            (env.testing === true ? v.transCompanyIdTest : v.transCompanyId) === expressLogistics.id);
+        if (currTransBoxId) {
+            let { transCompany } = currTransBoxId;
             let orderTrackRult = await this.getOrderTrackByTransNum(transCompany, transNumber);
             orderTrans.orderTrackRult = orderTrackRult?.response;
         };
@@ -639,7 +659,6 @@ export class COrder extends CUqBase {
         let addressId = newAddress && Address.boxId(newAddress.id);
         this.modalTitle = 'contactInfo';
         this.addressId = addressId;
-        this.cApp.cSelectShippingContact.TIT = true;
     }
 
     saveContact = async (contact: any) => {

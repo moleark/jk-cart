@@ -11,28 +11,26 @@ import { xs } from '../tools/browser';
 import { VModelByCreateOrder } from './VModelByCreateOrder';
 
 export class VCreateOrder extends VPage<COrder> {
-    private useShippingAddress: boolean = true;
+
+    @observable private useShippingAddress: boolean = true;
     //@observable private shippingAddressIsBlank: boolean = false;
     //@observable private invoiceAddressIsBlank: boolean = false;
-    //@observable private invoiceIsBlank: boolean = false;
-    private shippingAddressTip = observable.box();
-    private invoiceAddressTip = observable.box();
-    private invoiceTip = observable.box();
-    orderNotes: HTMLTextAreaElement;
-    submitOrderEd: boolean = false;
-
-    constructor(c: COrder) {
-        super(c);
-
-        makeObservable<VCreateOrder, "useShippingAddress">(this, {
-            useShippingAddress: observable,
-            orderNotes: observable,
-            submitOrderEd: observable
-        });
-    }
+	//@observable private invoiceIsBlank: boolean = false;
+	private shippingAddressTip = observable.box();
+	private invoiceAddressTip = observable.box();
+	private invoiceTip = observable.box();
+	private comBininvoiceTip = observable.box();
+    @observable orderNotes: HTMLTextAreaElement;
+    @observable submitOrderEd: boolean = false;
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
+        let { orderData } = this.controller;
+        if (orderData?.invoiceContact?.id !== orderData?.shippingContact?.id) {
+            this.useShippingAddress = false;
+        } else {
+            this.useShippingAddress = true;
+        };
         this.openPage(this.page);
     }
 
@@ -151,19 +149,21 @@ export class VCreateOrder extends VPage<COrder> {
     })
 
     private onSubmit = async () => {
-        let { orderData } = this.controller;
+        let { orderData, activePushOrder } = this.controller;
         // 必填项验证
-		let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
-		let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
+        let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
+        let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
+        let combinTip: string = "";
         if (!shippingContact) {
-			this.shippingAddressTip.set(renderTip('必须填写收货地址'));
+            this.shippingAddressTip.set(renderTip('必须填写收货地址'));
+            combinTip = "必须填写收货地址;";
             //this.shippingAddressIsBlank = true;
             //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
-            return;
+            // return;
         }
-        if (!invoiceContact) {
+        /* if (!invoiceContact) {
             if (this.useShippingAddress) {
-				orderData.invoiceContact = shippingContact; //contactBox;
+				this.controller.orderData.invoiceContact = shippingContact; //contactBox;
 				this.invoiceAddressTip.set(null);
                 //this.invoiceAddressIsBlank = false;
             } else {
@@ -172,16 +172,42 @@ export class VCreateOrder extends VPage<COrder> {
 				this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
                 return;
             }
-        }
+        } */
+        if (!invoiceContact && !this.useShippingAddress) {
+            this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
+            combinTip += "必须填写发票地址;";
+            // return;
+        };
+        if (this.useShippingAddress) {
+            this.controller.orderData.invoiceContact = shippingContact; this.invoiceAddressTip.set(null);
+        };
         if (!invoiceType || !invoiceInfo) {
             //this.invoiceIsBlank = true;
 			//setTimeout(() => this.invoiceIsBlank = false, GLOABLE.TIPDISPLAYTIME);
-			this.invoiceTip.set(renderTip('必须填写发票信息'));
+            this.invoiceTip.set(renderTip('必须填写发票信息'));
+            combinTip += "必须填写发票信息;";
+            // return;
+        };
+        if (invoiceType && invoiceInfo) {
+            let invoiceInfoO: any = await invoiceInfo.assure();
+            let { taxNo, address, telephone, bank, accountNo } = invoiceInfoO.obj;
+            let validInvoice = invoiceType.id === 1 ? !taxNo : (!taxNo || !address || !telephone || !bank || !accountNo);
+            if (validInvoice) {
+                this.invoiceTip.set(renderTip('您的发票信息不全,请补全发票信息;'));
+                combinTip += "您的发票信息不全,请补全发票信息;";
+            };
+        };
+        if (combinTip !== "") {
+            this.comBininvoiceTip.set(renderTip(combinTip));
             return;
         }
         let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
         this.controller.orderData.comments = endComments;
-        this.controller.submitOrder();
+        if (!activePushOrder.maxAmount) {
+            this.comBininvoiceTip.set(renderTip("订单总金额超出协议上限,不可下单!"));
+            return;
+        };
+        await this.controller.submitOrder();
     }
 
     saveShowModal = async (type: string) => {
@@ -197,6 +223,7 @@ export class VCreateOrder extends VPage<COrder> {
         let { allowOrdering } = currentUser;
         let disableOrderBtn = () => { this.submitOrderEd = true; setTimeout(() => this.submitOrderEd = false, 5000); };
         let footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
+            {autoHideTips(this.comBininvoiceTip, <div className="alert alert-danger">{this.comBininvoiceTip.get()}</div>,5000)}
             <div className="d-flex justify-content-left">
                 <div className="text-danger flex-grow-1 align-self-center" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
                 <button type="button"
@@ -218,7 +245,8 @@ export class VCreateOrder extends VPage<COrder> {
         let divInvoiceContact: any = null;
         if (this.useShippingAddress === false) {
             if (orderData.invoiceContact !== undefined) {
-                divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex">
+                divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex"
+                    onClick={() => { xs ? onSelectInvoiceContact() : this.saveShowModal('invoiceContact') }}>
                     {tv(orderData.invoiceContact, undefined, undefined, this.nullContact)}
                     <div>{chevronRight}</div>
                 </div>
@@ -326,7 +354,7 @@ export class VCreateOrder extends VPage<COrder> {
             <List items={orderData.orderItems} item={{ render: this.renderOrderItem,className:"w-100", key: this.orderItemKey as any }} />
             <div className="px-2">
                 <div className="row mx-0 py-3 pr-3 bg-white my-1">
-					{labeled('商品总额:', renderPrice(orderData.productAmount))}
+					{labeled('商品总额:', renderPrice(orderData.productAmounts))}
                     {freightFeeUI}
                     {freightFeeRemittedUI}
                 </div >

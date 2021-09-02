@@ -40,19 +40,13 @@ export class Cart {
         list: observable<CartItem>([]),
     };
     */
-    cartItems: CartItem[];
-    count = 0; //observable.box<number>(0);
-    amount = 0; //= observable.box<number>(0);
+    @observable cartItems: CartItem[];
+    @observable count = 0; //observable.box<number>(0);
+    @observable amount = 0; //= observable.box<number>(0);
     constructor(store: Store) {
-        makeObservable(this, {
-            cartItems: observable,
-            count: observable,
-            amount: observable
-        });
-
         //this.cApp = cApp;
         //this.cartItems = this.data.list;
-        this.store = store;
+		this.store = store;
         this.disposer = autorun(this.calcSum);
     }
 
@@ -84,11 +78,8 @@ export class Cart {
         else
             this.cartStore = new CartLocal(this.store);
         let cartData = await this.cartStore.load();
-		let cartItems = await this.buildItem2(cartData);
-		runInAction(() => {
-			this.cartItems = cartItems;
-			this.calcSum();	
-		});
+        this.cartItems = await this.buildItem2(cartData);
+        this.calcSum();
     }
 
     againOrderCart = (data: CartItem[]) => {
@@ -179,7 +170,7 @@ export class Cart {
                 productPromises.push(product.loadListItem());
                 cartItems.push({
                     product: product,
-                    packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: currency && currency.id }],
+                    packs: [{ pack: pack, quantity: quantity, price: price, retail: retail, currency: typeof currency === 'number' ? currency : currency?.id }],
                     $isSelected: true,
                     $isDeleted: false,
                     createdate: createdate,
@@ -518,9 +509,9 @@ class CartLocal extends CartStore {
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;
             cartItemExists.price = price;
-            cartItemExists.currency = currency && currency.id;
+            cartItemExists.currency = typeof currency === 'number' ? currency : currency?.id
         } else
-            this.cartData.push({ product: product.id, pack: pack.id, quantity: quantity, price: price, currency: currency && currency.id });
+            this.cartData.push({ product: product.id, pack: pack.id, quantity: quantity, price: price, currency: typeof currency === 'number' ? currency : currency?.id });
         localStorage.setItem(LOCALCARTNAME, JSON.stringify(this.cartData));
     }
 

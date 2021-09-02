@@ -6,16 +6,9 @@ import { observable, makeObservable } from 'mobx';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 
 export class VSharedCoupon extends VPage<CCoupon> {
-    tipsAfterDawed: string;
+
+    @observable tipsAfterDawed: string;
     private products: any[] = [];
-
-    constructor(c: CCoupon) {
-        super(c);
-        makeObservable(this, {
-            tipsAfterDawed: observable
-        });
-    }
-
     async open(param: any) {
         this.products = param.products || [];
         if (this.products.length === 0) {

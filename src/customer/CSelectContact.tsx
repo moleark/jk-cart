@@ -1,6 +1,6 @@
 import { observable, makeObservable } from 'mobx';
 import { Context, BoxId } from 'tonva-react';
-import { CApp, CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VContactList } from './VContactList';
 import { VContact } from './VContact';
 import { CAddress } from './CAddress';
@@ -8,14 +8,7 @@ import { CAddress } from './CAddress';
 export abstract class CSelectContact extends CUqBase {
     fromOrderCreation: boolean;
 
-    userContacts: BoxId[] = [];
-
-    constructor(cApp: CApp) {
-        super(cApp);
-        makeObservable(this, {
-            userContacts: observable
-        });
-    }
+    @observable userContacts: BoxId[] = [];
 
     async internalStart(fromOrderCreation: boolean/*contactType: ContactType*/) {
         this.fromOrderCreation = fromOrderCreation;
@@ -47,7 +40,8 @@ export abstract class CSelectContact extends CUqBase {
         let userContactId = userContact.id;
         let contact = await this.uqs.customer.Contact.load(userContactId);
         let userSetting = await this.cApp.currentUser?.getSetting();
-        contact.isDefault = await this.getIsDefault(userSetting, userContactId);
+        contact.isDefault = await this.cApp.cSelectShippingContact.getIsDefault(userSetting, userContactId);
+        contact.isDefaultInvoice = await this.cApp.cSelectInvoiceContact.getIsDefault(userSetting, userContactId);
         let userContactData: any = { contact: contact };
         this.openVPage(VContact, userContactData);
     }
@@ -56,14 +50,22 @@ export abstract class CSelectContact extends CUqBase {
         let { id } = contact;
         let { currentUser } = this.cApp;
         if (!currentUser) return;
-        if (contact.isDefault === undefined) {
+        if (contact.isDefault === undefined || contact.isDefaultInvoice=== undefined) {
             let userSetting = await currentUser.getSetting();
-            contact.isDefault = await this.getIsDefault(userSetting, id);
-        }
+            if (contact.isDefault === undefined) {
+                contact.isDefault = await this.cApp.cSelectShippingContact.getIsDefault(userSetting, id);
+            };
+            if (contact.isDefaultInvoice === undefined) {
+                contact.isDefaultInvoice = await this.cApp.cSelectInvoiceContact.getIsDefault(userSetting, id);
+            };
+        };
         await currentUser.delContact(id);
         if (contact.isDefault) {
-            this.setDefaultContact(undefined);
-        }
+            this.cApp.cSelectShippingContact.setDefaultContact(undefined);
+        };
+        if (contact.isDefaultInvoice) {
+            this.cApp.cSelectInvoiceContact.setDefaultContact(undefined);
+        };
         let index = this.userContacts.findIndex(v => v.id === id);
         if (index > -1)
             this.userContacts.splice(index, 1);
@@ -110,9 +112,12 @@ export abstract class CSelectContact extends CUqBase {
         if (!currentUser) return;
         await currentUser.addContact(newContactId);
         this.userContacts.push(contactBox);
-        let { id, isDefault } = contact;
+        let { id, isDefault, isDefaultInvoice } = contact;
         if (isDefault === true || this.userContacts.length === 1) {
-            await this.setDefaultContact(contactBox);
+            await this.cApp.cSelectShippingContact.setDefaultContact(contactBox);
+        };
+        if (isDefaultInvoice === true || this.userContacts.length === 1) {
+            await this.cApp.cSelectInvoiceContact.setDefaultContact(contactBox);
         };
         // contact.id !== undefined表示是修改了已有的contact(我们只能用“替换”表示“修改”，所以此时需要删除原contact)
         if (id !== undefined) {
@@ -134,6 +139,10 @@ export abstract class CSelectContact extends CUqBase {
         if (source === 'createOrder') {
             await this.cApp.cOrder.onContactSelected(contact);
         }
+
+        if (source === 'pointOrder') {
+            await this.cApp.cPointProduct.onContactSelected(contact);
+        }
     }
 
     pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
@@ -150,17 +159,7 @@ export abstract class CSelectContact extends CUqBase {
 }
 
 export class CSelectShippingContact extends CSelectContact {
-    TIT: boolean = false;
-
-    constructor(cApp: CApp) {
-        super(cApp);
-
-        makeObservable(this, {
-            TIT: observable
-        });
-    }
-
-    protected async getIsDefault(userSetting: any, userContactId: number): Promise<boolean> {
+    async getIsDefault(userSetting: any, userContactId: number): Promise<boolean> {
         if (userSetting !== undefined) {
             let { shippingContact } = userSetting;
             return shippingContact && shippingContact.id === userContactId;
@@ -168,7 +167,7 @@ export class CSelectShippingContact extends CSelectContact {
         return false;
     }
 
-    protected async setDefaultContact(contactId: BoxId) {
+    async setDefaultContact(contactId: BoxId) {
         let { currentUser } = this.cApp;
         if (!currentUser) return;
         await currentUser.setDefaultShippingContact(contactId);
@@ -176,7 +175,7 @@ export class CSelectShippingContact extends CSelectContact {
 }
 
 export class CSelectInvoiceContact extends CSelectContact {
-    protected async getIsDefault(userSetting: any, userContactId: number): Promise<boolean> {
+    async getIsDefault(userSetting: any, userContactId: number): Promise<boolean> {
         if (userSetting !== undefined) {
             let { invoiceContact } = userSetting;
             return invoiceContact && invoiceContact.id === userContactId;
@@ -184,7 +183,7 @@ export class CSelectInvoiceContact extends CSelectContact {
         return false;
     }
 
-    protected async setDefaultContact(contactId: BoxId) {
+     async setDefaultContact(contactId: BoxId) {
         let { currentUser } = this.cApp;
         if (!currentUser) return;
         await currentUser.setDefaultInvoiceContact(contactId);

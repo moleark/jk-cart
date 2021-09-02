@@ -30,6 +30,11 @@ export interface UqProduct {
     ProductChemical: Map;
     ProductMSDSFile: Map;
     ProductSpecFile: Map;
+    ProductUserManualFile: Map;
+    ProductProductCategory: Map;
+    ProductEmbargo: Map;
+    Productstandardsample: Map;
+    ProductDeliveryTime: Map;
     COA: Map;
     ProductExtention: Map;
     Brand: Tuid;
@@ -43,6 +48,8 @@ export interface UqProduct {
     GetLotByLotnumber: Query;
     GetAvailableProductById: Query;
     GetProductPackByOrigin: Query;
+    GetProductPrices: Query;
+    getProductLotNumber: Query;
 }
 
 export interface UqCommon {
@@ -67,6 +74,8 @@ export interface UqWebUser {
     WebUserVIPCard: Map;
     WebUserCoupon: Map;
     WebUserCouponUsed: Map;
+    WebUserCredits: Map;
+    WebUserCreditsUsed: Map;
     getMyUsedCoupon: Query,
     getMyExpiredCoupon: Query,
 
@@ -80,11 +89,22 @@ export interface UqCustomer {
     CustomerSetting: Map;
     CustomerContractor: Map;
     getCustomerOrganization: Query;
+    CustomerBuyerAccount: Map;
+    Buyeraccount: Tuid;
+    Customer: Tuid;
+    CustomerCoupon: Map;
+    CustomerCouponUsed: Map;
+    CustomerCredits: Map;
+    CustomerCreditsUsed: Map;
+    getMyUsedCoupon: Query,
+    getMyExpiredCoupon: Query,
 }
 
 export interface UqCustomerDiscount {
     GetDiscount: Query;
     GetDiscountByOrganization: Query;
+    CustomerDiscount: Map;
+    OrganizationDiscount: Map;
 }
 
 export interface UqPromotion {
@@ -145,6 +165,11 @@ export interface UqWebBuilder {
     GetSlideShow: Query;
 }
 
+export interface UqPlatformjoint {
+    NeoTridentUser: Map;
+    EpecUser: Map;
+}
+
 
 export interface UQs {
     order: UqOrder;
@@ -161,4 +186,5 @@ export interface UQs {
     member: UqMember;
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
+    platformjoint: UqPlatformjoint;
 }

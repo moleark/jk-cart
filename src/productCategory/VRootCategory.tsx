@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Ax, View } from 'tonva-react';
+import { Ax, View, FA } from 'tonva-react';
 import { CProductCategory } from './CProductCategory';
-import { FA } from 'tonva-react';
 import { rootCategroyResFromId } from 'global';
 //import { observer } from 'mobx-react';
 
@@ -35,9 +34,7 @@ export class VRootCategory extends View<CProductCategory> {
      */
     private renderRootCategory = (item: any, parent: any) => {
         let { name, children, productCategory } = item;
-		let rc = rootCategroyResFromId(productCategory);
-		if (!rc) return null;
-        let { src, labelColor } = rc;
+        let { src, labelColor } = rootCategroyResFromId(productCategory);
         return <div className="bg-white mb-3" key={name}>
             <Ax className="py-2 px-3 cursor-pointer"
                 href={'/product-catalog/' + productCategory}>

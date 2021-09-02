@@ -1,4 +1,4 @@
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VInvoiceInfo } from './VInvoiceInfo';
 //import { CCartApp } from 'CCartApp';
 //import { Tuid } from 'tonva-react';

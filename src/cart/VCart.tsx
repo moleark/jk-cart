@@ -27,47 +27,43 @@ const cartSchema = [
 ];
 
 export class VCart extends VPage<CCart> {
+    punchOutXML: any;
     /*
     async open() {
         this.openPage(this.page);
     }
     */
+    init(param: any) {
+        let { punchOutXML } = param;
+        this.punchOutXML = punchOutXML;
+    }
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cApp, editButton } = this.controller;
+        let { checkOut, strikeOut, cApp, cartBtnMatch } = this.controller;
 		let { cart } = cApp.store;
         let amount = cart.amount;
-		/*
-        let check = editButton ? '删除' : "去结算";
-        let content = editButton ? <>{check}</> : amount > 0 ?
+        let check = cartBtnMatch.getCartButtonTip();
+        let content = amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-		*/
-        if (editButton) {
-			let check = editButton ? '删除' : "去结算";
-			let content = editButton ? <>{check}</> : amount > 0 ?
-				<>{check} (¥{amount})</> :
-				<>{check}</>;
-			return <div className="d-flex justify-content-end">
-                <button className="btn btn-success w-25 mx-5" style={{ background: '#28a745' }}
-                    type="button"
-                    onClick={strikeOut}>
-                    {content}
-                </button>
-            </div>;
-        } else {
-			let check = editButton ? '删除' : "去结算";
-			let content = editButton ? <>{check}</> : amount > 0 ?
-				<>{check} (¥{amount})</> :
-				<>{check}</>;
-			return <div className="d-flex justify-content-center">
-                <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
-                    type="button"
-                    onClick={checkOut} disabled={amount <= 0}>
-                    {content}
-                </button>
-            </div>;
-        }
+        if (check === "punchOut")
+            return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { cartBtnMatch.CartButtonClick(); return true; }}
+                encType="application/x-www-form-urlencoded" method="post">
+                <input name="cxml-base64" defaultValue={ this.punchOutXML?.cxmlBase64 || "" } style={{visibility: "hidden", position: "absolute"}} type="text"  />
+                {this.punchOutXML?.message && <div className="text-center text-danger py-2" >{this.punchOutXML?.message }</div>}
+                <div className="d-flex justify-content-center">
+                    <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
+                        type="submit" disabled={amount <= 0 || !this.punchOutXML?.cxmlBase64}>
+                        {content}
+                    </button>
+                </div>
+            </form>;
+        return <div className="d-flex justify-content-center">
+            <button className="btn btn-success mx-5" style={{ background: '#28a745' }} type="button"
+                onClick={cartBtnMatch.CartButtonClick} disabled={amount <= 0}>
+                {content}
+            </button>
+        </div>;
     });
 
     render(params: any): JSX.Element {
@@ -201,17 +197,21 @@ export class VCart extends VPage<CCart> {
 
     // header() {return <div className="navheader">购物车</div>}
     header() {
-        if (!xs) return null;
+        if (!xs) return '';
         return <div className="navheader">购物车</div>;
     }
     footer() {
         return  React.createElement(observer(() => {
-            let { cApp } = this.controller;
+            let { cApp, cartBtnMatch } = this.controller;
 			let { cart } = cApp.store;
-            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
-                return null;
+            let footer: any;
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && cartBtnMatch.displayBtn) {
+                footer = undefined;
             }
-            return React.createElement(this.CheckOutButton);
+            else {
+                footer = React.createElement(this.CheckOutButton);
+            }
+            return footer;
         }));
     }
 
@@ -258,9 +258,9 @@ export class VCart extends VPage<CCart> {
         let { cQuickOrder } = this.controller.cApp;
         return <div className="row mx-0 px-2 my-2">
                 <div className="border rounded col-12 col-lg-6 p-2" style={{ background: "#f5f5f5" }}>
-                <div className="font-weight-bolder">快速订购</div>
+                <div className="font-weight-bolder">批量订购</div>
                 <div className="small">按产品编号订购或上传您自己的产品列表，以快速将多个产品添加到购物车。</div>
-                <Ax className="text-primary small ml-1" onClick={() => { cQuickOrder.openQuickOrder() }} href="/quickOrder">快速订购 &gt;&gt; </Ax>
+                <Ax className="text-primary small ml-1" onClick={() => { cQuickOrder.openQuickOrder() }} href="/quickOrder">批量订购 &gt;&gt; </Ax>
             </div>
         </div>
     };

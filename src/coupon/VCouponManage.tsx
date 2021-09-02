@@ -7,10 +7,13 @@ import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
 import { xs } from '../tools/browser';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { Modal } from 'antd';
+import { VModelCardDiscount } from './VModelCardDiscount';
 
 export class VCouponManage extends VPage<CCoupon> {
+
     private couponInput: HTMLInputElement;
-    private coupons: QueryPager<any>;
+    @observable private coupons: QueryPager<any>;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -19,17 +22,8 @@ export class VCouponManage extends VPage<CCoupon> {
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
 
-    //@observable tips: string;
-    private tips = observable.box();
-
-    constructor(c: CCoupon) {
-        super(c);
-
-        makeObservable<VCouponManage, "coupons">(this, {
-            coupons: observable
-        });
-    }
-
+	//@observable tips: string;
+	private tips = observable.box();
     async open(param: any) {
         this.openPage(this.page);
     }

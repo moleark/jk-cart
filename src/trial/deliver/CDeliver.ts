@@ -1,5 +1,6 @@
 import { CTrial } from "../";
-import { CApp, CUqSub, JkOrder } from "uq-app"
+import { CUqSub, JkOrder } from "uq-app"
+import { CApp } from "tapp"
 import { UQs } from "uq-app";
 import { DxOrderDetail, OrderDetail } from 'uq-app/uqs/JkOrder';
 import { VDeliver, VDeliverSuccess } from "./VDeliver";

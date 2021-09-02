@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips } from 'tonva-react';
-import { Schema } from 'tonva-react';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips, Schema } from 'tonva-react';
 import { CInvoiceInfo } from './CInvoiceInfo';
 import { xs } from 'tools/browser';
 import { VMeSideBar } from 'me/VMeSideBar';
@@ -32,6 +31,7 @@ const uiSchema: UiSchema = {
             widget: 'text', label: '纳税人识别码', placeholder: '必填',
             rules: (value: string) => {
                 if (value) {
+                    value = value.trim();
                     var regArr = [/^[\da-z]{10,15}$/i, /^\d{6}[\da-z]{10,12}$/i, /^[a-z]\d{6}[\da-z]{9,11}$/i, /^[a-z]{2}\d{6}[\da-z]{8,10}$/i, /^\d{14}[\dx][\da-z]{4,5}$/i, /^\d{17}[\dx][\da-z]{1,2}$/i, /^[a-z]\d{14}[\dx][\da-z]{3,4}$/i, /^[a-z]\d{17}[\dx][\da-z]{0,1}$/i, /^[\d]{6}[\da-z]{13,14}$/i],
                         j = regArr.length;
                     for (var i = 0; i < j; i++) {
@@ -52,6 +52,7 @@ const uiSchema: UiSchema = {
         telephone: {
             widget: 'text', label: '注册电话', placeholder: '必填',
             rules: (value: string) => {
+                if(value) value = value.trim();
                 if (value && !/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(value))
                     return "注册电话格式不正确，请重新输入！";
                 else
@@ -67,10 +68,11 @@ const uiSchema: UiSchema = {
         accountNo: {
             widget: 'text', label: '银行账号', placeholder: '必填',
             rules: (value: string) => {
+                if(value) value = value.trim();
                 // if (value && !/^([1-9]{1})(\d{14}|\d{17}|\d{18}|\d{15})$/.test(value))
                 /* 银行卡位数校验 现已开放 11-30位,后期可针对具体银行进行细化校验 */
                 /* 二次修改  客户银行卡号存在 0开头,暂时只校验数字及数位 */
-                if (value && !/^\d{11,30}$/.test(value.replace(/\s*/g, "")))
+                if (value && !/^\d{8,30}$/.test(value.replace(/\s*/g, "")))
                     // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
                 else
@@ -132,15 +134,6 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private saveTip = observable.box();
     private invoiceInfoData: any;
 
-    constructor(c: CInvoiceInfo) {
-        super(c);
-
-        makeObservable(this, {
-            invoiceType: observable,
-            InvoiceTypeChecked: observable
-        });
-    }
-
     async open(origInvoice?: any) {
         this.invoiceInfo(origInvoice);
         this.openPage(this.page);
@@ -183,7 +176,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         await this.form.buttonClick("submit");
     }
 
-    invoiceType: number;
+    @observable invoiceType: number;
 
     private buildForm(): JSX.Element {
         let requiredFields: any = this.invoiceType === 1 ? commonRequired : valueAddedRequired;
@@ -231,7 +224,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         </Page>
     });
 
-    InvoiceTypeChecked: boolean;
+    @observable InvoiceTypeChecked: boolean;
     render(param?: any): JSX.Element {
         return React.createElement(observer(() => {
             if (!this.InvoiceTypeChecked) {

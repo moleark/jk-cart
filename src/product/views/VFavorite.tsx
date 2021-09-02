@@ -18,7 +18,7 @@ export class VFavorite extends View<CProduct> {
             else
                 await cFavorites.addProductFavorites(product);
             await this.initInventoryAllocation(product);
-        //} else { 
+        //} else {
         //    cMe.showLogin();
         //}
     }
@@ -37,13 +37,13 @@ export class VFavorite extends View<CProduct> {
     }
 	*/
     render(param: any): JSX.Element {
-        let { product, callback } = param;
+        let { product, curPack, callback } = param;
     	return React.createElement(observer(() => {
             let { favorite, favoriteOrCancel } = product as Product;
 			//let { currentUser } = this.controller.cApp;
 			//if (currentUser)
 			//    this.initInventoryAllocation(productId);
-			//let icon = favorite === true ? "heart" : 'heart-o';
+			let icon = favorite === true ? "heart" : 'heart-o';
 			let onClick = async (evt: React.MouseEvent) => {
 				evt.stopPropagation();
 				await this.controller.cApp.assureLogin();
@@ -51,9 +51,9 @@ export class VFavorite extends View<CProduct> {
                 if (callback) callback();
 			}
             let imgSrc = favorite === true ? "/images/icon/favorite-icon-choose.svg" : "/images/icon/favorite-icon.svg";
-			return <div className="d-flex justify-content-end mr-3">
+			return <div className="d-flex justify-content-end">
                 <small onClick={onClick} style={{ zIndex: 9 }}>
-                    <img src={imgSrc} className="favorite w-1c mx-1" alt="" /> {/* 收藏本品 */} {/* 可在外部按需添加,否则需要再次调试样式布局 */}
+                    <img src={imgSrc} width="25px" className="favorite" />
 					{/* <FA className="mr-3 text-danger" name={icon} size="lg" /> */}
 				</small>
 			</div>;

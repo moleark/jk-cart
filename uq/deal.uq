@@ -1,0 +1,69 @@
+-- 默认的结算方式，是按单结算。按金额和按品种结算，需要申请。
+-- 如果从品种转换到另外两个方式，需要先结清所有未付款产品
+-- 如果需要转换到按品种结算，需要结清所有的未付订单
+-- 公司可以选择上述三种结算方式之几种都可以。
+
+ENUM EnumPayMethod (
+	order=1, 			-- 按单结算
+	amount=2,			-- 按金额结算
+	product=3,			-- 按品种结算
+);
+BOOK CustomerAccount (
+	KEY customer ID,
+	deposit DEC(16, 4),					-- 预存款
+	receivable DEC(16, 4),				-- 应收
+	payMethod ENUM EnumPayMethod,
+);
+
+-- 未付款订单，为按单结算和按金额结算准备的表
+PENDING CustomerOrderReceivable (
+	id,
+	order ID,
+	date DATETIME,
+	amount DEC(16, 4),
+);
+
+-- 未付款产品，为按品种结算准备的表。
+PENDING CustomerProductReceivable (
+	id,
+	product ID,
+	pack ID,
+	order ID,	
+	date DATETIME,
+	amount DEC(16, 4),
+	quantity DEC(16, 4),
+);
+
+ENUM EnumDealAction (prepay=1, pay=2, return=3, refund=4);
+HISTORY CustomerDealHistory (
+	Date,
+	KEY customer ID,
+	action ENUM EnumDealAction,
+	sheet ID,							-- 操作对应的单据
+	row SMALLINT,						-- 单据对应的行号
+	quantity DEC(16, 4),				-- 数量
+	amount DEC(16, 4),					-- 金额
+	ext TINYTEXT,						-- 根据action，定义的额外的数据。
+										-- 比如，如果是退货，这里可以是product id和pack id，中间用空格分开的字符串
+										-- 比如，如果是付款，详细信息应该在sheet上有，所以不需要额外的信息
+);
+
+MAP CustomerReturn (
+	KEY customer ID,
+	KEY order ID,
+	KEY row SMALLINT,					-- 单据对应的行号
+	quantity DEC(16, 4),				-- 数量
+	amount DEC(16, 4),					-- 金额
+	date DATETIME,						-- 退货日期
+	memo TINYTEXT,						-- 退货说明
+);
+
+MAP CustomerReturnWithoutSheet (
+	KEY customer ID,
+	KEY product ID,						-- 产品
+	KEY pack ID,						-- 包装
+	quantity DEC(16, 4),				-- 数量
+	amount DEC(16, 4),					-- 金额
+	date DATETIME,						-- 退货日期
+	memo TINYTEXT,						-- 退货说明
+);

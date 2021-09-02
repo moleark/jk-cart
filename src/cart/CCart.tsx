@@ -4,40 +4,63 @@ import { VCartLabel } from './VCartLabel';
 import { VCartLabelWeb } from './VCartLabelWeb';
 import { VCart } from './VCart';
 import { Product, CartPackRow, CartItem } from '../store';
-import { CApp, CUqBase } from 'uq-app';
+import { CApp, CUqBase } from 'tapp';
+import { GLOABLE } from '../global';
 
 export class CCart extends CUqBase {
-    //cart: Cart;
-    editButton: boolean = false; // = observable.box<boolean>(false);
-
+	//cart: Cart;
+    @observable editButton: boolean = false; // = observable.box<boolean>(false);
+    @observable cartBtnMatch: CartBtnMatch = new CartBtnMatch(this.cApp);
     private selectedCartItems: CartItem[];
 
-    constructor(cApp: CApp) {
-        super(cApp);
-
-        makeObservable(this, {
-            editButton: observable
-        });
-    }
-
     protected async internalStart(param: any) {
-        this.openVPage(VCart);
+        let punchOutXML = await this.generatePunchOutXML();
+        this.cartBtnMatch = new CartBtnMatch(this.cApp);
+        this.openVPage(VCart, { punchOutXML: punchOutXML });
     }
 
-    showCart = async () => {
+	showCart = async () => {
 		this.editButton = false;
         nav.navigate("/cart");
     }
 
+    generatePunchOutXML = async () => {
+        let { currentUser } = this.cApp;
+        let punchOutXML: any;
+        try {
+            if (currentUser && currentUser.thirdPartyOrg) {
+                if (currentUser.thirdPartyOrg === "3") {
+                    let webuserId = currentUser.id;
+                    let result = await fetch(GLOABLE.PUNCHOUT.PUNCHOUTXML + "?webuser=" + webuserId, {
+                        method: "post",
+                        headers: { "Content-Type":"application/json" }
+                    });
+                    let content: any = await result.json();
+                    if (result.ok) {
+                        // let content: any = await result.json();
+                        punchOutXML = {
+                            url: content?.url,
+                            cxmlBase64: content["cxml-base64"]
+                        };
+                    } else {
+                        punchOutXML = content;
+                    }
+                };
+            };
+            return punchOutXML;
+        } catch (error) {
+            return undefined;
+        };
+    }
 
-    //get count(): number {return this.cart?.count.get();}
+	//get count(): number {return this.cart?.count.get();}
 
-    /*
+	/*
 	getQuantity(productId: number, packId: number): number {
 		return this.cApp.store.cart.getQuantity(productId, packId);
 	}
 	*/
-    /*
+	/*
 	async add(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
 		await this.cApp.store.cart.add(product, pack, quantity, price, retail, currency);
 	}
@@ -46,7 +69,7 @@ export class CCart extends CUqBase {
 		await this.cApp.store.cart.removeItem(rows);
 	}
 	*/
-    /*
+	/*
 	async againOrderCart(data: CartItem[]) {
 		await this.cApp.store.cart.againOrderCart(data);
 	}
@@ -134,6 +157,18 @@ export class CCart extends CUqBase {
         // })
     }
 
+    punchOut = async () => {
+        /* 清除购物车 */
+        let param: [{ productId: number, packId: number }] = [] as any;
+        this.cApp.store.cart.cartItems.forEach((e: any) => {
+            e.packs.forEach((v: any) => {
+                param.push({ productId: e.product.id, packId: v.pack.id });
+            });
+        });
+        await this.cApp.store.cart.removeItem(param);
+        return true;
+    }
+
     checkOut = async () => {
         let { cart } = this.cApp.store;
         this.selectedCartItems = cart.getSelectedItems();
@@ -194,6 +229,40 @@ export class CCart extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
-    //tabPage: VCart = new VCart(this);
-	tabPage = () => this.renderView(VCart);
+    tabPage: VCart = new VCart(this);
+}
+
+export class CartBtnMatch {
+    private cApp: CApp;
+    private organization: any;
+
+    constructor(res: any) {
+        this.cApp = res;
+        this.organization = this.cApp.currentUser?.thirdPartyOrg;
+    }
+
+    get displayBtn():boolean {
+        return this.organization && !["3"].includes(this.organization);
+    }
+
+    getCartButtonTip = () => {
+        switch (this.organization) {
+            case "3":
+                return "punchOut";
+            default:
+                return "去结算";
+        };
+    }
+
+    CartButtonClick = async () => {
+        let { cCart } = this.cApp;
+        switch (this.organization) {
+            case "3":
+                await cCart.punchOut();
+                break;
+            default:
+                await cCart.checkOut();
+                break;
+        };
+    }
 }

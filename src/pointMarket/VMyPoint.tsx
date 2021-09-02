@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from 'tonva-react';
-import { CPointProduct, PointProductDetailLevel, topicClump } from "./CPointProduct";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from 'tonva-react';
+import { CPointProduct, topicClump, topicClumps } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
 import { PointProductImage } from 'tools/productImage';
@@ -34,37 +34,37 @@ export class VMyPoint extends VPage<CPointProduct> {
         </div>
     }
 
-    private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
+    private recommendOrHot = (type: any, theme?: string, imgArr?: any[], action?: any) => {
+        if (!imgArr || !imgArr.length) return null;
+        let { id, name } = type;
         let pointProductImage = (pointProduct: any, index: any) => {            
             let { product } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
-            return <div className={`d-flex align-items-center ${clm}`}>{tv(product, (v) => {
-                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0 z-height-more" style={{width:'91.6%',border:`2px solid ${randomColor()}`}} />
-                    // return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{width:'91.6%',height:'23vw',border:`2px solid ${randomColor()}`}} />
-                 })
-            }</div>
+            return <div className={`d-flex align-items-center ${clm}`}>
+                <Ax style={{width: '91.6%'}} className="h-100" href={"/pointshop/product/" + product?.id} >{tv(product, (v) => {
+                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0 z-height-more w-100"
+                        style={{/*  width: '91.6%', */ border: `2px solid ${randomColor()}` }} />
+                })}</Ax>
+            </div>
         }
         return <div className="mb-4" style={{ zIndex: 9 }}>
             <h6 className='d-flex justify-content-between align-content-end bg-transparent '>
                 <small className={classNames(theme ? theme : '', 'align-self-end')} style={{ color: theme ? theme : '' }}>{name}</small>
-                <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
+                <Ax href={"/pointshop/productLine/" + id} >
+                    <span style={{ color: '#808080' }} className="pl-2"><small >更多 </small><FA name='angle-right' /></span>
+                </Ax>
             </h6>
             <List
                 className="row mx-0 bg-transparent justify-content-between"
-                // className="d-flex w-100 bg-transparent justify-content-between"
                 items={imgArr.slice(0, 3)}
-                item={{
-                    render:pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
-                    onClick: (v) => toWhere(v,PointProductDetailLevel.DIRECT),
-                    className: "col-4 p-0 bg-transparent"
-                }}
+                item={{ render:pointProductImage, className: "col-4 p-0 bg-transparent" }}
                 none='暂无产品' />
         </div>
     }
 
     private page = observer(() => {
         let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
-            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp } = this.controller;
+            openExchangeHistory, openRevenueExpenditure, cApp } = this.controller;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
@@ -85,7 +85,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             {
                 icon: 'history',
                 caption: '兑换记录',
-                action: openExchangeHistory
+                action: ()=> nav.navigate("/pointshop/order")  /* openExchangeHistory */
             },
             {
                 icon: 'book',
@@ -103,7 +103,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 <div className="col-lg-3 d-none d-lg-block">
                     {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
-                <div className="col-lg-9 px-1">
+                <div className="col-lg-9 px-0 px-sm-1">
                     {pageHTitle(<div className="text-left">积分商城</div>)}
                     {renderDropdownActions(actions)}
                     <div>
@@ -117,7 +117,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                                 </div>
                                 <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
                                     {this.pointblock("签到", openPointSign, signInIcon)}
-                                    {this.pointblock("兑换", openPointProduct, exChangeIcon)}
+                                    {this.pointblock("兑换", ()=>{ nav.navigate("/pointshop/productLine/5002") }, exChangeIcon)}
                                 </div>
                             </div>
                         </div>
@@ -127,18 +127,17 @@ export class VMyPoint extends VPage<CPointProduct> {
                         {
                             pointProductGenre.length
                                 ? <div>
-                                    {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
                                     <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
                                         items={pointProductGenre}
-                                        item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
+                                        item={{ render: this.renderGenreItem, className: 'w-25 bg-transparent' }} none={none} />
                                     <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
                                 </div>
                                 : null
                         }
                         {/* 新品推荐 热门产品 */}
                         <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
-                            {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
-                            {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
+                            {this.recommendOrHot(topicClumps[5000], undefined, newPointProducts)}
+                            {this.recommendOrHot(topicClumps[5001], undefined, hotPointProducts)}
                         </div>
                     </div>
                     <div className="d-none d-lg-block py-md-5 my-md-5"></div>
@@ -148,18 +147,19 @@ export class VMyPoint extends VPage<CPointProduct> {
     });
 
     private renderGenreItem = (item: any) => {
-        let { name, imageUrl } = item;
+        let { name, imageUrl, id } = item;
         return <div>
             <label className="w-100 d-flex flex-column justify-content-center">
-                {
-                    imageUrl
-                        ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
-                        // ? <div className="w-25 m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-100" /></div>
-                        : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
-                }
-                <div className='text-dark small'>{name}</div>
-            </label>
-        </div>
+                <Ax href={"/pointshop/productLine/" + id} >
+                    {
+                        imageUrl
+                            ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
+                            : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
+                    }
+                    <div className='text-dark small'>{name}</div>
+                    </Ax>
+                </label>
+        </div>;
     }
 }
 

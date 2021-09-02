@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { observable, computed, makeObservable } from 'mobx';
-import { User, BoxId } from 'tonva-react';
+import { User, BoxId, QueryPager } from 'tonva-react';
 import { UQs } from 'uq-app';
 
 export class WebUser {
@@ -10,10 +10,10 @@ export class WebUser {
     nick?: string;
     icon?: string;
 
-    firstName: string;
+    @observable firstName: string;
     gender: string;
     salutation: string;
-    organizationName: string;
+    @observable organizationName: string;
     departmentName: string;
 
     get defaultOrganizationName(): string {
@@ -48,7 +48,7 @@ export class WebUser {
     }
 
     telephone: string;
-    mobile: string;
+    @observable mobile: string;
     email: string;
     fax: string;
     address: BoxId;
@@ -56,7 +56,15 @@ export class WebUser {
     zipCode: string;
     VIPDiscount: any;
     webUserVIPCard: any;
-    get allowOrdering() {
+    thirdPartyOrg: any;
+    epecUser: any;
+
+    get agtCustomerType() {
+        if (this.epecUser) return 'EPEC';
+        return "";
+    };
+
+    @computed get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
             (this.mobile && this.firstName && this.organizationName);
@@ -67,86 +75,83 @@ export class WebUser {
     private uqs: UQs;
 
 
-    constructor(uqs: UQs) {
-        makeObservable(this, {
-            firstName: observable,
-            organizationName: observable,
-            mobile: observable,
-            allowOrdering: computed
-        });
-
-        // cUsqWebUser: CUq, cUsqCustomer: CUq) {
+    constructor(uqs: UQs) {// cUsqWebUser: CUq, cUsqCustomer: CUq) {
         this.uqs = uqs;
     }
 
     setUser = async (user: User) => {
-		if (!user) return;
-		this._user = user;
-		this.id = user.id;
-		this.name = user.name;
-		this.nick = user.nick;
-		this.icon = user.icon;
+        if (!user) return;
+        this._user = user;
+        this.id = user.id;
+        this.name = user.name;
+        this.nick = user.nick;
+        this.icon = user.icon;
 
-		await this.loadWebUser();
+        await this.loadWebUser();
     }
 
     private async loadWebUser() {
         let { id, _user } = this;
         if (_user === undefined) return;
 
-		let { webuser: webUserTuid, salesTask } = this.uqs;
-		let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
-		let webUser = await WebUser.load(this.id);
-		if (webUser) {
-			let { firstName, gender, salutation, organizationName, departmentName } = webUser;
-			this.firstName = firstName;
-			this.gender = gender;
-			this.salutation = salutation;
-			this.organizationName = organizationName;
-			this.departmentName = departmentName;
-			this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
-			if (this.webUserVIPCard !== undefined) {
-				// this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
-				this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
-			}
+        let { webuser: webUserTuid, salesTask, platformjoint } = this.uqs;
+        let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
+        let webUser = await WebUser.load(this.id);
+        if (webUser) {
+            let { firstName, gender, salutation, organizationName, departmentName } = webUser;
+            this.firstName = firstName;
+            this.gender = gender;
+            this.salutation = salutation;
+            this.organizationName = organizationName;
+            this.departmentName = departmentName;
+            this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
+            if (this.webUserVIPCard !== undefined) {
+                // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
+                if (this.webUserVIPCard.expiredDate > Date.now())
+                    this.VIPDiscount = await salesTask.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
+                else this.VIPDiscount = [];
+            }
 
-			await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
-		}
+            await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
+            let thirdPartyOrg: any = await platformjoint.NeoTridentUser.obj({ webUser: this });
+            this.thirdPartyOrg = thirdPartyOrg?.organization;
+            this.epecUser = await platformjoint.EpecUser.obj({ webUser: this });
+        }
 
 
-		let contact = await WebUserContact.obj({ "webUser": id });
-		if (contact) {
-			let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
-			this.telephone = telephone;
-			this.mobile = mobile;
-			this.email = email;
-			this.fax = fax;
-			this.address = address;
-			this.addressString = addressString;
-			this.zipCode = zipCode;
-		}
+        let contact = await WebUserContact.obj({ "webUser": id });
+        if (contact) {
+            let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
+            this.telephone = telephone;
+            this.mobile = mobile;
+            this.email = email;
+            this.fax = fax;
+            this.address = address;
+            this.addressString = addressString;
+            this.zipCode = zipCode;
+        }
 
-		this.webUserSettings = (await WebUserSetting.obj({ webUser: id })) || { webUser: id };
+        this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
 
-		let value = await WebUserCustomer.obj({ webUser: id });
-		if (value !== undefined) {
-			this.currentCustomer = new Customer(value.customer, this.uqs);
-			await this.currentCustomer.init();
-		}
-		let accountValue = await WebUserBuyerAccount.query({ webUser: id });
-		let { ret: buyerAccounts } = accountValue;
-		if (buyerAccounts && buyerAccounts.length > 0) {
-			// TODO: 暂时不考虑有多个相关账号的情况
-			this.buyerAccount = buyerAccounts[0].buyerAccount;
-		}
+        let value = await WebUserCustomer.obj({ webUser: id });
+        if (value !== undefined) {
+            this.currentCustomer = new Customer(value.customer, this.uqs);
+            await this.currentCustomer.init();
+        }
+        let accountValue = await WebUserBuyerAccount.query({ webUser: id });
+        let { ret: buyerAccounts } = accountValue;
+        if (buyerAccounts && buyerAccounts.length > 0) {
+            // TODO: 暂时不考虑有多个相关账号的情况
+            this.buyerAccount = buyerAccounts[0].buyerAccount;
+        }
     }
 
-	/*
+    /*
     get isLogined(): boolean {
         return this._user !== undefined;
     }
-	*/
-	
+    */
+
     get hasCustomer(): boolean {
         return this.currentCustomer !== undefined;
     }
@@ -267,6 +272,54 @@ export class WebUser {
         return await this.uqs.积分商城.getPoints.table({ webuser: this.id });
     }
 
+    async getValidCredits() {
+        let { customer, webuser } = this.uqs;
+        let creditsForWebUser: any[] = [];
+        if (this.hasCustomer) {
+            creditsForWebUser = await customer.CustomerCredits.table({ customer: this.currentCustomer });
+        } else {
+            creditsForWebUser = await webuser.WebUserCredits.table({ webUser: this.id });
+        };
+        return creditsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
+    }
+
+    async getValidCoupons() {
+        let { customer, webuser } = this.uqs;
+        let couponsForWebUser: any[] = [];
+        if (this.hasCustomer) {
+            couponsForWebUser = await customer.CustomerCoupon.table({ customer: this.currentCustomer });
+        } else {
+            couponsForWebUser = await webuser.WebUserCoupon.table({ webUser: this.id });
+        };
+        return couponsForWebUser.filter(v => v.expiredDate.getTime() > Date.now());
+    }
+
+    async getUserdCoupon() {
+        let { webuser, customer } = this.uqs;
+        let result: any;
+        if (this.hasCustomer) {
+            result = new QueryPager<any>(customer.getMyUsedCoupon, 10, 10);
+            await result.first({ customer: this.currentCustomer });
+        } else {
+            result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
+            await result.first({ webUser: this.id });
+        };
+        return result;
+    }
+
+    async getExpiredCoupon() {
+        let { webuser, customer } = this.uqs;
+        let result: any;
+        if (this.hasCustomer) {
+            result = new QueryPager<any>(customer.getMyExpiredCoupon, 10, 10);
+            await result.first({ customer: this.currentCustomer });
+        } else {
+            result = new QueryPager<any>(webuser.getMyExpiredCoupon, 10, 10);
+            await result.first({ webUser: this.id });
+        };
+        return result;
+    }
+
 };
 
 export class Customer {
@@ -276,6 +329,7 @@ export class Customer {
     private customerSettings: any;
     Contractor: any;
     Organization: any;
+    Discounts: any[] = []
 
     constructor(customer: BoxId, uqs: UQs) {
         this.id = customer.id;
@@ -294,13 +348,57 @@ export class Customer {
         await this.uqs.customer.CustomerContacts.del({ customer: this.id, arr1: [{ contact: contactId }] });
     }
 
+    /**
+     * 获取customer折扣表
+     */
+    async getcustomerDiscount(customer: BoxId | number) {
+        let discounts = await this.uqs.customerDiscount.CustomerDiscount.table({ customer: customer });
+        return discounts.filter((el: any) => el.endDate > Date.now());
+    }
+
+    /**
+     * 获取所属组织折扣表
+     */
+    async getOrganizationDiscount(organization: BoxId | number) {
+        let discounts = await this.uqs.customerDiscount.OrganizationDiscount.table({ organization: organization });
+        return discounts.filter((el: any) => el.endDate > Date.now());
+    }
+    /* 获取用户的折扣表(个人-->个人所属组织-->关联老师-->老师所属组织) */
+    async getcustomerDiscountArr() {
+        /* 获取个人的折扣表 */
+        this.Discounts = await this.getcustomerDiscount(this.id);
+        if (this.Organization && !this.Discounts.length) {/* 获取个人组织的折扣表 */
+            this.Discounts = await this.getOrganizationDiscount(this.Organization);
+        };
+        if (this.Discounts.length) return;
+        /* 获取关联老师 */
+        let customerBuyerAccount = await this.uqs.customer.CustomerBuyerAccount.obj({ customer: this.id });
+        if (customerBuyerAccount) {
+            let { buyerAccount } = customerBuyerAccount;
+            /* 读取老师 buyerAccount */
+            let getBuyerAccountID = await this.uqs.customer.Buyeraccount.load(buyerAccount);
+            if (getBuyerAccountID) {
+                let { description: BuyerAccountName, organization } = getBuyerAccountID;
+                /*  获取老师customer */
+                let getBuyerAccountCustomerRes = await this.uqs.customer.Customer.search(BuyerAccountName, 10, 10);
+                if (!getBuyerAccountCustomerRes.length) return;
+                /* 获取老师的折扣表 */
+                this.Discounts = await this.getcustomerDiscount(getBuyerAccountCustomerRes[0].id);
+                if (this.Discounts.length) return;
+                /* 获取老师组织折扣表 */
+                this.Discounts = await this.getOrganizationDiscount(organization);
+            };
+        };
+    }
+
     async init() {
-        this.customerSettings = (await this.uqs.customer.CustomerSetting.obj({ customer: this.id })) || { customer: this.id };
+        this.customerSettings = await this.uqs.customer.CustomerSetting.obj({ customer: this.id }) || { customer: this.id };
         let customerContactorMap: any = await this.uqs.customer.CustomerContacts.obj({ customer: this.id });
         if (customerContactorMap)
             this.Contractor = customerContactorMap.contractor;
         let customerOrganization = await this.uqs.customer.getCustomerOrganization.obj({ customerId: this.id });
         if (customerOrganization) this.Organization = customerOrganization.organization;
+        await this.getcustomerDiscountArr();
     }
 
     getSetting() {

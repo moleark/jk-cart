@@ -7,32 +7,14 @@ export class Order {
     organization: BoxId;
     customer: any;
 
-    shippingContact: BoxId;
-    invoiceContact: BoxId;
-    invoiceType: BoxId;
-    invoiceInfo: BoxId;
-    orderItems: OrderItem[] = [];
+    @observable shippingContact: BoxId;
+    @observable invoiceContact: BoxId;
+    @observable invoiceType: BoxId;
+    @observable invoiceInfo: BoxId;
+    @observable orderItems: OrderItem[] = [];
 
-    freightFee: number;
-    freightFeeRemitted: number;
-
-    constructor() {
-        makeObservable(this, {
-            shippingContact: observable,
-            invoiceContact: observable,
-            invoiceType: observable,
-            invoiceInfo: observable,
-            orderItems: observable,
-            freightFee: observable,
-            freightFeeRemitted: observable,
-            amount: computed,
-            productAmount: computed,
-            coupon: observable,
-            couponOffsetAmount: observable,
-            couponRemitted: observable,
-            point: observable
-        });
-    }
+    @observable freightFee: number;
+    @observable freightFeeRemitted: number;
 
     /*
     @computed get amount() {
@@ -46,25 +28,32 @@ export class Order {
     /**
      * 总金额
      */
-    get amount() {
+    @computed get amount() {
         return parseFloat((this.orderItems.reduce((pv, cv) => (pv + cv.subAmount), 0) +
             (this.freightFee ? this.freightFee : 0) +
             (this.freightFeeRemitted ? this.freightFeeRemitted : 0)).toFixed(2));
-    }
+    };
     // @computed get productAmount() {
     //     return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
     // };
     /**
-     * 商品总额(未应用券的价格) -----> 已修 应用目录价计算(总额恒定)
+     * 商品总额 -----> 已修 应用现价计算（参与运费减免计算）
      */
-    get productAmount() {
+    @computed get productAmount() {
+        return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subAmount, 0).toFixed(2));
+    };
+
+    /**
+     * 商品总额(未应用券的价格) -----> 已修 应用目录价计算(总额恒定) 预览页展示所需
+     */
+    @computed get productAmounts() {
         return parseFloat(this.orderItems.reduce((pv, cv) => pv + cv.subListAmount, 0).toFixed(2));
-    }
+    };
     currency: BoxId;
-    coupon: BoxId;
-    couponOffsetAmount: number;
-    couponRemitted: number;
-    point: number;
+    @observable coupon: BoxId;
+    @observable couponOffsetAmount: number;
+    @observable couponRemitted: number;
+    @observable point: number;
     comments: string;
     salesRegion: BoxId;
 
@@ -140,25 +129,19 @@ export class Order {
 
 export class OrderItem {
     product: Product;
-    packs: CartPackRow[];
-    get subAmount() {
+    @observable packs: CartPackRow[];
+    @computed get subAmount() {
         return this.packs.reduce((p, c) => {
             return p + c.price * c.quantity
         }, 0);
     }
-    get subListAmount() {
+    @computed get subListAmount() {
         return this.packs.reduce((p, c) => {
             return p + c.retail * c.quantity
         }, 0);
     }
 
     constructor(product: Product) {
-        makeObservable(this, {
-            packs: observable,
-            subAmount: computed,
-            subListAmount: computed
-        });
-
         this.product = product;
     }
 }

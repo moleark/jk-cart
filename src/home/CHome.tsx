@@ -1,9 +1,8 @@
-import { Tuid } from 'tonva-react';
-import { PageItems } from 'tonva-react';
+import { Tuid, PageItems} from 'tonva-react';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
 import { VScanCode } from './VScanCode';
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 
 class HomeSections extends PageItems<any> {
 
@@ -51,7 +50,6 @@ export class CHome extends CUqBase {
     }
 
     renderSearchHeader = (size?: string) => {
-		if (this.isWebNav) return null;
         return this.renderView(VSearchHeader, size);
     }
 
@@ -77,6 +75,6 @@ export class CHome extends CUqBase {
         await cProduct.showProductDetail(productByOrigin.id, 'ScanCode');
     }
 
-    tab = () => this.renderView(VHome);
-    tabContent() {return new VHome(this).content();}
+    // tab = () => this.renderView(VHome);
+    tab: VHome = new VHome(this);
 }

@@ -43,21 +43,14 @@ export class EditMeInfo extends VPage<CMe>{
             icon: { widget: 'image', label: '头像' } as UiImageItem,
         }
     }
-    private data: any;
+    @observable private data: any;
 
-    private webUserData: any;
+    @observable private webUserData: any;
 
-    private webUserContactData: any;
+    @observable private webUserContactData: any;
 
     constructor(props: any) {
         super(props);
-
-        makeObservable<EditMeInfo, "data" | "webUserData" | "webUserContactData">(this, {
-            data: observable,
-            webUserData: observable,
-            webUserContactData: observable
-        });
-
         let { nick, icon } = nav.user;
         this.data = {
             nick: nick,

@@ -1,4 +1,4 @@
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VFavorites } from './VFavorites';
 import { QueryPager } from 'tonva-react';
 import { Product } from '../store';

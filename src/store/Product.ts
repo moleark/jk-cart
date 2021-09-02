@@ -47,43 +47,30 @@ export class Product {
 	private store: Store;
 
 	id: number;
-	props: ProductProps;
+	@observable.ref props: ProductProps;
 
-	brand: MainBrand;
-	chemical: Chemical;
-	favorite: boolean;
-	warningSigns: string;
-	extention: any;
-	descriptionPost: any;
-	packs: ProductPackRow[];
-	prices: any[];				// 包含价格和折扣信息
-	futureDeliveryTimeDescription: string;
-	MSDSFiles: any;
-	specFiles: any;
-	data: any;
-	discount: any;
+	@observable.ref brand: MainBrand;	/* 品牌 */
+	@observable.ref chemical: Chemical;	/* 化学属性 */
+	@observable favorite: boolean;		/* 是否收藏 */
+	@observable warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
+	@observable extention: any;			/* 基本信息、安全信息 */
+	@observable standardSample: any;	/* 标样信息 */
+	@observable productCrumbs: any[] = [];	/* 产品目录 */
+	@observable descriptionPost: any;	/* 产品描述 */
+	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
+	@observable prices: any[];				// 包含价格和折扣信息
+	@observable futureDeliveryTimeDescription: string;
+	@observable productDocs: any = { msds: false, spec: false, coa: false, um: false };
+	// @observable MSDSFiles: any;
+	// @observable specFiles: any;
+	// @observable data: any;
+	@observable discount: any;
 
 	constructor(store: Store, id: number | BoxId) {
-        makeObservable(this, {
-            props: observable.ref,
-            brand: observable.ref,
-            chemical: observable.ref,
-            favorite: observable,
-            warningSigns: observable,
-            extention: observable,
-            descriptionPost: observable,
-            packs: observable.shallow,
-            prices: observable,
-            futureDeliveryTimeDescription: observable,
-            MSDSFiles: observable,
-            specFiles: observable,
-            data: observable,
-            discount: observable
-        });
-        this.uqs = store.uqs;
-        this.store = store;
-        this.id = typeof id === 'object' ? id.id : id;
-    }
+		this.uqs = store.uqs;
+		this.store = store;
+		this.id = typeof id === 'object' ? id.id : id;
+	}
 
 	getInventoryAllocation(packId: number): InventoryAllocation[] {
 		// return undefined;
@@ -103,12 +90,16 @@ export class Product {
 			this.loadPrices(),
 			this.loadMSDSFile(),
 			this.loadSpecFile(),
+			this.loadCOAFile(),
+			this.loadUserManualFile(),
 			this.loadFDTimeDescription(),
 			this.getProductExtention(),
-			this.loadDescriptionPost()
+			this.loadDescriptionPost(),
+			this.loadProductCrumbs(),
+			this.loadStandardSample()
 		];
 		await Promise.all(promises);
-		await this.getProductWarningSigns();
+		await this.loadProductWarnings();
 	}
 
 	async loadListItem() {
@@ -123,7 +114,7 @@ export class Product {
 		await Promise.all(promises);
 	}
 
-	private async loadBase() {
+	async loadBase() {
 		if (this.props) return;
 		let { currentSalesRegion } = this.store;
 		let ret = await this.uqs.product.GetAvailableProductById.obj({ product: this.id, salesRegion: currentSalesRegion });
@@ -150,29 +141,50 @@ export class Product {
 	}
 
 	/**
-	 * 获取产品MSDS文件
+	 * 获取产品MSDS文件(是否存在)
 	 */
 	private async loadMSDSFile() {
-		if (this.MSDSFiles) return;
 		let productMSDSFiles = await this.uqs.product.ProductMSDSFile.table({ product: this.id });
-		this.MSDSFiles = productMSDSFiles.sort((a: any, b: any) => b.language.id - a.language.id);
+		this.productDocs.msds = productMSDSFiles.length ? true : false;
 	}
 
 	/**
-	 * 获取产品Spec文件
+	 * 获取产品Spec文件(是否存在)
 	 */
 	private async loadSpecFile() {
-		if (this.specFiles) return;
-		this.specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
+		let specFiles = await this.uqs.product.ProductSpecFile.table({ product: this.id });
+		this.productDocs.spec = specFiles.length ? true : false;
+	}
+
+	/**
+	 * 获取产品COA(是否存在)
+	 */
+	private async loadCOAFile() {
+		let coaFile = await this.uqs.product.getProductLotNumber.table({ product: this.id });
+		this.productDocs.coa = coaFile.length ? true : false;
+	}
+
+	/**
+	 * 获取用户手册(是否存在)
+	 */
+	private async loadUserManualFile() {
+		let userManualFile = await this.uqs.product.ProductUserManualFile.table({ product: this.id });
+		this.productDocs.um = userManualFile.length ? true : false;
 	}
 
 	private async loadPrices() {
-		let { customerDiscount, promotion, warehouse } = this.uqs;
+		let { customerDiscount, product, promotion, warehouse } = this.uqs;
 		let discount = 0;
 		let { currentUser, currentSalesRegion, cart, currentLanguage } = this.store;
 		//线上客户是否是线下客户 协议折扣  discount
 		if (currentUser) {
 			if (currentUser.hasCustomer) {
+				let { Discounts } = currentUser?.currentCustomer;
+				let discountSetting = Discounts.find((el: any) => el.brand?.id === this.brand?.id);
+				if (discountSetting && discountSetting.discount)
+					discount = discountSetting.discount;
+			};
+			/* if (currentUser.hasCustomer) {
 				let discountSetting = await customerDiscount.GetDiscount.obj({ brand: this.brand?.id, customer: currentUser?.currentCustomer });
 				if (discountSetting && discountSetting.discount)
 					discount = discountSetting.discount;
@@ -182,12 +194,12 @@ export class Product {
 						if (discountSetting && discountSetting.discount) discount = discountSetting.discount;
 					}
 				}
-			}
+			} */
 
 			// 协议客户与vip客户不同存
 			if (currentUser.webUserVIPCard !== undefined) {
 				let brandDiscounts = currentUser.VIPDiscount;
-				let brandDiscount = brandDiscounts.ret.find((e: any) => e.brand.id === this.brand?.id);
+				let brandDiscount = brandDiscounts.find((e: any) => e.brand.id === this.brand?.id);
 				// 协议与vip折扣比较 取其大值  (两者不可同存)
 				if (brandDiscount && brandDiscount.discount > discount)
 					discount = brandDiscount && brandDiscount.discount;
@@ -196,16 +208,7 @@ export class Product {
 
 		// let { id: currentSalesRegionId } = currentSalesRegion;
 		let prices = await this.getProductPacks();
-		/* 修复pack获取的数据 obj应为Object,但有时会获取为number,故重新调用一次接口
-		if (prices.length) {
-			let endIndex: number = 0;
-			while (!prices.some((v: any) => { let pack: BoxId = v.pack; return typeof pack.obj === 'object' }) || endIndex <= 1) {
-				endIndex += 1;
-				prices = await this.getProductPacks();
-			};
-		}; */
-
-		this.prices = prices.filter(e => e.discountinued === 0 && e.expireDate > Date.now()).sort((a, b) => a.retail - b.retail).map(element => {
+		this.prices = prices.sort((a, b) => a.retail - b.retail).map(element => {
 			let ret: any = {};
 			ret.pack = element.pack;
 			ret.retail = element.retail;
@@ -220,15 +223,12 @@ export class Product {
 
 		let promises: PromiseLike<any>[] = [];
 		let promises1: PromiseLike<any>[] = [];
-		// let promises2: PromiseLike<any>[] = []; // 收藏夹 暂时不做
 		this.prices.forEach(v => {
 			promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
 			promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
-			// promises2.push(this.uqs.webuser.myFavorites.obj({ webUser: this.cApp.currentUser, product: this.id, pack: v.pack.id }));
 		});
 		let results = await Promise.all(promises);
 		let results2 = await Promise.all(promises1);
-		// let resultsFavorite = await Promise.all(promises2);
 
 		let newPacks = [];
 		for (let i = 0; i < this.prices.length; i++) {
@@ -271,7 +271,9 @@ export class Product {
 		let { product } = this.uqs;
 		let { currentSalesRegion } = this.store;
 		let { id: currentSalesRegionId } = currentSalesRegion;
-		return await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
+		// let pricex2 = await product.PriceX.table({ product: this.id, salesRegion: currentSalesRegionId });
+		let pricex = await product.GetProductPrices.table({ product: this.id, salesRegion: currentSalesRegionId });
+		return pricex.filter(e => e.discountinued === 0 && e.expireDate > Date.now() && e.salesLevel?.id === 1);
 	}
 
 	favoriteOrCancel = async (pack?: any) => {
@@ -297,42 +299,97 @@ export class Product {
 
 	getProductExtention = async () => {
 		if (this.extention) return;
-		this.extention = await this.uqs.product.ProductExtention.obj({ product: this.id });
+		let extention = await this.uqs.product.ProductExtention.obj({ product: this.id });
+		this.extention = extention?.content;
 	}
 
 	loadDescriptionPost = async () => {
 		if (this.descriptionPost) return;
-		let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productapplication/' + 18625);
+		let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productapplication/' + this.id);
 		if (result.ok) {
 			let content = await result.text();
 			this.descriptionPost = content;
 		};
 	}
 
-	/**
-	 * 产品警示标示
-	 */
+	loadStandardSample = async () => {
+		let standardSample: any = await this.uqs.product.Productstandardsample.obj({ product: this.id });
+		this.standardSample = standardSample ? JSON.parse(standardSample.content.replace(/\t\n\r*/g, "")) : undefined;
+	}
+
+	loadProductCrumbs = async () => {
+		let { ProductProductCategory, ProductCategory } = this.uqs.product;
+		let arr: any[] = [];
+		let getProductCategorys: any[] = await ProductProductCategory.table({ product: this.id });
+		if (getProductCategorys.length) {
+			let promise: PromiseLike<any>[] = [];
+			for (let key of getProductCategorys) {
+				promise.push(ProductCategory.load(key?.category));
+			};
+			let result: any[] = await Promise.all(promise);
+			if (result.length) {
+				let value: any;
+				for (let key of result) {
+					let keyArr: any[] = [];
+					keyArr.unshift(key.productcategorylanguage.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+					value = key?.parent;
+					while (value) {
+						let productCategoryByParent: any = await ProductCategory.load(value);
+						if (productCategoryByParent)
+							keyArr.unshift(productCategoryByParent?.productcategorylanguage?.find((el: any) => el.language?.id == GLOABLE.CHINESE.id));
+						value = productCategoryByParent?.parent;
+					};
+					arr.push(keyArr);
+				};
+			};
+		};
+		this.productCrumbs = arr;
+	}
+
+	loadProductWarnings = async () => {
+		let warnings: PromiseLike<any>[] = [
+			this.getProductWarningSigns(),
+			this.getProductEmbargo(),
+		];
+		let res = await Promise.all(warnings);
+		this.warnings = res.filter((el: any) => el);
+	};
+
+	/* 产品警示标示 */
 	getProductWarningSigns = async () => {
-		let JNKRestrictByChemical = await this.getChemicalJNKRestrict();
-		this.warningSigns = '';
-		if (!JNKRestrictByChemical) return;
-		else {
-			let { jnkRestrict } = JNKRestrictByChemical;
-			let jnkRestrictObj = await this.loadJNKRestrict(jnkRestrict?.id);
-			if (jnkRestrictObj) {
-				let { no } = jnkRestrictObj;
-				if (no.indexOf('WX') > -1) this.warningSigns = '危化品';
-			}
-		}
+		let JNKRestrictByChemical: any[] = await this.uqs.chemical.ChemicalJNKRestrict.table({ chemical: this.chemical?.chemical });
+		if (!JNKRestrictByChemical.length) return;
+		let promise: PromiseLike<any>[] = [];
+		for (let key of JNKRestrictByChemical) {
+			promise.push(this.uqs.chemicalSecurity.JNKRestrict.load(key?.jnkRestrict?.id));
+		};
+		let result = await Promise.all(promise);
+		let warningSign: string = "";
+		for (let key of result) {
+			if (key) {
+				let { no } = key;
+				if (no.indexOf('WX') > -1) warningSign = '危化品';
+			};
+		};
+		/* let { jnkRestrict } = JNKRestrictByChemical;
+		let jnkRestrictObj = await this.uqs.chemicalSecurity.JNKRestrict.load(jnkRestrict?.id);
+		let warningSign: string = "";
+		if (jnkRestrictObj) {
+			let { no } = jnkRestrictObj;
+			if (no.indexOf('WX') > -1) warningSign = '危化品';
+		}; */
+		return warningSign;
 	}
 
-	getChemicalJNKRestrict = async () => {
-		return await this.uqs.chemical.ChemicalJNKRestrict.obj({ chemical: this.chemical?.chemical });
-	}
-
-	loadJNKRestrict = async (id: number) => {
-		return await this.uqs.chemicalSecurity.JNKRestrict.load(id);
-	}
+	/* 产品禁运信息 */
+	getProductEmbargo = async () => {
+		let { currentSalesRegion } = this.store;
+		let getProductEmbargo = await this.uqs.product.ProductEmbargo.obj({ product: this.id, salesRegion: currentSalesRegion });
+		if (!getProductEmbargo || getProductEmbargo.beginDate > Date.now() || getProductEmbargo.endDate < Date.now()) return;
+		let { type, packDescription, endDate } = getProductEmbargo;
+		let dateTime = moment(endDate).format("MM月DD日");
+		return `${type}产品,${dateTime}后发运(限${packDescription || "1L"}以上包装)`;
+	};
 
 	/**
 	 * 获取PDF文件流
@@ -369,9 +426,12 @@ export class Product {
 
 	private async loadFDTimeDescription() {
 		let { currentSalesRegion } = this.store;
-		let futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		let futureDeliveryTime = await this.uqs.product.ProductDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		if (!futureDeliveryTime.length) {
+			futureDeliveryTime = await this.uqs.product.GetFutureDeliveryTime.table({ product: this.id, salesRegion: currentSalesRegion });
+		};
 		if (futureDeliveryTime.length > 0) {
-			let { minValue, maxValue, unit } = futureDeliveryTime[0];
+			let { minValue, maxValue, unit, deliveryTimeDescription } = futureDeliveryTime[0];
 			this.futureDeliveryTimeDescription = minValue + (maxValue > minValue ? '~' + maxValue : '') + ' ' + unit;
 		} else {
 			this.futureDeliveryTimeDescription = '';

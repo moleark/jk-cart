@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _ from 'lodash';
 import { Context, nav, VPage, User } from 'tonva-react';
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VMe } from './VMe';
 import { CSelectShippingContact } from '../customer/CSelectContact';
 import { EditMeInfoFirstOrder } from './EditMeInfoFirstOrder';
@@ -33,12 +33,7 @@ export class CMe extends CUqBase {
     }
 
     tab = () => this.renderView(VMe);
-    //tabPage: VMe = new VMe(this);
-	tabPage = () => this.renderView(VMe);
-
-	trial = async () => {
-		await this.cApp.startTrial();
-	}
+    tabPage: VMe = new VMe(this);
 
     openMyOrders = async (state: string) => {
         let { cOrder } = this.cApp;

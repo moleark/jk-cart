@@ -1,4 +1,4 @@
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VYncProjects } from './VYncProjects';
 import { YncProjectsResponse, YncProjectsItem } from './YncProductItem';
 

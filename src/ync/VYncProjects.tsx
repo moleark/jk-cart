@@ -21,7 +21,7 @@ export class VYncProjects extends VPage<CYncProjects> {
 
 
     private onClick = async (model: any) => {
-        this.controller.returnYncProject(model);
+        await this.controller.returnYncProject(model);
         this.closePage();
     }
 

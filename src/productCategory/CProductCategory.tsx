@@ -1,4 +1,4 @@
-import { CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VRootCategory } from './VRootCategory';
 import { VRootCategorySideBar, VRootCategorySideBarToSelect } from './VRootCategorySideBar';
 import { GLOABLE } from "global";
@@ -59,8 +59,7 @@ export class CProductCategory extends CUqBase {
         });
         let { first, secend, third } = results;
         (first as any[]).forEach(v => {
-			let {productCategory} = v;
-            v.productCategory = (typeof productCategory === 'object')? productCategory.id : productCategory;
+            v.productCategory = v.productCategory.id;
             v.children = this.buildChildren(v.productCategory, secend, third);
         });
         this.rootCategories = first;

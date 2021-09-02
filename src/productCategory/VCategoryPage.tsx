@@ -84,6 +84,6 @@ export class VCategoryPage extends VPage<CProductCategory> {
     }
 
     header() { if (!xs) return ''; return this.controller.cApp.cHome.renderSearchHeader(); }
-	right():JSX.Element { if (!xs) return null; return this.controller.cApp.renderCartLabel(); }
-    content():JSX.Element { return this.renderCategory(); }
+    right() { if (!xs) return null; return this.controller.cApp.renderCartLabel(); }
+    content() { return this.renderCategory(); }
 }

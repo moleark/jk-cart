@@ -1,68 +1,50 @@
 import { observable, makeObservable } from 'mobx';
 import { BoxId, QueryPager } from 'tonva-react';
-import { CApp, CUqBase } from 'uq-app';
+import { CUqBase } from 'tapp';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
-import { VPageSkillSearch } from './VPageSkillSearch';
+import { docTypeWithCaptcha, VPageSkillSearch } from './VPageSkillSearch';
 import { VDelivery, VInCart, VProductWithPrice, VProuductView2 } from './views';
 import { Product } from '../store';
 import { GLOABLE } from 'global';
-import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen } from '../tools/elasticSearchPager';
+import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen, productStandardUrlGen } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';
 import { VError } from '../tools/VError';
 
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
-    esproductsPager: ElasticSearchPager<Product> | any[];
-    esProductsTotal: any;
-    currentPage: number = 1;
+    @observable esproductsPager: ElasticSearchPager<Product> | any[];
+    @observable esProductsTotal: any;
+    @observable currentPage: number = 1;
     //@observable productSpecFiles: any[] = [];
     //@observable productMSDSFiles: any[] = [];
     //@observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     //@observable chemicalInfoContainer: { [productId: number]: any } = {};
 
-    captcha: any;
-    materialType: string;
-    currentFileName: any;
-    currentLanguage: any;
-    currentProduct: any;
-    productMsdsVersions: any[] = [];
-    showFavorites: Boolean = false;
-    searchUrl: string;
+    @observable captcha: any;
+    @observable materialType: string;
+    @observable currentFileName: any;
+    @observable currentLanguage: any;
+    @observable currentProduct: any;
+    @observable productMscuVersions: any[] = [];
+    @observable showFavorites: Boolean = false;
+    @observable searchUrl: string;
 
     //@observable productData: any;
     //@observable product: any;
     //@observable discount: any;
 
-    //private salesRegion: any;
-    //private language: any;
+    private salesRegion: any;
+    private language: any;
 
     product: Product;
 
     searchKey: string;
-
-    constructor(cApp: CApp) {
-        super(cApp);
-
-        makeObservable(this, {
-            esproductsPager: observable,
-            esProductsTotal: observable,
-            currentPage: observable,
-            captcha: observable,
-            materialType: observable,
-            currentFileName: observable,
-            currentLanguage: observable,
-            currentProduct: observable,
-            productMsdsVersions: observable,
-            showFavorites: observable,
-            searchUrl: observable
-        });
-    }
-
     protected async internalStart(param?: any) {
-        this.searchKey = param;
+        let { key, type } = param;
+        this.searchKey = key;
         this.currentPage = 1;
-        this.searchByKey();
+        this.searchByKey(Number(type));
     }
 
     private productConverter = (item: any, queryResults?: { [name: string]: any[] }): Product => {
@@ -93,15 +75,18 @@ export class CProduct extends CUqBase {
         this.openVPage(VPageList); */
     }
 
-    private async searchByKey() {
+    private async searchByKey(type: number) {
         let url = GLOABLE.CONTENTSITE + '/api/product/search';
+        if (type === 2) url = GLOABLE.CONTENTSITE + '/api/standard-sample';
         let keyWord = encodeURIComponent(this.searchKey);
         if (xs) {
             let urlGen = new productUrlGen();
+            if (type === 2) urlGen = new productStandardUrlGen();
             await this.searchAction(url, keyWord, urlGen);
         };
         if (!xs) {
             this.searchUrl = url + '?key=' + keyWord + '&pageNumber=';
+            if (type === 2) this.searchUrl = url + '/' + keyWord + '/';
             await this.esProductsPagerMore(this.currentPage);
         };
         this.openVPage(VPageList);
@@ -226,14 +211,9 @@ export class CProduct extends CUqBase {
     }
     */
 
-    renderDeliveryTime = (pack: BoxId) => {
-		/*
-		let product = this.cApp.getProduct(pack.obj?.owner);
-		if (!product) {
-			debugger;
-		}
-		*/
-        return this.renderView(VDelivery, pack);
+    renderDeliveryTime = (pack: BoxId, defColor?: string) => {
+        let param = { pack: pack, defColor: defColor };
+        return this.renderView(VDelivery, param);
     }
 
     /*
@@ -291,9 +271,11 @@ export class CProduct extends CUqBase {
         // await this.cApp.assureLogin();
         let { origin, captcha, lang, lot } = row;
         if (this.materialType === 'msds')
-            return await this.fetchPdf(`/partial/productMsdsFileByOrigin/${lang}/${origin}/${captcha}`);
+            return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
+        if (this.materialType === 'um')
+            return await this.fetchPdf('/partial/productUserManualFileByOrigin/' + `${lang}/${origin}/${captcha}`);
         if (this.materialType === 'spec')
-            return await this.fetchPdf(`/partial/productSpecFileByOrigin/${origin}/${captcha}`);
+            return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
         if (this.materialType === 'coa') {
             let getLot = await this.getLotByOrigin({ lotnumber: lot, origin: origin });/* LV50T103 911810  */
             let res = {
@@ -354,22 +336,25 @@ export class CProduct extends CUqBase {
      */
     openMaterial = async (type?: string, id?: string) => {
         type = type !== undefined ? type.toLowerCase() : type;
-        if (type === 'msds' || type === 'spec') await this.getCaptcha();
+        if (docTypeWithCaptcha.includes(type)) await this.getCaptcha();
         this.materialType = type;
         let origin: string;
         if (!isNaN(Number(id))) {
             this.product = this.cApp.getProduct(Number(id));
-            await this.product.loadDetail();
+            await this.product.loadBase();
         }
         if (this.product && this.product.props) {
             origin = this.product.props.origin;
-            if (origin && type === 'msds') {
-                let result = await window.fetch(GLOABLE.CONTENTSITE + '/partial/productMsdsVersion/' + origin);
-                if (result.ok) {
-                    this.productMsdsVersions = await result.json();
-                }
-                else this.productMsdsVersions = [];
-            }
+            if (origin && (type === 'msds' || type === 'um')) {
+                let urls: { [type: string]: string } = {
+                    "msds": "/partial/productMsdsVersion/",
+                    "um": "/partial/productUserManualVersion/",
+                };
+                let url: string = urls[type] || "/partial/productMsdsVersion/";
+                let result = await window.fetch(GLOABLE.CONTENTSITE + url + origin);
+                if (result && result.ok) this.productMscuVersions = await result.json();
+                else this.productMscuVersions = [];
+            };
         }
         this.openVPage(VPageSkillSearch, origin);
     }

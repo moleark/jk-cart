@@ -10,13 +10,11 @@ export class VBrandCrumbs extends View<CProductCategory> {
             <a href="/">首页</a>
             <Ax href="/product-catalog">产品</Ax>
             {allAncestors.map((parent: any) => {
-                return <React.Fragment key={typeof parent === 'object'? parent.id : parent} >{
-					tv(parent, (e: any) => {
+                return tv(parent, (e: any) => {
                     let { id, productcategorylanguage } = e;
                     let jL = productcategorylanguage.find((jl: any) => cApp.currentLanguage.id === jl.language.id);
                     return jL !== undefined ? <Ax href={"/product-catalog/" + id}>{jL.name}</Ax> : null;
-                })}
-				</React.Fragment>
+                })
             })}
         </div>
     }

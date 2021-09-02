@@ -12,7 +12,7 @@ import { Product } from 'store';
 export class VProuductView2 extends View<CProduct> {
 	// @observable product: any;
 	// @observable discount: number;
-	private onProductClick = async (product: Product) => {
+	onProductClick = async (product: Product) => {
         let { id } = product;
         let url = "/product/" + id;
         this.navigate(url);
@@ -25,48 +25,47 @@ export class VProuductView2 extends View<CProduct> {
 			let { brand, chemical, props, id } = product;
 			let { description, descriptionC, origin, imageUrl } = props;
 			let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
-			let eName = <div className="pr-5"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+			let eName = <div className="pr-5 en-font-family" style={{wordWrap:'break-word'}}><strong className="cursor-pointer" onClick={()=> this.onProductClick(product)}   dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
 			let cName: any;
 			if (descriptionC !== description) {
-				cName = <div className="pr-5" dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
+				cName = <div className="d-inline-block cursor-pointer" onClick={()=> this.onProductClick(product)} dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
 			}
-			return <div className="row mx-0 my-lg-2">
-				<div className="col-lg-2" onClick={()=>{this.onProductClick(product)}}>
+			return <div className="row mx-0 my-lg-2 w-100">
+				<div className="col-lg-2">
 					<div className="img-wrap">
 						<ProductImage chemicalId={imageUrl} className="mx-auto" style={{ maxHeight: 192 }} />
 					</div>
 				</div>
 				<div className="col-lg-10 each-product">
-					<div onClick={()=>{this.onProductClick(product)}}>
-						{this.renderVm(VFavorite, { product, callback: callback })}
-						<h3 className="ml-lg-3">
-							{eName}
-							{cName}
-						</h3>
-						{
-							!productListSource
-								? <div className="row p-0 mx-0">
-									{renderPropItem('产品编号', origin)}
-									{renderPropItem('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}}  href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
-									{renderPropItem('纯度', purity || props.purity)}
-									{renderPropItem('分子式', molecularFomula || props.molecularFomula)}
-									{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
-									{renderBrand(brand)}
-								</div>
-								: <p className="ml-lg-3">
-									{renderPropItemC('产品编号', origin, null, false)}
-									{renderPropItemC('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}} href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
-									{brand && renderPropItemC('品牌', brand.name)}
-								</p>
-						}
+					<div onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}>
+						<div>{this.renderVm(VFavorite, { product, callback: callback })}</div>
 					</div>
-					<div className="text-right">
-						<a className="button collapsed" data-toggle="collapse" href={`#description${id}`}
-							role="button" aria-expanded="false" aria-controls="jk" 
-							/* target="_blank" */ rel="noreferrer" 
-							style={{position:"absolute",marginBottom:"-10px"}}	
-						// onClick={(event: React.MouseEvent) => { event.stopPropagation(); return false; }}
-						>{''}</a>
+					<h3 className="ml-lg-3">
+						{eName}
+						{cName}
+					</h3>
+					{
+						!productListSource
+							? <div className="row p-0 mx-0">
+								{renderPropItem('产品编号', origin)}
+								{renderPropItem('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}}  href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
+								{renderPropItem('纯度', purity || props.purity)}
+								{renderPropItem('分子式', molecularFomula || props.molecularFomula)}
+								{renderPropItem('分子量', molecularWeight || props.molecularWeight)}
+								{renderBrand(brand)}
+							</div>
+							: <p className="ml-lg-3">
+								{renderPropItemC('产品编号', origin, null, false)}
+								{renderPropItemC('CAS', <Ax onClick={(e) => { e.stopPropagation();nav.navigate(`/search/${ CAS || props.CAS }`);}} href={`/search/${ CAS || props.CAS }` } className="text-primary">{CAS || props.CAS}</Ax>)}
+								{brand && renderPropItemC('品牌', brand.name)}
+							</p>
+					}
+					<div className="text-right pt-3">
+						<a className="button collapsed" data-toggle="collapse" href={`#description${id}`} role="button"
+							aria-expanded="false" aria-controls="collapseExample" /* target="_blank" */
+							style={{position:"absolute",marginBottom:"-10px"}}
+							// onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
+						></a>
 					</div>
 				</div>
 
@@ -76,11 +75,11 @@ export class VProuductView2 extends View<CProduct> {
 					<div className="table-responsive-vertical shadow-z-1">
 						<table id="table" className="table article-product-table" style={{marginBottom:2}}>
 							<thead>
-								<tr className="article-product-list">
-									<th>包装</th>
-									<th>库存</th>
-									<th>价格</th>
-									<th>数量</th>
+								<tr className="article-product-list text-right">
+									<th style={{paddingLeft:8,paddingRight:8}}>包装</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>库存</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>价格(RMB)</th>
+									<th style={{paddingLeft:8,paddingRight:8}}>数量</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -185,7 +184,6 @@ function renderPropItemC(caption: string, value: any, captionClass?: string, Cut
 
 	</>
 }
-/*
 function renderPropItemCustom(caption: string, value: any, captionClass?: string, CutLine?: Boolean) {
 	if (value === null || value === undefined || value === '0') return null;
 	let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
@@ -193,11 +191,11 @@ function renderPropItemCustom(caption: string, value: any, captionClass?: string
 	let cutLine: JSX.Element = <span className="h-1c align-self-center mx-2" style={{ borderRight: '1px solid #333' }}></span>;
 	if (!CutLine && CutLine !== undefined) cutLine = null;
 	return <div className="col-6 col-lg-4 col-sm-6 px-0">
+		{/* {!xs && cutLine} */}
 		<span className={classNames('small', capClass)}> {caption}： </span>
 		<span className={classNames('small', valClass)}>{value}</span>
 	</div>;
 }
-*/
 
 /**
  * 收藏列表（有收藏与取消功能）

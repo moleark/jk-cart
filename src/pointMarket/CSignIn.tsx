@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { CApp, CUqBase } from 'uq-app';
+import { CApp, CUqBase } from 'tapp';
 import { observable, makeObservable } from 'mobx';
 import { QueryPager } from 'tonva-react';
 import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
