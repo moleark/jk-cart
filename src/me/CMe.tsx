@@ -10,6 +10,7 @@ import { CAddress } from '../customer/CAddress';
 import { CFavorites } from '../customer/CFavorites';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
+import { VLegal } from './legal';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -95,6 +96,10 @@ export class CMe extends CUqBase {
     openPrivacy = () => {
         // this.openVPage(Privacy);
         nav.showPrivacyPage();
+    }
+
+    openLegal = async () => {
+        this.openVPage(VLegal);
     }
 
     getCommonText = async (textId: number) => {

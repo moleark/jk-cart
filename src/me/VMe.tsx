@@ -118,6 +118,11 @@ export class VMe extends VPage<CMe> {
             },
             {
                 type: 'component',
+                component: <IconText iconClass="text-info mr-2" icon="smile-o" text="用户协议" />,
+                onClick: this.controller.openLegal
+            },
+            {
+                type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="隐私政策" />,
                 onClick: this.privacy
             },
