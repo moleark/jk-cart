@@ -9,8 +9,16 @@ import { observable, makeObservable } from 'mobx';
 //import { CartItem } from '../cart/Cart';
 
 export class VOrderDetail extends VPage<COrder> {
-    @observable orderTrans: any[] = [];
-    
+    orderTrans: any[] = [];
+
+    constructor(c: COrder) {
+        super(c);
+
+        makeObservable(this, {
+            orderTrans: observable
+        });
+    }
+
     async open(order: any) {
 
         this.openPage(this.page, order);

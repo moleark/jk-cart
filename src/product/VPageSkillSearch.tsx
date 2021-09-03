@@ -28,7 +28,16 @@ export class VPageSkillSearch extends VPage<CProduct> {
 	private productLotTip = observable.box<string>();
 	private productLotTipNone = observable.box<string>();
 	private captchaTip = observable.box<string>();
-	@observable buttonDisable: boolean = false;
+	buttonDisable: boolean = false;
+
+	constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            buttonDisable: observable
+        });
+	}
+
 	async open(param?: any) {
 		this.openPage(this.page, { origin: param });
 	}

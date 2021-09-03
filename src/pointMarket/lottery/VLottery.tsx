@@ -3,17 +3,29 @@ import { observer } from 'mobx-react';
 import { VPage, Page, FA } from 'tonva-react';
 import { CLottery } from './CLottery';
 import { PointProductImage } from 'tools/productImage';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import classNames from 'classnames';
 
-
 export class VLottery extends VPage<CLottery> {
-    @observable currIndex: number;
-    @observable winning: any;   /* 中奖的商品 */
-    @observable isLottery: boolean = false;
-    @observable lotterySuccess: boolean = false;
-    @observable aDeg: any = 0;/* 轮盘转到度数 */
+    currIndex: number;
+    winning: any;   /* 中奖的商品 */
+    isLottery: boolean = false;
+    lotterySuccess: boolean = false;
+    aDeg: any = 0;/* 轮盘转到度数 */
     prize = [0, 1, 2, 5, 8, 7, 6, 3];//抽奖轮转顺序  九宫格
+
+    constructor(c: CLottery) {
+        super(c);
+
+        makeObservable(this, {
+            currIndex: observable,
+            winning: observable,
+            isLottery: observable,
+            lotterySuccess: observable,
+            aDeg: observable
+        });
+    }
+
     // prize = [0, 1, 2, 3, 4, 5, 6, 7];//抽奖轮转顺序     轮盘
     async open(param?: any) {
         // console.log(await this.controller.cApp.uqs.积分商城);

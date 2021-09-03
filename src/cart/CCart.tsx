@@ -9,14 +9,22 @@ import { GLOABLE } from '../global';
 
 export class CCart extends CUqBase {
 	//cart: Cart;
-    @observable editButton: boolean = false; // = observable.box<boolean>(false);
-    @observable cartBtnMatch: CartBtnMatch = new CartBtnMatch(this.cApp);
+    editButton: boolean = false; // = observable.box<boolean>(false);
+    cartBtnMatch: CartBtnMatch = new CartBtnMatch(this.cApp);
     private selectedCartItems: CartItem[];
 
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            editButton: observable,
+            cartBtnMatch: observable
+        });
+    }
+
     protected async internalStart(param: any) {
-        let punchOutXML = await this.generatePunchOutXML();
         this.cartBtnMatch = new CartBtnMatch(this.cApp);
-        this.openVPage(VCart, { punchOutXML: punchOutXML });
+        this.openVPage(VCart);
     }
 
 	showCart = async () => {
@@ -229,7 +237,8 @@ export class CCart extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
-    tabPage: VCart = new VCart(this);
+    // tabPage: VCart = new VCart(this);
+    tabPage = () => this.renderView(VCart);
 }
 
 export class CartBtnMatch {
@@ -241,7 +250,7 @@ export class CartBtnMatch {
         this.organization = this.cApp.currentUser?.thirdPartyOrg;
     }
 
-    get displayBtn():boolean {
+    get displayBtn(): boolean {
         return this.organization && !["3"].includes(this.organization);
     }
 

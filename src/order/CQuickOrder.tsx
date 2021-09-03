@@ -1,6 +1,6 @@
 import { observable, makeObservable } from 'mobx';
 import { BoxId, Tuid } from 'tonva-react';
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 import { VQuickOrder } from './VQuickOrder';
 import { VPriceQuickOrder } from 'product/views';
 
@@ -11,13 +11,20 @@ export let minPrice = (vipPrice: any, promotionPrice: any) => {
 
 export class CQuickOrder extends CUqBase {
 
-    @observable quickOrderProducts: any[] = [
+    quickOrderProducts: any[] = [
         // { id: 1, origin: "187351" },
         // { id: 2, origin: "102053" },
         // { id: 3, origin: "159262" },
         // { id: 4, origin: "160666" },
         // { id: 5, origin: "187351" },
     ];
+
+    constructor(cApp: CApp) {
+        super(cApp);
+        makeObservable(this, {
+            quickOrderProducts: observable
+        });
+    }
     
     protected async internalStart(param?: any) { }
 

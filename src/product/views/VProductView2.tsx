@@ -65,7 +65,7 @@ export class VProuductView2 extends View<CProduct> {
 							aria-expanded="false" aria-controls="collapseExample" /* target="_blank" */
 							style={{position:"absolute",marginBottom:"-10px"}}
 							// onClick={(event: React.MouseEvent) => { event.stopPropagation(); }}
-						></a>
+						>{''}</a>
 					</div>
 				</div>
 
@@ -184,18 +184,17 @@ function renderPropItemC(caption: string, value: any, captionClass?: string, Cut
 
 	</>
 }
-function renderPropItemCustom(caption: string, value: any, captionClass?: string, CutLine?: Boolean) {
+/* function renderPropItemCustom(caption: string, value: any, captionClass?: string, CutLine?: Boolean) {
 	if (value === null || value === undefined || value === '0') return null;
 	let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
 	let valClass = captionClass ? classNames(captionClass) : "";
 	let cutLine: JSX.Element = <span className="h-1c align-self-center mx-2" style={{ borderRight: '1px solid #333' }}></span>;
 	if (!CutLine && CutLine !== undefined) cutLine = null;
 	return <div className="col-6 col-lg-4 col-sm-6 px-0">
-		{/* {!xs && cutLine} */}
 		<span className={classNames('small', capClass)}> {caption}： </span>
 		<span className={classNames('small', valClass)}>{value}</span>
 	</div>;
-}
+} */
 
 /**
  * 收藏列表（有收藏与取消功能）

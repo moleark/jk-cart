@@ -12,9 +12,9 @@ export interface PListTableProps{
 }
 
 export class ListTable extends React.Component<PListTableProps>{
-    constructor(props:any) {
+    /* constructor(props:any) {
         super(props);
-    }
+    } */
 
     render() {
         let { columns, content } = this.props;

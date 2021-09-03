@@ -6,11 +6,23 @@ import Pdfh5 from 'pdfh5'
 import "pdfh5/css/pdfh5.css";
 
 export class VPagePDF extends VPage<CProduct> {
-    @observable pdfh5: any;
-    @observable fileName: string = '';      /* 文件名称 暂弃 */
-    @observable fileUrl: any;               /* 文件路径 */
-    @observable isFoundFile: boolean = true;/* 文件是否存在 */
-    @observable fileContent: any;           /* 内容 */
+    pdfh5: any;
+    fileName: string = '';      /* 文件名称 暂弃 */
+    fileUrl: any;               /* 文件路径 */
+    isFoundFile: boolean = true;/* 文件是否存在 */
+    fileContent: any;           /* 内容 */
+
+    constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            pdfh5: observable,
+            fileName: observable,
+            fileUrl: observable,
+            isFoundFile: observable,
+            fileContent: observable
+        });
+    }
 
     async open(param?: any) {
         // this.fileName = this.controller.currentFileName;
@@ -53,7 +65,7 @@ export class VPagePDF extends VPage<CProduct> {
         // return <Page header={header} right={right} >
         return <Page >
             <div className="text-right mt-1 rounded py-1 pr-3 d-none d-sm-block" style={{background:'#f5f5f5'}}>
-                <a href={this.fileUrl} target="_blank">
+                <a href={this.fileUrl} target="_blank" rel="noreferrer">
                     <button className="btn btn-sm btn-success w-3c" style={{backgroundColor: '#218838'}}>下载</button>
                     {/* <FA name="cloud-download" className="text-primary" size='2x' /> */}
                 </a>

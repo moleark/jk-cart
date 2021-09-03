@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from 'tonva-react';
 import { CPointProduct, topicClump, topicClumps } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
-import { VPointRule } from './VPointRule';
+import { VPointRule } from './view/VPointRule';
 import { PointProductImage } from 'tools/productImage';
 import classNames from 'classnames';
 import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';

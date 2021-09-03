@@ -10,10 +10,10 @@ export class WebUser {
     nick?: string;
     icon?: string;
 
-    @observable firstName: string;
+    firstName: string;
     gender: string;
     salutation: string;
-    @observable organizationName: string;
+    organizationName: string;
     departmentName: string;
 
     get defaultOrganizationName(): string {
@@ -48,7 +48,7 @@ export class WebUser {
     }
 
     telephone: string;
-    @observable mobile: string;
+    mobile: string;
     email: string;
     fax: string;
     address: BoxId;
@@ -64,7 +64,7 @@ export class WebUser {
         return "";
     };
 
-    @computed get allowOrdering() {
+    get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
             (this.mobile && this.firstName && this.organizationName);
@@ -76,6 +76,15 @@ export class WebUser {
 
 
     constructor(uqs: UQs) {// cUsqWebUser: CUq, cUsqCustomer: CUq) {
+        makeObservable(this, {
+            firstName: observable,
+            organizationName: observable,
+            mobile: observable,
+            allowOrdering: computed,
+            agtCustomerType: computed,
+        });
+
+        // cUsqWebUser: CUq, cUsqCustomer: CUq) {
         this.uqs = uqs;
     }
 

@@ -4,8 +4,16 @@ import { CMe } from './CMe';
 import { observable, makeObservable } from 'mobx';
 
 export class Privacy extends VPage<CMe>{
+    private privacy: any;
 
-    @observable private privacy: any;
+    constructor(cMe: CMe) {
+        super(cMe);
+
+        makeObservable<Privacy, "privacy">(this, {
+            privacy: observable
+        });
+    }
+
     async open(param?: any) {
 
         this.privacy = await this.controller.getCommonText(1);

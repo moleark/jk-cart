@@ -1,5 +1,4 @@
 import { PageItems } from 'tonva-react';
-import * as _ from 'lodash';
 
 export class ElasticSearchPager<T extends any> extends PageItems<T>{
 

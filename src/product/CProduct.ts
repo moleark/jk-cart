@@ -1,6 +1,6 @@
 import { observable, makeObservable } from 'mobx';
 import { BoxId, QueryPager } from 'tonva-react';
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 import { VPageProduct } from './VPageProduct';
 import { VPageList } from './VPageList';
 import { docTypeWithCaptcha, VPageSkillSearch } from './VPageSkillSearch';
@@ -13,33 +13,52 @@ import { VError } from '../tools/VError';
 
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
-    @observable esproductsPager: ElasticSearchPager<Product> | any[];
-    @observable esProductsTotal: any;
-    @observable currentPage: number = 1;
+    esproductsPager: ElasticSearchPager<Product> | any[];
+    esProductsTotal: any;
+    currentPage: number = 1;
     //@observable productSpecFiles: any[] = [];
     //@observable productMSDSFiles: any[] = [];
     //@observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
     //@observable chemicalInfoContainer: { [productId: number]: any } = {};
 
-    @observable captcha: any;
-    @observable materialType: string;
-    @observable currentFileName: any;
-    @observable currentLanguage: any;
-    @observable currentProduct: any;
-    @observable productMscuVersions: any[] = [];
-    @observable showFavorites: Boolean = false;
-    @observable searchUrl: string;
+    captcha: any;
+    materialType: string;
+    currentFileName: any;
+    currentLanguage: any;
+    currentProduct: any;
+    productMscuVersions: any[] = [];
+    showFavorites: Boolean = false;
+    searchUrl: string;
 
     //@observable productData: any;
     //@observable product: any;
     //@observable discount: any;
 
-    private salesRegion: any;
-    private language: any;
+    // private salesRegion: any;
+    // private language: any;
 
     product: Product;
 
     searchKey: string;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            esproductsPager: observable,
+            esProductsTotal: observable,
+            currentPage: observable,
+            captcha: observable,
+            materialType: observable,
+            currentFileName: observable,
+            currentLanguage: observable,
+            currentProduct: observable,
+            productMscuVersions: observable,
+            showFavorites: observable,
+            searchUrl: observable
+        });
+    }
+
     protected async internalStart(param?: any) {
         let { key, type } = param;
         this.searchKey = key;
@@ -271,11 +290,11 @@ export class CProduct extends CUqBase {
         // await this.cApp.assureLogin();
         let { origin, captcha, lang, lot } = row;
         if (this.materialType === 'msds')
-            return await this.fetchPdf('/partial/productMsdsFileByOrigin/' + `${lang}/${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productMsdsFileByOrigin/${lang}/${origin}/${captcha}`);
         if (this.materialType === 'um')
-            return await this.fetchPdf('/partial/productUserManualFileByOrigin/' + `${lang}/${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productUserManualFileByOrigin/${lang}/${origin}/${captcha}`);
         if (this.materialType === 'spec')
-            return await this.fetchPdf('/partial/productSpecFileByOrigin/' + `${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productSpecFileByOrigin/${origin}/${captcha}`);
         if (this.materialType === 'coa') {
             let getLot = await this.getLotByOrigin({ lotnumber: lot, origin: origin });/* LV50T103 911810  */
             let res = {

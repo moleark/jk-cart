@@ -6,7 +6,7 @@ import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 import { VCouponManage } from './VCouponManage';
 import { VModelCardDiscount } from './VModelCardDiscount';
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -28,11 +28,22 @@ const couponTips: { [key: number]: string } = {
 
 export class CCoupon extends CUqBase {
     isOpenMyCouponManage: boolean = false;
-    @observable couponDrawed: boolean;
-    @observable sharedCouponValidationResult: any;
-    @observable CardDiscount: boolean = false;
-    @observable curCardDiscount: any;
+    couponDrawed: boolean;
+    sharedCouponValidationResult: any;
+    CardDiscount: boolean = false;
+    curCardDiscount: any;
     couponPager: QueryPager<any>;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            couponDrawed: observable,
+            sharedCouponValidationResult: observable,
+            CardDiscount: observable,
+            curCardDiscount: observable
+        });
+    }
 
     applyCoupon = async (coupon: string) => {
         let validationResult = await this.getCouponValidationResult(coupon);

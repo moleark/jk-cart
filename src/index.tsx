@@ -2,16 +2,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
-//import './css/style.css';
-import * as serviceWorker from './serviceWorker';
 import './index.css';
-import { NavView, start, nav, startPage, env } from 'tonva-react';
 import './App.css';
 import 'antd/dist/antd.css';
+import * as serviceWorker from './serviceWorker';
+import { NavView, start, nav, startPage, env } from 'tonva-react';
 import { CApp, CWeb, appConfig } from 'tapp';
 import * as qs from 'querystringify';
 import { GLOABLE } from 'global';
-//import logo from './logo.svg';
 
 /*
 let elRoot = document.getElementById('root');

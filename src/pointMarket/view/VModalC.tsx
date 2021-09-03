@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { FA, View } from 'tonva-react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
-
+import { observable, makeObservable } from 'mobx';
 
 export class VModalC extends React.Component<any,any> {
-    @observable visible: boolean = true;
+    visible: boolean = true;
 
     constructor(props: any) {
         super(props);
         let { visible } = this.props;
         this.visible = visible;
+        makeObservable(this, {
+            visible: observable
+        });
     }
 
     medalOnClick = () => {

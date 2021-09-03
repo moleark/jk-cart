@@ -11,8 +11,7 @@ import { xs } from '../tools/browser';
 import { VModelByCreateOrder } from './VModelByCreateOrder';
 
 export class VCreateOrder extends VPage<COrder> {
-
-    @observable private useShippingAddress: boolean = true;
+    private useShippingAddress: boolean = true;
     //@observable private shippingAddressIsBlank: boolean = false;
     //@observable private invoiceAddressIsBlank: boolean = false;
 	//@observable private invoiceIsBlank: boolean = false;
@@ -20,8 +19,18 @@ export class VCreateOrder extends VPage<COrder> {
 	private invoiceAddressTip = observable.box();
 	private invoiceTip = observable.box();
 	private comBininvoiceTip = observable.box();
-    @observable orderNotes: HTMLTextAreaElement;
-    @observable submitOrderEd: boolean = false;
+    orderNotes: HTMLTextAreaElement;
+    submitOrderEd: boolean = false;
+
+    constructor(c: COrder) {
+        super(c);
+
+        makeObservable<VCreateOrder, "useShippingAddress">(this, {
+            useShippingAddress: observable,
+            orderNotes: observable,
+            submitOrderEd: observable
+        });
+    }
 
     async open(param: any) {
         document.documentElement.scrollIntoView();

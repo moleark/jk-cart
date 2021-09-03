@@ -15,16 +15,14 @@ export class VMain extends VPage<CApp> {
             { 
 				name: 'home', 
 				caption: caption('首页', 'home'),
-				// content: cHome.tab,
-				content: ()=> <div>11</div>,
+				content: cHome.tab, 
 				notify: undefined
 			},
             // { name: 'member', label: '会员', icon: 'vcard', content: cMember.tab },
             {
                 name: 'cart',
 				caption: caption('购物车', 'shopping-cart'),
-                // content: cCart.tabPage, 
-				content: ()=> <div>22</div>,
+                content: cCart.tabPage, 
                 //page: cCart.tabPage,
                 notify: store.cartCount
             },

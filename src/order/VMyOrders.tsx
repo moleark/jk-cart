@@ -20,9 +20,18 @@ export class VMyOrders extends VPage<COrder> {
     @observable private completedOrders: any[];
 	@observable private allOrders: any[];
 	*/
-	@observable private list: any[] = [];
-	@observable currentState: string;
+	private list: any[] = [];
+	currentState: string;
 	private tabs: TabProp[];
+
+	constructor(c: COrder) {
+        super(c);
+
+        makeObservable<VMyOrders, "list">(this, {
+            list: observable,
+            currentState: observable
+        });
+	}
 
 	/*
     async open(param: any) {
@@ -151,7 +160,7 @@ export class VMyOrders extends VPage<COrder> {
 					<div className="alert alert-info alert-signin my-2">
 						<div>原官网历史订单
 						<a className="text-primary" href={GLOABLE.CONTENTSITE + "/Member/Center/SaleOrderList.aspx?language=zh-CN"}
-								target="_blank"><b>查询</b></a>
+								target="_blank" rel="noreferrer"><b>查询</b></a>
 						</div>
 					</div>
 				</div>

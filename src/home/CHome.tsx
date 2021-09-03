@@ -1,4 +1,4 @@
-import { Tuid, PageItems} from 'tonva-react';
+import { Tuid, PageItems } from 'tonva-react';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
 import { VScanCode } from './VScanCode';
@@ -75,6 +75,6 @@ export class CHome extends CUqBase {
         await cProduct.showProductDetail(productByOrigin.id, 'ScanCode');
     }
 
-    // tab = () => this.renderView(VHome);
-    tab: VHome = new VHome(this);
+    tab = () => this.renderView(VHome);
+    tabContent() {return new VHome(this).content();}
 }

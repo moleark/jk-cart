@@ -40,13 +40,19 @@ export class Cart {
         list: observable<CartItem>([]),
     };
     */
-    @observable cartItems: CartItem[];
-    @observable count = 0; //observable.box<number>(0);
-    @observable amount = 0; //= observable.box<number>(0);
+    cartItems: CartItem[];
+    count = 0; //observable.box<number>(0);
+    amount = 0; //= observable.box<number>(0);
     constructor(store: Store) {
+        makeObservable(this, {
+            cartItems: observable,
+            count: observable,
+            amount: observable
+        });
+
         //this.cApp = cApp;
         //this.cartItems = this.data.list;
-		this.store = store;
+        this.store = store;
         this.disposer = autorun(this.calcSum);
     }
 
@@ -147,12 +153,12 @@ export class Cart {
         for (let index = cartData.length - 1; index >= 0; index--) {
             let e: any = cartData[index];
             let priceMap: any = prices.find((v: any) => {
-				if (!v) return false;
-				return Tuid.equ(v.product, e.product)
-                	&& Tuid.equ(v.pack, e.pack) 
-					&& v.discountinued === 0 
-					&& v.expireDate > Date.now()
-			});
+                if (!v) return false;
+                return Tuid.equ(v.product, e.product)
+                    && Tuid.equ(v.pack, e.pack)
+                    && v.discountinued === 0
+                    && v.expireDate > Date.now()
+            });
             if (priceMap && priceMap.retail) {
                 e.retail = priceMap.retail;
             } else {
@@ -297,12 +303,12 @@ export class Cart {
         }
     }
 
-	async changeQuantity(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
-		if (quantity > 0)
-			await this.add(product, pack, quantity, price, retail, currency);
-		else
-			await this.removeItem([{ productId: product.id, packId: pack.id }]);
-	}
+    async changeQuantity(product: Product, pack: BoxId, quantity: number, price: number, retail: number, currency: any) {
+        if (quantity > 0)
+            await this.add(product, pack, quantity, price, retail, currency);
+        else
+            await this.removeItem([{ productId: product.id, packId: pack.id }]);
+    }
 
 
     againCreatOrder = async (initialData: OrderItem[]) => {
@@ -347,7 +353,7 @@ export class Cart {
         //nav.navigate('/cart');
     }
 
-	private minPrice(vipPrice: any, promotionPrice: any) {
+    private minPrice(vipPrice: any, promotionPrice: any) {
         if (vipPrice || promotionPrice)
             return Math.min(typeof (vipPrice) === 'number' ? vipPrice : Infinity, typeof (promotionPrice) === 'number' ? promotionPrice : Infinity);
     }
@@ -503,9 +509,9 @@ class CartLocal extends CartStore {
 
     async storeCart(product: Product, pack: BoxId, quantity: number, price: number, currency: any) {
         let cartItemExists = this.cartData.find(e => {
-			if (!e) return false;
-			return Tuid.equ(e.product, product) && TuidDiv.equ(e.pack, pack);
-		});
+            if (!e) return false;
+            return Tuid.equ(e.product, product) && TuidDiv.equ(e.pack, pack);
+        });
         if (cartItemExists !== undefined) {
             cartItemExists.quantity = quantity;
             cartItemExists.price = price;

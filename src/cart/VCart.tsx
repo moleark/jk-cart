@@ -5,6 +5,7 @@ import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
 import { CartPackRow, CartItem } from '../store';
 import { xs } from 'tools/browser';
+import { makeObservable, observable } from 'mobx';
 
 const cartSchema = [
     {
@@ -28,14 +29,31 @@ const cartSchema = [
 
 export class VCart extends VPage<CCart> {
     punchOutXML: any;
+    punchOutUrl: boolean = false;
     /*
     async open() {
         this.openPage(this.page);
     }
     */
-    init(param: any) {
-        let { punchOutXML } = param;
-        this.punchOutXML = punchOutXML;
+    
+    constructor(c: CCart) {
+        super(c);
+
+        makeObservable(this, {
+            punchOutXML: observable,
+            punchOutUrl: observable,
+        });
+    }
+
+    /* init(param?: any) {
+        this.punchOutXML = undefined;
+    } */
+
+    punchOutSubmit = async ()=>{
+        this.punchOutXML = await this.controller.generatePunchOutXML();
+        if (!this.punchOutXML?.cxmlBase64) { this.punchOutUrl = false; return false; };
+        this.punchOutUrl = true;
+        return true;
     }
 
     protected CheckOutButton = observer(() => {
@@ -47,13 +65,16 @@ export class VCart extends VPage<CCart> {
             <>{check} (¥{amount})</> :
             <>{check}</>;
         if (check === "punchOut")
-            return <form action={this.punchOutXML?.url || "*"} onSubmit={() => { cartBtnMatch.CartButtonClick(); return true; }}
+            return <form action={this.punchOutXML?.url || "*"}
+                onSubmit={() => { this.punchOutSubmit(); if (this.punchOutUrl) cartBtnMatch.CartButtonClick(); return this.punchOutUrl; }}
                 encType="application/x-www-form-urlencoded" method="post">
-                <input name="cxml-base64" defaultValue={ this.punchOutXML?.cxmlBase64 || "" } style={{visibility: "hidden", position: "absolute"}} type="text"  />
-                {this.punchOutXML?.message && <div className="text-center text-danger py-2" >{this.punchOutXML?.message }</div>}
+                <input name="cxml-base64" defaultValue={this.punchOutXML?.cxmlBase64 || ""} style={{ visibility: "hidden", position: "absolute" }} type="text" />
+                {this.punchOutXML?.message && <div className="text-center text-danger py-2" >{this.punchOutXML?.message}</div>}
                 <div className="d-flex justify-content-center">
-                    <button className="btn btn-success mx-5" style={{ background: '#28a745' }}
-                        type="submit" disabled={amount <= 0 || !this.punchOutXML?.cxmlBase64}>
+                    <button className="btn btn-success mx-5" style={{ background: '#28a745' }} onClick={() => {
+                        document.addEventListener('submit', (e) => { if (!this.punchOutUrl) e.preventDefault(); });
+                    }}
+                        type="submit" disabled={amount <= 0 /* || !this.punchOutXML?.cxmlBase64 */}>
                         {content}
                     </button>
                 </div>
@@ -197,7 +218,7 @@ export class VCart extends VPage<CCart> {
 
     // header() {return <div className="navheader">购物车</div>}
     header() {
-        if (!xs) return '';
+        if (!xs) return null;
         return <div className="navheader">购物车</div>;
     }
     footer() {
@@ -206,7 +227,7 @@ export class VCart extends VPage<CCart> {
 			let { cart } = cApp.store;
             let footer: any;
             if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && cartBtnMatch.displayBtn) {
-                footer = undefined;
+                footer = null;
             }
             else {
                 footer = React.createElement(this.CheckOutButton);

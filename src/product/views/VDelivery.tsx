@@ -17,7 +17,7 @@ export class VDelivery extends View<CProduct> {
 			//let { packId, productId } = param;
             let { product, cApp } = this.controller;
             product = cApp.getProduct(obj?.owner);
-            if (!product) return;
+            if (!product) return null;
             let { futureDeliveryTimeDescription } = product;
             let inventoryAllocation = product.getInventoryAllocation(packId);
 			// if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
@@ -40,7 +40,7 @@ export class VDelivery extends View<CProduct> {
                         restrict += 1;
 				        return <div key={index}>{'期货: ' + futureDeliveryTimeDescription}</div>;
                     }
-					return undefined;
+					return null;
 				}
 			})}</>;
 		}));

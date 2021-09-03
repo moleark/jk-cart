@@ -4,7 +4,7 @@ import { VPage, Ax, FA, View, A, Image, nav, env } from 'tonva-react';
 import { CApp } from './CApp';
 import { observer } from 'mobx-react';
 import * as qs from 'querystringify';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 
 interface PCategoryId {
     id: number | string,
@@ -22,17 +22,26 @@ const ProductCategorys: { [name: string]: PCategoryId } = {
 export class VMainWebNav extends VPage<CApp> {
     content() {
         let { cHome } = this.controller;
-        return cHome.tab.content();
+        return cHome.tabContent();
     }
 }
 
 export class NavHeaderView extends View<CApp> {
     private searchKey: HTMLInputElement;
     private searchType: HTMLSelectElement;
-    @observable searchPhlder: string;
+    searchPhlder: string;
+
+    constructor(c: CApp) {
+        super(c);
+
+        makeObservable(this, {
+            searchPhlder: observable
+        });
+    }
 
     searchClick = () => {
-        let url = "/search/" + encodeURIComponent(this.searchKey.value);
+        let keyValue: string = this.searchKey?.value ? this.searchKey?.value : "";
+        let url = "/search/" + encodeURIComponent(keyValue);
         if (this.searchKey?.value !== "") url += "?type=" + this.searchType.value;
         this.navigate(url);
     }

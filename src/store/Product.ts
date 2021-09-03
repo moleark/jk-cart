@@ -47,26 +47,42 @@ export class Product {
 	private store: Store;
 
 	id: number;
-	@observable.ref props: ProductProps;
+	props: ProductProps;
 
-	@observable.ref brand: MainBrand;	/* 品牌 */
-	@observable.ref chemical: Chemical;	/* 化学属性 */
-	@observable favorite: boolean;		/* 是否收藏 */
-	@observable warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
-	@observable extention: any;			/* 基本信息、安全信息 */
-	@observable standardSample: any;	/* 标样信息 */
-	@observable productCrumbs: any[] = [];	/* 产品目录 */
-	@observable descriptionPost: any;	/* 产品描述 */
-	@observable.shallow packs: ProductPackRow[];	/* 销售包装 */
-	@observable prices: any[];				// 包含价格和折扣信息
-	@observable futureDeliveryTimeDescription: string;
-	@observable productDocs: any = { msds: false, spec: false, coa: false, um: false };
+	brand: MainBrand;	/* 品牌 */
+	chemical: Chemical;	/* 化学属性 */
+	favorite: boolean;		/* 是否收藏 */
+	warnings: any[] = [];	/* 警示：危化品、夏东季禁运等 */
+	extention: any;			/* 基本信息、安全信息 */
+	standardSample: any;	/* 标样信息 */
+	productCrumbs: any[] = [];	/* 产品目录 */
+	descriptionPost: any;	/* 产品描述 */
+	packs: ProductPackRow[];	/* 销售包装 */
+	prices: any[];				// 包含价格和折扣信息
+	futureDeliveryTimeDescription: string;
+	productDocs: any = { msds: false, spec: false, coa: false, um: false };
 	// @observable MSDSFiles: any;
 	// @observable specFiles: any;
 	// @observable data: any;
-	@observable discount: any;
+	discount: any;
 
 	constructor(store: Store, id: number | BoxId) {
+		makeObservable(this, {
+			props: observable.ref,
+			brand: observable.ref,
+			chemical: observable.ref,
+			favorite: observable,
+			warnings: observable,
+			extention: observable,
+			standardSample: observable,
+			productCrumbs: observable,
+			descriptionPost: observable,
+			packs: observable.shallow,
+			prices: observable,
+			futureDeliveryTimeDescription: observable,
+			productDocs: observable,
+			discount: observable
+		});
 		this.uqs = store.uqs;
 		this.store = store;
 		this.id = typeof id === 'object' ? id.id : id;
@@ -207,7 +223,7 @@ export class Product {
 		}
 
 		// let { id: currentSalesRegionId } = currentSalesRegion;
-		let prices = await this.getProductPacks();
+		let prices: any[] = await this.getProductPacks();
 		this.prices = prices.sort((a, b) => a.retail - b.retail).map(element => {
 			let ret: any = {};
 			ret.pack = element.pack;

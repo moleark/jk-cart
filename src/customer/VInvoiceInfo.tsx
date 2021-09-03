@@ -134,6 +134,15 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private saveTip = observable.box();
     private invoiceInfoData: any;
 
+    constructor(c: CInvoiceInfo) {
+        super(c);
+
+        makeObservable(this, {
+            invoiceType: observable,
+            InvoiceTypeChecked: observable
+        });
+    }
+
     async open(origInvoice?: any) {
         this.invoiceInfo(origInvoice);
         this.openPage(this.page);
@@ -176,7 +185,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         await this.form.buttonClick("submit");
     }
 
-    @observable invoiceType: number;
+    invoiceType: number;
 
     private buildForm(): JSX.Element {
         let requiredFields: any = this.invoiceType === 1 ? commonRequired : valueAddedRequired;
@@ -224,7 +233,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         </Page>
     });
 
-    @observable InvoiceTypeChecked: boolean;
+    InvoiceTypeChecked: boolean;
     render(param?: any): JSX.Element {
         return React.createElement(observer(() => {
             if (!this.InvoiceTypeChecked) {

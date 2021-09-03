@@ -38,8 +38,8 @@ export const schema = [
 ];
 
 export class VPointProduct extends VPage<CPointProduct> {
-    @observable protected isShowSelectForm: boolean = false;
-    @observable Gengres: any[] = [];
+    protected isShowSelectForm: boolean = false;
+    Gengres: any[] = [];
     //@observable protected productIsNull: boolean = false;
     //@observable protected pointIsEnough: boolean = false;
     protected productIsNull = observable.box(false);
@@ -54,6 +54,15 @@ export class VPointProduct extends VPage<CPointProduct> {
         { caption: '5-15万', state: 'twoLevel', icon: 'superpowers', borderC: '#7c1e5e' },
         { caption: '15万以上', state: 'above', icon: 'superpowers', borderC: '#0e2c8c' },
     ];
+
+    constructor(c: CPointProduct) {
+        super(c);
+
+        makeObservable<VPointProduct, "isShowSelectForm">(this, {
+            isShowSelectForm: observable,
+            Gengres: observable,
+        });
+    }
 
     header() {
         return this.isWebNav === true ? <div>{this.themeName}</div> : this.themeName;

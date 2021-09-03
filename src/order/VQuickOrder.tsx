@@ -18,10 +18,20 @@ const productOrderType: { [type:number]:string } = {
 
 export class VQuickOrder extends VPage<CQuickOrder> {
 
-    @observable directOrderType: number = 1;        /* 一键下单 类型 */
-    @observable excelData: any[] = [];              /* excel文件数据 */
-    @observable execlFileName: string;              /* excel文件名称 */
+    directOrderType: number = 1;        /* 一键下单 类型 */
+    excelData: any[] = [];              /* excel文件数据 */
+    execlFileName: string;              /* excel文件名称 */
     private excelTip = observable.box<string>('');
+
+    constructor(c: CQuickOrder) {
+        super(c);
+
+        makeObservable(this, {
+            directOrderType: observable,
+            excelData: observable,
+            execlFileName: observable
+        });
+    }
 
     header() {
         return this.isWebNav === true ? null : <>批量订购</>;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { VPage, Page, DropdownAction, DropdownActions, FA } from 'tonva-react';
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { signTopicMap, Homemadelogo } from 'tools/images';
 import { CSignIn } from './CSignIn';
 import { RevenueExpenditure } from '../basicRefer';
@@ -21,8 +21,17 @@ export const daysAndMultipleByWelfare = [
 ];
 
 export class VPointSign extends VPage<CSignIn> {
-    @observable showTips: any = "none";
+    showTips: any = "none";
     rulesNum: number = 0;
+
+    constructor(c: CSignIn) {
+        super(c);
+
+        makeObservable(this, {
+            showTips: observable
+        });
+    }
+
     async open(param?: any) {
         this.openPage(this.page);
     }

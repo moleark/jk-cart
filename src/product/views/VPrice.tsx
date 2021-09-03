@@ -182,7 +182,8 @@ export class VPriceWithTr extends VPrice {
     isShowTable: boolean = true;
 
     render(product: Product): JSX.Element {
-		let {prices} = product;
+        let { prices } = product;
+        if (!prices) return null;
         return React.createElement(observer(() => {
             return  <>{prices?.map((v: any, index: number) => {
             let { pack } = v;
@@ -203,11 +204,21 @@ export class VPriceWithTr extends VPrice {
  * 根据产品编号/包装规格查询产品，在客户手动输入或提交excel表格下单的场景下使用
  */
 export class VPriceQuickOrder extends VPrice {
-    @observable selectPack: any;
+    selectPack: any;
+
+    constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            selectPack: observable
+        });
+    }
+
     renderPrice(param: any, item: any) {
         let onQuantityChanged = async (context: Context, value: any, prev: any):Promise<void> => {
             let { data } = context;
-            let { pack, retail, vipPrice, promotionPrice, currency } = data;
+            //let { pack, retail, vipPrice, promotionPrice, currency } = data;
+			let { pack } = data;
             let { cApp } = this.controller;
             let { cQuickOrder } = cApp;
             await cQuickOrder.changeProductQuantity(param, pack, value);
@@ -230,7 +241,7 @@ export class VPriceQuickOrder extends VPrice {
 			}
 		}
 	
-        let { retail, vipPrice, promotionPrice, quantity } = item;
+        let { retail, vipPrice, promotionPrice, /* quantity */ } = item;
         // if (!quantity) return;
         let right = null;
         if (retail) {

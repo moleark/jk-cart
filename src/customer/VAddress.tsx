@@ -86,7 +86,7 @@ export class VAddress extends VPage<CAddress> {
         this.cityId = cityId;
         let counties = await this.controller.getCityCounties(cityId);
         if (counties && counties.length > 0) {
-            this.backLevel++;
+            // this.backLevel++;
             let header = this.titleHeader('选择所在区县');
             this.openPageElement(<Page header={header}>
                 <>
@@ -104,6 +104,8 @@ export class VAddress extends VPage<CAddress> {
 
     onCountyClick = async (countyId: any) => {
         this.countyId = countyId;
+        console.log('this.backLevel',this.backLevel);
+        
         this.closePage(this.backLevel);
         this.saveAddress();
     }

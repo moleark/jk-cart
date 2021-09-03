@@ -1,18 +1,31 @@
 /* eslint-disable */
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 import { VLottery } from './VLottery';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { VMyLotteryPrize } from './VMyLotteryPrize';
 import { VMyPrizeExchangeOrder } from '../VExchangeOrder';
 import { prizeOrder, prizeOrderItem } from './prizeOrder';
 
 export class CLottery extends CUqBase {
-    @observable lotteryProducts: any[] = [];        /* 抽奖产品列表 */
-    @observable remainingNumOfDraws: number = 1;    /* 剩余抽奖次数 */
-    @observable productsLib: any[] = [];            /* 抽奖产品集合（加概率） */
-    @observable myPrizeLib: any[] = [];             /* 我的奖品 */
-    @observable totalNumPrizes: number = 10000;      /* 奖品总量 */
-    @observable prizeOrderData: prizeOrder = new prizeOrder();
+    lotteryProducts: any[] = [];        /* 抽奖产品列表 */
+    remainingNumOfDraws: number = 1;    /* 剩余抽奖次数 */
+    productsLib: any[] = [];            /* 抽奖产品集合（加概率） */
+    myPrizeLib: any[] = [];             /* 我的奖品 */
+    totalNumPrizes: number = 10000;      /* 奖品总量 */
+    prizeOrderData: prizeOrder = new prizeOrder();
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            lotteryProducts: observable,
+            remainingNumOfDraws: observable,
+            productsLib: observable,
+            myPrizeLib: observable,
+            totalNumPrizes: observable,
+            prizeOrderData: observable
+        });
+    }
 
     async internalStart(param?: any) { }
 

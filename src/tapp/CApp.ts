@@ -79,7 +79,6 @@ export class CApp extends CUqApp {
         this.cOrder = this.newC(COrder);
         this.cQuickOrder = this.newC(CQuickOrder);
         this.cCart = this.newC(CCart);
-        await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         this.cCoupon = this.newC(CCoupon);
         this.cMember = this.newC(CMember);
         this.cMe = this.newC(CMe);
@@ -92,6 +91,7 @@ export class CApp extends CUqApp {
         this.cSelectInvoiceContact = this.newC(CSelectInvoiceContact);
         this.cAddress = this.newC(CAddress);
         this.cInvoiceInfo = this.newC(CInvoiceInfo);
+        await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         await this.cSelectShippingContact.getContactList();
         await this.cHome.getSlideShow();
         return true;

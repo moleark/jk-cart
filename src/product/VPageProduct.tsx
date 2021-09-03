@@ -82,7 +82,15 @@ const securityInfoKey = [
 export class VPageProduct extends VPage<CProduct> {
     //private productBox: BoxId;
     //private discount: number;
-    @observable p: boolean = false;
+    p: boolean = false;
+
+    constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            p: observable
+        });
+    }
 
     async open(param: any) {
         //let { productData, product, discount } = param;

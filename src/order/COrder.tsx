@@ -1,6 +1,6 @@
 import { observable, makeObservable } from 'mobx';
 import { BoxId, Context, env, nav } from 'tonva-react';
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';
 import { OrderSuccess } from './OrderSuccess';
@@ -20,25 +20,24 @@ import { VCoupleAvailable } from 'coupon/VCouponAvailable';
 import { VEpecOrderError } from './VEpecOrderError';
 import { VOrderTrans } from './VOrderTrans';
 import { VError } from '../tools/VError';
-import _ from 'lodash';
 import { ActivePushOrder, IActivePushOrder } from './ActivePushOrder';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
-    @observable orderPageStart: number = 1000000000;    /* 订单历史记录分页 pageStart */
-    @observable getUserOrders: any[] = [];  /* 获取用户所有订单 */
-    @observable orderData: Order = new Order();
-    @observable activePushOrder: IActivePushOrder = ActivePushOrder(this.cApp);
+    orderPageStart: number = 1000000000;    /* 订单历史记录分页 pageStart */
+    getUserOrders: any[] = [];  /* 获取用户所有订单 */
+    orderData: Order = new Order();
+    activePushOrder: IActivePushOrder = ActivePushOrder(this.cApp);
     /**
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
-    @observable couponAppliedData: any = {};
+    couponAppliedData: any = {};
 
-    @observable replyToContactType: string;
-    @observable modalTitle: any;
-    @observable modalTitleS: { [desc: string]: any } = {
+    replyToContactType: string;
+    modalTitle: any;
+    modalTitleS: { [desc: string]: any } = {
         'contactList': { id: 1, title: '地址管理', preLevel: '' },
         'contactInfo': { id: 2, title: '地址信息', preLevel: 'contactList' },
         'provinceChoice': { id: 3, title: '所在省市', preLevel: 'contactInfo' },
@@ -48,18 +47,40 @@ export class COrder extends CUqBase {
         'validCard': { id: 7, title: '可用优惠', preLevel: '' },
     };
 
-    @observable editContact: any;
-    @observable provinces: any[] = [];
-    @observable cities: any[] = [];
-    @observable counties: any[] = [];
-    @observable addressId: any;
+    editContact: any;
+    provinces: any[] = [];
+    cities: any[] = [];
+    counties: any[] = [];
+    addressId: any;
 
     hasAnyCoupon: boolean;
     /**
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
      */
-    @observable buyerAccounts: any[] = [];
-    @observable validCardForWebUser: any;
+    buyerAccounts: any[] = [];
+    validCardForWebUser: any;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            orderPageStart: observable,
+            getUserOrders: observable,
+            activePushOrder: observable,
+            orderData: observable,
+            couponAppliedData: observable,
+            replyToContactType: observable,
+            modalTitle: observable,
+            modalTitleS: observable,
+            editContact: observable,
+            provinces: observable,
+            cities: observable,
+            counties: observable,
+            addressId: observable,
+            buyerAccounts: observable,
+            validCardForWebUser: observable
+        });
+    }
 
     protected async internalStart(param: any) {
     }

@@ -1,5 +1,5 @@
 import { BoxId } from 'tonva-react';
-import { observable, computed } from 'mobx';
+import { observable, computed, makeObservable } from 'mobx';
 
 export class prizeOrder {
 
@@ -8,10 +8,18 @@ export class prizeOrder {
     customer: any;  //OK
     salesRegion: BoxId;   // OK
 
-    @observable shippingContact: BoxId; //OK
-    @observable exchangeItems: prizeOrderItem[] = [];
+    shippingContact: BoxId; //OK
+    exchangeItems: prizeOrderItem[] = [];
 
-    @computed get amount() {
+    constructor() {
+        makeObservable(this, {
+            shippingContact: observable,
+            exchangeItems: observable,
+            amount: computed
+        });
+    }
+
+    get amount() {
         return this.exchangeItems.reduce((pv, cv) => (pv + cv.subAmount), 0);
     };
 
@@ -37,14 +45,28 @@ export class prizeOrder {
 
 export class prizeOrderItem {
     product: BoxId;
-    @observable pack: BoxId;
-    @observable quantity: any;
-    @observable point: any;
-    @observable imageUrl: any;
-    @observable description: any;
-    @observable descriptionC: any;
-    @observable grade: any;
-    @computed get subAmount() {
+    pack: BoxId;
+    quantity: any;
+    point: any;
+    imageUrl: any;
+    description: any;
+    descriptionC: any;
+    grade: any;
+
+    constructor() {
+        makeObservable(this, {
+            pack: observable,
+            quantity: observable,
+            point: observable,
+            imageUrl: observable,
+            description: observable,
+            descriptionC: observable,
+            grade: observable,
+            subAmount: computed
+        });
+    }
+
+    get subAmount() {
         return this.quantity * this.point;
     }
 }

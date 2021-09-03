@@ -7,13 +7,11 @@ import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
 import { xs } from '../tools/browser';
 import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
-import { Modal } from 'antd';
-import { VModelCardDiscount } from './VModelCardDiscount';
 
 export class VCouponManage extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
-    @observable private coupons: QueryPager<any>;
+    private coupons: QueryPager<any>;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -23,7 +21,16 @@ export class VCouponManage extends VPage<CCoupon> {
     ];
 
 	//@observable tips: string;
-	private tips = observable.box();
+    private tips = observable.box();
+    
+    constructor(c: CCoupon) {
+        super(c);
+
+        makeObservable<VCouponManage, "coupons">(this, {
+            coupons: observable
+        });
+    }
+
     async open(param: any) {
         this.openPage(this.page);
     }

@@ -1,14 +1,20 @@
 import { observable, makeObservable } from 'mobx';
 import { Context, BoxId } from 'tonva-react';
-import { CUqBase } from 'tapp';
+import { CApp, CUqBase } from 'tapp';
 import { VContactList } from './VContactList';
 import { VContact } from './VContact';
 import { CAddress } from './CAddress';
 
 export abstract class CSelectContact extends CUqBase {
     fromOrderCreation: boolean;
+    userContacts: BoxId[] = [];
 
-    @observable userContacts: BoxId[] = [];
+    constructor(cApp: CApp) {
+        super(cApp);
+        makeObservable(this, {
+            userContacts: observable
+        });
+    }
 
     async internalStart(fromOrderCreation: boolean/*contactType: ContactType*/) {
         this.fromOrderCreation = fromOrderCreation;
