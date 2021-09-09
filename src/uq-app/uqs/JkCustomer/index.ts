@@ -20,28 +20,37 @@ import * as Domain from './Domain.ui';
 import * as ProductX from './ProductX.ui';
 import * as Brand from './Brand.ui';
 import * as CustomerSettingType from './CustomerSettingType.ui';
+import * as VIPCardType from './VIPCardType.ui';
 
+function assign(uq:Uq, to:string, from:any): void {
+	try {
+		Object.assign((uq as any)[to], from);
+	}
+	catch {}
+}
+	
 export function setUI(uq: Uq) {
-	Object.assign(uq.Currency, Currency);
-	Object.assign(uq.Contact, Contact);
-	Object.assign(uq.Customer, Customer);
-	Object.assign(uq.InvoiceType, InvoiceType);
-	Object.assign(uq.Research, Research);
-	Object.assign(uq.Province, Province);
-	Object.assign(uq.Department, Department);
-	Object.assign(uq.BuyerAccount, BuyerAccount);
-	Object.assign(uq.Organization, Organization);
-	Object.assign(uq.Country, Country);
-	Object.assign(uq.InvoiceInfo, InvoiceInfo);
-	Object.assign(uq.City, City);
-	Object.assign(uq.Post, Post);
-	Object.assign(uq.County, County);
-	Object.assign(uq.SalesRegion, SalesRegion);
-	Object.assign(uq.Employee, Employee);
-	Object.assign(uq.Address, Address);
-	Object.assign(uq.Domain, Domain);
-	Object.assign(uq.ProductX, ProductX);
-	Object.assign(uq.Brand, Brand);
-	Object.assign(uq.CustomerSettingType, CustomerSettingType);
+	assign(uq, 'Currency', Currency);
+	assign(uq, 'Contact', Contact);
+	assign(uq, 'Customer', Customer);
+	assign(uq, 'InvoiceType', InvoiceType);
+	assign(uq, 'Research', Research);
+	assign(uq, 'Province', Province);
+	assign(uq, 'Department', Department);
+	assign(uq, 'BuyerAccount', BuyerAccount);
+	assign(uq, 'Organization', Organization);
+	assign(uq, 'Country', Country);
+	assign(uq, 'InvoiceInfo', InvoiceInfo);
+	assign(uq, 'City', City);
+	assign(uq, 'Post', Post);
+	assign(uq, 'County', County);
+	assign(uq, 'SalesRegion', SalesRegion);
+	assign(uq, 'Employee', Employee);
+	assign(uq, 'Address', Address);
+	assign(uq, 'Domain', Domain);
+	assign(uq, 'ProductX', ProductX);
+	assign(uq, 'Brand', Brand);
+	assign(uq, 'CustomerSettingType', CustomerSettingType);
+	assign(uq, 'VIPCardType', VIPCardType);
 }
 export * from './JkCustomer';

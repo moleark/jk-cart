@@ -23,41 +23,54 @@ import * as CommonText from './CommonText.ui';
 import * as ExpressLogistics from './ExpressLogistics.ui';
 import * as OrderDetail from './OrderDetail.ui';
 import * as OrderMain from './OrderMain.ui';
-import * as ReturnDetail from './ReturnDetail.ui';
-import * as ReturnMain from './ReturnMain.ui';
+import * as OrderMainEx from './OrderMainEx.ui';
+import * as OrderDetailEx from './OrderDetailEx.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
-import * as DxReturnDetail from './DxReturnDetail.ui';
-import * as IxCustomerReturnable from './IxCustomerReturnable.ui';
+import * as DxOrderMainState from './DxOrderMainState.ui';
+import * as IxOrderDetailFee from './IxOrderDetailFee.ui';
+import * as IxOrderMainFee from './IxOrderMainFee.ui';
+import * as IxOrderDetailCoupon from './IxOrderDetailCoupon.ui';
+import * as IxOrderMainCustomerCoupon from './IxOrderMainCustomerCoupon.ui';
 
+function assign(uq:Uq, to:string, from:any): void {
+	try {
+		Object.assign((uq as any)[to], from);
+	}
+	catch {}
+}
+	
 export function setUI(uq: Uq) {
-	Object.assign(uq.Coupon, Coupon);
-	Object.assign(uq.Chemical, Chemical);
-	Object.assign(uq.SalesRegion, SalesRegion);
-	Object.assign(uq.Currency, Currency);
-	Object.assign(uq.PackType, PackType);
-	Object.assign(uq.Address, Address);
-	Object.assign(uq.Country, Country);
-	Object.assign(uq.Province, Province);
-	Object.assign(uq.City, City);
-	Object.assign(uq.County, County);
-	Object.assign(uq.InvoiceType, InvoiceType);
-	Object.assign(uq.Customer, Customer);
-	Object.assign(uq.Organization, Organization);
-	Object.assign(uq.Contact, Contact);
-	Object.assign(uq.InvoiceInfo, InvoiceInfo);
-	Object.assign(uq.Brand, Brand);
-	Object.assign(uq.ProductX, ProductX);
-	Object.assign(uq.Warehouse, Warehouse);
-	Object.assign(uq.WebUser, WebUser);
-	Object.assign(uq.BuyerAccount, BuyerAccount);
-	Object.assign(uq.CommonText, CommonText);
-	Object.assign(uq.ExpressLogistics, ExpressLogistics);
-	Object.assign(uq.OrderDetail, OrderDetail);
-	Object.assign(uq.OrderMain, OrderMain);
-	Object.assign(uq.ReturnDetail, ReturnDetail);
-	Object.assign(uq.ReturnMain, ReturnMain);
-	Object.assign(uq.DxOrderDetail, DxOrderDetail);
-	Object.assign(uq.DxReturnDetail, DxReturnDetail);
-	Object.assign(uq.IxCustomerReturnable, IxCustomerReturnable);
+	assign(uq, 'Coupon', Coupon);
+	assign(uq, 'Chemical', Chemical);
+	assign(uq, 'SalesRegion', SalesRegion);
+	assign(uq, 'Currency', Currency);
+	assign(uq, 'PackType', PackType);
+	assign(uq, 'Address', Address);
+	assign(uq, 'Country', Country);
+	assign(uq, 'Province', Province);
+	assign(uq, 'City', City);
+	assign(uq, 'County', County);
+	assign(uq, 'InvoiceType', InvoiceType);
+	assign(uq, 'Customer', Customer);
+	assign(uq, 'Organization', Organization);
+	assign(uq, 'Contact', Contact);
+	assign(uq, 'InvoiceInfo', InvoiceInfo);
+	assign(uq, 'Brand', Brand);
+	assign(uq, 'ProductX', ProductX);
+	assign(uq, 'Warehouse', Warehouse);
+	assign(uq, 'WebUser', WebUser);
+	assign(uq, 'BuyerAccount', BuyerAccount);
+	assign(uq, 'CommonText', CommonText);
+	assign(uq, 'ExpressLogistics', ExpressLogistics);
+	assign(uq, 'OrderDetail', OrderDetail);
+	assign(uq, 'OrderMain', OrderMain);
+	assign(uq, 'OrderMainEx', OrderMainEx);
+	assign(uq, 'OrderDetailEx', OrderDetailEx);
+	assign(uq, 'DxOrderDetail', DxOrderDetail);
+	assign(uq, 'DxOrderMainState', DxOrderMainState);
+	assign(uq, 'IxOrderDetailFee', IxOrderDetailFee);
+	assign(uq, 'IxOrderMainFee', IxOrderMainFee);
+	assign(uq, 'IxOrderDetailCoupon', IxOrderDetailCoupon);
+	assign(uq, 'IxOrderMainCustomerCoupon', IxOrderMainCustomerCoupon);
 }
 export * from './JkOrder';

@@ -8,7 +8,7 @@ import { COrder } from "../order/COrder";
 import { CProductCategory } from "../productCategory/CProductCategory";
 import { CMember } from "../member";
 import { CMe } from "../me/CMe";
-import { CUqApp } from "uq-app";
+import { CUqApp } from "./CBase";
 import { VMain } from 'tapp/main';
 import * as qs from 'querystringify';
 import { CCoupon } from "coupon/CCoupon";
@@ -336,7 +336,7 @@ export class CApp extends CUqApp {
 
     private navOrderDetail: NavPage = async (params: any) => {
         await this.assureLogin();
-        this.cOrder.openOrderDetail(Number(params.orderId));
+        this.cOrder.openOrderDetail(Number(params.orderId), params.state);
     }
 
     private navCouponManage: NavPage = async (params: any) => {
@@ -399,7 +399,7 @@ export class CApp extends CUqApp {
             '/contact': this.navContactList,
             '/invoice': this.navInvoice,
             '/myOrders': this.navMyOrders,
-            '/orderDetail/:orderId': this.navOrderDetail,
+            '/orderDetail/:state/:orderId': this.navOrderDetail,
             '/couponManage': this.navCouponManage,
             '/favorites': this.navFavorites,
             '/password': this.navPassword,

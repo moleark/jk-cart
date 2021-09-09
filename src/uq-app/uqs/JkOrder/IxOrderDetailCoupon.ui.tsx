@@ -1,32 +1,31 @@
-import { Res, setRes, TFunc, UI } from "tonva-react";
+import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxReturnDetail } from "./JkOrder";
+import { IxOrderDetailCoupon } from "./JkOrder";
 
 /*--fields--*/
 const fields = {
-	id: {
-		"name": "id",
+	ix: {
+		"name": "ix",
 		"type": "id",
 		"isKey": false,
-		"label": "Id"
+		"label": "Ix"
 	} as FieldItemId,
-	deliverReturnDone: {
-		"name": "deliverReturnDone",
-		"type": "number",
+	xi: {
+		"name": "xi",
+		"type": "id",
 		"isKey": false,
-		"widget": "number",
-		"label": "DeliverReturnDone"
-	} as FieldItemNum,
+		"label": "Xi"
+	} as FieldItemId,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.deliverReturnDone, 
+	fields.xi, 
 ];
 
 export const ui: UI = {
-	label: "DxReturnDetail",
+	label: "IxOrderDetailCoupon",
 	fieldArr,
 	fields,
 };
@@ -44,6 +43,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: DxReturnDetail):JSX.Element {
-	return <>{JSON.stringify(item)}</>;
+export function render(item: IxOrderDetailCoupon):JSX.Element {
+	return <>{uqStringify(item)}</>;
 };

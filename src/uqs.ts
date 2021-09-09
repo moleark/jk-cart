@@ -11,6 +11,7 @@ export interface UqOrder {
     GetPendingPayment: Query;
     CommonText: Tuid;
     orderTransportation: Map;
+    SearchOrders: Query;
 }
 
 export interface UqChemical {
@@ -56,6 +57,7 @@ export interface UqCommon {
     SalesRegion: Tuid;
     Language: Tuid;
     Address: Tuid;
+    Currency: Tuid;
     InvoiceType: Tuid;
     GetCountryProvinces: Query;
     GetProvinceCities: Query;
@@ -170,7 +172,9 @@ export interface UqPlatformjoint {
     EpecUser: Map;
 }
 
-
+export interface UqDeliver {
+    GetOrderDetailTransportation: Query;
+}
 
 export interface UQs {
     order: UqOrder;
@@ -188,4 +192,5 @@ export interface UQs {
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
     platformjoint: UqPlatformjoint;
+    deliver: UqDeliver;
 }

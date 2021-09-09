@@ -9,7 +9,7 @@ import { observable, makeObservable } from 'mobx';
 //import { CartItem } from '../cart/Cart';
 
 export class VOrderDetail extends VPage<COrder> {
-    orderTrans: any[] = [];
+    /* orderTrans: any[] = [];
 
     constructor(c: COrder) {
         super(c);
@@ -17,7 +17,7 @@ export class VOrderDetail extends VPage<COrder> {
         makeObservable(this, {
             orderTrans: observable
         });
-    }
+    } */
 
     async open(order: any) {
 
@@ -84,19 +84,23 @@ export class VOrderDetail extends VPage<COrder> {
         nav.navigate('/cart');
     }
 
-    private renderOrderItem = (orderItem: OrderItem, index: number) => {
-        let { product, packs } = orderItem;
+    private renderOrderItem = (orderItem: any /* OrderItem */, index: number) => {
+        let { product, packs, param } = orderItem;
         let { id } = product;
         let { controller, packsRow } = this;
-        let getOrderTrans = this.orderTrans.find((v: any) => v.row === (index + 1));
+        let transportation: any;
+        if (param?.transportation) {
+            let { carrier, waybillNumber } = param.transportation;
+            transportation = {transNumber: waybillNumber, expressLogistics: carrier};
+        };
         let orderTransUI: JSX.Element;
-        if (getOrderTrans) orderTransUI = <span className="mr-2 cursor-pointer btn btn-sm btn-info"
+        if (transportation) orderTransUI = <span className="mr-2 cursor-pointer btn btn-sm btn-info"
             style={{ background: "#17a2b8" }}
-            onClick={() => controller.openOrderTrans(getOrderTrans)} >查看物流</span>;
+            onClick={() => controller.openOrderTrans(transportation)} >查看物流</span>;
         return <div className="row my-1 w-100 mx-0">
             <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
             <div className="col-lg-6">{
-                packs.map((p, index) => {
+                packs.map((p:any, index:number) => {
                     return packsRow(p, index);
                 })
             }</div>
@@ -116,8 +120,7 @@ export class VOrderDetail extends VPage<COrder> {
         let { brief, data } = order;
         let { id, no, state, description, date } = brief;
         let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, comments, couponOffsetAmount, couponRemitted
-            , freightFee, freightFeeRemitted, orderTrans } = data;
-        this.orderTrans = orderTrans;
+            , freightFee, freightFeeRemitted } = data;
         let couponUI;
         if (couponOffsetAmount || couponRemitted) {
             let offsetUI, remittedUI;
@@ -142,7 +145,7 @@ export class VOrderDetail extends VPage<COrder> {
             </div>
         }
 
-        let freightFeeUI, freightFeeRemittedUI;
+        /* let freightFeeUI, freightFeeRemittedUI;
         if (freightFee) {
             freightFeeUI = <>
                 <div className="text-right text-danger"><small>¥</small>{freightFee}</div>
@@ -152,7 +155,7 @@ export class VOrderDetail extends VPage<COrder> {
                     <div className="text-right text-danger"><small>¥</small>{freightFeeRemitted}(减免)</div>
                 </>
             }
-        }
+        } */
         let orderAgainUI = <div className="px-3 py-2 border-bottom" style={{userSelect: "none"}}>
             <span className="align-middle">若需再次购买该订单中所有产品，请 </span>
             <button className="btn btn-sm btn-secondary cursor-pointer" title='可直接下单再次购买订单中产品'
@@ -168,26 +171,28 @@ export class VOrderDetail extends VPage<COrder> {
 
         let header: any
         if (xs) header = <>订单详情: {no}</>            //orderAgainUI
+        let infoArr: any[] = [
+            { name: "收货地址:", value: tv(shippingContact), isShow: shippingContact },
+            { name: "发票地址:", value: tv(invoiceContact), isShow: invoiceContact },
+            { name: "发票信息:", value: invoiceTemplate(invoiceType, invoiceInfo), isShow: invoiceType || invoiceInfo },
+        ];
         return <Page header={header} footer={<></>}>
             {!xs && <div className="alert alert-info alert-signin mt-3">订单编号 {no}</div>}
             {orderAgainUI}
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">收货地址:</div>
-                <div className="col-9">{tv(shippingContact)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">发票地址:</div>
-                <div className="col-9">{tv(invoiceContact)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">发票信息:</div>
-                <div className="col-9">{invoiceTemplate(invoiceType, invoiceInfo)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
+            {
+                infoArr.map((el: any) => {
+                    if (!el.isShow) return null;
+                    return <div className="bg-white row no-gutters p-3 my-1" key={el.name}>
+                        <div className="col-3 text-muted">{el.name}</div>
+                        <div className="col-9">{el.value}</div>
+                    </div>
+                })
+            }
+            {/* <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">运费:</div>
                 <div className="col-9">{freightFeeUI}{freightFeeRemittedUI}</div>
-            </div>
+            </div> */}
             {couponUI}
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">下单时间:</div>

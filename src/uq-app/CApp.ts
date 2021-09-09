@@ -422,7 +422,7 @@ export class CApp extends CUqApp {
 
     private navOrderDetail: NavPage = async (params: any) => {
         await this.assureLogin();
-        this.cOrder.openOrderDetail(Number(params.orderId));
+        this.cOrder.openOrderDetail(Number(params.orderId), params.state);
     }
 
     private navCouponManage: NavPage = async (params: any) => {
@@ -471,22 +471,15 @@ export class CApp extends CUqApp {
             '/contact': this.navContactList,
             '/invoice': this.navInvoice,
             '/myOrders': this.navMyOrders,
-            '/orderDetail/:orderId': this.navOrderDetail,
+            '/orderDetail/:state/:orderId': this.navOrderDetail,
             '/couponManage': this.navCouponManage,
             '/favorites': this.navFavorites,
             '/password': this.navPassword,
             '/meInfo': this.navMeInfo,
-            '/trial': this.startTrial,
 
             '/quickOrder': this.navQuickOrder,
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();
-    }
-
-    startTrial = async () => {
-        let trial = await import('../trial');
-        let cTrial = this.newC(trial.CTrial);
-        await cTrial.start();
     }
 }

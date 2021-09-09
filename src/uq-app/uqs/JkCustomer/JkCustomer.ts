@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Jul 16 2021 23:48:12 GMT-0400 (北美东部夏令时间) ===//
+//=== UqApp builder created on Thu Sep 09 2021 08:37:43 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqQuery, UqMap, UqID } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqQuery, UqMap } from "tonva-react";
 
 
 //===============================
@@ -203,6 +203,10 @@ export interface TuidCustomerSettingType {
 	description: string;
 }
 
+export interface TuidVIPCardType {
+	id?: number;
+}
+
 export interface ParamSearchCustomer {
 	key: string;
 }
@@ -287,24 +291,36 @@ export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
-export interface $Piecewise {
-	id?: number;
-	name: string;
-	ratio: number;
-	offset: number;
-	asc: number;
+export interface ParamGetMyUsedCoupon {
+	customer: number;
+}
+export interface ReturnGetMyUsedCoupon$page {
+	seq: number;
+	id: number;
+	code: number;
+	types: string;
+	useddate: any;
+}
+export interface ResultGetMyUsedCoupon {
+	$page: ReturnGetMyUsedCoupon$page[];
 }
 
-export interface $PiecewiseDetail {
-	id?: number;
-	main?: number;
-	sec: number;
-	value: number;
+export interface ParamGetMyExpiredCoupon {
+	customer: number;
+}
+export interface ReturnGetMyExpiredCoupon$page {
+	seq: number;
+	id: number;
+	code: number;
+	types: string;
+	createdate: any;
+	expireddate: any;
+}
+export interface ResultGetMyExpiredCoupon {
+	$page: ReturnGetMyExpiredCoupon$page[];
 }
 
 export interface ParamActs {
-	$Piecewise?: $Piecewise[];
-	$PiecewiseDetail?: $PiecewiseDetail[];
 }
 
 
@@ -334,6 +350,7 @@ export interface UqExt extends Uq {
 	ProductX: UqTuid<TuidProductX>;
 	Brand: UqTuid<TuidBrand>;
 	CustomerSettingType: UqTuid<TuidCustomerSettingType>;
+	VIPCardType: UqTuid<TuidVIPCardType>;
 	SearchCustomer: UqQuery<ParamSearchCustomer, ResultSearchCustomer>;
 	GetBuyerAccountByNo: UqQuery<ParamGetBuyerAccountByNo, ResultGetBuyerAccountByNo>;
 	GetCustomerByNo: UqQuery<ParamGetCustomerByNo, ResultGetCustomerByNo>;
@@ -341,6 +358,8 @@ export interface UqExt extends Uq {
 	GetCustomerByKey: UqQuery<ParamGetCustomerByKey, ResultGetCustomerByKey>;
 	SearchDomain: UqQuery<ParamSearchDomain, ResultSearchDomain>;
 	$poked: UqQuery<Param$poked, Result$poked>;
+	GetMyUsedCoupon: UqQuery<ParamGetMyUsedCoupon, ResultGetMyUsedCoupon>;
+	GetMyExpiredCoupon: UqQuery<ParamGetMyExpiredCoupon, ResultGetMyExpiredCoupon>;
 	CustomerDepartment: UqMap;
 	CustomerSetting: UqMap;
 	CustomerContractor: UqMap;
@@ -356,6 +375,8 @@ export interface UqExt extends Uq {
 	ResearchDomain: UqMap;
 	OrganizationSetting: UqMap;
 	CustomerSettingAlter: UqMap;
-	$Piecewise: UqID<any>;
-	$PiecewiseDetail: UqID<any>;
+	CustomerCreditsUsed: UqMap;
+	CustomerCredits: UqMap;
+	CustomerCoupon: UqMap;
+	CustomerCouponUsed: UqMap;
 }

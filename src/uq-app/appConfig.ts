@@ -30,6 +30,11 @@ export const appConfig: AppConfig = {
 		*/
 		{
 			dev: jk,
+			name: 'deliver',
+			version: '0.1.1',
+		},
+		{
+			dev: jk,
 			name: 'order',
 			version: '0.1.1',
 		},
@@ -51,7 +56,7 @@ export const appConfig: AppConfig = {
 		},
 	],
 	noUnit: true,
-    tvs,
+	tvs,
 	oem: undefined,
 	loginTop: jnkTop
 };

@@ -24,7 +24,7 @@ export function groupByProduct(packItems: any[]) {
 export function groupByProduct1(packItems: any[]) {
     let result: any[] = [];
     for (let packItem of packItems) {
-        let { product, pack, quantity, price, retail, currency } = packItem;
+        let { product, pack, quantity, price, retail, currency, param } = packItem;
         let packRow: CartPackRow = {
             pack: pack,
             price: price,
@@ -33,7 +33,8 @@ export function groupByProduct1(packItems: any[]) {
             currency: currency && currency.id
         }
         let cpi = { product: product, packs: [packRow] };
-        result.push(cpi);
+        let cparam = { param: param || undefined };
+        result.push({ ...cpi, ...cparam });
     }
     return result;
 }
