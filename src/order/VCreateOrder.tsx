@@ -161,10 +161,10 @@ export class VCreateOrder extends VPage<COrder> {
         let { orderData, activePushOrder } = this.controller;
         // 必填项验证
         let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
-        let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
+        // let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
         let combinTip: string = "";
         if (!shippingContact) {
-            this.shippingAddressTip.set(renderTip('必须填写收货地址'));
+            this.shippingAddressTip.set('必须填写收货地址');
             combinTip = "必须填写收货地址;";
             //this.shippingAddressIsBlank = true;
             //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
@@ -183,7 +183,7 @@ export class VCreateOrder extends VPage<COrder> {
             }
         } */
         if (!invoiceContact && !this.useShippingAddress) {
-            this.invoiceAddressTip.set(renderTip('必须填写发票地址'));
+            this.invoiceAddressTip.set('必须填写发票地址');
             combinTip += "必须填写发票地址;";
             // return;
         };
@@ -193,27 +193,26 @@ export class VCreateOrder extends VPage<COrder> {
         if (!invoiceType || !invoiceInfo) {
             //this.invoiceIsBlank = true;
 			//setTimeout(() => this.invoiceIsBlank = false, GLOABLE.TIPDISPLAYTIME);
-            this.invoiceTip.set(renderTip('必须填写发票信息'));
+            this.invoiceTip.set('必须填写发票信息');
             combinTip += "必须填写发票信息;";
-            // return;
         };
         if (invoiceType && invoiceInfo) {
             let invoiceInfoO: any = await invoiceInfo.assure();
             let { taxNo, address, telephone, bank, accountNo } = invoiceInfoO.obj;
             let validInvoice = invoiceType.id === 1 ? !taxNo : (!taxNo || !address || !telephone || !bank || !accountNo);
             if (validInvoice) {
-                this.invoiceTip.set(renderTip('您的发票信息不全,请补全发票信息;'));
+                this.invoiceTip.set('您的发票信息不全,请补全发票信息;');
                 combinTip += "您的发票信息不全,请补全发票信息;";
             };
         };
         if (combinTip !== "") {
-            this.comBininvoiceTip.set(renderTip(combinTip));
+            this.comBininvoiceTip.set(combinTip);
             return;
         }
         let endComments = this.orderNotes?.value ? this.orderNotes.value.replace(/(\s|\t|\n)*/g, "") : "";
         this.controller.orderData.comments = endComments;
         if (!activePushOrder.maxAmount) {
-            this.comBininvoiceTip.set(renderTip("订单总金额超出协议上限,不可下单!"));
+            this.comBininvoiceTip.set("订单总金额超出协议上限,不可下单!");
             return;
         };
         await this.controller.submitOrder();
@@ -224,6 +223,8 @@ export class VCreateOrder extends VPage<COrder> {
         this.controller.modalTitle = 'contactList';
         this.controller.replyToContactType = type;
     }
+
+    renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
 
     private page = observer(() => {
 
@@ -264,7 +265,7 @@ export class VCreateOrder extends VPage<COrder> {
                     <button className="btn btn-outline-primary"
                         onClick={()=>{ xs ? onSelectInvoiceContact() : this.saveShowModal('invoiceContact')}}>选择发票地址</button>
                     {/*invoiceAddressBlankTip*/}
-					{autoHideTips(this.invoiceAddressTip)}
+					{autoHideTips(this.invoiceAddressTip, this.renderTip(this.invoiceAddressTip.get()))}
                 </div>
             }
 		}
@@ -317,7 +318,7 @@ export class VCreateOrder extends VPage<COrder> {
                     {tv(orderData.invoiceType, (v) => <>{v.description}</>, undefined, () => <span className="text-primary">填写发票信息</span>)}
                     {tv(orderData.invoiceInfo, (v) => <> -- {v.title}</>, undefined, () => <></>)}
                     {/*invoiceBlankTip*/}
-					{autoHideTips(this.invoiceTip)}
+                    {autoHideTips(this.invoiceTip, this.renderTip(this.invoiceTip.get()))}
                 </LMR>)}
         </div>
 
@@ -354,7 +355,7 @@ export class VCreateOrder extends VPage<COrder> {
                             {tv(orderData.shippingContact, undefined, undefined, this.nullContact)}
                         </LMR>
                         {/*shippingAddressBlankTip*/}
-						{autoHideTips(this.shippingAddressTip)}
+						{autoHideTips(this.shippingAddressTip,this.renderTip(this.shippingAddressTip.get()))}
                     </>)}
                 </div>
                 {invoiceContactUI}
