@@ -311,7 +311,6 @@ export class COrder extends CUqBase {
                         let repContent = await rep.json();
                         this.openVPage(VEpecOrderError, { message: repContent.message });
                         return;
-                        break;
                     default:
                         break;
                 }
@@ -480,13 +479,15 @@ export class COrder extends CUqBase {
             case 'pendingpayment':
                 return await order.GetPendingPayment.table(undefined);
             case 'processing':
-                let res = await order.Order.mySheets(undefined, 1, -20);
-                return res.map((el: any) => { return { ...el, state: "processing" } });
+                /* let res = await order.Order.mySheets(undefined, 1, -20);
+                return res.map((el: any) => { return { ...el, state: "processing" } }); */
+                let result3: any = await this.searchMyOrders({ state: "11" });
+                return result3.items;
             case 'completed':
-                let result2:any = await this.searchMyOrders({state: "12"});
+                let result2: any = await this.searchMyOrders({ state: "12" });
                 return result2.items;
             case 'shipped':
-                let result1:any = await this.searchMyOrders({state: "13"});
+                let result1: any = await this.searchMyOrders({ state: "13" });
                 return result1.items;
             case 'all':
                 let result:any = await this.searchMyOrders({});
