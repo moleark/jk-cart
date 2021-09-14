@@ -117,6 +117,7 @@ export class VMyOrders extends VPage<COrder> {
 			'processing': '待审核',
 			'completed': '待发货',
 			'shipped': '已发货',
+			"11":"待审核",
 			"12":"待发货",
 			"13":"已发货",
 		};
