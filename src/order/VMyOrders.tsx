@@ -129,7 +129,7 @@ export class VMyOrders extends VPage<COrder> {
 				<td data-title={columns[1].name}><EasyDate date={date} /></td>
 				<td data-title={columns[2].name}>{os[state]}</td>
 				<td data-title={columns[3].name}>
-					<Ax href={"/orderDetail/"+ state + "/" + id} className='w-100' target="_blank">
+					<Ax href={"/orderDetail/" + id} className='w-100' target="_blank">
 						<button type='button' className="btn-primary btn-sm w-4c rounded-sm">详情</button>
 					</Ax>
 				</td>
@@ -143,7 +143,7 @@ export class VMyOrders extends VPage<COrder> {
 		let { openOrderDetail } = this.controller;
 		let { id, no, date, state } = order;
 		return <div className="m-3">
-			<div className="d-flex w-100 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id,state)}>
+			<div className="d-flex w-100 justify-content-between cursor-pointer" onClick={() => openOrderDetail(id)}>
 			<div><span className="small text-muted">订单: </span><strong>{no}</strong></div>
 			<div className="small text-muted"><EasyDate date={date} /></div>
 		</div></div>;

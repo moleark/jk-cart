@@ -21,7 +21,7 @@ import { VEpecOrderError } from './VEpecOrderError';
 import { VOrderTrans } from './VOrderTrans';
 import { VError } from '../tools/VError';
 import { ActivePushOrder, IActivePushOrder } from './ActivePushOrder';
-import { IxOrderMainFee, OrderDetail, IxOrderDetailFee, DxOrderMainState, OrderDetailEx, OrderMain, OrderMainEx } from '../uq-app/uqs/JkOrder/JkOrder';
+import { OrderDetail, DxOrderMainState, OrderMain, OrderMainEx } from '../uq-app/uqs/JkOrder/JkOrder';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -523,97 +523,97 @@ export class COrder extends CUqBase {
         this.orderData.invoiceInfo = newInvoice.invoiceInfo;
     }
 
-    openOrderDetail = async (orderId: number, state: string) => {
-        if (state === "processing") {
-            let order = await this.uqs.order.Order.getSheet(orderId);
-            let { brief, data } = order;
-            if (this.user?.id !== brief?.user) {
-                this.openVPage(VError);return;
-            };
-            let { orderItems } = data;
-            let orderItemsGrouped = groupByProduct1(orderItems);
-            data.orderItems = orderItemsGrouped;
-            this.openVPage(VOrderDetail, order);
-        } else {
-            let { currentUser, store } = this.cApp;
-            let { currentSalesRegion } = store;
-            let { id: salesRegionId } = currentSalesRegion;
-            let { JkOrder, customer, common, product:productx, deliver } = this.uqs
-            let order: any = { brief: {}, data: { orderItems: [], comments: undefined } };
-            /* 第一项是 main， 第二项是 detail */
-            let getOrderDetail = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
-                id: orderId,
-                main: JkOrder.OrderMain,
-                detail: JkOrder.OrderDetail,
+    openOrderDetail = async (orderId: number) => {
+        // if (state === "11") {
+        //     let order = await this.uqs.order.Order.getSheet(orderId);
+        //     let { brief, data } = order;
+        //     if (this.user?.id !== brief?.user) {
+        //         this.openVPage(VError);return;
+        //     };
+        //     let { orderItems } = data;
+        //     let orderItemsGrouped = groupByProduct1(orderItems);
+        //     data.orderItems = orderItemsGrouped;
+        //     this.openVPage(VOrderDetail, order);
+        // } else {
+        let { currentUser, store } = this.cApp;
+        let { currentSalesRegion } = store;
+        let { id: salesRegionId } = currentSalesRegion;
+        let { JkOrder, customer, common, product:productx, deliver } = this.uqs
+        let order: any = { brief: {}, data: { orderItems: [], comments: undefined } };
+        /* 第一项是 main， 第二项是 detail */
+        let getOrderDetail = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
+            id: orderId,
+            main: JkOrder.OrderMain,
+            detail: JkOrder.OrderDetail,
+        });
+        let getOrderMainEx: any[] = await JkOrder.ID<OrderMainEx>({
+            IDX: JkOrder.OrderMainEx,
+            id: orderId,
+        });
+        if (!getOrderDetail[0].length || !getOrderDetail[1].length) {
+            this.openVPage(VError);return;
+        };
+        let getOrderMainState: any[] = await JkOrder.ID<DxOrderMainState>({
+            IDX: JkOrder.DxOrderMainState,
+            id: orderId,
+        });
+        let mainArr: any[] = getOrderDetail[0];
+        if (mainArr.length) {
+            let { id, no, createDate: date, sumAmount: amount, shippingContact, invoiceContact, invoiceInfo, invoiceType } = mainArr[0] as any;
+            let { state } = getOrderMainState[0] || { state: undefined };
+            shippingContact = customer.Contact.boxId(shippingContact);
+            invoiceContact = customer.Contact.boxId(invoiceContact);
+            invoiceInfo = customer.InvoiceInfo.boxId(invoiceInfo);
+            invoiceType = common.InvoiceType.boxId(invoiceType);
+            let currency = common.Currency.boxId(5);
+            let promise1: PromiseLike<any>[] = [shippingContact, invoiceContact, invoiceInfo, invoiceType, currency];
+            await Promise.all(promise1);
+            /* 数据库date与前端时间偏移量为8小时 */
+            date = moment(date).utcOffset(-8).format('YYYY-MM-DD HH:mm:ss');
+            order.brief = { id: id, no: no, state: state, date: date };
+            _.assign(order.data, {
+                couponOffsetAmount: 0, couponRemitted: 0, salesRegion: { id: 1 },
+                currency: currency, webUser: currentUser, amount: amount,
+                shippingContact: shippingContact, invoiceContact: invoiceContact,
+                invoiceInfo: invoiceInfo, invoiceType: invoiceType,
+                comments: getOrderMainEx[0]?.commentsAboutDeliver
             });
-            let getOrderMainEx: any[] = await JkOrder.ID<OrderMainEx>({
-                IDX: JkOrder.OrderMainEx,
-                id: orderId,
-            });
-            if (!getOrderDetail[0].length || !getOrderDetail[1].length) {
-                this.openVPage(VError);return;
-            };
-            let getOrderMainState: any[] = await JkOrder.ID<DxOrderMainState>({
-                IDX: JkOrder.DxOrderMainState,
-                id: orderId,
-            });
-            let mainArr: any[] = getOrderDetail[0];
-            if (mainArr.length) {
-                let { id, no, createDate: date, sumAmount: amount, shippingContact, invoiceContact, invoiceInfo, invoiceType } = mainArr[0] as any;
-                let { state } = getOrderMainState[0] || { state: undefined };
-                shippingContact = customer.Contact.boxId(shippingContact);
-                invoiceContact = customer.Contact.boxId(invoiceContact);
-                invoiceInfo = customer.InvoiceInfo.boxId(invoiceInfo);
-                invoiceType = common.InvoiceType.boxId(invoiceType);
-                let currency = common.Currency.boxId(5);
-                let promise1: PromiseLike<any>[] = [shippingContact, invoiceContact, invoiceInfo, invoiceType, currency];
-                await Promise.all(promise1);
-                /* 数据库date与前端时间偏移量为8小时 */
-                date = moment(date).utcOffset(-8).format('YYYY-MM-DD HH:mm:ss');
-                order.brief = { id: id, no: no, state: state, date: date };
-                _.assign(order.data, {
-                    couponOffsetAmount: 0, couponRemitted: 0, salesRegion: { id: 1 },
-                    currency: currency, webUser: currentUser, amount: amount,
-                    shippingContact: shippingContact, invoiceContact: invoiceContact,
-                    invoiceInfo: invoiceInfo, invoiceType: invoiceType,
-                    comments: getOrderMainEx[0]?.commentsAboutDeliver
+            let orderItemsn: any[] = [];
+            if (getOrderDetail[1].length) {
+                let promise: PromiseLike<any>[] = [];
+                getOrderDetail[1].forEach((el: any) => {
+                    let { product } = el;
+                    el.product = productx.ProductX.boxId(product);
+                    promise.push(el.product);
+                    promise.push(productx.GetProductPrices.table({ product: product, salesRegion: salesRegionId }).then((data: any) => el.pricex = data || []));
+                    promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: el?.id }).then((data: any) => el.transportation = data || undefined));
                 });
-                let orderItemsn: any[] = [];
-                if (getOrderDetail[1].length) {
-                    let promise: PromiseLike<any>[] = [];
-                    getOrderDetail[1].forEach((el: any) => {
-                        let { product } = el;
-                        el.product = productx.ProductX.boxId(product);
-                        promise.push(el.product);
-                        promise.push(productx.GetProductPrices.table({ product: product, salesRegion: salesRegionId }).then((data: any) => el.pricex = data || []));
-                        promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: id }).then((data: any) => el.transportation = data || undefined));
-                    });
-                    await Promise.all(promise);
-                    orderItemsn = getOrderDetail[1].map((el: any) => {
-                        let { product, item, price, quantity, id, pricex } = el as any;
-                        let { pack } = pricex?.find((o: any) => o.pack?.id === item) || { pack: item };
-                        let param: any = { id: id, transportation: el.transportation };
-                        return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined };
-                    });
-                };
-                /* Fee(页面暂时不展示,后期实现) */
-                // let getFreightFee = await JkOrder.IX<IxOrderMainFee>({
-                //     IX:JkOrder.IxOrderMainFee,
-                //     ix: [31198536],
-                // });
-                // let freightFee: any, freightFeeRemitted:any;
-                // if (getFreightFee.length) {
-                //     let { xi, fee } = getFreightFee[0];
-                //     freightFee = xi; freightFeeRemitted = -1 * fee;
-                // };
-                _.assign(order.data, {
-                    orderItems: groupByProduct1(orderItemsn),
-                    // freightFee: freightFee || 12,
-                    // freightFeeRemitted: freightFeeRemitted || 0,
+                await Promise.all(promise);
+                orderItemsn = getOrderDetail[1].map((el: any) => {
+                    let { product, item, price, quantity, id, pricex } = el as any;
+                    let { pack } = pricex?.find((o: any) => o.pack?.id === item) || { pack: item };
+                    let param: any = { id: id, transportation: el.transportation };
+                    return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined };
                 });
             };
-            this.openVPage(VOrderDetail, order);
-        }
+            /* Fee(页面暂时不展示,后期实现) */
+            // let getFreightFee = await JkOrder.IX<IxOrderMainFee>({
+            //     IX:JkOrder.IxOrderMainFee,
+            //     ix: [31198536],
+            // });
+            // let freightFee: any, freightFeeRemitted:any;
+            // if (getFreightFee.length) {
+            //     let { xi, fee } = getFreightFee[0];
+            //     freightFee = xi; freightFeeRemitted = -1 * fee;
+            // };
+            _.assign(order.data, {
+                orderItems: groupByProduct1(orderItemsn),
+                // freightFee: freightFee || 12,
+                // freightFeeRemitted: freightFeeRemitted || 0,
+            });
+        };
+        this.openVPage(VOrderDetail, order);
+        // }
     }
     /* 物流信息 orderTransportation 此表废弃,不使用数据 */
     inteLogistics = async (items: any[], orderId: number) => {
