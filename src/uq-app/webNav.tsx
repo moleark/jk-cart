@@ -18,10 +18,10 @@ const ProductCategorys: { [name: string]: PCategoryId } = {
 };
 
 export class VMainWebNav extends VPage<CApp> {
-    content() {
+    /* content() {
         let { cHome } = this.controller;
         return cHome.tabContent();
-    }
+    } */
 }
 
 export class NavHeaderView extends View<CApp> {
@@ -52,7 +52,7 @@ export class NavHeaderView extends View<CApp> {
             return <div className="login" style={{ fontSize: "14px" }}> {v}</div >;
         }));
 
-        let vCartLabel = React.createElement(observer(() => {
+        /* let vCartLabel = React.createElement(observer(() => {
             let { store } = this.controller;
 			if (!store) return null;
             let count = store.cartCount;
@@ -69,7 +69,7 @@ export class NavHeaderView extends View<CApp> {
                 </Ax>
             </div>
         }));
-
+ */
         return <header>
             <div className="top-header">
                 <div className="container">
@@ -83,7 +83,7 @@ export class NavHeaderView extends View<CApp> {
                                     中国
                                 </a>
                             </div>
-                            {vCartLabel}
+                            {/* {vCartLabel} */}
                             {vLogin}
                         </div>
                     </div>

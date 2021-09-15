@@ -29,7 +29,7 @@ export class CWeb extends CApp {
     protected async afterStart(): Promise<void> {
         await super.afterStart();
 
-        this.hookElements();
+        // this.hookElements();
 		/*
         window.onfocus = () => {
             nav.reloadUser();
@@ -37,33 +37,33 @@ export class CWeb extends CApp {
 		*/
     }
 
-    private hookElements() {
-        let elements: Elements = {
-            login: this.renderLogin,
-            homeCart: this.renderHomeCart,
-        }
-        for (const p in elements) {
-            let elRoot = document.getElementById(p);
-            if (elRoot) {
-                elements[p](elRoot);
-            }
-        }
-    }
+    // private hookElements() {
+    //     let elements: Elements = {
+    //         login: this.renderLogin,
+    //         homeCart: this.renderHomeCart,
+    //     }
+    //     for (const p in elements) {
+    //         let elRoot = document.getElementById(p);
+    //         if (elRoot) {
+    //             elements[p](elRoot);
+    //         }
+    //     }
+    // }
 
-    private renderLogin = (element: HTMLElement) => {
-        ReactDOM.render(this.cMe.renderLoginState(), element);
-    }
+    // private renderLogin = (element: HTMLElement) => {
+    //     ReactDOM.render(this.cMe.renderLoginState(), element);
+    // }
 
-    private renderHomeCart = (element: HTMLElement) => {
-        ReactDOM.render(this.cCart.renderCartLabel_web(), element);
-    }
+    // private renderHomeCart = (element: HTMLElement) => {
+    //     ReactDOM.render(this.cCart.renderCartLabel_web(), element);
+    // }
 
     protected async internalStart(params: any) {
     }
 
-    protected showMain() {
+    /* protected showMain() {
         this.openVPage(VMainWebNav);
-    }
+    } */
 
     /**
      * 
