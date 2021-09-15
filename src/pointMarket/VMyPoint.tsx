@@ -65,6 +65,7 @@ export class VMyPoint extends VPage<CPointProduct> {
     private page = observer(() => {
         let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
             openExchangeHistory, openRevenueExpenditure, cApp } = this.controller;
+        let { currentUser } = cApp;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
@@ -95,17 +96,24 @@ export class VMyPoint extends VPage<CPointProduct> {
         ];
         let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
-        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>;
+        let UINoExchangeTip: JSX.Element;
+        if (!currentUser.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
+            您的个人信息不完善，无法兑换礼品.<br />
+            请完善您的<Ax href="/meInfo" className="text-primary" > 账户信息 </Ax>.
+            <br />完善后需要一点审核时间,请您耐心等待.
+        </div>
         let header = CrPageHeaderTitle('积分商城');
         if (!xs) right = null;
         return <Page header={header} right={right} className="h-100 bg-white">
-            <div className="row mx-0 mt-1">
+            <div className="row mx-0 mt-0 mt-sm-1">
                 <div className="col-lg-3 d-none d-lg-block">
                     {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
                 <div className="col-lg-9 px-0 px-sm-1">
                     {pageHTitle(<div className="text-left">积分商城</div>)}
                     {renderDropdownActions(actions)}
+                    {UINoExchangeTip && <div className="d-none d-lg-block mb-2">{UINoExchangeTip}</div>}
                     <div>
                         <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: 'cover' }}>{/* cover contain */}
                             <>{nowPointTip}</>
@@ -122,6 +130,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                             </div>
                         </div>
                     </div>
+                    {UINoExchangeTip && <div className="d-block d-lg-none mt-2">{UINoExchangeTip}</div>}
                     <div className="pt-3">
                         {/* 产品类别 */}
                         {
