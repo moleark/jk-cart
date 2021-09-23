@@ -83,7 +83,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                             </div>
                             <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                 {
-                                    !OffShelf || currentUser?.hasCustomer
+                                    !OffShelf && currentUser?.hasCustomer
                                     ? <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
                                     : null
                                 }
