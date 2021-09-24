@@ -98,11 +98,16 @@ export class VMyPoint extends VPage<CPointProduct> {
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>;
         let UINoExchangeTip: JSX.Element;
-        if (!currentUser.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
+        if (!currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
             您的个人信息不完善，无法兑换礼品.<br />
             请完善您的<Ax href="/meInfo" className="text-primary" > 账户信息 </Ax>.
             <br />完善后需要一点审核时间,请您耐心等待.
-        </div>
+        </div>;
+        if (!currentUser) {
+            UINoExchangeTip = <div className="alert alert-warning m-0">
+                请登录后进行礼品兑换.<br />
+            </div>;
+        };
         let header = CrPageHeaderTitle('积分商城');
         if (!xs) right = null;
         return <Page header={header} right={right} className="h-100 bg-white">

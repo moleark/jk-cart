@@ -57,14 +57,23 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
     private historyListTable = (): JSX.Element => {
         if (this.showList && this.showList.items && !this.showList.items.length)
             return <div className="my-5 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
-        let columns = [{ id: 1, name: '简述' },{ id: 2, name: '日期' },{ id: 3, name: '收支' }];
+        let columns = [{ id: 1, name: '简述' }, { id: 2, name: '积分说明' }, { id: 3, name: '日期' }, { id: 4, name: '收支' }];
+        let sources: { [s: number]: string } = {
+            1: "积分券下单",
+            2: "签到",
+            3: "兑换",
+            5: "下单",
+            8: "抽奖",
+            9: "退货"
+        };
         let content = <>{
             this.showList && this.showList.items && this.showList.items.map((v: any) => {
-                let { id, date, comments, point } = v;
+                let { id, date, comments, point, source } = v;
                 return <tr className="article-product-list order-wrap-list" key={id}>
                     <td data-title={columns[0].name}>{comments}</td>
-                    <td data-title={columns[1].name}><EasyDate date={date} /></td>
-                    <td data-title={columns[2].name} className="text-danger font-weight-bolder">{point >= 0 ? '+' : ''}{point}</td>
+                    <td data-title={columns[1].name}>{sources[source]}</td>
+                    <td data-title={columns[2].name}><EasyDate date={date} /></td>
+                    <td data-title={columns[3].name} className="text-danger font-weight-bolder">{point >= 0 ? '+' : ''}{point}</td>
                 </tr>
             })
         }</>;
