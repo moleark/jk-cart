@@ -41,8 +41,9 @@ export class CSignIn extends CUqBase {
      * 是否签到
      */
     isSignined = async () => {
+        let { currentUser } = this.cApp;
         let { checkIsSignin } = this.uqs.积分商城;
-        let res = await checkIsSignin.obj({});
+        let res = await checkIsSignin.obj({ customer: currentUser?.currentCustomer });
         this.IsSignin = res.result === 0 ? true : false;
     }
 
@@ -74,8 +75,9 @@ export class CSignIn extends CUqBase {
      * 获取签到记录
      */
     getSigninHistory = async () => {
+        let { currentUser } = this.cApp;
         this.signinPageHistory = new QueryPager(this.uqs.积分商城.GetPointSigninHistory, 15, 30);
-        this.signinPageHistory.first({});
+        this.signinPageHistory.first({ customer: currentUser?.currentCustomer });
     }
 
     /**

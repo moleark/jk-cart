@@ -401,8 +401,9 @@ export class CPointProduct extends CUqBase {
      * 获取积分详情的数据
      */
     getPointHistory = () => {
+        let { currentUser } = this.cApp;
         this.pagePointHistory = new QueryPager(this.uqs.积分商城.GetPointHistory, 15, 30);
-        this.pagePointHistory.first({ key: "" });
+        this.pagePointHistory.first({ customer: currentUser?.currentCustomer, key: "" });
     }
 
     /**

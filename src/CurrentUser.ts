@@ -260,7 +260,7 @@ export class WebUser {
     }
 
     async getPoints() {
-        return await this.uqs.积分商城.getPoints.table({ webuser: this.id });
+        return await this.uqs.积分商城.getPoints.table({ customer: this.currentCustomer });
     }
 
     async getValidCredits() {

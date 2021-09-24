@@ -68,6 +68,7 @@ export class VMyPoint extends VPage<CPointProduct> {
     private page = observer(() => {
         let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,isLogined,
             openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp, showPointDoubt } = this.controller;
+        let { currentUser } = cApp;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
         let dateYear = date.getFullYear();
@@ -98,7 +99,18 @@ export class VMyPoint extends VPage<CPointProduct> {
         ];
         let right = <DropdownActions className="align-self-center mr-1 bg-transparent border-0 text-light" icon="navicon" actions={actions} />;
 
-        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>
+        let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>;
+        let UINoExchangeTip: JSX.Element;
+        if (!currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
+            您的个人信息不完善，无法兑换礼品.<br />
+            请完善您的<span className="text-primary" > 账户信息 </span>.
+            <br />完善后需要一点审核时间,请您耐心等待.
+        </div>;
+        if (!currentUser) {
+            UINoExchangeTip = <div className="alert alert-warning m-0">
+                请登录后进行礼品兑换.<br />
+            </div>;
+        };
         let pointShowUI: any;
         if (!isLogined) pointShowUI = <div className="align-self-center">您尚未登录</div>;
         else pointShowUI = <div>
@@ -124,6 +136,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                 </div>
             </div>
             <>{nowPointTip}</>
+             {UINoExchangeTip && <div className="mt-2">{UINoExchangeTip}</div>}
             <div className="pt-3">
                 {/* 产品类别 */}
                 {
