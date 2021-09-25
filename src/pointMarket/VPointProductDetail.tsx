@@ -63,7 +63,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
         let { currentUser } = cApp;
         let { product, OffShelf } = pointProduct;
         let OffShelfTip: any = undefined;
-        if(OffShelf) OffShelfTip = <div className="position-absolute w-25" style={{top:0,left:15}}>
+        if (OffShelf) OffShelfTip = <div className="position-absolute w-25" style={{ top: 0, left: 15 }}>
             <img src={已下架} alt="" className="w-100" />
         </div>
         return <>
@@ -84,8 +84,8 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                             <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                 {
                                     !OffShelf && currentUser?.hasCustomer
-                                    ? <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
-                                    : null
+                                        ? <Form schema={schema} uiSchema={this.uiSchema} formData={pointProduct} className="mr-2" />
+                                        : null
                                 }
                             </div>
                         </div>
@@ -94,7 +94,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             })}
         </>
     }
-    
+
     private page = observer(() => {
         let { pointProductsDetail } = this.controller;
         return <div className="row mx-0 mt-1">
