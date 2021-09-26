@@ -11,6 +11,7 @@ import noStock from 'images/noStock.png';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
     @observable protected shippingAddressIsBlank: boolean = false;
+    @observable disBtn: boolean = false;
     protected pageDesc: string = OrderSource.EXCHANGEORDER;
     private noStockTip = observable.box();
     async open(param?: any) {
@@ -73,6 +74,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         await createOrderStocks();
         if (this.controller.noJDStock) {this.setNoStockTip(); return;};
         await this.onSubmitOwn();
+        this.disBtn = true;
     }
 
     private setNoStockTip = () => {
@@ -112,7 +114,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             {autoHideTips(this.noStockTip)}
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
-                <button type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认兑换</button>
+                <button disabled={this.disBtn} type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认兑换</button>
             </div>
         </div>;
         if (noJDStock) this.setNoStockTip();
