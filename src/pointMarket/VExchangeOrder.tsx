@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, LMR, FA, tv, List, autoHideTips } from 'tonva-react';
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
 import { randomColor } from 'tools/randomColor';
 import { pointIcon } from 'tools/images';
@@ -13,6 +13,15 @@ export class VExchangeOrder extends VPage<CPointProduct> {
 	//@observable protected shippingAddressIsBlank: boolean = false;
 	protected shippingAddressIsBlank = observable.box<boolean>();
     protected pageDesc: string = OrderSource.EXCHANGEORDER;
+    disBtn: boolean = false;
+
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable(this, {
+            disBtn: observable
+        });
+    }
+
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -63,8 +72,9 @@ export class VExchangeOrder extends VPage<CPointProduct> {
             this.shippingAddressIsBlank.set(true);
             //setTimeout(() => this.shippingAddressIsBlank = false, GLOABLE.TIPDISPLAYTIME);
             return;
-        }
+        };
         await this.onSubmitOwn();
+        this.disBtn = true;
     }
 
 	/*
@@ -109,7 +119,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let footer = <div className="d-block">
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
-                <button type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.onSubmit}>确认兑换</button>
+                <button disabled={this.disBtn} type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.onSubmit}>确认兑换</button>
             </div>
         </div>;
         let vModel = React.createElement(observer(() => {
