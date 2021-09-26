@@ -62,13 +62,13 @@ export class VPointProductDetail extends VPage<CPointProduct> {
                                 <span className="text-danger h5">{v.point}</span>
                                 <small>分</small>
                             </div>
-                            {/* <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
+                            <div className="col-7 d-flex justify-content-end align-items-right m-0 p-0">
                                 {
                                     !OffShelf && currentUser?.hasCustomer
                                     ? <Form schema={schema} uiSchema={this.uiSchema} formData={pointProductsDetail} className="mr-2" />
                                     : null
                                 }
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>
