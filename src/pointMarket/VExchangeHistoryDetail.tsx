@@ -17,8 +17,8 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100"  /></div>
-                    <div className="col-8 small">
+                    <div title={v.description} className="col-4 col-sm-3 col-lg-2 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100"  /></div>
+                    <div className="col-8 col-sm-9 col-lg-10 small">
                         <div><label>{v.descriptionC}</label></div>
                         <div className="d-flex justify-content-between my-3">
                             <div className="mt-1"><b>{pack ? <>{tv(pack, (c) => <>{c.radioy}{c.unit}</>)}</> : v.grade}</b></div>
@@ -35,13 +35,13 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
     private page = (order: any) => {
         let { brief, data } = order;
-        let { no, date } = brief;
+        let { no, date, state } = brief;/* state: "canceled" */
         let { exchangeItems, shippingContact, amount } = data;
-
-        let header:any = <>订单详情: {no}</>
+        let header: any = <>订单详情: {no} {state === "canceled" ? '(已取消)' : "" }</>
         if (!xs) header = '';
+        let UI_CON_state = state === "canceled" ? <b className="float-right h4 text-danger">兑换单已取消</b> : <></>;
         return <Page header={header}>
-            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a></div>}
+            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a>  {UI_CON_state}</div>}
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>
