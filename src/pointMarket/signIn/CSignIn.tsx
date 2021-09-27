@@ -62,7 +62,7 @@ export class CSignIn extends CUqBase {
         let { cPointProduct } = this.cApp;
         let { Signin } = this.uqs.积分商城;
         customer = this.cApp.currentUser.currentCustomer;
-        customer = customer ? customer : this.user.id;
+        // customer = customer ? customer : this.user.id;
         await Signin.submit({ webuser: this.user.id, customer: customer, amount: amount });
         await cPointProduct.refreshMypoint();
         // await this.getSigninConsecutiveDays();
