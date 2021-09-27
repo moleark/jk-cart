@@ -25,7 +25,7 @@ export const MeLib = [
                 component: <IconText iconClass="text-info mr-2" icon="heart" text="商品收藏" />,
                 href:'/favorites',
             },{
-                component: <IconText iconClass="text-info mr-2" icon="shopping-bag" text="积分管理" />,
+                component: <IconText iconClass="text-info mr-2" icon="shopping-bag" text="积分商城" />,
                 href:'/pointshop',
             },{
                 component: <IconText iconClass="text-info mr-2" icon="connectdevelop" text="卡券管理" />,

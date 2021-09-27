@@ -201,7 +201,7 @@ export class NavHeaderView extends View<CApp> {
                                     <a className="dropdown-item text-center" href="/contact">地址管理</a>
                                     <hr className="my-1" />
                                     <a className="dropdown-item text-center" href="/favorites">商品收藏</a>
-                                    <a className="dropdown-item text-center" href="/pointshop">积分管理</a>
+                                    <a className="dropdown-item text-center" href="/pointshop">积分商城</a>
                                     <a className="dropdown-item text-center" href="/couponManage">卡券管理</a>
                                     <hr className="my-1" />
                                     <a className="dropdown-item text-center" href="/myOrders">订单记录</a>
