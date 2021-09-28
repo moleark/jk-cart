@@ -46,6 +46,11 @@ export const appConfig: AppConfig = {
 		},
 		{
 			dev: jk,
+			name: '积分商城',
+			version: '0.1.1',
+		},
+		{
+			dev: jk,
 			name: 'product',
 			version: '0.1.1',
 		},

@@ -1,6 +1,6 @@
-//=== UqApp builder created on Thu Sep 09 2021 08:37:43 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Sep 27 2021 14:37:25 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqQuery, UqMap } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqQuery, UqMap, UqHistory, UqIX } from "tonva-react";
 
 
 //===============================
@@ -320,7 +320,31 @@ export interface ResultGetMyExpiredCoupon {
 	$page: ReturnGetMyExpiredCoupon$page[];
 }
 
+export interface ParamCustomerSalesmanHistory {
+	customer: number;
+	salesman: number;
+	operation: number;
+	createDate: any;
+}
+export interface ReturnCustomerSalesmanHistory$page {
+	date: any;
+	customer: number;
+	salesman: number;
+	operation: number;
+	createDate: any;
+}
+export interface ResultCustomerSalesmanHistory {
+	$page: ReturnCustomerSalesmanHistory$page[];
+}
+
+export interface CustomerSalesman {
+	ix: number;
+	xi: number;
+	unLockOn: any;
+}
+
 export interface ParamActs {
+	customerSalesman?: CustomerSalesman[];
 }
 
 
@@ -379,4 +403,6 @@ export interface UqExt extends Uq {
 	CustomerCredits: UqMap;
 	CustomerCoupon: UqMap;
 	CustomerCouponUsed: UqMap;
+	CustomerSalesmanHistory: UqHistory<ParamCustomerSalesmanHistory, ResultCustomerSalesmanHistory>;
+	CustomerSalesman: UqIX<any>;
 }

@@ -144,6 +144,7 @@ export interface UqPointShop {
     PointProductLib: Tuid;
     PointProductSource: Map;
     GetPointProductByGenre: Query;
+    SearchExchangeOrders: Query;
     // TODO：delete
     // AddPoint: Action;
     // IsCanUseOrder: Action;
@@ -174,6 +175,7 @@ export interface UqPlatformjoint {
 
 export interface UqDeliver {
     GetOrderDetailTransportation: Query;
+    GetPointExchangeDetailTransportation: Query;
 }
 
 export interface UQs {

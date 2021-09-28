@@ -4,6 +4,13 @@ import { CPointProduct } from './CPointProduct';
 import { OrderItem } from './pointOrder';
 import { PointProductImage } from 'tools/productImage';
 import { xs } from 'tools/browser';
+const ExchangeState: { [state: string | number]: string } = {
+    12: "待发运",
+    13: "已发运",
+    14: "已完成",
+    15: "已取消",
+    "canceled": "已取消",
+};
 
 export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
@@ -12,8 +19,22 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         this.openPage(this.page, order);
     }
 
+    exchangeTransportation = async (transportation: any) => {
+        let { cApp } = this.controller;
+        await cApp.cOrder.openOrderTrans(transportation);
+    }
+
     private renderexchangeItem = (orderItem: OrderItem) => {
-        let { product, pack, quantity, point } = orderItem;
+        let { product, pack, quantity, point, param } = orderItem;
+        let transportation: any;
+        if (param?.transportation) {
+            let { carrier, waybillNumber } = param.transportation;
+            transportation = {transNumber: waybillNumber, expressLogistics: carrier};
+        };
+        let exchangeTransUI: JSX.Element;
+        if (transportation) exchangeTransUI = <div className="text-right" >
+            <button onClick={() => { this.exchangeTransportation(transportation) }} className="btn btn-sm btn-outline-primary" >查看物流</button>
+        </div>;
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
@@ -27,6 +48,7 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
                                 <small className="text-muted">分 ({point} × {quantity})</small>
                             </div>
                         </div>
+                        {exchangeTransUI}
                     </div>
                 </div>
             })}
@@ -37,9 +59,10 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         let { brief, data } = order;
         let { no, date, state } = brief;/* state: "canceled" */
         let { exchangeItems, shippingContact, amount } = data;
-        let header: any = <>订单详情: {no} {state === "canceled" ? '(已取消)' : "" }</>
+        let statestr: string = ExchangeState[state];
+        let header: any = <>订单详情: {no} {statestr ? `(${statestr})` : "" }</>
         if (!xs) header = '';
-        let UI_CON_state = state === "canceled" ? <b className="float-right h4 text-danger">兑换单已取消</b> : <></>;
+        let UI_CON_state = statestr ? <b className="float-right h5 text-danger">兑换单{statestr}</b> : <></>;
         return <Page header={header}>
             { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a>  {UI_CON_state}</div>}
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />

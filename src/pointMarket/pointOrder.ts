@@ -43,6 +43,7 @@ export class pointOrder {
 }
 
 export class OrderItem {
+    param?: any;
     product: BoxId;
     pack: BoxId;
     quantity: any;

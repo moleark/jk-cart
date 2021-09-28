@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu Sep 09 2021 08:37:43 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Sep 27 2021 14:37:25 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -284,6 +284,22 @@ export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
+export interface ParamSearchOrders {
+	keyWord: string;
+	state: string;
+	customer: number;
+}
+export interface ReturnSearchOrders$page {
+	seq: number;
+	id: number;
+	no: string;
+	date: any;
+	state: string;
+}
+export interface ResultSearchOrders {
+	$page: ReturnSearchOrders$page[];
+}
+
 export interface ParamCart {
 	user: number;
 	product: number;
@@ -391,12 +407,35 @@ export interface OrderMain {
 	createDate: any;
 }
 
+export interface ReturnDetail {
+	id?: number;
+	main?: number;
+	orderDetail: number;
+	item: number;
+	product: number;
+	quantity: number;
+	price: number;
+	lotNumber: string;
+	createDate: any;
+}
+
+export interface ReturnMain {
+	id?: number;
+	no?: string;
+	customerAccount: number;
+	webUser: number;
+	shippingContact: number;
+	invoiceContact: number;
+	sumAmount: number;
+	currency: number;
+	createDate: any;
+}
+
 export interface OrderMainEx {
 	id?: number;
 	seller: string;
 	salesman: number;
 	salesRegion: number;
-	buyerAccount: number;
 	organization: number;
 	currency: number;
 	poNumber: string;
@@ -424,6 +463,20 @@ export interface OrderDetailEx {
 	createDate: any;
 }
 
+export interface ReturnDetailEx {
+	id?: number;
+	returnItemId: string;
+	endUser: number;
+	mark: string;
+}
+
+export interface ReturnMainEx {
+	id?: number;
+	seller: string;
+	salesman: number;
+	salesRegion: number;
+}
+
 export interface DxOrderDetail {
 	id: number;
 	deliver?: number;
@@ -435,6 +488,17 @@ export interface DxOrderDetail {
 	invoice?: number;
 	invoiceDone?: number;
 	invoiceTime?: any;
+	$act?: number;
+}
+
+export interface DxReturnDetail {
+	id: number;
+	deliverReturn?: number;
+	deliverReturnDone?: number;
+	receiveReturn?: number;
+	receiveReturnDone?: number;
+	invoiceReturn?: number;
+	invoiceReturnDone?: number;
 	$act?: number;
 }
 
@@ -456,6 +520,17 @@ export interface ActParamDxOrderDetail {
 	invoice?: number|IDXValue;
 	invoiceDone?: number|IDXValue;
 	invoiceTime?: any|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxReturnDetail {
+	id: number|IDXValue;
+	deliverReturn?: number|IDXValue;
+	deliverReturnDone?: number|IDXValue;
+	receiveReturn?: number|IDXValue;
+	receiveReturnDone?: number|IDXValue;
+	invoiceReturn?: number|IDXValue;
+	invoiceReturnDone?: number|IDXValue;
 	$act?: number;
 }
 
@@ -492,9 +567,14 @@ export interface IxOrderMainCustomerCoupon {
 export interface ParamActs {
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
+	returnDetail?: ReturnDetail[];
+	returnMain?: ReturnMain[];
 	orderMainEx?: OrderMainEx[];
 	orderDetailEx?: OrderDetailEx[];
+	returnDetailEx?: ReturnDetailEx[];
+	returnMainEx?: ReturnMainEx[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
+	dxReturnDetail?: ActParamDxReturnDetail[];
 	dxOrderMainState?: ActParamDxOrderMainState[];
 	ixOrderDetailFee?: IxOrderDetailFee[];
 	ixOrderMainFee?: IxOrderMainFee[];
@@ -539,16 +619,21 @@ export interface UqExt extends Uq {
 	OrderState: UqBook<ParamOrderState, ResultOrderState>;
 	GetCart: UqQuery<ParamGetCart, ResultGetCart>;
 	$poked: UqQuery<Param$poked, Result$poked>;
+	SearchOrders: UqQuery<ParamSearchOrders, ResultSearchOrders>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
-	OrderTransportation: UqMap;
 	OrderHistory: UqHistory<ParamOrderHistory, ResultOrderHistory>;
 	OrderReceivable: UqPending<any, any>;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
+	ReturnDetail: UqID<any>;
+	ReturnMain: UqID<any>;
 	OrderMainEx: UqID<any>;
 	OrderDetailEx: UqID<any>;
+	ReturnDetailEx: UqID<any>;
+	ReturnMainEx: UqID<any>;
 	DxOrderDetail: UqIDX<any>;
+	DxReturnDetail: UqIDX<any>;
 	DxOrderMainState: UqIDX<any>;
 	IxOrderDetailFee: UqIX<any>;
 	IxOrderMainFee: UqIX<any>;

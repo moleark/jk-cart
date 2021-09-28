@@ -17,6 +17,7 @@ import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 import { VShopSideBar } from './view/VShopSideBar';
 import { VError } from 'tools/VError';
+import { DxExchagneMainState } from '../uq-app/uqs/Jk积分商城/Jk积分商城';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -240,23 +241,77 @@ export class CPointProduct extends CUqBase {
      * 积分兑换记录页面
      */
     openExchangeHistory = async () => {
-        let promises: PromiseLike<any>[] = [
+        /* let promises: PromiseLike<any>[] = [
             this.uqs.积分商城.PointExchangeSheet.mySheets(undefined, 1, -10),
             this.uqs.积分商城.PointExchangeSheet.mySheets("#", 1, -100)
         ];
         let presult = await Promise.all(promises);
-        let exchangeHistory = presult[0].concat(presult[1]);
-        this.openVPage(VExchangeHistory, exchangeHistory);
+        let exchangeHistory = presult[0].concat(presult[1]); */
+        let { Jk积分商城, 积分商城 } = this.uqs;
+        /* 
+        let as:any[] = await Jk积分商城.QueryID({
+            IDX: [Jk积分商城.ExchangeMain]
+        });
+        let exchangeHistorys = as.map((el: any) => {
+            let { id, no, createDate } = el;
+            return { id: id, no: no, date: createDate };
+        }); */
+        let result = new QueryPager<any>(积分商城.SearchExchangeOrders, 1000, 1000);
+        await result.first({
+            customer: this.cApp.currentUser?.currentCustomer
+        });
+        let exchangeHistorys: any[] = result?.items || [];
+        this.openVPage(VExchangeHistory, exchangeHistorys);
     }
 
     /**
      * 历史兑换单详情页面
      */
     openOrderDetail = async (orderId: number) => {
-        let order:any = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
-        if (!order || (this.user?.id !== order?.brief?.user)) {
+        // let order: any = await this.uqs.积分商城.PointExchangeSheet.getSheet(orderId);
+        /* if (!order || (this.user?.id !== order?.brief?.user)) {
             this.openVPage(VError);
             return;
+        }; */
+        let { Jk积分商城, 积分商城, customer: customerUQ, deliver } = this.uqs;
+        let order = { brief: {}, data: {} };
+        let getOrder:any[] = await Jk积分商城.IDDetailGet({
+            id: orderId,
+            main: Jk积分商城.ExchangeMain,
+            detail: Jk积分商城.ExchangeDetail,
+        });
+        let [mainArr, orderDetail] = getOrder;
+        if (!mainArr.length || !orderDetail.length) {
+            this.openVPage(VError);return;
+        };
+        let getDxExchagneMainState: any[] = await Jk积分商城.ID<DxExchagneMainState>({
+            IDX: Jk积分商城.DxExchagneMainState,
+            id: orderId,
+        });
+        let { id, no, createDate, shippingContact, amount, customer } = mainArr[0];
+        let { state } = getDxExchagneMainState[0] || { state: undefined };
+        order.brief = { id: id, no: no, date: createDate, state: state };
+        customer = customerUQ.Customer.boxId(customer);
+        shippingContact = customerUQ.Contact.boxId(shippingContact);
+        
+        let promise: PromiseLike<any>[] = [customer, shippingContact];
+        orderDetail.forEach((el: any) => {
+            el.product = 积分商城.PointProductLib.boxId(el?.item);
+            let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
+            getExchangeTransportation.then((data: any) => el.transportation = data || undefined);
+            promise.push(getExchangeTransportation);
+            promise.push(el.product);
+        });
+        await Promise.all(promise);
+        let exchangeItems = orderDetail.map((el: any) => {
+            let { product, point, quantity, subAmount, id, transportation } = el;
+            return { param: { id: id, transportation: transportation }, point: point, product: product, quantity: quantity, subAmount: subAmount };
+        });
+        order.data = {
+            amount: amount,
+            customer: customer,
+            exchangeItems: exchangeItems,
+            shippingContact: shippingContact,
         };
         this.openVPage(VExchangeHistoryDetail, order);
     }

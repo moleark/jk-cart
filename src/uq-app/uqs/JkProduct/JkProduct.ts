@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu Sep 09 2021 08:37:43 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Sep 27 2021 14:37:25 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID } from "tonva-react";
 
@@ -273,7 +273,6 @@ export interface ReturnSearchPointProduct$page {
 	radioy: number;
 	unit: string;
 	retail: number;
-	$id: number;
 }
 export interface ResultSearchPointProduct {
 	$page: ReturnSearchPointProduct$page[];
@@ -305,7 +304,6 @@ export interface ReturnGetPointProductMoreBySourceRet {
 	radioy: number;
 	unit: string;
 	retail: number;
-	$id: number;
 }
 export interface ResultGetPointProductMoreBySource {
 	ret: ReturnGetPointProductMoreBySourceRet[];
