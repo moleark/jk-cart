@@ -136,47 +136,15 @@ export class CPointProduct extends CUqBase {
         this.pointToExchanging = 0;
     }
 
-    loginMonitor = async (callBack?:any): Promise<void> => {
-        if (!this.isLogined) {
-            let loginCallback = async (user: User): Promise<void> => {
-                let { cApp } = this;
-                await cApp.currentUser.setUser(user);
-                await cApp.loginCallBack(user);
-                this.closePage(1);
-                if (callBack !== undefined) callBack();
-                else await this.showMainPoint();
-            };
-            nav.showLogin(loginCallback, true);
-        }
-    };
-
-    
-    tabPage: VMyPoint = new VMyPoint(this);
-
-    initPointAllData = async () => {
-        if(this.user !==undefined)
-            await this.refreshMypoint();        /* 刷新积分 */
-        await this.getPointProductGenre();  /* 获取产品类型 */
-        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
-        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
-    }
-
-    showMainPoint = async () => {
-        await this.refreshMypoint(); 
-        this.cApp.showMain('pointMarket');
-    }
-
     /**
      * 积分管理页面
      */
     openMyPoint = async (param?: any) => {
-        await this.initPointAllData();
+        await this.refreshMypoint();        /* 刷新积分 */
+        await this.getPointProductGenre();  /* 获取产品类型 */
+        this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
+        this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
         this.openVPage(VMyPoint);
-        // await this.refreshMypoint();        /* 刷新积分 */
-        // await this.getPointProductGenre();  /* 获取产品类型 */
-        // this.newPointProducts = await this.getNewPointProducts();    /* 获取新品推荐 */
-        // this.hotPointProducts = await this.getHotPointProducts();    /* 获取热门产品 */
-        // this.openVPage(VMyPoint);
     }
 
     /**
@@ -265,12 +233,8 @@ export class CPointProduct extends CUqBase {
      * 积分收支明细页面
      */
     openRevenueExpenditure = async (topic?: any) => {
-        if (!this.isLogined)
-            await this.cApp.cPointProduct.loginMonitor();
-        else { 
-            await this.getPointHistory();
-            this.openVPage(VRevenueExpenditure, topic)
-        }
+        await this.getPointHistory();
+        this.openVPage(VRevenueExpenditure, topic)
     }
 
     /**
@@ -350,30 +314,7 @@ export class CPointProduct extends CUqBase {
             shippingContact: shippingContact,
         };
         this.openVPage(VExchangeHistoryDetail, order);
-    };
-
-    /* 订单是否是含有JD商品的订单 */
-    getOutWardOrderByJD = async (orderId: number) => {
-        // orderId = nav.testing ? 485 : 96; //96  485
-        this.outWardOrderByJD = await this.uqs.platFormJoint.OutWardOrderMapping.obj({ platform: 1, myOrderId: orderId });
-    };
-
-    /** 获取物流信息 */
-    getOrderTrack = async () => {
-        let param = { jdOrderId: this.outWardOrderByJD.platformOrderId };
-        let res = await FetchPost(GLOABLE.JD + '/orderTrack', JSON.stringify(param));
-        let orderTrackObj: any;
-        if (res.ok) orderTrackObj = await res.json();
-        return orderTrackObj;
-    };
-
-    /**
-     * 历史兑换单物流信息页面
-     */
-    openExchangeOrderTrack = async () => {
-        let OrderTrack = await this.getOrderTrack();
-        this.openVPage(VExchangeOrderTrack, OrderTrack);
-    };
+    }
 
     /**
      * 已选择的可兑换产品页面
@@ -554,35 +495,7 @@ export class CPointProduct extends CUqBase {
                 return item;
             });
         }
-    };
-
-    createOrderStocks = async () => {
-        let noSourceList = this.pointProductsSelected.filter((v: any) => v.quantity > 0 && !v.pointProductSource);
-        if (noSourceList.length) {
-            let promises1: PromiseLike<any>[] = [];
-            noSourceList.forEach((v: any) => promises1.push(this.getProductSources(v.product)));
-            let result = await Promise.all(promises1);
-            this.pointProductsSelected.forEach((v: any) => {
-                let findCoincideById = result.find((o: any) => o && v.product.id === o.pointProduct.id);
-                if (findCoincideById) v.pointProductSource = findCoincideById;
-            });
-        };
-
-        let jdProducts = this.pointProductsSelected.filter((v: any) => v.quantity > 0 && v.pointProductSource && v.pointProductSource.type === 'jd.com');
-        this.noJDStock = false;
-        if (!jdProducts.length) return;
-        let newStockRes = await this.getStockBySource({ data: jdProducts, sourceType: 'jd.com' });
-        let noStockList = newStockRes.filter((v: any) => v.stockStateId === 34 || v.stockStateDesc === "无货");
-        if (!noStockList.length) return;
-        this.pointProductsSelected.forEach((v: any) => {
-            let pSource = v.pointProductSource;
-            if (pSource?.type === 'jd.com') {
-                v.newStockRes = noStockList.find((e: any) => e.skuId === Number(pSource.sourceId));
-            };
-        });
-        this.noJDStock = true;
-    };
-
+    }
     /**
      * 生成兑换单兑换积分
      */
@@ -605,6 +518,9 @@ export class CPointProduct extends CUqBase {
         }
 
         //兑换后清空选择的积分产品
+        /* this.orderData.exchangeItems = undefined;
+        this.pointProductsSelected.length = 0;
+        this.pointToExchanging = 0; */
         this.clearSelectedPointsProducts();
 
         // 打开下单成功显示界面
@@ -738,39 +654,6 @@ export class CPointProduct extends CUqBase {
     }
 
     onSelectShippingContact = async () => {
-        this.orderData.shippingContact = await this.selectContact();
-        await this.createOrderStocks();
-    }
-
-    showPointDoubt = async () => {
-        if (!this.isLogined)
-            await this.cApp.cPointProduct.loginMonitor();
-        else {
-            let { cMe, currentUser } = this.cApp;
-            let param: any = { currentUser, webUsers: [] };
-            if (currentUser.hasCustomer) {
-                let { currentCustomer } = currentUser;
-                param.currentCustomer = currentCustomer;
-                let otherWebUsers = await currentCustomer.getRelatedWebUser();
-                param.webUsers = otherWebUsers;
-                this.openVPage(VPointDoubt, param);
-            } else {
-                if (!currentUser.allowOrdering) {
-                    let note = <>
-                        我们需要审核您的账号信息。账号审核是为了将您的账号和您之前的积分关联起来。
-                        为此，需要您提供以下信息（带有 <span className="text-danger">*</span> 的信息为必填项），感谢您的配合。
-                    </>;
-                    cMe.toPersonalAccountInfo(async () => { this.openVPage(VPointDoubt) }, note);
-                } else {
-                    this.openVPage(VPointDoubt, param);
-                }
-            }
-        } 
-    }
-
-    applyAuditUser = async () => {
-        let { cApp, uqs } = this;
-        let { currentUser } = cApp;
-        await uqs.webuser.applyAuditUser.submit({ webUser: currentUser });
+        this.orderData.shippingContact = await this.selectContact()
     }
 }

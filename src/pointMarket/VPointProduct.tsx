@@ -35,8 +35,6 @@ export const schema = [
     { name: 'quantity', type: 'number' } as NumSchema,
     // { name: 'point', type: 'number' } as NumSchema,
     // { name: 'imageUrl', type: 'string' } as StringSchema,
-    { name: 'newStockRes', type: 'object' } as ObjectSchema,
-    { name: 'pointProductSource', type: 'object' } as ObjectSchema,
 ];
 
 export class VPointProduct extends VPage<CPointProduct> {
@@ -47,6 +45,7 @@ export class VPointProduct extends VPage<CPointProduct> {
     protected productIsNull = observable.box(false);
     protected pointIsEnough = observable.box(false);
     private currentInterval: string;
+    private themeName: string = '积分商城';
     private tabs: TabProp[];
     protected none: JSX.Element = <div className="my-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
     rankInterval: any = [
@@ -140,8 +139,6 @@ export class VPointProduct extends VPage<CPointProduct> {
                 WidgetClass: MinusPlusWidget,
                 onChanged: this.controller.onQuantityChanged as any
             } as UiCustom,
-            newStockRes: { visible: false },
-            pointProductSource: { visible: false },
             // point: { visible: false },
             // imageUrl: { visible: false },
         }

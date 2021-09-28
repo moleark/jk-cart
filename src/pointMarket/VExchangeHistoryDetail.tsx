@@ -12,13 +12,6 @@ const ExchangeState: { [state: string | number]: string } = {
     "canceled": "已取消",
 };
 
-const OrderState: { [state: string]: string } = {
-    '$':'$',
-    'matching':'matching',
-    'shipping':'配送中',
-    'canceled':'此订单已取消',
-}
-
 export class VExchangeHistoryDetail extends VPage<CPointProduct> {
 
     async open(order: any) {
@@ -63,7 +56,6 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
     }
 
     private page = (order: any) => {
-        let { outWardOrderByJD, openExchangeOrderTrack } = this.controller;
         let { brief, data } = order;
         let { no, date, state } = brief;/* state: "canceled" */
         let { exchangeItems, shippingContact, amount } = data;
@@ -82,11 +74,9 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
                 <div className="col-3 text-muted">下单时间:</div>
                 <div className="col-9 text-right"><EasyDate date={date} /></div>
             </div>
-            <div className="bg-white p-3 my-1 d-flex justify-content-between">
-                <strong>{ orderState }</strong>
+            <div className="bg-white p-3 my-1 text-right">
                 <span className="text-danger font-weight-bold">总积分: {amount}</span>
             </div>
-            {OrderTrackBtn}
         </Page>
     }
 }

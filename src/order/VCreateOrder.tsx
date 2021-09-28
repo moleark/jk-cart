@@ -63,7 +63,7 @@ export class VCreateOrder extends VPage<COrder> {
                     <small className="text-muted">(¥{parseFloat(price.toFixed(2))} × {quantity})</small>
                 </div>
             </div>
-            <div>{this.controller.cApp.cProduct.renderDeliveryTime(pack)}</div>
+            <div>{this.controller.renderDeliveryTime(pack)}</div>
         </div>;
     }
 
@@ -242,16 +242,7 @@ export class VCreateOrder extends VPage<COrder> {
                     onClick={() => { disableOrderBtn(); this.onSubmit()}} disabled={!allowOrdering || this.submitOrderEd}>提交订单
                 </button>
             </div>
-        } else
-            footer = <div className="w-100 px-3 py-1" style={{ backgroundColor: "#f8f8f8" }}>
-                <div className="d-flex justify-content-left">
-                    <div className="text-danger flex-grow-1" style={{ fontSize: '1.8rem' }}><small>¥</small>{orderData.amount}</div>
-                    <button type="button"
-                        className={classNames('btn', 'w-30', { 'btn-danger': currentUser.allowOrdering, 'btn-secondary': !currentUser.allowOrdering })}
-                        onClick={this.onSubmit} disabled={!currentUser.allowOrdering}>提交订单
-                </button>
-                </div>
-            </div>;
+        </div>;
 
         let chevronRight = xs ? <FA name="chevron-right" className="cursor-pointer" /> : <></>;
 		/*
@@ -267,7 +258,7 @@ export class VCreateOrder extends VPage<COrder> {
                 divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex"
                     onClick={() => { xs ? onSelectInvoiceContact() : this.saveShowModal('invoiceContact') }}>
                     {tv(orderData.invoiceContact, undefined, undefined, this.nullContact)}
-                    <div onClick={onSelectInvoiceContact}>{chevronRight}</div>
+                    <div>{chevronRight}</div>
                 </div>
             } else {
                 divInvoiceContact = <div className="col-8 offset-4 offset-sm-2">

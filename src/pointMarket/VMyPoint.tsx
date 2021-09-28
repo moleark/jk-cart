@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from 'tonva-react';
 import { CPointProduct, topicClump, topicClumps } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
@@ -165,7 +164,7 @@ export class VMyPoint extends VPage<CPointProduct> {
                     <div className="d-none d-lg-block py-md-5 my-md-5"></div>
                 </div>
             </div>
-        </>;
+        </Page>;
     });
 
     private renderGenreItem = (item: any) => {

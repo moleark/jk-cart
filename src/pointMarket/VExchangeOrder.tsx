@@ -64,7 +64,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
     }
 
     protected onSubmit = async () => {
-        let { orderData, cApp, createOrderStocks } = this.controller;
+        let { orderData, cApp } = this.controller;
         let { cLottery } = cApp;
         // 必填项验证
         let { shippingContact } = this.pageDesc === OrderSource.EXCHANGEORDER ? orderData : cLottery.prizeOrderData;
@@ -117,7 +117,6 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let { pointProductsSelected, pointToExchanging: pointsSum ,visible} = this.controller;
         let header = <div className="w-100 text-center">兑换确认</div>;
         let footer = <div className="d-block">
-            {autoHideTips(this.noStockTip)}
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
                 <button disabled={this.disBtn} type="button" className="btn btn-danger m-1" style={{backgroundColor:'#dc3545'}} onClick={this.onSubmit}>确认兑换</button>

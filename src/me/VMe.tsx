@@ -124,11 +124,6 @@ export class VMe extends VPage<CMe> {
             },
             {
                 type: 'component',
-                component: <IconText iconClass="text-info mr-2" icon="smile-o" text="用户协议" />,
-                onClick: this.controller.openLegal
-            },
-            {
-                type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="隐私政策" />,
                 onClick: this.privacy
             },
@@ -150,7 +145,7 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     component: <button className="btn btn-success w-100 my-2" onClick={() => showLogin()}>
-                        <FA name="sign-out" size="lg" /> 登录/注册
+                        <FA name="sign-out" size="lg" /> 请登录
                     </button>
                 },
             );
@@ -169,13 +164,13 @@ export class VMe extends VPage<CMe> {
             ];
 
             rows = [
-                /*
+				/*
                 '',
                 {
                     type: 'component',
                     component: <this.meInfo />
-                },
-                */
+				},
+				*/
                 '',
                 {
                     type: 'component',
@@ -192,11 +187,11 @@ export class VMe extends VPage<CMe> {
                     component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="发票管理" />,
                     onClick: this.openInvoice
                 },
-                /* {
+                {
                     type: 'component',
-                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分商城" />,
+                    component: <IconText iconClass="text-info mr-2" icon="address-book-o" text="积分管理" />,
                     onClick: this.openMyPoint
-                }, */
+                },
                 '',
                 {
                     type: 'component',
