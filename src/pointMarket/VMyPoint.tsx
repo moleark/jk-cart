@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from "tonva";
-import { CPointProduct, PointProductDetailLevel, topicClump } from "./CPointProduct";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv, Ax } from 'tonva-react';
+import { CPointProduct, topicClump, topicClumps } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
-import { VPointRule } from './VPointRule';
+import { VPointRule } from './view/VPointRule';
 import { PointProductImage } from 'tools/productImage';
 import classNames from 'classnames';
 import { logo_pointShop, signInIcon, exChangeIcon, homeTopicMap, triangleShadingO, triangleShadingT } from 'tools/images';
 import { RevenueExpenditure } from './basicRefer';
 import { randomColor } from 'tools/randomColor';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { xs } from '../tools/browser';
 
 export class VMyPoint extends VPage<CPointProduct> {
 
@@ -40,34 +42,37 @@ export class VMyPoint extends VPage<CPointProduct> {
         </div>
     }
 
-    private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
-        let pointProductImage = (pointProduct: any, index: any) => {
+    private recommendOrHot = (type: any, theme?: string, imgArr?: any[], action?: any) => {
+        if (!imgArr || !imgArr.length) return null;
+        let { id, name } = type;
+        let pointProductImage = (pointProduct: any, index: any) => {            
             let { product } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
-            return <div className={`d-flex align-items-center ${clm}`}>{tv(product, (v) => {
-                return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{ width: '91.6%', height: '23vw', border: `2px solid ${randomColor()}` }} />
-            })
-            }</div>
+            return <div className={`d-flex align-items-center ${clm}`}>
+                <Ax style={{width: '91.6%'}} className="h-100" href={"/pointshop/product/" + product?.id} >{tv(product, (v) => {
+                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0 z-height-more w-100"
+                        style={{/*  width: '91.6%', */ border: `2px solid ${randomColor()}` }} />
+                })}</Ax>
+            </div>
         }
         return <div className="mb-4" style={{ zIndex: 9 }}>
             <h6 className='d-flex justify-content-between align-content-end bg-transparent '>
                 <small className={classNames(theme ? theme : '', 'align-self-end')} style={{ color: theme ? theme : '' }}>{name}</small>
-                <span style={{ color: '#808080' }} className="pl-2" onClick={() => more(name)} ><small >更多 </small><FA name='angle-right' /></span>
+                <Ax href={"/pointshop/productLine/" + id} >
+                    <span style={{ color: '#808080' }} className="pl-2"><small >更多 </small><FA name='angle-right' /></span>
+                </Ax>
             </h6>
-            <List className="d-flex w-100 bg-transparent justify-content-between"
+            <List
+                className="row mx-0 bg-transparent justify-content-between"
                 items={imgArr.slice(0, 3)}
-                item={{
-                    render: pointProductImage, //(v: any) => <PointProductImage chemicalId={v.imageUrl ? v.imageUrl : '1'} className="w-100 px-1 bg-transparent" style={{border:`2px solid ${randomColor()}`}} />,
-                    onClick: (v) => toWhere(v, PointProductDetailLevel.DIRECT),
-                    className: "col-4 p-0 bg-transparent"
-                }}
+                item={{ render:pointProductImage, className: "col-4 p-0 bg-transparent" }}
                 none='暂无产品' />
         </div>
     }
 
     private page = observer(() => {
-        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,isLogined,
-            openExchangeHistory, openRevenueExpenditure, openPointProduct, openPointProductDetail, cApp, showPointDoubt } = this.controller;
+        let { myEffectivePoints, myPointTobeExpired, myTotalPoints, pointProductGenre, newPointProducts, hotPointProducts,
+            openExchangeHistory, openRevenueExpenditure, cApp } = this.controller;
         let { currentUser } = cApp;
         let { openPointSign } = cApp.cSignIn;
         var date = new Date();
@@ -89,7 +94,7 @@ export class VMyPoint extends VPage<CPointProduct> {
             {
                 icon: 'history',
                 caption: '兑换记录',
-                action: openExchangeHistory
+                action: ()=> nav.navigate("/pointshop/order")  /* openExchangeHistory */
             },
             {
                 icon: 'book',
@@ -103,7 +108,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         let UINoExchangeTip: JSX.Element;
         if (!currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
             您的个人信息不完善，无法兑换礼品.<br />
-            请完善您的<span className="text-primary" > 账户信息 </span>.
+            请完善您的<Ax href="/meInfo" className="text-primary" > 账户信息 </Ax>.
             <br />完善后需要一点审核时间,请您耐心等待.
         </div>;
         if (!currentUser) {
@@ -111,67 +116,72 @@ export class VMyPoint extends VPage<CPointProduct> {
                 请登录后进行礼品兑换.<br />
             </div>;
         };
-        let pointShowUI: any;
-        if (!isLogined) pointShowUI = <div className="align-self-center">您尚未登录</div>;
-        else pointShowUI = <div>
-                            <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
-                            <div className="mt-2">
-                                {myTotalPoints > 0 ? <small className="mr-2">总分: {myTotalPoints}</small> : null}
-                                <span className="small" onClick={() => showPointDoubt()}><span className="small">对积分有疑问?</span></span>
+        let header = CrPageHeaderTitle('积分商城');
+        if (!xs) right = null;
+        return <Page header={header} right={right} className="h-100 bg-white">
+            <div className="row mx-0 mt-0 mt-sm-1">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0 px-sm-1">
+                    {pageHTitle(<div className="text-left">积分商城</div>)}
+                    {renderDropdownActions(actions)}
+                    {UINoExchangeTip && <div className="d-none d-lg-block mb-2">{UINoExchangeTip}</div>}
+                    <div>
+                        <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: 'cover' }}>{/* cover contain */}
+                            <>{nowPointTip}</>
+                            <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
+                            < div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between" >
+                                <div>
+                                    <div><small>当前</small> <span className="h5">{myEffectivePoints}</span> <small>分可用</small></div>
+                                    <div className="mt-2">{myTotalPoints > 0 ? <small>总分: {myTotalPoints}</small> : null}</div>
+                                </div>
+                                <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
+                                    {this.pointblock("签到", openPointSign, signInIcon)}
+                                    {this.pointblock("兑换", ()=>{ nav.navigate("/pointshop/productLine/5002") }, exChangeIcon)}
+                                </div>
                             </div>
                         </div>
-
-        return <>
-            <div className="position-relative">
-                <div className="position-absolute" style={{top:12,right:0}}>{ right }</div>
-                <div className="d-flex flex-column pb-4 w-100" style={{ background: `url(${homeTopicMap}) no-repeat`, backgroundSize: '100% 100%' }}>
-                    <img src={logo_pointShop} alt="img" className="w-8c mt-4 ml-4 mb-3" />
-                    <div className="d-flex mx-3 mt-2 ml-4 text-light justify-content-between">
-                        {pointShowUI}
-                        <div className="d-flex justify-content-end mt-1" style={{ flex: 1 }}>
-                            {this.pointblock("签到", openPointSign, signInIcon)}
-                            {this.pointblock("兑换", openPointProduct, exChangeIcon)}
+                    </div>
+                    {UINoExchangeTip && <div className="d-block d-lg-none mt-2">{UINoExchangeTip}</div>}
+                    <div className="pt-3">
+                        {/* 产品类别 */}
+                        {
+                            pointProductGenre.length
+                                ? <div>
+                                    <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
+                                        items={pointProductGenre}
+                                        item={{ render: this.renderGenreItem, className: 'w-25 bg-transparent' }} none={none} />
+                                    <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
+                                </div>
+                                : null
+                        }
+                        {/* 新品推荐 热门产品 */}
+                        <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
+                            {this.recommendOrHot(topicClumps[5000], undefined, newPointProducts)}
+                            {this.recommendOrHot(topicClumps[5001], undefined, hotPointProducts)}
                         </div>
                     </div>
-                </div>
-            </div>
-            <>{nowPointTip}</>
-             {UINoExchangeTip && <div className="mt-2">{UINoExchangeTip}</div>}
-            <div className="pt-3">
-                {/* 产品类别 */}
-                {
-                    pointProductGenre.length
-                        ? <div>
-                            {/* style={{ background: `url(${triangleShadingO}) no-repeat scroll bottom right`, backgroundSize: '10%', }} */}
-                            <List className="d-flex flex-wrap pt-2 text-center px-2 bg-transparent justify-content-between"
-                                items={pointProductGenre}
-                                item={{ render: this.renderGenreItem, onClick: (v) => openPointProduct(v), className: 'w-25 bg-transparent' }} none={none} />
-                            <p className="d-flex m-0 justify-content-end pr-1"><img src={triangleShadingO} alt="" className="h-3c" /></p>
-                        </div>
-                        : null
-                }
-                {/* 新品推荐 热门产品 */}
-                <div className='mb-2 px-4 bg-transparent position-relative' style={{ background: `url(${triangleShadingT}) no-repeat 2% 50% `, backgroundSize: '38px' }}>
-                    {newPointProducts.length ? this.recommendOrHot(topicClump.newRecommend, openPointProduct, openPointProductDetail, undefined, newPointProducts) : null}
-                    {hotPointProducts.length ? this.recommendOrHot(topicClump.hotProduct, openPointProduct, openPointProductDetail, undefined, hotPointProducts) : null}
+                    <div className="d-none d-lg-block py-md-5 my-md-5"></div>
                 </div>
             </div>
         </>;
     });
 
     private renderGenreItem = (item: any) => {
-        let { name, imageUrl } = item;
+        let { name, imageUrl, id } = item;
         return <div>
             <label className="w-100 d-flex flex-column justify-content-center">
-                {
-                    imageUrl
-                        ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
-                        // ? <div className="w-25 m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-100" /></div>
-                        : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
-                }
-                <div className='text-dark small'>{name}</div>
-            </label>
-        </div>
+                <Ax href={"/pointshop/productLine/" + id} >
+                    {
+                        imageUrl
+                            ? <div className="m-auto"><PointProductImage chemicalId={imageUrl ? imageUrl : ':0-0268.png'} className="w-2c" /></div>
+                            : <FA name="leaf" className='mt-2 text-success mb-2' size='lg' />
+                    }
+                    <div className='text-dark small'>{name}</div>
+                    </Ax>
+                </label>
+        </div>;
     }
 }
 
@@ -185,5 +195,17 @@ export function renderPointRecord(item: any) {
         <div className="d-table h-100">
             <div className="font-weight-bolder h-100 d-table-cell align-middle text-danger">{point >= 0 ? '+' : ''}{point}</div>
         </div>
+    </div>
+}
+
+export function renderDropdownActions(actions: any) {
+    if (xs) return null;
+    return <div className="row mx-0 justify-content-end mb-2">
+        {actions.map((v: any,index:number) => {
+            return <div className='m-1 cursor-pointer' key={index} onClick={v.action}>
+                <FA name={v.icon} className="text-info"></FA>
+                <span> {v.caption}</span>
+            </div>
+        })}
     </div>
 }

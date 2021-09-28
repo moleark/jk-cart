@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager, autoHideTips } from 'tonva-react';
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
-import { observable } from 'mobx';
-import { GLOABLE } from 'cartenv';
+import { observable, makeObservable } from 'mobx';
 import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
+import { xs } from '../tools/browser';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
 
 export class VCouponManage extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
-    @observable private coupons: QueryPager<any>;
+    private coupons: QueryPager<any>;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -19,7 +20,17 @@ export class VCouponManage extends VPage<CCoupon> {
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
 
-    @observable tips: string;
+	//@observable tips: string;
+    private tips = observable.box();
+    
+    constructor(c: CCoupon) {
+        super(c);
+
+        makeObservable<VCouponManage, "coupons">(this, {
+            coupons: observable
+        });
+    }
+
     async open(param: any) {
         this.openPage(this.page);
     }
@@ -28,12 +39,12 @@ export class VCouponManage extends VPage<CCoupon> {
         let { getCoupons } = this.controller;
         this.tabs = this.oss.map((v: any) => {
             let { caption, state, icon, toolTip } = v;
-            let none = <div className="mt-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
+            let none = <div className="my-4 text-secondary d-flex justify-content-center">{`『 ${toolTip} 』`}</div>
             return {
                 name: caption,
                 caption: (selected: boolean) => TabCaptionComponent(caption, icon, color(selected)),
                 content: () => {
-                    return <List items={this.coupons} item={{ render: this.renderCoupon }} none={none} />
+                    return <List items={this.coupons} item={{render: this.renderCoupon, className: 'col-lg-6 border rounded px-0'}} className='row mx-0 bg-light mt-2' none={none} />
                 },
                 isSelected: this.currentStatus === state,
                 load: async () => {
@@ -49,9 +60,10 @@ export class VCouponManage extends VPage<CCoupon> {
      */
     private receiveCoupon = async () => {
         let { drawCoupon, getCouponValidationResult, applyTip } = this.controller;
-        let coupon = this.couponInput.value;
+		let coupon = this.couponInput.value;
+		let tips: string;
         if (!coupon)
-            this.tips = "请输入您的优惠卡/券号";
+            tips = "请输入您的优惠卡/券号";
         else {
             this.couponInput.value = '';
 
@@ -59,14 +71,17 @@ export class VCouponManage extends VPage<CCoupon> {
             let { result } = validationResult;
             if (result === 1) {
                 await drawCoupon(validationResult);
-                this.tips = '领取成功！';
+                tips = '领取成功！';
             } else {
-                this.tips = applyTip(result);
+                tips = applyTip(result);
             }
-        }
+		}
+		this.tips.set(tips);
+		/*
         if (this.tips) {
-            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
-        }
+        //    setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+		}
+		*/
         // setTimeout(() => this.controller.closePage(), 500);
         // this.currentStatus = this.oss[0].state;
         // this.coupons = await getCoupons(this.currentStatus);
@@ -99,10 +114,12 @@ export class VCouponManage extends VPage<CCoupon> {
      * 折扣明细或使用记录
      */
     private CouponViewOrUse = (coupon: any) => {
-        let { showDiscountSetting } = this.controller;
+        let { showDiscountSetting,showModelCardDiscount } = this.controller;
         let { result, types } = coupon;
-        if (result === 1 && types !== 'credits')
-            showDiscountSetting(coupon);
+        if (result === 1 && types !== 'credits') {
+            if (xs) showDiscountSetting(coupon);
+            else showModelCardDiscount(coupon);
+        }
     }
 
     private tipsUI = observer(() => {
@@ -125,17 +142,28 @@ export class VCouponManage extends VPage<CCoupon> {
 
     private page = observer(() => {
         this.getTabs();
-        let right = <button className="btn btn-primary w-100" onClick={this.receiveCoupon}>领取</button>
-        return <Page header="卡券管理">
-            <div className="px-2 py-3">
-                <LMR right={right}>
-                    <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
-                </LMR>
-                {React.createElement(this.tipsUI)}
-                <div className="mt-2">
-                    <Tabs tabs={this.tabs} tabPosition="top" />
+        let right = <button className="btn btn-primary w-4c" onClick={this.receiveCoupon}>领取</button>
+        let header = CrPageHeaderTitle('卡券管理');
+        return <Page header={header}>
+            <div className="row mx-0">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
                 </div>
-            </div >
-        </Page >
+                <div className="col-lg-9 px-0 mx-auto" style={{ maxWidth: !xs ? 800 : 'none' }}>
+                    {pageHTitle(<div className="text-left px-2">卡券管理</div>)}
+                    <div className="px-2 py-3 mb-5 mx-auto" style={{maxWidth:990}}>
+                        <LMR right={right}>
+                            <input ref={v => this.couponInput = v} type="number" placeholder="输入领取优惠卡券号码" className="form-control"></input>
+                        </LMR>
+                        {/*React.createElement(this.tipsUI)*/}
+                        {autoHideTips(this.tips)}
+                        <div className="mt-2 reset-z-header-boxS">
+                            <Tabs tabs={this.tabs} tabPosition="top" tabBg='bg-light' />
+                        </div>
+                    </div >
+                    {this.controller.renderModelCardDiscount()}
+                </div>
+            </div>
+        </Page>
     })
 }

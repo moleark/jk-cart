@@ -1,25 +1,28 @@
 import * as React from 'react';
-import { nav, User, Page, Image, VPage } from 'tonva';
-import { Prop, Media, IconText, FA, PropGrid, LMR } from 'tonva';
-import { About } from './about';
+import { nav, Image, VPage, Ax, Prop, IconText, FA, PropGrid, LMR } from 'tonva-react';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
-import { EditMeInfo } from './EditMeInfo';
+//import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
-import { appConfig } from 'configuration';
+import { appConfig } from 'tapp';
+//import { observable } from 'mobx';
+import { browser, xs } from 'tools/browser';
+import welcome from 'images/welcome.png';
+import { MeLib } from './VMeSideBar';
 
 export class VMe extends VPage<CMe> {
-
+	/*
     async open(param?: any) {
-
-    }
+		this.open
+	}
+	*/
+	//private tips = observable.box('a');
 
     private exit() {
         nav.showLogout();
     }
 
-    private about = () => nav.push(<About />);
     private contactUs = () => nav.push(<ContactUs />);
     private privacy = () => {
         this.controller.openPrivacy();
@@ -55,14 +58,15 @@ export class VMe extends VPage<CMe> {
 
     private meInfo = observer(() => {
         let { user } = nav;
-        if (user === undefined) return null;
+        if (user === undefined) {
+			return null;
+		}
         let { id, name, nick, icon } = user;
         return <LMR className="px-3 py-2 cursor-pointer w-100 bg-primary text-white"
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
             right={<FA className="align-self-end" name="angle-right" />}
-            onClick={() => {
-                this.openVPage(EditMeInfo);
-            }}>
+            onClick={this.controller.openMeInfo
+				 /*() => {this.openVPage(EditMeInfo);}*/}>
             <div>
                 <div>{userSpan(name, nick)}</div>
                 <div className="small"><span className="text-light">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
@@ -99,8 +103,10 @@ export class VMe extends VPage<CMe> {
         return <this.page />;
     }
     header() {
-        return <this.meInfo />;
-    }
+        if (xs || browser.versions.iPad) return <this.meInfo />;
+        return '';
+	}
+	footer():JSX.Element {return null;}
 
     private page = observer(() => {
         const { user } = nav;
@@ -114,7 +120,7 @@ export class VMe extends VPage<CMe> {
             {
                 type: 'component',
                 component: <IconText iconClass="text-info mr-2" icon="smile-o" text="关于百灵威" />,
-                onClick: this.about
+                onClick: () => this.controller.openAbout()
             },
             {
                 type: 'component',
@@ -155,7 +161,7 @@ export class VMe extends VPage<CMe> {
                 {
                     type: 'component',
                     bk: '',
-                    component: <div className="text-center flex-fill"><button className="btn btn-danger w-75" onClick={this.exit}>
+                    component: <div className="text-center flex-fill mb-3"><button className="btn btn-danger w-75" onClick={this.exit}>
                         <FA name="sign-out" size="lg" /> 退出登录
 						</button>
                     </div>
@@ -211,7 +217,52 @@ export class VMe extends VPage<CMe> {
             ]
             rows.push(...aboutRows, ...logOutRows);
         }
-        return <PropGrid rows={rows} values={{}} />;
+
+        if (xs || browser.versions.iPad) return <>
+            <PropGrid rows={rows} values={{}} />
+        </>;
+        else {
+            if (user === undefined) {
+                return <div className="d-flex justify-content-center" style={{ height: 340 }}>
+                    <div className="my-auto p-5 rounded">
+                        <div className="d-flex">
+                            <img src={welcome} className="m-auto" alt="" />
+                        </div>
+                        您正在以访客身份查看本站内容,请
+                            <Ax href="/login" className="alert-link font-weight-bolder"> 登录 </Ax>
+                        或者
+                            <Ax href="/register" className="alert-link font-weight-bolder"> 注册会员</Ax>
+                    </div>
+                </div>
+            };
+            let meLib = MeLib;
+            return <div className="container mt-lg-2 py-3">
+                <div className="row">
+                    {
+                        meLib.map((v: any,index:number) => {
+                            return <div className="col-lg-4 single-product" key={index}>
+                                <div className="border text-center pt-5">
+                                    <a href="#"><img src={v.image} className="w-50" /></a>
+                                </div>
+                                <h2 className="mint-bg">{v.type}</h2>
+                                <div className="background-grey h-auto">
+                                    <ul className="pl-3">
+                                        {
+                                            v.belongs.map((o: any,index:number) => {
+                                                return <li className="list-inline" key={index}><Ax href={o.href}>{o.component}</Ax></li>
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        })
+                    }
+                </div>
+            </div>
+        
+        }
+		// <button onClick={()=>this.tips.set('ddddd')}>push</button>
+		// {autoHideTips(this.tips, <div className="text-danger">{this.tips.get()}</div>)}
     })
 }
 

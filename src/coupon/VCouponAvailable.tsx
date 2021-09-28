@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, List, FA, LMR } from 'tonva';
-import { CCoupon, COUPONBASE } from './CCoupon';
+import { VPage, Page, List, FA, LMR, autoHideTips } from 'tonva-react';
+import { CCoupon } from './CCoupon';
 import { observable } from 'mobx';
 import { VVIPCard, VCoupon, VCredits } from './VVIPCard';
-import { GLOABLE } from 'cartenv';
 import { observer } from 'mobx-react';
-import { Credits } from './Coupon';
+import { xs } from 'tools/browser';
 
 export class VCoupleAvailable extends VPage<CCoupon> {
 
@@ -13,7 +12,8 @@ export class VCoupleAvailable extends VPage<CCoupon> {
     private vipCardForWebUser: any;
     private coupons: any[];
 
-    @observable tips: string;
+	//@observable tips: string;
+	private tips = observable.box(null);
     async open(param: any) {
         let { vipCardForWebUser, couponsForWebUser } = param;
         this.vipCardForWebUser = vipCardForWebUser;
@@ -30,9 +30,12 @@ export class VCoupleAvailable extends VPage<CCoupon> {
      * 应用选择的vipcard等 
      */
     private applySelectedCoupon = async (coupon: string) => {
+		this.tips.set(await this.controller.applySelectedCoupon(coupon));
+		/*
         this.tips = await this.controller.applySelectedCoupon(coupon);
-        if (this.tips)
-            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+        //if (this.tips)
+		//	setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+		*/
     }
 
     private renderCoupon = (coupon: any) => {
@@ -53,6 +56,7 @@ export class VCoupleAvailable extends VPage<CCoupon> {
             return null;
     }
 
+	/*
     private tipsUI = observer(() => {
         let tipsUI = <></>;
         if (this.tips) {
@@ -62,31 +66,66 @@ export class VCoupleAvailable extends VPage<CCoupon> {
             </div>
         }
         return tipsUI;
-    })
+	})
+	*/
 
-    private page = () => {
+    private page = observer(() => {
+
         let vipCardUI;
         if (this.vipCardForWebUser) {
             let { coupon } = this.vipCardForWebUser;
             vipCardUI = <div onClick={() => this.applySelectedCoupon(coupon.code)}>{this.renderVm(VVIPCard, coupon)}</div>
         }
 
-        let left = <div className="d-flex align-items-center mr-3"><div className="align-middle">优惠卡/券:</div></div>
         let right = <button className="btn btn-primary w-100" onClick={this.applyCoupon}>使用</button>
 
-        return <Page header="可用优惠">
-            <div className="px-2 py-3">
+        return <Page header="可用优惠"> 
+            {this.renderContent({right:right,vipCardUI:vipCardUI})}
+            {this.controller.renderModelCardDiscount()}
+        </Page >
+    })
+
+    renderContent = (param: any) => {
+        let { right, vipCardUI } = param;
+        let left = <div className="d-flex align-items-center mr-3"><div className="align-middle">优惠卡/券:</div></div>
+        return <>
+            <div className="px-2 py-3 reset-z-header-boxS">
                 <LMR left={left} right={right}>
                     <input ref={v => this.couponInput = v} type="number" className="form-control"></input>
                 </LMR>
-                {React.createElement(this.tipsUI)}
+                {/*React.createElement(this.tipsUI)*/}
+                {autoHideTips(this.tips,
+                    <div className="alert alert-primary" role="alert">
+                        <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                        {this.tips.get()}
+                    </div>
+                )}
             </div >
-
             <div className="px-2 bg-white">
                 {vipCardUI}
             </div>
-            <List items={this.coupons} item={{ render: this.renderCoupon }} none={null}></List>
-        </Page >
+            <List items={this.coupons} item={{ render: this.renderCoupon }}
+                none={ <div className="w-100 d-flex justify-content-center text-secondary my-3">无可用卡券</div> } ></List>
+        </>
+    }
+
+    render(param?: any): JSX.Element {
+        let { vipCardForWebUser, couponsForWebUser } = param;
+        this.vipCardForWebUser = vipCardForWebUser;
+        this.coupons = couponsForWebUser.map((v: any) => v.coupon).concat(param.creditsForWebUser.map((v: any) => v.coupon));
+        let vipCardUI:any;
+        if (this.vipCardForWebUser) {
+            let { coupon } = this.vipCardForWebUser;
+            vipCardUI = <div onClick={() => this.applySelectedCoupon(coupon.code)}>{this.renderVm(VVIPCard, coupon)}</div>;
+        }
+        
+        let right = <button className="btn btn-primary w-3c" onClick={this.applyCoupon}>使用</button>
+        return React.createElement(observer(() => { 
+            return <div style={{width:!xs ? 500 :'none'}}>
+                {this.renderContent({right:right,vipCardUI:vipCardUI})}
+                {this.controller.cApp.cCoupon.renderModelCardDiscount()}
+            </div>
+        }))
     }
 }
 

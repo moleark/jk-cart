@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom } from 'tonva';
-import { FA } from 'tonva';
-import { tv } from 'tonva';
+import { VPage, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom, FA, tv, Ax } from 'tonva-react';
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
-import { CartPackRow, CartItem2 } from './Cart';
+import { CartPackRow, CartItem } from '../store';
+import { xs } from 'tools/browser';
+import { makeObservable, observable } from 'mobx';
 
 const cartSchema = [
     {
@@ -28,72 +28,107 @@ const cartSchema = [
 ];
 
 export class VCart extends VPage<CCart> {
+    punchOutXML: any;
+    punchOutUrl: boolean = false;
+    /*
     async open() {
         this.openPage(this.page);
     }
+    */
+    
+    constructor(c: CCart) {
+        super(c);
+
+        makeObservable(this, {
+            punchOutXML: observable,
+            punchOutUrl: observable,
+        });
+    }
+
+    /* init(param?: any) {
+        this.punchOutXML = undefined;
+    } */
+
+    punchOutSubmit = async ()=>{
+        this.punchOutXML = await this.controller.generatePunchOutXML();
+        if (!this.punchOutXML?.cxmlBase64) { this.punchOutUrl = false; return false; };
+        this.punchOutUrl = true;
+        return true;
+    }
 
     protected CheckOutButton = observer(() => {
-        let { checkOut, strikeOut, cApp } = this.controller;
-        let { cart } = cApp;
-        let amount = cart.amount.get();
-        let check = cart.editButton.get() ? '删除' : "去结算";
-        let content = cart.editButton.get() ? <>{check}</> : amount > 0 ?
+        let { checkOut, strikeOut, cApp, cartBtnMatch } = this.controller;
+		let { cart } = cApp.store;
+        let amount = cart.amount;
+        let check = cartBtnMatch.getCartButtonTip();
+        let content = amount > 0 ?
             <>{check} (¥{amount})</> :
             <>{check}</>;
-        if (cart.editButton.get()) {
-            return <div className="d-flex justify-content-end">
-                <button className="btn btn-success w-25 mx-5"
-                    type="button"
-                    onClick={strikeOut}>
-                    {content}
-                </button>
-            </div>;
-        } else {
-            return <div className="d-flex justify-content-center">
-                <button className="btn btn-success w-75 mx-5"
-                    type="button"
-                    onClick={checkOut} disabled={amount <= 0}>
-                    {content}
-                </button>
-            </div>;
-        }
+        if (check === "punchOut")
+            return <form action={this.punchOutXML?.url || "*"}
+                onSubmit={() => { this.punchOutSubmit(); if (this.punchOutUrl) cartBtnMatch.CartButtonClick(); return this.punchOutUrl; }}
+                encType="application/x-www-form-urlencoded" method="post">
+                <input name="cxml-base64" defaultValue={this.punchOutXML?.cxmlBase64 || ""} style={{ visibility: "hidden", position: "absolute" }} type="text" />
+                {this.punchOutXML?.message && <div className="text-center text-danger py-2" >{this.punchOutXML?.message}</div>}
+                <div className="d-flex justify-content-center">
+                    <button className="btn btn-success mx-5" style={{ background: '#28a745' }} onClick={() => {
+                        document.addEventListener('submit', (e) => { if (!this.punchOutUrl) e.preventDefault(); });
+                    }}
+                        type="submit" disabled={amount <= 0 /* || !this.punchOutXML?.cxmlBase64 */}>
+                        {content}
+                    </button>
+                </div>
+            </form>;
+        return <div className="d-flex justify-content-center">
+            <button className="btn btn-success mx-5" style={{ background: '#28a745' }} type="button"
+                onClick={cartBtnMatch.CartButtonClick} disabled={amount <= 0}>
+                {content}
+            </button>
+        </div>;
     });
 
     render(params: any): JSX.Element {
         return <this.tab />;
     }
 
-    private renderCartItem = (item: CartItem2) => {
+    private renderCartItem = (item: CartItem) => {
         let { product } = item;
         let { controller } = this;
-        let { onProductClick, renderCartProduct } = controller;
-        return <div className="pr-1">
-            <div className="row">
-                <div className="col-lg-6 pb-3" onClick={() => onProductClick(product)}>
+        let { onItemClick, renderCartProduct } = controller;
+        return <div className="row justify-content-between">
+            <div className="col-lg-5 px-0" >{/* onClick={() => onItemClick(item)} */}
+                <Ax href={'/product/' + product.id}>
                     {renderCartProduct(product)}
-                </div>
-                <div className="col-lg-6"><FormField name="packs" /></div>
+                </Ax>
             </div>
-        </div>;
+            <div className="col-lg-6 px-0 mt-2"><FormField name="packs" /></div>
+        </div>
     }
 
     private packsRow = (item: CartPackRow) => {
-        let { pack, price, currency } = item;
-
-        return <div className="px-2">
+        let { pack, price } = item;
+        return <>
+            <div className="px-2 d-flex align-items-center">
+                <div className="col-4 px-0"><b>{tv(pack)}</b></div>
+                <div className="col-4 px-0"><span className="text-danger h5">¥{price}</span></div>
+                <div className="col-4 px-0"><FormField name="quantity" /></div>
+            </div>
+            {/* <div>{this.controller.renderDeliveryTime(pack)}</div> */}
+        </>
+        /* return <div className="px-2">
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-6c mr-4 text-right"><span className="text-danger h5">¥{price}</span></div>
                 <FormField name="quantity" />
             </div>
             <div>{this.controller.renderDeliveryTime(pack)}</div>
-        </div>;
+        </div>; */
     }
 
     private uiSchema: UiSchema = {
         selectable: true,
         deletable: true,
-        restorable: true,
+        restorable: false,
         items: {
             list: {
                 widget: 'arr',
@@ -118,20 +153,38 @@ export class VCart extends VPage<CCart> {
                             } as UiCustom
                         },
                     } as UiArr
-                }
+                },
+                onDeleted: this.controller.onRemoveCartItem,
             } as UiArr
         }
     }
 
     protected cartForm = observer(() => {
-        let { cart } = this.controller.cApp;
-        let { data: cartData } = cart;
-        return <Form className="bg-white flex-fill overflow-auto" schema={cartSchema} uiSchema={this.uiSchema} formData={cartData} />
+        let { cApp } = this.controller;
+		let { cart } = cApp.store;
+        let { cartItems } = cart;
+        let data = { list: cartItems };
+        return <>
+            {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">购物车</h1></div> : null}
+            <div className="d-none d-lg-block">
+                <div className="w-100 border-bottom ">
+                    <div className="col-lg-6 d-flex ml-auto mr-0 mb-2 px-2 font-weight-bolder h6">
+                        <div className="col-4">包装</div>
+                        <div className="col-4">单价</div>
+                        <div className="col-4 text-left pl-0" style={{ textIndent: '2em' }}>数量</div>
+                    </div>
+                </div>
+            </div>
+
+            <Form className="bg-white flex-fill overflow-auto reset-z-fieldset"
+                schema={cartSchema} uiSchema={this.uiSchema} formData={data} />
+        </>
     });
 
     private empty() {
-        return <div className="py-5 text-center bg-white">你的购物车空空如也</div>
+        return <div className="mt-1 py-5 text-center bg-white">你的购物车空空如也</div>
     }
+
     /**
      * 是否编辑
      */
@@ -139,6 +192,8 @@ export class VCart extends VPage<CCart> {
         // let { cart } = this.controller.cApp;
         // cart.editButton.set(!cart.editButton.get());
     }
+
+    /*
     private page = observer((params: any): JSX.Element => {
         let { cart } = this.controller.cApp;
         let footer: any, content: any;
@@ -159,13 +214,53 @@ export class VCart extends VPage<CCart> {
             {content}
         </Page>;
     })
+    */
+
+    // header() {return <div className="navheader">购物车</div>}
+    header() {
+        if (!xs) return null;
+        return <div className="navheader">购物车</div>;
+    }
+    footer() {
+        return  React.createElement(observer(() => {
+            let { cApp, cartBtnMatch } = this.controller;
+			let { cart } = cApp.store;
+            let footer: any;
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0 && cartBtnMatch.displayBtn) {
+                footer = null;
+            }
+            else {
+                footer = React.createElement(this.CheckOutButton);
+            }
+            return footer;
+        }));
+    }
+
+    content() {
+        return  React.createElement(observer(() => {
+            let { cApp } = this.controller;
+			let { cart } = cApp.store;
+            let content: any;
+            if (cart.count === 0 && cart.cartItems && cart.cartItems.length === 0) {
+                content = this.empty();
+            }
+            else {
+                content = React.createElement(this.cartForm);
+            }
+            return <>
+                {content}
+                {this.renderQuickOrder()}
+            </>;
+        }));
+    }
 
     private tab = observer(() => {
-        let { cart } = this.controller.cApp;
+        let { cApp } = this.controller;
+		let { cart } = cApp.store;
         let header = <header className="py-2 text-center bg-info text-white">
             <FA className="align-middle" name="shopping-cart" size="2x" /> &nbsp; <span className="h5 align-middle">购物车</span>
         </header>;
-        if (cart.count.get() === 0 && cart.cartItems.length === 0) {
+        if (cart.count === 0 && cart.cartItems.length === 0) {
             return <>
                 {header}
                 {this.empty()}
@@ -180,23 +275,36 @@ export class VCart extends VPage<CCart> {
         </>;
     });
 
+    renderQuickOrder = () => {
+        let { cQuickOrder } = this.controller.cApp;
+        return <div className="row mx-0 px-2 my-2">
+                <div className="border rounded col-12 col-lg-6 p-2" style={{ background: "#f5f5f5" }}>
+                <div className="font-weight-bolder">批量订购</div>
+                <div className="small">按产品编号订购或上传您自己的产品列表，以快速将多个产品添加到购物车。</div>
+                <Ax className="text-primary small ml-1" onClick={() => { cQuickOrder.openQuickOrder() }} href="/quickOrder">批量订购 &gt;&gt; </Ax>
+            </div>
+        </div>
+    };
+
+    /*
     header() {
         let { cart } = this.controller.cApp;
         let cancel = cart.editButton.get() ? '取消' : '编辑';
         let header = <header className="py-2 text-center bg-info text-white position-relative">
             <FA className="mr-3" name="shopping-cart" size="lg" />
             <span>购物车</span>
-            {/* <small className="position-absolute" onClick={this.whetherToEdit} style={{ right: 20 }} >{cancel}</small> */}
         </header>;
         return header;
     }
-	/*
-	footer() {
-		return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
-	}
-	*/
-
+    */
+    /*
+    footer() {
+        return <div className="p-3 d-flex justify-content-center"><this.CheckOutButton /></div>;
+    }
+    */
+    /*
     content() {
         return <this.tab />
     }
+    */
 }

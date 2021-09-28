@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { CUqBase } from '../CBase';
+import { observable, makeObservable } from 'mobx';
+import { QueryPager } from 'tonva-react';
 import { VSharedCoupon } from './VSharedCoupon';
-import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
-import { observable } from 'mobx';
 import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 import { VCouponManage } from './VCouponManage';
+import { VModelCardDiscount } from './VModelCardDiscount';
+import { CApp, CUqBase } from 'tapp';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -14,11 +14,36 @@ export const COUPONBASE: any = {
     'vipcard': { 'name': 'VIP卡', 'view': VVIPCard }
 }
 
+
+const couponTips: { [key: number]: string } = {
+    "-1": '对不起，当前服务器繁忙，请稍后再试。',
+    "1": '有效',
+    "0": "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。",
+    "2": '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。',
+    "3": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+    "5": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+    "6": '不允许使用本人优惠券！',
+    "4": '该优惠券已经被使用过了，不允许重复使用。',
+}
+
 export class CCoupon extends CUqBase {
     isOpenMyCouponManage: boolean = false;
-    @observable couponDrawed: boolean;
-    @observable sharedCouponValidationResult: any;
+    couponDrawed: boolean;
+    sharedCouponValidationResult: any;
+    CardDiscount: boolean = false;
+    curCardDiscount: any;
     couponPager: QueryPager<any>;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            couponDrawed: observable,
+            sharedCouponValidationResult: observable,
+            CardDiscount: observable,
+            curCardDiscount: observable
+        });
+    }
 
     applyCoupon = async (coupon: string) => {
         let validationResult = await this.getCouponValidationResult(coupon);
@@ -29,6 +54,18 @@ export class CCoupon extends CUqBase {
             }
             this.returnCall(validationResult);
             this.closePage();
+        }
+        return rtn;
+    }
+
+    applyCoupon1 = async (coupon: string) => {
+        let validationResult = await this.getCouponValidationResult(coupon);
+        let { result: rtn, id, types } = validationResult;
+        if (rtn === 1) {
+            if (types === 'vipcard' || types === 'coupon') {
+                validationResult.discountSetting = await this.getCouponDiscountSetting(types, id);
+            }
+            return validationResult;
         }
         return rtn;
     }
@@ -59,7 +96,7 @@ export class CCoupon extends CUqBase {
                 return this.getValidMusterForWebUser(result);
             case 'usageRecordForWebUser':
                 result = await currentUser.getUserdCoupon();
-                // result = new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
+                // new QueryPager<any>(webuser.getMyUsedCoupon, 10, 10);
                 // await result.first({ webUser: currentUser });
                 return result;
             case 'expiredForWebUser':
@@ -134,6 +171,7 @@ export class CCoupon extends CUqBase {
      */
     getValidCardForWebUser = async () => {
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         let { id: currentUserId } = currentUser;
 
         let validVIPCardForWebUser = await this.getValidVipCardForWebUser(currentUserId);
@@ -184,6 +222,8 @@ export class CCoupon extends CUqBase {
     }
 
     applyTip = (ret: any) => {
+        return couponTips[ret];
+        /*
         switch (ret) {
             case -1:
                 return '对不起，当前服务器繁忙，请稍后再试。';
@@ -202,7 +242,7 @@ export class CCoupon extends CUqBase {
                 return '该优惠券已经被使用过了，不允许重复使用。';
             default:
                 break;
-        }
+        }*/
     }
 
     /**
@@ -243,12 +283,12 @@ export class CCoupon extends CUqBase {
     /**
      * 
      * @param currentUserId 
-     *  (更新至webuser--getValidCredits)
+     * (更新至webuser--getValidCredits)
      * -- TODO : 废弃
      */
     getValidCreditsForWebUser = async (currentUserId: number): Promise<any[]> => {
         let { uqs } = this.cApp;
-        let { webuser  } = uqs;
+        let { webuser } = uqs;
         let creditsForWebUser: any[] = await webuser.WebUserCredits.table({ webUser: currentUserId });
         let validCreditsForWebUser: any[] = [];
         if (creditsForWebUser) {
@@ -265,6 +305,13 @@ export class CCoupon extends CUqBase {
         let { types, id } = vipCard;
         vipCard.discountSetting = await this.getCouponDiscountSetting(types, id);
         this.openVPage(VVIPCardDiscount, vipCard);
+    }
+
+    showModelCardDiscount = async (vipCard: any) => {
+        let { types, id } = vipCard;
+        vipCard.discountSetting = await this.getCouponDiscountSetting(types, id);
+        this.curCardDiscount = vipCard;
+        this.CardDiscount = true;
     }
     /**
      * 获取卡券的有效折扣  
@@ -317,6 +364,7 @@ export class CCoupon extends CUqBase {
 
         // 自动领取积分券
         let { currentUser } = this.cApp;
+        if (!currentUser) return;
         let { id: currentUserId, allowOrdering } = currentUser;
         if (result === 1 && currentUserId && allowOrdering)
             await this.drawCoupon(this.sharedCouponValidationResult);
@@ -340,18 +388,17 @@ export class CCoupon extends CUqBase {
         let { result } = this.sharedCouponValidationResult;
         let allowCurrentUser = async () => {
             if (result === 1) {
-                if (!currentUser.allowOrdering) {
-                    let note = <>
-                        化学品是受国家安全法规限制的特殊商品，百灵威提供技术咨询、资料以及化学产品的对象必须是具有化学管理和应用能力的专业单位（非个人）。
-                        为此，需要您重新提供非虚拟的、可核查的信息。这些信息包括下面所有带有 <span className="text-danger">*</span> 的信息。
-                    </>;
-                    cMe.toPersonalAccountInfo(async () => await this.drawCoupon(this.sharedCouponValidationResult), note);
+                if (!currentUser || !currentUser.allowOrdering) {
+                    cMe.toPersonalAccountInfo(async () => await this.drawCoupon(this.sharedCouponValidationResult));
                 } else {
                     await this.drawCoupon(this.sharedCouponValidationResult);
                 }
             }
         }
 
+        await this.cApp.assureLogin();
+        await allowCurrentUser();
+        /*
         let loginCallback = async (user: User) => {
             await cApp.currentUser.setUser(user);
             await cApp.loginCallBack(user);
@@ -363,11 +410,13 @@ export class CCoupon extends CUqBase {
         else {
             await allowCurrentUser();
         }
+        */
     }
 
     drawCoupon = async (credits: any) => {
         let { uqs, cApp } = this;
         let { currentUser } = cApp;
+        if (!currentUser) return;
         let { id: currentUserId } = currentUser;
         let { webuser, customer } = uqs;
         let { result, id: creditsId, code, validitydate, types } = credits;
@@ -438,5 +487,13 @@ export class CCoupon extends CUqBase {
     renderProduct = (product: any) => {
         let { cProduct } = this.cApp;
         return cProduct.renderProductWithPrice(product);
+    }
+
+    renderModelCardDiscount = () => {
+        return this.renderView(VModelCardDiscount);
+    }
+
+    renderCardDiscount = () => {
+        return this.renderView(VVIPCardDiscount, { vipCard: this.curCardDiscount });
     }
 }

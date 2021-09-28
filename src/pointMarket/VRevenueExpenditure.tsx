@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
+import { VPage, Page, Scroller, EasyDate, List } from 'tonva-react';
 import { CPointProduct } from './CPointProduct';
-import { List } from 'tonva';
 import { observer } from 'mobx-react-lite';
-// import moment from 'moment';
 import { renderPointRecord } from './VMyPoint';
 import { RevenueExpenditure } from './basicRefer';
+import { xs } from 'tools/browser';
+import { CrPageHeaderTitle, pageHTitle } from 'tools/pageHeaderTitle';
+import { ListTable } from 'tools/listTable';
 
 export class VRevenueExpenditure extends VPage<CPointProduct> {
     private showList: any = [];
@@ -13,21 +14,6 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
     async open(param?: any) {
         this.openPage(this.page, { header: param });
     }
-
-    /* private renderItem = (item: any) => {
-        let { date, comments, point } = item;
-        let generateDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-        return <div className="d-flex w-100 justify-content-between align-content-center px-3 py-2">
-            <div>
-                <div className="text-muted"><small><b>{comments}</b></small></div>
-                <div style={{ fontSize: "40%" }} className="text-muted">{generateDate}</div>
-                <div style={{ fontSize: "40%" }} className="text-muted"><EasyDate date={date}></EasyDate></div>
-            </div>
-            <div className="d-table h-100">
-                <div className="font-weight-bolder h-100 d-table-cell align-middle" style={{ color: "#ff0000" }}>{point >= 0 ? '+' : ''}{point}</div>
-            </div>
-        </div>
-    } */
 
     private matchData = (header: string) => {
         let { pagePointHistory, cApp } = this.controller;
@@ -52,11 +38,41 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
 
     private page = observer((param: any) => {
         let { header } = param;
+        let headerT = header;
         this.matchData(header);
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
-
+        header = CrPageHeaderTitle(header);
         return <Page header={header} onScrollBottom={this.onScrollBottom}>
-            <List items={this.showList} item={{ render: renderPointRecord }} none={none} />
+            {pageHTitle(headerT)}
+            <div className="mx-auto">
+                {
+                    xs 
+                        ? <List items={this.showList} item={{ render: renderPointRecord }} none={none} />
+                        : this.historyListTable()
+                }
+            </div>
         </Page>;
     });
+
+    private historyListTable = (): JSX.Element => {
+        if (this.showList && this.showList.items && !this.showList.items.length)
+            return <div className="my-5 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
+        let columns = [{ id: 1, name: '简述' }, { id: 2, name: '积分说明' }, { id: 3, name: '日期' }, { id: 4, name: '收支' }];
+        let sources: { [s: number]: string } = { 1: "积分券下单", 2: "签到", 3: "兑换", 5: "下单", 8: "抽奖", 9: "退货" };
+        let PointTypes: { [type: number]: string } = { 1: "总积分", 2: "有效积分", 3: "用掉的积分" };
+        let content = <>{
+            this.showList && this.showList.items && this.showList.items.map((v: any) => {
+                let { id, date, comments, point, source, pointType } = v;
+                let desc = `${sources[source]}${PointTypes[pointType] ? `(${PointTypes[pointType]})` : ""}`;
+                // else desc = sources[source];
+                return <tr className="article-product-list order-wrap-list" key={id}>
+                    <td data-title={columns[0].name}>{comments}</td>
+                    <td data-title={columns[1].name}>{desc}</td>
+                    <td data-title={columns[2].name}><EasyDate date={date} /></td>
+                    <td data-title={columns[3].name} className="text-danger font-weight-bolder">{point >= 0 ? '+' : ''}{point}</td>
+                </tr>
+            })
+        }</>;
+        return <ListTable columns={columns} content={content} ></ListTable>;
+	}
 }

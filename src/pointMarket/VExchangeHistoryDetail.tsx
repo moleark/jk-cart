@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate } from 'tonva';
+import { VPage, Page, EasyDate, tv, List } from 'tonva-react';
 import { CPointProduct } from './CPointProduct';
-import { tv, List } from 'tonva';
 import { OrderItem } from './pointOrder';
 import { PointProductImage } from 'tools/productImage';
+import { xs } from 'tools/browser';
+const ExchangeState: { [state: string | number]: string } = {
+    12: "待发运",
+    13: "已发运",
+    14: "已完成",
+    15: "已取消",
+    "canceled": "已取消",
+};
 
 const OrderState: { [state: string]: string } = {
     '$':'$',
@@ -19,13 +26,27 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
         this.openPage(this.page, order);
     }
 
+    exchangeTransportation = async (transportation: any) => {
+        let { cApp } = this.controller;
+        await cApp.cOrder.openOrderTrans(transportation);
+    }
+
     private renderexchangeItem = (orderItem: OrderItem) => {
-        let { product, pack, quantity, point } = orderItem;
+        let { product, pack, quantity, point, param } = orderItem;
+        let transportation: any;
+        if (param?.transportation) {
+            let { carrier, waybillNumber } = param.transportation;
+            transportation = {transNumber: waybillNumber, expressLogistics: carrier};
+        };
+        let exchangeTransUI: JSX.Element;
+        if (transportation) exchangeTransUI = <div className="text-right" >
+            <button onClick={() => { this.exchangeTransportation(transportation) }} className="btn btn-sm btn-outline-primary" >查看物流</button>
+        </div>;
         return <>
             {tv(product, (v) => {
                 return <div className="row m-1 w-100">
-                    <div title={v.description} className="col-4 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100" style={{maxHeight:"23vw"}} /></div>
-                    <div className="col-8 small">
+                    <div title={v.description} className="col-4 col-sm-3 col-lg-2 m-0 p-0"><PointProductImage chemicalId={v.imageUrl} className="w-100"  /></div>
+                    <div className="col-8 col-sm-9 col-lg-10 small">
                         <div><label>{v.descriptionC}</label></div>
                         <div className="d-flex justify-content-between my-3">
                             <div className="mt-1"><b>{pack ? <>{tv(pack, (c) => <>{c.radioy}{c.unit}</>)}</> : v.grade}</b></div>
@@ -34,6 +55,7 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
                                 <small className="text-muted">分 ({point} × {quantity})</small>
                             </div>
                         </div>
+                        {exchangeTransUI}
                     </div>
                 </div>
             })}
@@ -43,16 +65,14 @@ export class VExchangeHistoryDetail extends VPage<CPointProduct> {
     private page = (order: any) => {
         let { outWardOrderByJD, openExchangeOrderTrack } = this.controller;
         let { brief, data } = order;
-        let { no, date,state } = brief;
+        let { no, date, state } = brief;/* state: "canceled" */
         let { exchangeItems, shippingContact, amount } = data;
-        let orderState: string = state === 'canceled' ? '此订单已取消' : ''; // OrderState[state || '$'];
-        let header = <>订单详情: {no}</>;
-        let OrderTrackBtn: any;
-        if (outWardOrderByJD)
-            OrderTrackBtn = <div className="bg-white p-3 my-1 d-flex justify-content-end">
-                <button className="btn btn-primary" onClick={openExchangeOrderTrack}>查看物流</button>
-            </div>;
+        let statestr: string = ExchangeState[state];
+        let header: any = <>订单详情: {no} {statestr ? `(${statestr})` : "" }</>
+        if (!xs) header = '';
+        let UI_CON_state = statestr ? <b className="float-right h5 text-danger">兑换单{statestr}</b> : <></>;
         return <Page header={header}>
+            { !xs && <div className="alert alert-info alert-signin mt-3">订单编号 <a href="#" className="alert-link">{no}</a>  {UI_CON_state}</div>}
             <List items={exchangeItems} item={{ render: this.renderexchangeItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">收货地址:</div>

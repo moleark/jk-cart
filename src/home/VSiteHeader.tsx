@@ -1,8 +1,10 @@
+/* eslint-disable */
 import * as React from 'react';
-import { LMR, FA, View } from 'tonva';
-import logo from '../images/logo.png';
+import { LMR, FA, View } from 'tonva-react';
+import logo from '../images/logo_mobi.png';
 import { CHome } from './CHome';
 import 扫一扫 from 'images/扫一扫.png';
+
 export class VSiteHeader extends View<CHome> {
     render() {
         let currentSalesRegion = <FA name="globe" />
@@ -19,7 +21,7 @@ export class VSiteHeader extends View<CHome> {
             <button onClick={()=>nav.start()}>Try</button>
         </div>;*/
         return <LMR
-            className="mb-1 align-items-center bg-white"
+            className="mb-1 align-items-center bg-white reset-z-header-boxS"
             left={left} right={right}>
             <div className="px-3 py-4">
                 {this.controller.renderSearchHeader('md')}

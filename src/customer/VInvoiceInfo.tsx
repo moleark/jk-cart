@@ -1,9 +1,12 @@
+/* eslint-disable */
 import * as React from 'react';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA } from 'tonva';
-import { Schema } from 'tonva';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, tv, BoxId, FA, autoHideTips, Schema } from 'tonva-react';
 import { CInvoiceInfo } from './CInvoiceInfo';
+import { xs } from 'tools/browser';
+import { VMeSideBar } from 'me/VMeSideBar';
+import { CrPageHeaderTitle } from 'tools/pageHeaderTitle';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -66,6 +69,9 @@ const uiSchema: UiSchema = {
             widget: 'text', label: '银行账号', placeholder: '必填',
             rules: (value: string) => {
                 if(value) value = value.trim();
+                // if (value && !/^([1-9]{1})(\d{14}|\d{17}|\d{18}|\d{15})$/.test(value))
+                /* 银行卡位数校验 现已开放 11-30位,后期可针对具体银行进行细化校验 */
+                /* 二次修改  客户银行卡号存在 0开头,暂时只校验数字及数位 */
                 if (value && !/^\d{8,30}$/.test(value.replace(/\s*/g, "")))
                     // if (value && !/^([1-9]{1})(\d{10,29})$/.test(value.replace(/\s*/g, "")))
                     return "银行账号格式不正确，请重新输入！";
@@ -80,7 +86,7 @@ const uiSchema: UiSchema = {
 const commonRequired = {
     id: false,
     title: true,
-    taxNo: false,
+    taxNo: true,
     address: false,
     telephone: false,
     bank: false,
@@ -102,7 +108,7 @@ const valueAddedRequired = {
 const commonVisible = {
     id: false,
     title: true,
-    taxNo: false,
+    taxNo: true,
     address: false,
     telephone: false,
     bank: false,
@@ -123,20 +129,34 @@ const valueAddedVisible = {
 
 export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private form: Form;
-    @observable showTip: boolean = false;
-    saveTip: string = "";
+    //@observable showTip: boolean = false;	
+    //saveTip: string = "";
+    private saveTip = observable.box();
     private invoiceInfoData: any;
 
+    constructor(c: CInvoiceInfo) {
+        super(c);
+
+        makeObservable(this, {
+            invoiceType: observable,
+            InvoiceTypeChecked: observable
+        });
+    }
+
     async open(origInvoice?: any) {
+        this.invoiceInfo(origInvoice);
+        this.openPage(this.page);
+    }
+
+    invoiceInfo = (origInvoice?: any) => {
         let { invoiceType, invoiceInfo } = origInvoice;
         this.invoiceType = (invoiceType && invoiceType.id) || 1;
         if (invoiceInfo) {
             invoiceInfo.assure();
             this.invoiceInfoData = { ...invoiceInfo.obj };
         } else {
-            this.invoiceInfoData = { 'title': this.controller.cApp.currentUser.defaultOrganizationName };
+            this.invoiceInfoData = { 'title': this.controller.cApp.currentUser?.defaultOrganizationName };
         }
-        this.openPage(this.page);
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
@@ -148,14 +168,16 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         };
         this.invoiceInfoData = data;
 
+        let tip: string;
         try {
             await this.controller.saveInvoiceInfo(invoice);
-            this.saveTip = "发票信息已经保存";
+            tip = "发票信息已经保存";
         } catch (error) {
-            this.saveTip = "发票信息保存失败，请稍后再试";
+            tip = "发票信息保存失败，请稍后再试";
         }
-        this.showTip = true;
-        setTimeout(() => { this.showTip = false; }, 2000);
+        //this.showTip = true;
+        //setTimeout(() => { this.showTip = false; }, 2000);
+        this.saveTip.set(tip);
     }
 
     private onSaveInvoice = async () => {
@@ -163,7 +185,7 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
         await this.form.buttonClick("submit");
     }
 
-    @observable invoiceType: number;
+    invoiceType: number;
 
     private buildForm(): JSX.Element {
         let requiredFields: any = this.invoiceType === 1 ? commonRequired : valueAddedRequired;
@@ -173,12 +195,6 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
             e.required = requiredFields[e.name];
             items[e.name].visible = visibleFields[e.name];
         });
-        /* return <Form ref={v => this.form = v} className="my-3"
-            schema={schema}
-            uiSchema={uiSchema}
-            formData={this.invoiceInfoData}
-            onButtonClick={this.onFormButtonClick}
-            fieldLabelSize={3} /> */
         return React.createElement(observer(() => {
             return <Form ref={v => this.form = v} className="my-3"
                 schema={schema}
@@ -196,12 +212,42 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
     private page = observer(() => {
         let frm = this.buildForm();
 
+        /*
         let tipUI = this.showTip ? (<div className="alert alert-primary" role="alert">
             <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
             {this.saveTip}
         </div>) : null;
-        return <Page header="发票">
-            <div className="px-3">
+        */
+        let header = CrPageHeaderTitle('发票');
+        return <Page header={header}>
+            <div className="row mx-0 bg-light my-1">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0">
+                    {!xs && <div className="text-center mt-5"><h1>发票</h1></div>}
+                    {this.renderInvoiceContent()}
+                </div>
+            </div>
+        </Page>
+    });
+
+    InvoiceTypeChecked: boolean;
+    render(param?: any): JSX.Element {
+        return React.createElement(observer(() => {
+            if (!this.InvoiceTypeChecked) {
+                let { origInvoice } = param;
+                this.invoiceInfo(origInvoice);
+                this.InvoiceTypeChecked = true;
+            };
+            return <>{this.renderInvoiceContent()}</>
+        }));
+    }
+
+    renderInvoiceContent = () => {
+        let frm = this.buildForm();
+        return <>
+            <div className="px-3 mx-auto" style={{ maxWidth: !xs ? 600 : 'none' }}>
                 <div className="form-group row py-3 mb-1 bg-white">
                     <div className="col-12 col-sm-3 pb-2 text-muted">发票类型:</div>
                     <div className="col-12 col-sm-9">
@@ -218,13 +264,17 @@ export class VInvoiceInfo extends VPage<CInvoiceInfo> {
                     </div>
                 </div>
             </div>
-            <div className="p-3 bg-white">
+            <div className="p-3 bg-white mx-auto" style={{ maxWidth: !xs ? 600 : 'none' }}>
                 {frm}
                 <button type="button"
                     className="btn btn-primary w-100"
                     onClick={this.onSaveInvoice}>确定</button>
-                {tipUI}
+                {/*tipUI*/}
+                {autoHideTips(this.saveTip, <div className="alert alert-primary" role="alert">
+                    <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                    {this.saveTip.get()}
+                </div>)}
             </div>
-        </Page>
-    });
+        </>
+    }
 }

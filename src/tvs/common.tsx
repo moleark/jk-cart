@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { tv } from 'tonva';
+import { tv } from 'tonva-react';
 
 export const tvAddress = (values: any) => {
     let { country, province, city, county } = values;

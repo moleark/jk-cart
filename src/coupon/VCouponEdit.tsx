@@ -1,10 +1,20 @@
 import * as React from 'react';
-import { VPage, FA, Page, List, LMR, tv, EasyDate } from 'tonva';
+import { VPage, FA, Page, autoHideTips } from 'tonva-react';
 import { CCoupon } from './CCoupon';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { GLOABLE } from 'cartenv';
 import { VVIPCard } from './VVIPCard';
+
+const tipsMap:{[key:number]: string} = {
+	"-1": '对不起，当前服务器繁忙，请稍后再试。',
+	"1": '有效',
+	"0": "无此优惠券，请重新输入或与您的专属销售人员联系确认优惠码是否正确。",
+	"2": '优惠券已过期或作废，请重新输入或与您的专属销售人员联系。',
+	"3": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+	"5": '优惠券无效，请重新输入或与您的专属销售人员联系。',
+	"6": '不允许使用本人优惠券！',
+	"4": '该优惠券已经被使用过了，不允许重复使用。',
+};
 
 export class VCouponEdit extends VPage<CCoupon> {
 
@@ -12,7 +22,8 @@ export class VCouponEdit extends VPage<CCoupon> {
     private couponList: any[];
     private vipCardForWebUser: any;
 
-    @observable tips: string;
+	//@observable tips: string;
+	private tips = observable.box();
     async open(param: any) {
         this.vipCardForWebUser = param.vipCard;
         this.openPage(this.page);
@@ -26,7 +37,9 @@ export class VCouponEdit extends VPage<CCoupon> {
     }
 
     private applySelectedCoupon = async (coupon: string) => {
-        let ret = await this.controller.applyCoupon(coupon);
+		let ret = await this.controller.applyCoupon(coupon);
+		this.tips.set(tipsMap[ret]);
+		/*
         switch (ret) {
             case -1:
                 this.tips = '对不起，当前服务器繁忙，请稍后再试。';
@@ -53,8 +66,9 @@ export class VCouponEdit extends VPage<CCoupon> {
             default:
                 break;
         }
-        if (this.tips)
-            setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+        //if (this.tips)
+		//	setTimeout(() => this.tips = undefined, GLOABLE.TIPDISPLAYTIME);
+		*/
     }
 
     private renderCoupon = (couponForUser: any) => {
@@ -94,8 +108,11 @@ export class VCouponEdit extends VPage<CCoupon> {
                         <button className="btn btn-primary w-100" onClick={this.applyCoupon}>使用</button>
                     </div>
                 </div>
-                {React.createElement(this.tipsUI)}
-
+                {/*React.createElement(this.tipsUI)*/}
+				{autoHideTips(this.tips, <div className="alert alert-primary" role="alert">
+					<FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+					{this.tips}
+				</div>)}
                 {vipCardUI}
             </div>
         </Page>

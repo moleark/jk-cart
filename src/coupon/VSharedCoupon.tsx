@@ -1,14 +1,21 @@
 import * as React from 'react';
-import { CCoupon, COUPONBASE } from './CCoupon';
-import { VPage, Page, List, FA } from 'tonva';
+import { CCoupon } from './CCoupon';
+import { VPage, Page, List } from 'tonva-react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 
 export class VSharedCoupon extends VPage<CCoupon> {
-
-    @observable tipsAfterDawed: string;
+    tipsAfterDawed: string;
     private products: any[] = [];
+    
+    constructor(c: CCoupon) {
+        super(c);
+        makeObservable(this, {
+            tipsAfterDawed: observable
+        });
+    }
+
     async open(param: any) {
         this.products = param.products || [];
         if (this.products.length === 0) {
@@ -66,13 +73,10 @@ export class VSharedCoupon extends VPage<CCoupon> {
                     return <>{this.renderVm(VCoupon, sharedCouponValidationResult)}</>;
                 else
                     return <>{this.renderVm(VVIPCard, sharedCouponValidationResult)}</>;
-                break;
             case 'credits':
                 return <>{this.renderVm(VCredits, sharedCouponValidationResult)}</>;
-                break;
             case 'vipcard':
                 return <>{this.renderVm(VVIPCard, sharedCouponValidationResult)}</>;
-                break
             default:
                 break;
         }
@@ -84,10 +88,7 @@ export class VSharedCoupon extends VPage<CCoupon> {
 
     private page = observer(() => {
         let { renderProduct, cApp, sharedCouponValidationResult } = this.controller;
-
-        let { cCart } = cApp;
-        let cart = cCart.renderCartLabel();
-        return <Page header="与您分享" right={cart}>
+        return <Page header="与您分享" right={cApp.renderCartLabel()}>
             {this.renderCouponBase(sharedCouponValidationResult)}
             {React.createElement(this.drawCouponUI)}
             <List items={this.products} item={{ render: renderProduct, onClick: this.onProductClick, className: "mb-1" }} none={null} />

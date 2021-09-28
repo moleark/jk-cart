@@ -1,9 +1,8 @@
-import { QueryPager, Tuid } from 'tonva';
-import { PageItems } from 'tonva';
-import { CUqBase } from '../CBase';
+import { Tuid, PageItems } from 'tonva-react';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';
 import { VScanCode } from './VScanCode';
+import { CUqBase } from 'tapp';
 
 class HomeSections extends PageItems<any> {
 
@@ -36,7 +35,7 @@ export class CHome extends CUqBase {
     homeSections: HomeSections;
     sectionTuid: Tuid;
 
-    banners: any[] = [];
+    banners: any[];
     async internalStart(param: any) {
 
         /*
@@ -60,10 +59,14 @@ export class CHome extends CUqBase {
     }
 
     getSlideShow = async () => {
-        let list = await this.uqs.webBuilder.GetSlideShow.table({});
+		if (this.banners) return;
+		let list = await this.uqs.webBuilder.GetSlideShow.table({});
+		this.banners = list.map(v => ({ path: v.path, src: v.src }));
+		/*
         list.forEach(v => {
             this.banners.push({ path: v.path, src: v.src });
-        })
+		})
+		*/
     }
 
     scanCodetoProductDetail = async (origin: any) => {
@@ -72,6 +75,6 @@ export class CHome extends CUqBase {
         await cProduct.showProductDetail(productByOrigin.id, 'ScanCode');
     }
 
-    // tab = () => this.renderView(VHome);
-    tab: VHome = new VHome(this);
+    tab = () => this.renderView(VHome);
+    tabContent() {return new VHome(this).content();}
 }

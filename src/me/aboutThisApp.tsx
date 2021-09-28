@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Page, VPage, nav } from 'tonva';
-import logo from '../images/logo.png';
-import { appConfig } from 'configuration';
+import { Page, VPage, nav } from 'tonva-react';
+import logo from '../images/logo_mobi.png';
+import { appConfig } from 'tapp';
 import { CMe } from './CMe';
 
 export class AboutThisApp extends VPage<CMe>{
@@ -18,7 +18,7 @@ export class AboutThisApp extends VPage<CMe>{
         return <Page header="关于百灵威购物APP" right={right}>
             <div className='bg-white p-3'>
                 <div className="h3 flex-fill text-center">
-                    <img src={logo} />
+                    <img src={logo} alt="logo" />
                 </div>
                 <div className="h3 flex-fill text-center">
                     <span className="text-primary mr-3">百灵威购物APP</span>

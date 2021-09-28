@@ -1,21 +1,19 @@
-import { QueryPager, User } from 'tonva';
-import { BoxId } from 'tonva';
-import { observable, computed } from 'mobx';
-import { UQs } from './uqs';
+/* eslint-disable */
+import { observable, computed, makeObservable } from 'mobx';
+import { User, BoxId, QueryPager } from 'tonva-react';
+import { UQs } from 'uq-app';
 
 export class WebUser {
-
+    private _user: User;
     id: number;
     name: string;
     nick?: string;
     icon?: string;
-    guest: number;
-    token: string;
 
-    @observable firstName: string;
+    firstName: string;
     gender: string;
     salutation: string;
-    @observable organizationName: string;
+    organizationName: string;
     departmentName: string;
 
     get defaultOrganizationName(): string {
@@ -50,7 +48,7 @@ export class WebUser {
     }
 
     telephone: string;
-    @observable mobile: string;
+    mobile: string;
     email: string;
     fax: string;
     address: BoxId;
@@ -58,13 +56,19 @@ export class WebUser {
     zipCode: string;
     VIPDiscount: any;
     webUserVIPCard: any;
-    @computed get allowOrdering() {
+    thirdPartyOrg: any;
+    epecUser: any;
+
+    get agtCustomerType() {
+        if (this.epecUser) return 'EPEC';
+        return "";
+    };
+
+    get allowOrdering() {
         // 这个地方要改成相关账号吧？
         return this.currentCustomer !== undefined ||
             (this.mobile && this.firstName && this.organizationName);
     }
-
-    private _user: User;
 
     private webUserSettings: any;
 
@@ -72,77 +76,91 @@ export class WebUser {
 
 
     constructor(uqs: UQs) {// cUsqWebUser: CUq, cUsqCustomer: CUq) {
+        makeObservable(this, {
+            firstName: observable,
+            organizationName: observable,
+            mobile: observable,
+            allowOrdering: computed,
+            agtCustomerType: computed,
+        });
+
+        // cUsqWebUser: CUq, cUsqCustomer: CUq) {
         this.uqs = uqs;
     }
 
     setUser = async (user: User) => {
-        if (user !== undefined) {
-            this._user = user;
-            this.id = user.id;
-            this.name = user.name;
-            this.nick = user.nick;
-            this.icon = user.icon;
-            this.guest = user.guest;
-            this.token = user.token;
+        if (!user) return;
+        this._user = user;
+        this.id = user.id;
+        this.name = user.name;
+        this.nick = user.nick;
+        this.icon = user.icon;
 
-            await this.loadWebUser();
-        }
+        await this.loadWebUser();
     }
 
     private async loadWebUser() {
         let { id, _user } = this;
-        if (this._user !== undefined) {
-            let { webuser: webUserTuid, salesTask } = this.uqs;
-            let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
-            let webUser = await WebUser.load(this.id);
-            if (webUser) {
-                let { firstName, gender, salutation, organizationName, departmentName } = webUser;
-                this.firstName = firstName;
-                this.gender = gender;
-                this.salutation = salutation;
-                this.organizationName = organizationName;
-                this.departmentName = departmentName;
-                this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
-                if (this.webUserVIPCard !== undefined) {
-                    // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
-                    this.VIPDiscount = await salesTask.VIPCardDiscount.query({ coupon: this.webUserVIPCard.vipCard });
-                }
+        if (_user === undefined) return;
 
-                await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
+        let { webuser: webUserTuid, salesTask, platformjoint } = this.uqs;
+        let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
+        let webUser = await WebUser.load(this.id);
+        if (webUser) {
+            let { firstName, gender, salutation, organizationName, departmentName } = webUser;
+            this.firstName = firstName;
+            this.gender = gender;
+            this.salutation = salutation;
+            this.organizationName = organizationName;
+            this.departmentName = departmentName;
+            this.webUserVIPCard = await webUserTuid.WebUserVIPCard.obj({ webUser: this });
+            if (this.webUserVIPCard !== undefined) {
+                // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
+                if (this.webUserVIPCard.expiredDate > Date.now())
+                    this.VIPDiscount = await salesTask.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
+                else this.VIPDiscount = [];
             }
 
+            await RecordLogin.submit({ webUser: webUser, ip: "", app: "shop" });
+            let thirdPartyOrg: any = await platformjoint.NeoTridentUser.obj({ webUser: this });
+            this.thirdPartyOrg = thirdPartyOrg?.organization;
+            this.epecUser = await platformjoint.EpecUser.obj({ webUser: this });
+        }
 
-            let contact = await WebUserContact.obj({ "webUser": id });
-            if (contact) {
-                let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
-                this.telephone = telephone;
-                this.mobile = mobile;
-                this.email = email;
-                this.fax = fax;
-                this.address = address;
-                this.addressString = addressString;
-                this.zipCode = zipCode;
-            }
 
-            this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
+        let contact = await WebUserContact.obj({ "webUser": id });
+        if (contact) {
+            let { telephone, mobile, email, fax, address, addressString, zipCode } = contact;
+            this.telephone = telephone;
+            this.mobile = mobile;
+            this.email = email;
+            this.fax = fax;
+            this.address = address;
+            this.addressString = addressString;
+            this.zipCode = zipCode;
+        }
 
-            let value = await WebUserCustomer.obj({ webUser: id });
-            if (value !== undefined) {
-                this.currentCustomer = new Customer(value.customer, this.uqs);
-                await this.currentCustomer.init();
-            }
-            let accountValue = await WebUserBuyerAccount.query({ webUser: id });
-            let { ret: buyerAccounts } = accountValue;
-            if (buyerAccounts && buyerAccounts.length > 0) {
-                // TODO: 暂时不考虑有多个相关账号的情况
-                this.buyerAccount = buyerAccounts[0].buyerAccount;
-            }
+        this.webUserSettings = await WebUserSetting.obj({ webUser: id }) || { webUser: id };
+
+        let value = await WebUserCustomer.obj({ webUser: id });
+        if (value !== undefined) {
+            this.currentCustomer = new Customer(value.customer, this.uqs);
+            await this.currentCustomer.init();
+        }
+        let accountValue = await WebUserBuyerAccount.query({ webUser: id });
+        let { ret: buyerAccounts } = accountValue;
+        if (buyerAccounts && buyerAccounts.length > 0) {
+            // TODO: 暂时不考虑有多个相关账号的情况
+            this.buyerAccount = buyerAccounts[0].buyerAccount;
         }
     }
 
+    /*
     get isLogined(): boolean {
         return this._user !== undefined;
     }
+    */
+
     get hasCustomer(): boolean {
         return this.currentCustomer !== undefined;
     }
@@ -319,6 +337,8 @@ export class Customer {
 
     private customerSettings: any;
     Contractor: any;
+    Organization: any;
+    Discounts: any[] = []
 
     constructor(customer: BoxId, uqs: UQs) {
         this.id = customer.id;
@@ -337,11 +357,57 @@ export class Customer {
         await this.uqs.customer.CustomerContacts.del({ customer: this.id, arr1: [{ contact: contactId }] });
     }
 
+    /**
+     * 获取customer折扣表
+     */
+    async getcustomerDiscount(customer: BoxId | number) {
+        let discounts = await this.uqs.customerDiscount.CustomerDiscount.table({ customer: customer });
+        return discounts.filter((el: any) => el.endDate > Date.now());
+    }
+
+    /**
+     * 获取所属组织折扣表
+     */
+    async getOrganizationDiscount(organization: BoxId | number) {
+        let discounts = await this.uqs.customerDiscount.OrganizationDiscount.table({ organization: organization });
+        return discounts.filter((el: any) => el.endDate > Date.now());
+    }
+    /* 获取用户的折扣表(个人-->个人所属组织-->关联老师-->老师所属组织) */
+    async getcustomerDiscountArr() {
+        /* 获取个人的折扣表 */
+        this.Discounts = await this.getcustomerDiscount(this.id);
+        if (this.Organization && !this.Discounts.length) {/* 获取个人组织的折扣表 */
+            this.Discounts = await this.getOrganizationDiscount(this.Organization);
+        };
+        if (this.Discounts.length) return;
+        /* 获取关联老师 */
+        let customerBuyerAccount = await this.uqs.customer.CustomerBuyerAccount.obj({ customer: this.id });
+        if (customerBuyerAccount) {
+            let { buyerAccount } = customerBuyerAccount;
+            /* 读取老师 buyerAccount */
+            let getBuyerAccountID = await this.uqs.customer.Buyeraccount.load(buyerAccount);
+            if (getBuyerAccountID) {
+                let { description: BuyerAccountName, organization } = getBuyerAccountID;
+                /*  获取老师customer */
+                let getBuyerAccountCustomerRes = await this.uqs.customer.Customer.search(BuyerAccountName, 10, 10);
+                if (!getBuyerAccountCustomerRes.length) return;
+                /* 获取老师的折扣表 */
+                this.Discounts = await this.getcustomerDiscount(getBuyerAccountCustomerRes[0].id);
+                if (this.Discounts.length) return;
+                /* 获取老师组织折扣表 */
+                this.Discounts = await this.getOrganizationDiscount(organization);
+            };
+        };
+    }
+
     async init() {
         this.customerSettings = await this.uqs.customer.CustomerSetting.obj({ customer: this.id }) || { customer: this.id };
         let customerContactorMap: any = await this.uqs.customer.CustomerContacts.obj({ customer: this.id });
         if (customerContactorMap)
             this.Contractor = customerContactorMap.contractor;
+        let customerOrganization = await this.uqs.customer.getCustomerOrganization.obj({ customerId: this.id });
+        if (customerOrganization) this.Organization = customerOrganization.organization;
+        await this.getcustomerDiscountArr();
     }
 
     getSetting() {

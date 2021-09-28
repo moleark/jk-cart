@@ -1,4 +1,4 @@
-import { CartPackRow } from "cart/Cart";
+import { CartPackRow } from "../store";
 
 export function groupByProduct(packItems: any[]) {
     let result: any[] = [];
@@ -17,6 +17,24 @@ export function groupByProduct(packItems: any[]) {
             result.push(cpi);
         }
         cpi.packs.push(packRow);
+    }
+    return result;
+}
+
+export function groupByProduct1(packItems: any[]) {
+    let result: any[] = [];
+    for (let packItem of packItems) {
+        let { product, pack, quantity, price, retail, currency, param } = packItem;
+        let packRow: CartPackRow = {
+            pack: pack,
+            price: price,
+            retail: retail,
+            quantity: quantity,
+            currency: currency && currency.id
+        }
+        let cpi = { product: product, packs: [packRow] };
+        let cparam = { param: param || undefined };
+        result.push({ ...cpi, ...cparam });
     }
     return result;
 }

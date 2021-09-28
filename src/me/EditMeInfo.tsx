@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import {
     userApi, ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem, nav, Page,
     Edit, UiSchema,
     VPage, UiRadio, IdSchema, UiIdItem, Context, BoxId, tv
-} from 'tonva';
+} from 'tonva-react';
 import { CMe } from './CMe';
 import {
     faxValidation, emailValidation, mobileValidation, telephoneValidation,
@@ -12,10 +12,24 @@ import {
     organizationNameValidation, departmentNameValidation,
     salutationValidation, nameValidation
 } from '../tools/inputValidations';
+import { xs } from 'tools/browser';
 
 export class EditMeInfo extends VPage<CMe>{
 
     async open(param: any) {
+        let { cApp } = this.controller;
+		// 程序运行到这里，必须有currentWebUser，否则一定是其它某个地方出错了。
+        //if(!cApp.currentUser?.mobile) await cApp.currentUser.setUser(nav.user);
+        let { telephone, mobile, email, fax, zipCode, address, addressString } = cApp.currentUser;
+        this.webUserContactData = {
+            telephone: telephone,
+            mobile: mobile,
+            email: email,
+            fax: fax,
+            address: address,
+            addressString: addressString,
+            zipCode: zipCode,
+        };
         this.openPage(this.page);
     }
 
@@ -29,14 +43,21 @@ export class EditMeInfo extends VPage<CMe>{
             icon: { widget: 'image', label: '头像' } as UiImageItem,
         }
     }
-    @observable private data: any;
+    private data: any;
 
-    @observable private webUserData: any;
+    private webUserData: any;
 
-    @observable private webUserContactData: any;
+    private webUserContactData: any;
 
     constructor(props: any) {
         super(props);
+
+        makeObservable<EditMeInfo, "data" | "webUserData" | "webUserContactData">(this, {
+            data: observable,
+            webUserData: observable,
+            webUserContactData: observable
+        });
+
         let { nick, icon } = nav.user;
         this.data = {
             nick: nick,
@@ -87,16 +108,26 @@ export class EditMeInfo extends VPage<CMe>{
 
     private page = () => {
         let { schema, uiSchema, data, onItemChanged, webUserData, onWebUserChanged, webUserContactData, onWebUserContactChanged, controller } = this;
-        return <Page header="个人信息">
-            <Edit schema={schema} uiSchema={uiSchema}
-                data={data}
-                onItemChanged={onItemChanged} />
-            <Edit schema={webUserSchema} uiSchema={webUserUiSchema}
-                data={webUserData}
-                onItemChanged={onWebUserChanged} />
-            <Edit schema={webUserContactSchema} uiSchema={webUserContactUiSchema(controller.pickAddress)}
-                data={webUserContactData}
-                onItemChanged={onWebUserContactChanged} />
+        let header: any, title = '个人信息';
+        if (xs) header = title;
+        return <Page header={header}>
+             <div className="row mx-0 mb-lg-5 mb-sm-5">
+                <div className="col-lg-3 d-none d-lg-block">
+                    {this.controller.cApp.cMe.renderMeSideBar()}
+                </div>
+                <div className="col-lg-9 px-0 mx-auto" style={{ maxWidth: !xs ? 800 : 'none' }}>
+                    {!xs && <div className="text-left mt-5 px-3"><h1>{title}</h1></div>}
+                    <Edit schema={schema} uiSchema={uiSchema}
+                        data={data}
+                        onItemChanged={onItemChanged} />
+                    <Edit schema={webUserSchema} uiSchema={webUserUiSchema}
+                        data={webUserData}
+                        onItemChanged={onWebUserChanged} />
+                    <Edit schema={webUserContactSchema} uiSchema={webUserContactUiSchema(controller.pickAddress)}
+                        data={webUserContactData}
+                        onItemChanged={onWebUserContactChanged} />
+                </div>
+            </div>
         </Page>;
     }
 }

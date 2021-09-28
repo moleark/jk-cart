@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page } from 'tonva';
+import { VPage, Page, nav } from 'tonva-react';
 import { CPointProduct } from './CPointProduct';
 
 export class OrderSuccess extends VPage<CPointProduct> {
@@ -9,7 +9,7 @@ export class OrderSuccess extends VPage<CPointProduct> {
     }
 
     private page = (orderCreateResult: any) => {
-        return <Page header="兑换成功" back="close">
+        return <Page header="兑换成功" afterBack={()=>{ nav.navigate("/pointshop") }} back="close">
             <div className="p-3 bg-white mb-3">
                 <div className="mb-3">兑换成功，感谢您对百灵威的厚爱！</div>
                 <p className="">

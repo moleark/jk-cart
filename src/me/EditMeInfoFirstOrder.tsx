@@ -1,11 +1,10 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { observable } from 'mobx';
-import { ItemSchema, Page, VPage, FA, Form, Context } from 'tonva';
+import { observable, makeObservable } from 'mobx';
+import { ItemSchema, Page, VPage, FA, Form, Context, autoHideTips } from 'tonva-react';
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';
-import { GLOABLE } from 'cartenv';
 
 interface Options {
     onlyRequired: boolean;
@@ -19,7 +18,8 @@ interface Options {
 
 export class EditMeInfoFirstOrder extends VPage<CMe>{
     private options: Options;
-    @observable tips: JSX.Element;
+    //@observable tips: JSX.Element;
+    private tips = observable.box();
     private form: Form;
 
     async open(param: any) {
@@ -28,15 +28,29 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         this.openPage(this.page);
     }
 
-    @observable private webUserData: any;
-    @observable private webUserContactData: any;
+    private webUserData: any;
+    private webUserContactData: any;
+
+    private ref = (f: Form) => {
+        if (this.form === f) {
+            debugger;
+        }
+        this.form = f;
+    }
 
     constructor(props: any) {
         super(props);
 
+        makeObservable<EditMeInfoFirstOrder, "webUserData" | "webUserContactData">(this, {
+            webUserData: observable,
+            webUserContactData: observable
+        });
+
         let { cApp } = this.controller;
+        let { currentUser } = cApp;
+        if (!currentUser) return;
         let { firstName, gender, salutation, organizationName, departmentName, telephone
-            , mobile, email, fax, address, addressString, zipCode } = cApp.currentUser;
+            , mobile, email, fax, address, addressString, zipCode } = currentUser;
         this.webUserData = {
             firstName: firstName,
             gender: gender,
@@ -64,7 +78,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         await this.controller.changeWebUserContact(this.webUserContactData);
 
         let { currentUser } = this.controller.cApp;
-        if (currentUser.allowOrdering) {
+        if (currentUser && currentUser.allowOrdering) {
             this.closePage();
             let webUserContacts = await currentUser.getContacts();
             if (webUserContacts === undefined || webUserContacts.length === 0) {
@@ -72,13 +86,12 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
             }
             await this.options.actionButton.action();
         } else {
-            this.tips = <>以上带有 <span className='text-danger'>*</span> 的内容均须填写！</>;
-            setTimeout(() => {
-                this.tips = undefined;
-            }, GLOABLE.TIPDISPLAYTIME);
+            this.tips.set(<>以上带有 <span className='text-danger'>*</span> 的内容均须填写！</>);
+            //setTimeout(() => {
+            //    this.tips = undefined;
+            //}, GLOABLE.TIPDISPLAYTIME);
         }
     }
-
 
     private onCompleted = async () => {
         if (!this.form) return;
@@ -86,7 +99,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
     }
 
     private page = observer(() => {
-
+        /*
         let tipsUI = <></>;
         if (this.tips) {
             tipsUI = <div className="alert alert-primary" role="alert">
@@ -94,6 +107,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
                 {this.tips}
             </div>
         }
+        */
 
         let { onlyRequired, caption, note, actionButton } = this.options;
         let schemaFilter = (itemSchema: ItemSchema): boolean => {
@@ -129,7 +143,7 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
             </div>
 
             <div className="App-container container text-left">
-                <Form ref={v => this.form = v} className="my-3"
+                <Form ref={this.ref} className="my-3"
                     schema={schemaArr.filter(schemaFilter)}
                     uiSchema={uiSchema}
                     formData={data}
@@ -138,7 +152,11 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
             </div>
 
             <div className="p-3 bg-white">
-                {tipsUI}
+                {/*tipsUI*/}
+                {autoHideTips(this.tips, <div className="alert alert-primary" role="alert">
+                    <FA name="exclamation-circle" className="text-warning float-left mr-3" size="2x"></FA>
+                    {this.tips}
+                </div>)}
                 <button type="button" className="btn btn-primary w-100" onClick={() => this.onCompleted()}>{value}</button>
             </div>
         </Page >;

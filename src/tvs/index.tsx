@@ -1,4 +1,4 @@
-import { TVs } from "tonva";
+import { TVs } from 'tonva-react';
 import { common } from "./common";
 import { warehouse } from "./warehouse";
 import { product } from "./product";

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './App.css';
-import { NavView, nav, start } from 'tonva';
-import { CApp } from 'CApp';
-import { appConfig } from 'configuration';
+import { NavView, nav, start } from 'tonva-react';
+import { appConfig, CApp } from 'tapp';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 //const tonvaApp = "bruce/TestApp";
 nav.setSettings(appConfig);
@@ -13,7 +13,9 @@ class App extends React.Component {
     await start(CApp, appConfig);
   }
   public render() {
-    return <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+    return <Router>
+      <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+    </Router>
   }
 }
 

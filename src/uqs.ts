@@ -1,4 +1,4 @@
-import { Tuid, Map, Query, Action, Sheet, Book } from "tonva";
+import { Tuid, Map, Query, Action, Sheet, Book } from "tonva-react";
 
 export interface UqOrder {
     //a: Tuid;
@@ -10,16 +10,34 @@ export interface UqOrder {
     GetCart: Query;
     GetPendingPayment: Query;
     CommonText: Tuid;
+    orderTransportation: Map;
+    SearchOrders: Query;
+}
+
+export interface UqChemical {
+    ChemicalJNKRestrict: Map;
+}
+
+export interface UqChemicalSecurity {
+    JNKRestrict: Tuid;
 }
 
 export interface UqProduct {
     ProductX: Tuid;
+    Lot: Tuid;
     ProductCategory: Tuid;
     PriceX: Map;
     AgentPrice: Map;
     ProductChemical: Map;
     ProductMSDSFile: Map;
     ProductSpecFile: Map;
+    ProductUserManualFile: Map;
+    ProductProductCategory: Map;
+    ProductEmbargo: Map;
+    Productstandardsample: Map;
+    ProductDeliveryTime: Map;
+    COA: Map;
+    ProductExtention: Map;
     Brand: Tuid;
     GetRootCategory: Query;
     GetRootCategories: Query;
@@ -28,12 +46,18 @@ export interface UqProduct {
     SearchProductByCategory: Query;
     GetFutureDeliveryTime: Query;
     GetProductByOrigin: Query;
+    GetLotByLotnumber: Query;
+    GetAvailableProductById: Query;
+    GetProductPackByOrigin: Query;
+    GetProductPrices: Query;
+    getProductLotNumber: Query;
 }
 
 export interface UqCommon {
     SalesRegion: Tuid;
     Language: Tuid;
     Address: Tuid;
+    Currency: Tuid;
     InvoiceType: Tuid;
     GetCountryProvinces: Query;
     GetProvinceCities: Query;
@@ -70,6 +94,10 @@ export interface UqCustomer {
     CustomerContacts: Map;
     CustomerSetting: Map;
     CustomerContractor: Map;
+    getCustomerOrganization: Query;
+    CustomerBuyerAccount: Map;
+    Buyeraccount: Tuid;
+    Customer: Tuid;
     CustomerCoupon: Map;
     CustomerCouponUsed: Map;
     CustomerCredits: Map;
@@ -80,6 +108,9 @@ export interface UqCustomer {
 
 export interface UqCustomerDiscount {
     GetDiscount: Query;
+    GetDiscountByOrganization: Query;
+    CustomerDiscount: Map;
+    OrganizationDiscount: Map;
 }
 
 export interface UqPromotion {
@@ -117,20 +148,21 @@ export interface UqPointShop {
     PointProductLib: Tuid;
     PointProductSource: Map;
     GetPointProductByGenre: Query;
+    SearchExchangeOrders: Query;
     // TODO：delete
-    AddPoint: Action;
-    IsCanUseOrder: Action;
+    // AddPoint: Action;
+    // IsCanUseOrder: Action;
 
     // TODO：delete
-    GetPlatFormOrder: Query;
-    GetLastPlatFormOrder: Action;
-    AddPlatformOrderPoint: Action;
-    AddUsedCoupon: Action;
+    // GetPlatFormOrder: Query;
+    // GetLastPlatFormOrder: Action;
+    // AddPlatformOrderPoint: Action;
+    // AddUsedCoupon: Action;
 
     GetPointHistory: Query;
     GetPointSigninHistory: Query;
-    WebUserCredits: Map;
-    WebUserCreditsUsed: Map;
+    // WebUserCredits: Map;
+    // WebUserCreditsUsed: Map;
     SigninSheet: Sheet;
     checkIsSignin: Query;
     Signin: Action;
@@ -144,11 +176,20 @@ export interface UqWebBuilder {
     GetSlideShow: Query;
 }
 
-export interface UqOrderDraft {
-    OrderDraft: Sheet;
+export interface UqPlatformjoint {
+    NeoTridentUser: Map;
+    EpecUser: Map;
 }
+
+export interface UqDeliver {
+    GetOrderDetailTransportation: Query;
+    GetPointExchangeDetailTransportation: Query;
+}
+
 export interface UQs {
     order: UqOrder;
+    chemical: UqChemical;
+    chemicalSecurity: UqChemicalSecurity;
     product: UqProduct;
     common: UqCommon;
     webuser: UqWebUser;
@@ -160,6 +201,6 @@ export interface UQs {
     member: UqMember;
     积分商城: UqPointShop;
     webBuilder: UqWebBuilder;
-    orderDraft: UqOrderDraft;
-    platFormJoint: UqPlatFormJoint;
+    platformjoint: UqPlatformjoint;
+    deliver: UqDeliver;
 }

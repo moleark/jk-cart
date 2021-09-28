@@ -1,5 +1,5 @@
 import * as React from 'react';
-import logo from '../images/logo.png';
+import logo from '../images/logo_mobi.png';
 
 export const jnkTop = <div className="d-flex align-items-center position-relative">
     <img className="h-3c position-absolute" src={logo} alt="百灵威" />

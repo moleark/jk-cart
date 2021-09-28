@@ -1,12 +1,23 @@
+/* eslint-disable */
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyDate } from 'tonva';
+import { VPage, Page, BoxId, EasyDate, Ax, Tuid, nav, List, tv } from 'tonva-react';
 import { COrder } from './COrder';
-import { tv } from 'tonva';
-import { List } from 'tonva';
 import { OrderItem } from './Order';
-import { CartItem2 } from 'cart/Cart';
+import { xs } from '../tools/browser';
+import classNames from 'classnames';
+import { observable, makeObservable } from 'mobx';
+//import { CartItem } from '../cart/Cart';
 
 export class VOrderDetail extends VPage<COrder> {
+    /* orderTrans: any[] = [];
+
+    constructor(c: COrder) {
+        super(c);
+
+        makeObservable(this, {
+            orderTrans: observable
+        });
+    } */
 
     async open(order: any) {
 
@@ -17,7 +28,7 @@ export class VOrderDetail extends VPage<COrder> {
     private packsRow = (item: any, index: number) => {
         let { pack, quantity, price, currency } = item;
 
-        return <div key={index} className="px-2 py-2 border-top">
+        return <div key={index} className={classNames('px-2 py-2', index !== 0 ? 'border-top' : '')}>
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>
                 <div className="w-12c mr-4 text-right">
@@ -28,42 +39,87 @@ export class VOrderDetail extends VPage<COrder> {
         </div>;
     }
 
-    private renderOrderItem = (orderItem: OrderItem) => {
-        let { product, packs } = orderItem;
+    againCreatOrder = async (initialData: OrderItem[]) => {
+		/*
+        let { uqs, currentSalesRegion, cCart } = this.controller.cApp;
+        let { product: p } = uqs;
+        let { PriceX } = p;
+        let promises: PromiseLike<void>[] = [];
+        initialData.forEach((e: any) => e.packs.forEach((v: any) => {
+            promises.push(PriceX.obj({ product: e.product, pack: v.pack, salesRegion: currentSalesRegion }))
+        }));
+        let prices: any[] = await Promise.all(promises);
+        let orderData: CartItem[] = [];
+        let productPromises: Promise<any>[] = [];
+        for (let key of initialData) {
+            let { product, packs } = key;
+            let filtPacksByProductId = prices.filter((v: any) => Tuid.equ(v.product, product) && v.discountinued === 0 && v.expireDate > Date.now());
+            if (!filtPacksByProductId.length) continue;
+            for (let i of packs) {
+                let findPack = filtPacksByProductId.find((v: any) => Tuid.equ(v.pack, i.pack));
+                if (!findPack) continue;
+                product = this.controller.cApp.getProduct(product.id);
+                productPromises.push(product.loadListItem());
+                orderData.push({
+                    product: product,
+                    packs: [{ pack: i.pack, quantity: i.quantity || 1, price: findPack.retail, retail: findPack.retail, currency: findPack.salesRegion?.obj?.currency }],
+                    $isSelected: true,
+                    $isDeleted: false,
+                    createdate: Date.now()
+                })
+            };
+        };
+        await Promise.all(productPromises);
+        orderData.forEach((v: any) => {
+            let newPrices: any[] = v.product?.prices || [];
+            let findPack = newPrices.find((i: any) => Tuid.equ(i.pack, v.packs[0].pack));
+            if (findPack) {
+                let { vipPrice, promotionPrice } = findPack;
+                v.packs[0].price = this.minPrice(vipPrice, promotionPrice) || v.packs[0].price;
+            };
+        });
+        cCart.againOrderCart(orderData);
+		*/
+		await this.controller.cApp.store.cart.againCreatOrder(initialData);
+        nav.navigate('/cart');
+    }
+
+    private renderOrderItem = (orderItem: any /* OrderItem */, index: number) => {
+        let { product, packs, param } = orderItem;
+        let { id } = product;
         let { controller, packsRow } = this;
-        return <div>
-            <div className="row p-1 my-1">
-                <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
-                <div className="col-lg-6">{
-                    packs.map((p, index) => {
-                        return packsRow(p, index);
-                    })
-                }</div>
+        let transportation: any;
+        if (param?.transportation) {
+            let { carrier, waybillNumber } = param.transportation;
+            transportation = {transNumber: waybillNumber, expressLogistics: carrier};
+        };
+        let orderTransUI: JSX.Element;
+        if (transportation) orderTransUI = <span className="mr-2 cursor-pointer btn btn-sm btn-info"
+            style={{ background: "#17a2b8" }}
+            onClick={() => controller.openOrderTrans(transportation)} >查看物流</span>;
+        return <div className="row my-1 w-100 mx-0">
+            <div className="col-lg-6 pb-3">{controller.renderOrderItemProduct(product)}</div>
+            <div className="col-lg-6">{
+                packs.map((p:any, index:number) => {
+                    return packsRow(p, index);
+                })
+            }</div>
+            <div className="text-right w-100 px-3">
+                <Ax className="mx-2 text-info font-weight-bold" href={'/product/mscu/MSDS/' + id}>SDS</Ax>
+                {orderTransUI}
+                <div className="btn btn-sm btn-info float-left float-lg-right cursor-pointer"
+                    style={{ background: "#17a2b8" }} onClick={() => { this.againCreatOrder([orderItem]) }}>
+                    再次购买
+                </div>
             </div>
-        </div>;
+        </div>
     }
 
-    orderAgain = async (data: any) => {
-        let { cOrder } = this.controller.cApp;
-        let { orderItems } = data;
-
-        orderItems = orderItems.map((el: CartItem2) => {
-            return {
-                product: el.product,
-                packs: el.packs,
-                $isDeleted: false,
-                $isSelected: true,
-                createdate: 'undefined'
-            }
-        })
-        // console.log('orderItems', orderItems);
-        await cOrder.createOrderFromCart(orderItems)
-    }
     private page = (order: any) => {
 
         let { brief, data } = order;
         let { id, no, state, description, date } = brief;
-        let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, couponOffsetAmount, couponRemitted
+        let { orderItems, currency, shippingContact, invoiceContact, invoiceType, invoiceInfo, amount, comments, couponOffsetAmount, couponRemitted
             , freightFee, freightFeeRemitted } = data;
         let couponUI;
         if (couponOffsetAmount || couponRemitted) {
@@ -89,7 +145,7 @@ export class VOrderDetail extends VPage<COrder> {
             </div>
         }
 
-        let freightFeeUI, freightFeeRemittedUI;
+        /* let freightFeeUI, freightFeeRemittedUI;
         if (freightFee) {
             freightFeeUI = <>
                 <div className="text-right text-danger"><small>¥</small>{freightFee}</div>
@@ -99,35 +155,50 @@ export class VOrderDetail extends VPage<COrder> {
                     <div className="text-right text-danger"><small>¥</small>{freightFeeRemitted}(减免)</div>
                 </>
             }
-        }
-        let orderAgainUI = <div className="d-flex justify-content-center">
-            <button className="btn btn-primary w-50" onClick={async () => { this.orderAgain(order.data) }}>再次下单</button>
+        } */
+        let orderAgainUI = <div className="px-3 py-2 border-bottom" style={{userSelect: "none"}}>
+            <span className="align-middle">若需再次购买该订单中所有产品，请 </span>
+            <button className="btn btn-sm btn-secondary cursor-pointer" title='可直接下单再次购买订单中产品'
+                style={{ background: "#6c757d" }}
+                onClick={() => { this.againCreatOrder(orderItems) }}>再次下单</button>
+            {/* <button className="btn btn-primary w-50" onClick={async () => { this.controller.orderAgain(order.data) }}>再次下单</button> */}
         </div>
 
-        let header = <>订单详情: {no}</>            //orderAgainUI
+        let commentsUI = comments ? <div className="bg-white row no-gutters p-3 my-1">
+            <div className="col-3 text-muted">备注:</div>
+            <div className="col-9">{comments}</div>
+        </div> : null;
+
+        let header: any
+        if (xs) header = <>订单详情: {no}</>            //orderAgainUI
+        let infoArr: any[] = [
+            { name: "收货地址:", value: tv(shippingContact), isShow: shippingContact },
+            { name: "发票地址:", value: tv(invoiceContact), isShow: invoiceContact },
+            { name: "发票信息:", value: invoiceTemplate(invoiceType, invoiceInfo), isShow: invoiceType || invoiceInfo },
+        ];
         return <Page header={header} footer={<></>}>
+            {!xs && <div className="alert alert-info alert-signin mt-3">订单编号 {no}</div>}
+            {orderAgainUI}
             <List items={orderItems} item={{ render: this.renderOrderItem }} />
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">收货地址:</div>
-                <div className="col-9">{tv(shippingContact)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">发票地址:</div>
-                <div className="col-9">{tv(invoiceContact)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">发票信息:</div>
-                <div className="col-9">{invoiceTemplate(invoiceType, invoiceInfo)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
+            {
+                infoArr.map((el: any) => {
+                    if (!el.isShow) return null;
+                    return <div className="bg-white row no-gutters p-3 my-1" key={el.name}>
+                        <div className="col-3 text-muted">{el.name}</div>
+                        <div className="col-9">{el.value}</div>
+                    </div>
+                })
+            }
+            {/* <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">运费:</div>
                 <div className="col-9">{freightFeeUI}{freightFeeRemittedUI}</div>
-            </div>
+            </div> */}
             {couponUI}
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">下单时间:</div>
                 <div className="col-9 text-right"><EasyDate date={date} /></div>
             </div>
+            {commentsUI}
             <div className="bg-white p-3 my-1 text-right">
                 <span className="text-danger font-weight-bold">总金额: {amount}{tv(currency)}</span>
             </div>

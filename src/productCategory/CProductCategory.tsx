@@ -1,16 +1,31 @@
-//import { observable } from 'mobx';
-import _ from 'lodash';
-import { CUqBase } from '../CBase';
+import { CUqBase } from 'tapp';
 import { VRootCategory } from './VRootCategory';
-import { VCategory } from './VCategory';
-import { GLOABLE } from "cartenv";
+import { VRootCategorySideBar, VRootCategorySideBarToSelect } from './VRootCategorySideBar';
+import { GLOABLE } from "global";
 import './cat.css';
+import { Ax, BoxId, Tuid, VPage } from 'tonva-react';
+import { VCategoryPage } from './VCategoryPage';
+import classNames from 'classnames';
+import { VCategoryHome } from './VCategoryHome';
+
+export interface ProductCategory {
+    productCategory: number; //ID ProductCategory,
+    parent: number; // ID,
+    name: string; // char(200),
+    total: number; // int
+    children?: ProductCategory[];
+    allAncestors?: any[];
+};
 
 export class CProductCategory extends CUqBase {
-    rootCategories: any[] = [];
+    rootCategories: ProductCategory[];
+    current: ProductCategory;		// 当前显示的目录
+    instruction: string; 			// 当前目录的介绍
     //@observable categories2: any[] = [];
 
     async internalStart(param: any) {
+        await this.loadRoot();
+        /*
         this.uqs.product.ProductCategory.stopCache();
 
         let { currentSalesRegion, currentLanguage } = this.cApp;
@@ -19,14 +34,10 @@ export class CProductCategory extends CUqBase {
             language: currentLanguage.id
         });
         let { first, secend, third } = results;
-        /*
-        (first as any[]).forEach(element => {
-            this.buildCategories(element, secend, third);
-        });
-        */
         this.rootCategories = (first as any[]).map(v => {
             return this.buildCategories(v, secend, third);
         });
+        */
         /*
         let result2 = await this.getRootCategoriesQuery.query({ salesRegion: currentSalesRegion.id, language: currentLanguage.id });
         if (result2)
@@ -34,65 +45,233 @@ export class CProductCategory extends CUqBase {
         */
     }
 
+    async loadRoot() {
+        if (this.rootCategories) return;
+        let { uqs, cApp } = this;
+        let { product } = uqs;
+        let { ProductCategory, GetRootCategory } = product;
+        ProductCategory.stopCache();
+
+        let { currentSalesRegion, currentLanguage } = cApp;
+        let results = await GetRootCategory.query({
+            salesRegion: currentSalesRegion, // 去掉.id, 如果传入的是obj参数，会自动取id
+            language: currentLanguage, // 去掉.id, 如果传入的是obj参数，会自动取id
+        });
+        let { first, secend, third } = results;
+        (first as any[]).forEach(v => {
+            v.productCategory = v.productCategory.id;
+            v.children = this.buildChildren(v.productCategory, secend, third);
+        });
+        this.rootCategories = first;
+    }
+
+    /**
+     * 加载指定目录节点，结果赋值给this.current;
+     * @param id 目录节点id
+     */
+    async load(id: number) {
+        if (this.current && this.current.productCategory === id) return;
+
+        let { uqs, currentLanguage } = this.cApp;
+        let { product } = uqs;
+        let { ProductCategory } = product;
+        let promises = [
+            ProductCategory.load(id),
+            this.getCategoryChildren(id),
+            this.getCategoryInstruction(id)
+        ];
+        let [pcTuid, { first, secend }, instruction] = await Promise.all(promises);
+        this.instruction = instruction;
+        this.current = {
+            productCategory: id,
+            parent: undefined,
+            allAncestors: [],
+            name: undefined,
+            total: undefined,
+            children: [],
+        }
+
+        let getAllAncestors = async function (productCategoryId: number) {
+            let allAncestors: any[] = [];
+            while (true) {
+                let ProductCategoryLoad: any = await ProductCategory.load(productCategoryId);
+                if (!ProductCategoryLoad) break;
+                let { parent } = ProductCategoryLoad;
+                if (!parent) break;
+                productCategoryId = parent.id;
+                allAncestors.unshift(parent);
+            }
+            return allAncestors;
+        }
+
+        if (pcTuid) {
+            let { parent, productcategorylanguage } = pcTuid;
+            if (parent !== undefined) {
+                this.current.parent = parent;
+                this.current.allAncestors = await getAllAncestors(id);
+            }
+            let pcCurrentLanguage = productcategorylanguage.find((v: any) => Tuid.equ(currentLanguage, v.language));
+            this.current.name = pcCurrentLanguage && pcCurrentLanguage.name;
+            this.current.children = this.buildChildren(id, first, secend);
+        }
+    }
+
     renderRootList = () => {
         return this.renderView(VRootCategory);
     };
 
-    getCategoryInstruction = async (categoryId: number) => {
-        let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
-        if (res.ok) {
-            let content = await res.text();
-            return content;
+    /**
+     * 渲染PC版SideBar中的目录树
+     */
+    renderRootSideBar = () => {
+        return this.renderView(VRootCategorySideBar, this.rootCategories);
+    }
+
+    /**
+     * 渲染mobile版SideBar中的目录树
+     */
+    renderRootSideBarByMob = () => {
+        return this.renderView(VRootCategorySideBarToSelect, this.rootCategories);
+    }
+
+    /**
+     * 获取目录节点相关的介绍贴文
+     * @param categoryId 目录节点id
+     */
+    private getCategoryInstruction = async (categoryId: number) => {
+        try {
+            let res = await window.fetch(GLOABLE.CONTENTSITE + "/partial/categoryinstruction/" + categoryId);
+            if (res.ok) {
+                let content = await res.text();
+                return content;
+            }
+        } catch (error) {
+
         }
     };
 
-    private async getCategoryChildren(parentCategoryId: number) {
+    /**
+     * 根据目录节点的id获取该节点的子节点列表
+     * @param categoryId 目录节点的id
+     */
+    private async getCategoryChildren(categoryId: number) {
         let { currentSalesRegion, currentLanguage } = this.cApp;
         return await this.uqs.product.GetChildrenCategory.query({
-            parent: parentCategoryId,
+            parent: categoryId,
             salesRegion: currentSalesRegion.id,
             language: currentLanguage.id
         });
     }
 
-    private buildCategories(categoryWapper: any, firstCategory: any[], secendCategory: any[]): any {
-        let { productCategory } = categoryWapper;
-        let catId: number = productCategory.id, children: any[] = [];
-        for (let f of firstCategory) {
-            if (f.parent !== catId) continue;
-            let pcid = f.productCategory.id;
-            let len = secendCategory.length;
-            let subsub = '';
-            for (let j = 0; j < len; j++) {
-                //element.children = secendCategory.filter((v: any) => v.parent === pcid);
-                let { name, parent } = secendCategory[j];
-                if (parent !== pcid) continue;
-                if (subsub.length > 0) subsub += ' / ';
-                subsub += name;
-                let sLen = subsub.length;
-                if (sLen > 40) break;
-            }
-            if (subsub.length > 0) f.subsub = subsub;
-            children.push(f);
+    /**
+     * 为productCategory装配子节点/孙节点 
+     * @param id 
+     * @param subCategories 
+     * @param secendSubCategory 
+     */
+    private buildChildren(id: number, subCategories: ProductCategory[], secendSubCategory: ProductCategory[]): ProductCategory[] {
+        let children: ProductCategory[] = [];
+        for (let sub of subCategories) {
+            let { productCategory: subProductCategory, parent: subParent, name: subName, total: subTotal } = sub;
+            if (!Tuid.equ(id, subParent)) continue;
+            children.push({
+                productCategory: (subProductCategory as any).id,
+                parent: (subParent as any).id,
+                name: subName,
+                total: subTotal,
+                children: secendSubCategory
+                    .filter(v => Tuid.equ(v.parent, subProductCategory))
+                    .map(v => {
+                        return {
+                            productCategory: (v.productCategory as any).id,
+                            parent: (v.parent as any).id,
+                            name: v.name,
+                            total: v.total
+                        }
+                    })
+            });
         }
-        //categoryWapper.children = firstCategory.filter((v: any) => v.parent === pcid);
-        let ret = _.clone(categoryWapper);
-        ret.children = children; // firstCategory.filter((v: any) => v.parent === pcid);
-        return ret;
+        return children;
     }
 
-    async openMainPage(categoryWaper: any, parent: any, labelColor: string) {
+    onClickCategory = async (pc: ProductCategory) => {
 
-        let { productCategory, name } = categoryWaper;
-        let { id: productCategoryId } = productCategory;
-        let results = await this.getCategoryChildren(productCategoryId);
+        /*
+        this.current = pc;
+        let { productCategory, name } = pc;
+        let { id: productCategoryId } = ((productCategory as any) as BoxId);
+        let promises = [this.getCategoryChildren(productCategoryId), this.getCategoryInstruction(productCategoryId)];
+        let [results, instruction] = await Promise.all(promises);
         if (results.first.length !== 0) {
-            let rootCategory = this.buildCategories(categoryWaper, results.first, results.secend);
-            let instruction = await this.getCategoryInstruction(productCategoryId);
-            this.openVPage(VCategory, { categoryWapper: rootCategory, parent, labelColor, instruction });
+            this.openVPage(VCategory);
         } else {
             let { cProduct } = this.cApp;
-            await cProduct.searchByCategory({ productCategoryId, name });
+            await cProduct.searchByCategory({ productCategory: productCategoryId, name });
         }
+        */
+        let { productCategory } = pc;
+        let { id: productCategoryId } = ((productCategory as any) as BoxId);
+        await this.showCategoryPage(productCategoryId);
+    }
+
+    /**
+     * 
+     * @param {number} categoryId 目录节点的id 
+     */
+    async showCategoryPage(categoryId: number) {
+        if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
+
+        await this.load(categoryId);
+        let VP: new (c: CProductCategory) => VPage<any>;
+        VP = VCategoryPage;
+        /*
+        // 如果想要web跟app方式的产品分类页面不一样，可以这么处理
+        if (this.isWebNav) {
+            VP = VCategoryPage;
+        }
+        else {
+            VP = VCategory;
+        }
+        */
+        if (this.current) {
+            let { children } = this.current;
+            if (children && children.length > 0) {
+                this.openVPage(VP);
+            }
+            else {
+                await this.cApp.cProduct.searchByCategory({
+                    productCategory: categoryId,
+                    name: this.current.name
+                });
+            }
+        } else {
+            this.openVPage(VP);
+        }
+    }
+
+    /**
+     * 
+     * @param {ProductCategory} pc 目录节点
+     * @param className 所使用的class 
+     * @param content 
+     */
+    renderCategoryItem(pc: ProductCategory, className?: string, content?: any): JSX.Element {
+        if (!pc) debugger;
+        let { productCategory, name } = pc;
+        let pcId = typeof productCategory === 'object' ? (productCategory as any).id : productCategory;
+        return <Ax key={pcId}
+            href={'/product-catalog/' + pcId}
+            className={classNames(className, 'd-block text-truncate')}
+        >{content || name}</Ax>
+    }
+
+    /**
+     * 
+     */
+    async showCategoryHome() {
+        if (!this.rootCategories) await this.loadRoot();  // 供SideBar使用
+        let VP: new (c: CProductCategory) => VPage<any>;
+        VP = VCategoryHome;
+        this.openVPage(VP);
     }
 }

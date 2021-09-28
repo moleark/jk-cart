@@ -1,5 +1,5 @@
 import { VAddress } from './VAddress';
-import { CUqBase } from '../CBase';
+import { CUqBase } from 'tapp';
 
 export class CAddress extends CUqBase {
     protected async internalStart() {

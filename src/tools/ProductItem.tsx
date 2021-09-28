@@ -1,4 +1,4 @@
-import { BoxId } from 'tonva';
+import { BoxId } from 'tonva-react';
 
 export class ProductItem {
     product: BoxId;

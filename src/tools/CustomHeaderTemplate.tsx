@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FA, nav } from 'tonva';
+import { FA, nav } from 'tonva-react';
 import classNames from 'classnames';
 
 export const CustomHeaderTemplate = (content?: any, right?: any, bg?: any, textC?: any, back?: any) => {

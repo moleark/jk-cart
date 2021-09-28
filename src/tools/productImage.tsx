@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image } from 'tonva';
+import { Image } from 'tonva-react';
 
 const imagePath = "https://static.jkchemical.com/Structure/";
 const pointProductImagePath = "https://static.jkchemical.com/images/pointshop";
@@ -14,7 +14,8 @@ interface ProductImageProps {
 export function ProductImage(props: ProductImageProps) {
 
     let { style, className, chemicalId } = props;
-    return <Image src={chemicalId && (imagePath + chemicalId.substr(0, 3) + '/' + chemicalId + '.png')}
+    let t = new Date().getTime();
+    return <Image src={chemicalId && (imagePath + chemicalId.substr(0, 3) + '/' + chemicalId + '.png'+ "?t=" + t)}
         style={style} className={className} altImage={altimagePath} />;
 }
 

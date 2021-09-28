@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { CCoupon, COUPONBASE } from './CCoupon';
-import { View, FA, EasyDate, LMR, tv } from 'tonva';
+import { CCoupon } from './CCoupon';
+import { View, FA, LMR } from 'tonva-react';
 import { VIPCard, IsInActivePeriod, activityTime } from './Coupon';
 import moment from 'moment';
+import { xs } from '../tools/browser';
 
 function getTips(result: number, types: string, code: string) {
     let invalidTip = `${COUPONBASE[types]['name']}【${code}】无效，请与您的专属销售人员联系。`;
@@ -115,9 +116,13 @@ export class VCoupon extends View<CCoupon> {
             let tipUI = null;
             if (types !== 'credits') {
                 if (discount)
-                    tipUI = <small className="text-success">此{COUPONBASE[types]['name']}全场通用</small>
+                    tipUI = <small className="text-success cursor-pointer">此{COUPONBASE[types]['name']}全场通用</small>
                 else
-                    tipUI = <small className="text-success" onClick={(event) => this.showDiscountSetting(this.coupon, event)}>查看适用品牌及折扣</small>
+                    tipUI = <small className="text-success cursor-pointer" onClick={(event) => {
+                        event.stopPropagation();
+                        if (xs) this.showDiscountSetting(this.coupon, event);
+                        else this.controller.showModelCardDiscount(this.coupon)
+                    }}>查看适用品牌及折扣</small>
             }
             let newDate = getEasyDate(validitydate);
 
@@ -136,7 +141,7 @@ export class VCoupon extends View<CCoupon> {
                 {this.renderCardDescription()}
             </div>;
 
-            couponUi = <div className="bg-white py-3 px-2 mb-1">
+            couponUi = <div className="bg-white py-3 px-2 mb-1 reset-z-header-boxS">
                 <LMR left={left} right={this.renderRight()}>
                     {content}
                 </LMR>
@@ -177,7 +182,7 @@ export class VCredits extends VCoupon {
     protected renderActivityDescription = (): JSX.Element => {
         let { startDate, endDate } = activityTime;
         return IsInActivePeriod() ? <div className="text-danger mt-1">
-            <small className="text-muted">{startDate.replace(/\-/g, '.')} 至 {endDate.replace(/\-/g, '.')} 内下单可获四倍积分 </small>
+            <small className="text-muted">{startDate.replace(/-/g, '.')} 至 {endDate.replace(/-/g, '.')} 内下单可获四倍积分 </small>
         </div> : null;
     }
 
@@ -249,4 +254,10 @@ export function getEasyDate(validitydate: any) {
     // let date = new Date(validitydate).toLocaleDateString().split('/');
     let year = new Date().getFullYear().toString();
     return `${date[0] === year ? '' : (date[0] + '年')}${date[1]}月${date[2]}日`;
+}
+
+export const COUPONBASE: any = {
+    'coupon': { 'name': '优惠券', 'view': VCoupon },
+    'credits': { 'name': '积分券', 'view': VCredits },
+    'vipcard': { 'name': 'VIP卡', 'view': VVIPCard }
 }

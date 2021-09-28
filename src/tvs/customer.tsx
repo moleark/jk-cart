@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { tv } from 'tonva';
+import { tv } from 'tonva-react';
 import { tvAddress, tvCountry } from './common';
 
 export const tvContact = (values: any) => {
@@ -14,7 +13,7 @@ export const tvContact = (values: any) => {
 }
 
 export const tvInvoiceType = (values: any) => {
-    let { id, description } = values;
+    let { description } = values;
     return <div className="flex-grow-1">
         {description}
     </div>

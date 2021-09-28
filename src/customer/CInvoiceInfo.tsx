@@ -1,8 +1,7 @@
-//import { Controller } from 'tonva';
-import { CUqBase } from '../CBase';
+import { CUqBase } from 'tapp';
 import { VInvoiceInfo } from './VInvoiceInfo';
 //import { CCartApp } from 'CCartApp';
-//import { Tuid } from 'tonva';
+//import { Tuid } from 'tonva-react';
 
 export class CInvoiceInfo extends CUqBase {
     fromOrderCreation: boolean;
@@ -13,7 +12,27 @@ export class CInvoiceInfo extends CUqBase {
     }
 
     async saveInvoiceInfo(invoice: any) {
-        let { invoiceType, invoiceInfo, isDefault } = invoice;
+        let invoiceBox =  await this.saveInvoiceInfoData(invoice);
+        /* let { invoiceType, invoiceInfo } = invoice;
+        let newInvoiceInfo = await this.uqs.customer.InvoiceInfo.save(undefined, invoiceInfo);
+
+        let { id: newInvoiceInfoId } = newInvoiceInfo;
+        let invoiceBox = {
+            invoiceType: this.uqs.common.InvoiceType.boxId(invoiceType),
+            invoiceInfo: this.uqs.customer.InvoiceInfo.boxId(newInvoiceInfoId),
+        }
+        // if (isDefault === true || !this.fromOrderCreation) {
+        let { currentUser } = this.cApp;
+        await currentUser.setDefaultInvoice(invoiceBox.invoiceType, invoiceBox.invoiceInfo);
+        // } */
+        if (this.fromOrderCreation) {
+            this.backPage();
+            this.returnCall(invoiceBox);
+        }
+    }
+
+    async saveInvoiceInfoData(invoice: any) {
+        let { invoiceType, invoiceInfo } = invoice;
         let newInvoiceInfo = await this.uqs.customer.InvoiceInfo.save(undefined, invoiceInfo);
 
         let { id: newInvoiceInfoId } = newInvoiceInfo;
@@ -25,9 +44,6 @@ export class CInvoiceInfo extends CUqBase {
         let { currentUser } = this.cApp;
         await currentUser.setDefaultInvoice(invoiceBox.invoiceType, invoiceBox.invoiceInfo);
         // }
-        if (this.fromOrderCreation) {
-            this.backPage();
-            this.returnCall(invoiceBox);
-        }
+        return invoiceBox;
     }
 }

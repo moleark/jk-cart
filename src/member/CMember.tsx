@@ -1,37 +1,34 @@
-import * as React from 'react';
-//import Loadable from 'react-loadable';
-import { observable } from 'mobx';
+/* eslint-disable */
+import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FA } from 'tonva';
-import { Controller, Loading, nav } from 'tonva';
-import { Action, Map, BoxId } from 'tonva';
-import { CApp } from '../CApp';
-import { CUqBase } from '../CBase';
+import { FA, Loading, nav, BoxId } from 'tonva-react';
+import { CApp, CUqBase } from 'tapp';
 import { VMember } from './VMember';
-//import { CCartApp } from 'CCartApp';
-//import { jnkTop } from 'me/loginTop';
 
 export class CMember extends CUqBase {
-
-    //cApp: CCartApp;
-    //    cApp: CApp;
-    @observable member: any;
+    member: any;
     private referrer: BoxId;
 
-    protected async internalStart(param: any) {
+    constructor(cApp: CApp) {
+        super(cApp);
 
-        if (this.isLogined) {
-            let { member } = this.uqs;
-            let { id: currentUserId } = this.user;
-            let promises: PromiseLike<any>[] = [];
-            promises.push(member.MemberAction.submit({}));
-            promises.push(member.MemberRecommender.table({ referrer: currentUserId }));
-            promises.push(member.MemberRecommender.table({ member: currentUserId }));
-            let result = await Promise.all(promises);
-            let { code, point } = result[0];
-            this.referrer = result[2];
-            this.member = { recommendationCode: code, point: point, fans: result[1], referrer: result[2] };
-        }
+        makeObservable(this, {
+            member: observable.ref
+        });
+    }
+
+    protected async internalStart(param: any) {
+		if (!this.isLogined) return;
+		let { member } = this.uqs;
+		let { id: currentUserId } = this.user;
+		let promises: PromiseLike<any>[] = [
+			member.MemberAction.submit({}),
+			member.MemberRecommender.table({ referrer: currentUserId }),
+			member.MemberRecommender.table({ member: currentUserId }),
+		];
+		let [{ code, point }, fans, referrer] = await Promise.all(promises);
+		this.referrer = referrer;
+		this.member = { recommendationCode: code, point, fans, referrer };
     }
 
     private loginCallback = async () => {
@@ -39,7 +36,7 @@ export class CMember extends CUqBase {
         await this.internalStart(undefined);
     }
 
-    render = observer(() => {
+    private render = observer(() => {
         if (this.isLogined) {
             return this.member === undefined ? <Loading /> : this.renderView(VMember);
         } else {

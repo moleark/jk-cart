@@ -1,5 +1,6 @@
-import { UQs } from '../uqs';
-import { Tuid, BoxId } from 'tonva';
+/* eslint-disable */
+import { UQs } from 'uq-app';
+import { Tuid, BoxId } from 'tonva-react';
 import { Order } from 'order/Order';
 import moment from 'moment';
 
@@ -74,12 +75,13 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
                     let couponOffsetAmount = 0;
                     for (let i = 0; i < orderItems.length; i++) {
                         let oi = orderItems[i];
-                        let { product, packs } = oi;
-                        let { ProductX } = uqsProduct;
-                        let productTuid: any = await ProductX.load(product)
+						let { product, packs } = oi;
+						let { brand } = product;
+                        //let { ProductX } = uqsProduct;
+                        //let productTuid: any = await ProductX.load(product)
                         // 获取品牌的折扣
                         let { BottomDiscount } = salesTask;
-                        let brandDiscountMap: any = await BottomDiscount.obj({ brand: productTuid.brand, salesRegion: salesRegion.id });
+                        let brandDiscountMap: any = await BottomDiscount.obj({ brand, salesRegion: salesRegion.id });
 
                         for (let j = 0; j < packs.length; j++) {
                             let pk = packs[j];
@@ -181,9 +183,10 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
                 let couponOffsetAmount = 0;
                 for (let i = 0; i < orderItems.length; i++) {
                     let oi = orderItems[i];
-                    let { product, packs } = oi;
+					let { product, packs } = oi;
+					let { brand } = product;
                     // 获取明细中产品的VIP卡折扣
-                    let thisDiscountSetting = this.discountSetting.find((e: any) => Tuid.equ(e.brand, product.obj.brand));
+                    let thisDiscountSetting = this.discountSetting.find((e: any) => Tuid.equ(e.brand, brand));
                     let discount = (thisDiscountSetting && thisDiscountSetting.discount) || 0;
 
                     for (let j = 0; j < packs.length; j++) {
@@ -198,9 +201,7 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
             }
         }
     }
-
 }
-
 
 export class Credits extends CouponBase implements OrderPriceStrategy {
     async applyTo(orderData: Order, uqs: UQs) {

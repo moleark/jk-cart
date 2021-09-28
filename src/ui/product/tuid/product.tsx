@@ -1,5 +1,5 @@
 import * as React from 'react';
-//import { TuidUI, tv } from 'tonva';
+//import { TuidUI, tv } from 'tonva-react';
 import { ProductImage } from '../../../tools/productImage';
 /*
 export const productUI: TuidUI = {

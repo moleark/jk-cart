@@ -1,5 +1,5 @@
 import logo_pointShop from 'images/logo_pointShop.png';
-import logo from 'images/logo.png';
+import logo from 'images/logo_mobi.png';
 import signInIcon from 'images/signInIcon.png';
 import exChangeIcon from 'images/exChangeIcon.png';
 import homeTopicMap from 'images/homeTopicMap.jpg';

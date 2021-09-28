@@ -1,7 +1,7 @@
+/* eslint-disable */
 import * as React from 'react';
-import { VPage, Image } from 'tonva';
+import { VPage, Image, LMR, Muted, FA, Media } from 'tonva-react';
 import { CMember } from './CMember';
-import { LMR, Muted, FA, Media } from 'tonva';
 import pig from '../images/pig.png';
 import { observer } from 'mobx-react';
 
