@@ -1,16 +1,24 @@
 import * as React from 'react';
-import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from 'tonva';
+import { VPage, Page, FA, tv, Form, UiSchema, UiCustom } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
 import { schema, TopicDivision } from './VPointProduct';
 import giftPlate from 'images/giftPlate.png';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import 已下架 from 'images/已下架.png';
 
 export class VPointProductDetail extends VPage<CPointProduct> {
-    @observable DetailSource: number;
+    DetailSource: number;
+    constructor(c: CPointProduct) {
+        super(c);
+
+        makeObservable(this, {
+            DetailSource: observable,
+        });
+    }
+
     async open(param?: any) {
         this.DetailSource = param;
         this.openPage(this.page);

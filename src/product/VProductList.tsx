@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
+import { VPage, Page, Scroller } from "tonva-react";
 import { CProduct } from './CProduct';
-import { List } from 'tonva';
+import { List } from "tonva-react";
 import logo from '../images/logo.png';
 import magnifier from '../images/magnifier.svg'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';

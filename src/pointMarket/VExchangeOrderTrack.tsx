@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { VPage, Page, List } from 'tonva';
+import { VPage, Page, List } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import classNames from 'classnames';
 import moment from 'moment';
 
 export class VExchangeOrderTrack extends VPage<CPointProduct> {
-    @observable orderTrack: any[] = [];
+    orderTrack: any[] = [];
+    
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable(this, {
+            orderTrack: observable
+        });
+    }
 
     async open(param?: any) {
         if (param) {

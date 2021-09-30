@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RowContext, nav, User, BoxId } from 'tonva';
+import { RowContext, nav, User, BoxId } from "tonva-react";
 import { CUqBase } from '../CBase';
 import { VCartLabel } from './VCartLabel';
 import { VCartLabel_Web } from './VCartLabel_Web';

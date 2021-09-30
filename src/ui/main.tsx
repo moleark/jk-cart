@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, TabCaptionComponent, Page, Tabs } from 'tonva';
+import { VPage, TabCaptionComponent, Page, Tabs } from "tonva-react";
 import { CApp } from '../CApp';
 // import { Switch, Route } from 'react-router-dom';
 import { CUqBase } from 'CBase';

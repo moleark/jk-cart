@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
-import { List, View, Page, Scroller } from 'tonva';
+import { List, View, Page, Scroller } from "tonva-react";
 // import { renderProduct } from './VProductView';
 
 export class VProductList_Web extends View<CProduct> {

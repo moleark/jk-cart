@@ -1,12 +1,20 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva';
+import { Page, VPage } from "tonva-react";
 import marked from 'marked';
 import { CMe } from './CMe';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 
 export class Privacy extends VPage<CMe>{
 
-    @observable private privacy: any;
+    private privacy: any;
+    constructor(cMe: CMe) {
+        super(cMe);
+
+        makeObservable<Privacy, "privacy">(this, {
+            privacy: observable
+        });
+    }
+
     async open(param?: any) {
 
         this.privacy = await this.controller.getCommonText(1);

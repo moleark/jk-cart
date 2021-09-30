@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, List, Scroller } from 'tonva';
+import { VPage, Page, BoxId, List, Scroller } from "tonva-react";
 import { CFavorites } from './CFavorites';
 
 export class VFavorites extends VPage<CFavorites> {

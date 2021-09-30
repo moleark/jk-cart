@@ -1,12 +1,19 @@
 import * as React from 'react';
-import { View, FA, BoxId, nav } from 'tonva';
+import { View, FA, BoxId, nav } from "tonva-react";
 import { CProduct } from '../product/CProduct';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 
 export class VProductFavorateLabel extends View<CProduct> {
 
-    @observable private isProductFarirates: boolean = false;
+    isProductFarirates: boolean = false;
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable<VProductFavorateLabel, "isProductFarirates">(this, {
+            isProductFarirates: observable,
+        });
+    }
+    
     private favoriteOrCancel = async (product: number) => {
         let { cApp } = this.controller;
         let { cFavorites, currentUser, cMe } = cApp;

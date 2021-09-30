@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import {
     userApi, ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem, nav, Page,
     Edit, UiSchema,
     VPage, UiRadio, IdSchema, UiIdItem, Context, BoxId, tv
-} from 'tonva';
+} from "tonva-react";
 import { CMe } from './CMe';
 import {
     faxValidation, emailValidation, mobileValidation, telephoneValidation,
@@ -29,14 +29,20 @@ export class EditMeInfo extends VPage<CMe>{
             icon: { widget: 'image', label: '头像' } as UiImageItem,
         }
     }
-    @observable private data: any;
+    private data: any;
 
-    @observable private webUserData: any;
+    private webUserData: any;
 
-    @observable private webUserContactData: any;
+    private webUserContactData: any;
 
     constructor(props: any) {
         super(props);
+        makeObservable<EditMeInfo, "data" | "webUserData" | "webUserContactData">(this, {
+            data: observable,
+            webUserData: observable,
+            webUserContactData: observable
+        });
+
         let { nick, icon } = nav.user;
         this.data = {
             nick: nick,

@@ -1,4 +1,4 @@
-import { PageItems } from 'tonva';
+import { PageItems } from "tonva-react";
 import * as _ from 'lodash';
 import { result } from 'lodash';
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { observable } from 'mobx';
-import { ItemSchema, Page, VPage, FA, Form, Context } from 'tonva';
+import { makeObservable, observable } from 'mobx';
+import { ItemSchema, Page, VPage, FA, Form, Context } from "tonva-react";
 import { CMe } from './CMe';
 import { webUserSchema, webUserUiSchema, webUserContactSchema, webUserContactUiSchema } from './EditMeInfo';
 import { observer } from 'mobx-react';
@@ -19,7 +19,7 @@ interface Options {
 
 export class EditMeInfoFirstOrder extends VPage<CMe>{
     private options: Options;
-    @observable tips: JSX.Element;
+    tips: JSX.Element;
     private form: Form;
 
     async open(param: any) {
@@ -28,11 +28,17 @@ export class EditMeInfoFirstOrder extends VPage<CMe>{
         this.openPage(this.page);
     }
 
-    @observable private webUserData: any;
-    @observable private webUserContactData: any;
+    private webUserData: any;
+    private webUserContactData: any;
 
     constructor(props: any) {
         super(props);
+        
+        makeObservable<EditMeInfoFirstOrder, "webUserData" | "webUserContactData">(this, {
+            tips: observable,
+            webUserData: observable,
+            webUserContactData: observable
+        });
 
         let { cApp } = this.controller;
         let { firstName, gender, salutation, organizationName, departmentName, telephone

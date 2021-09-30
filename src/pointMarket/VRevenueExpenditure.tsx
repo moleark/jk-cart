@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, Scroller } from 'tonva';
+import { VPage, Page, Scroller } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
-import { List } from 'tonva';
+import { List } from "tonva-react";
 import { observer } from 'mobx-react-lite';
 // import moment from 'moment';
 import { renderPointRecord } from './VMyPoint';

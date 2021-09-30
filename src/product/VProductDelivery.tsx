@@ -1,13 +1,22 @@
 import * as React from 'react';
-import { tv, View } from 'tonva';
+import { tv, View } from "tonva-react";
 import { CProduct } from './CProduct';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 
 export class VProductDelivery extends View<CProduct> {
 
-    @observable private inventoryAllocation: any[];
-    @observable private futureDeliveryTimeDescription: string;
+    inventoryAllocation: any[];
+    futureDeliveryTimeDescription: string;
+
+    constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            inventoryAllocation: observable,
+            futureDeliveryTimeDescription: observable,
+        });
+    }
 
     render(param: any): JSX.Element {
         let { obj: packObj, id: packId } = param;

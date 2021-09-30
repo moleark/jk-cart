@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { CCoupon, COUPONBASE } from './CCoupon';
-import { VPage, Page, List, FA } from 'tonva';
+import { VPage, Page, List, FA } from "tonva-react";
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 
 export class VSharedCoupon extends VPage<CCoupon> {
 
-    @observable tipsAfterDawed: string;
+    tipsAfterDawed: string;
     private products: any[] = [];
+    constructor(c: CCoupon) {
+        super(c);
+        makeObservable(this, {
+            tipsAfterDawed: observable
+        });
+    }
+
     async open(param: any) {
         this.products = param.products || [];
         if (this.products.length === 0) {

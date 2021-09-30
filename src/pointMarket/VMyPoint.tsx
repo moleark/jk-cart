@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from "tonva";
+import { VPage, Page, nav, List, FA, DropdownActions, DropdownAction, EasyDate, tv } from "tonva-react";
 import { CPointProduct, PointProductDetailLevel, topicClump } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 import { VPointRule } from './VPointRule';
@@ -101,15 +101,13 @@ export class VMyPoint extends VPage<CPointProduct> {
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>;
         let UINoExchangeTip: JSX.Element;
-        if (!currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
+        if (currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
             您的个人信息不完善，无法兑换礼品.<br />
             请完善您的<span className="text-primary" > 账户信息 </span>.
             <br />完善后需要一点审核时间,请您耐心等待.
         </div>;
-        if (!currentUser) {
-            UINoExchangeTip = <div className="alert alert-warning m-0">
-                请登录后进行礼品兑换.<br />
-            </div>;
+        if (!isLogined) {
+            UINoExchangeTip = <div className="alert alert-warning m-0">请登录后进行礼品兑换.<br /></div>;
         };
         let pointShowUI: any;
         if (!isLogined) pointShowUI = <div className="align-self-center">您尚未登录</div>;

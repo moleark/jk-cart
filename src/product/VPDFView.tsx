@@ -1,16 +1,27 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
-import { VPage, Page } from 'tonva';
-import { observable } from 'mobx';
+import { VPage, Page } from "tonva-react";
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import Pdfh5 from 'pdfh5'
 import "pdfh5/css/pdfh5.css";
 
 export class VPDFView extends VPage<CProduct> {
-    @observable pdfh5: any;
-    @observable fileName: string = '';      /* 文件名称 */
-    @observable fileUrl: any;               /* 文件路径 */
-    @observable isFoundFile: boolean = true;/* 文件是否存在 */
+    pdfh5: any;
+    fileName: string = '';      /* 文件名称 */
+    fileUrl: any;               /* 文件路径 */
+    isFoundFile: boolean = true;/* 文件是否存在 */
+
+    constructor(c: CProduct) {
+        super(c);
+
+        makeObservable(this, {
+            pdfh5: observable,
+            fileName: observable,
+            fileUrl: observable,
+            isFoundFile: observable,
+        });
+    }
 
     async open(param?: any) {
         this.fileName = this.controller.currentFileName;

@@ -1,17 +1,29 @@
+import { CApp } from 'CApp';
 import { CUqBase } from 'CBase';
-import { observable } from 'mobx';
-import { QueryPager } from 'tonva';
+import { makeObservable, observable } from 'mobx';
+import { QueryPager } from "tonva-react";
 import { VPointSign, daysAndMultipleByWelfare } from './VPointSign';
 import { VRevenueExpenditure } from './VRevenueExpenditure';
 
 const pointBase: number = 3; /* 积分基数 */
 
 export class CSignIn extends CUqBase {
-    @observable signinval: number = pointBase;         /* 签到可领积分 */
-    @observable signinConsecutiveDays: number = 0;     /* 连续签到天数 */
-    @observable IsSignin: boolean = false;             /* 是否签到 */
-    @observable signinPageHistory: QueryPager<any>;    /* 签到记录 */
+    signinval: number = pointBase;         /* 签到可领积分 */
+    signinConsecutiveDays: number = 0;     /* 连续签到天数 */
+    IsSignin: boolean = false;             /* 是否签到 */
+    signinPageHistory: QueryPager<any>;    /* 签到记录 */
 
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            signinval: observable,
+            signinConsecutiveDays: observable,
+            IsSignin: observable,
+            signinPageHistory: observable
+        });
+    }
+    
     async internalStart(param?: any) { }
 
     /**

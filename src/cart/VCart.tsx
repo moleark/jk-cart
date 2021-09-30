@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom } from 'tonva';
-import { FA } from 'tonva';
-import { tv } from 'tonva';
+import { VPage, Page, Form, ObjectSchema, NumSchema, ArrSchema, UiSchema, UiArr, FormField, UiCustom } from "tonva-react";
+import { FA } from "tonva-react";
+import { tv } from "tonva-react";
 import { MinusPlusWidget } from '../tools';
 import { CCart } from './CCart';
 import { CartPackRow, CartItem2 } from './Cart';

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { nav, User, Page, Image, VPage } from 'tonva';
-import { Prop, Media, IconText, FA, PropGrid, LMR } from 'tonva';
+import { nav, User, Page, Image, VPage } from "tonva-react";
+import { Prop, Media, IconText, FA, PropGrid, LMR } from "tonva-react";
 import { About } from './about';
 import { ContactUs } from './contactUs';
 import { observer } from 'mobx-react';
 import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 import { AboutThisApp } from './aboutThisApp';
-import { appConfig } from 'configuration';
+import { appConfig } from 'uq-app/appConfig';
 
 export class VMe extends VPage<CMe> {
 
@@ -55,7 +55,7 @@ export class VMe extends VPage<CMe> {
 
     private meInfo = observer(() => {
         let { user } = nav;
-        if (user === undefined) return null;
+        if (user === undefined || user === null) return null;
         let { id, name, nick, icon } = user;
         return <LMR className="px-3 py-2 cursor-pointer w-100 bg-primary text-white"
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
@@ -137,7 +137,7 @@ export class VMe extends VPage<CMe> {
         ];
 
         let rows: Prop[];
-        if (user === undefined) {
+        if (user === undefined || user === null) {
             let { showLogin } = this.controller;
             rows = aboutRows;
             rows.push(

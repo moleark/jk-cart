@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { COrderDraft } from './COrderDraft';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page, FA } from "tonva-react";
 
 export class VNotYOrder extends VPage<COrderDraft> {
 

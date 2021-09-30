@@ -1,5 +1,5 @@
-import { observable, autorun, IReactionDisposer } from 'mobx';
-import { Action, Query, TuidDiv, BoxId, Tuid } from 'tonva';
+import { observable, autorun, IReactionDisposer, makeObservable } from 'mobx';
+import { Action, Query, TuidDiv, BoxId, Tuid } from "tonva-react";
 //import { CCartApp } from '../CCartApp';
 import { PackRow } from 'product/Product';
 import { groupByProduct } from 'tools/groupByProduct';
@@ -37,7 +37,7 @@ export class Cart {
     private disposer: IReactionDisposer;
     private newquantity: number;
 
-    @observable data: any = {
+    data: any = {
         list: observable<CartItem2>([]),
     };
     cartItems: CartItem2[];
@@ -45,6 +45,12 @@ export class Cart {
     amount = observable.box<number>(0);
     editButton = observable.box<boolean>(false);
     constructor(cApp: CApp) {
+        makeObservable(this, {
+            data: observable,
+            count: observable,
+            amount: observable
+        });
+
         this.cApp = cApp;
         this.cartItems = this.data.list;
         this.disposer = autorun(this.calcSum);
@@ -311,9 +317,9 @@ abstract class CartStore {
         this.cApp = cApp;
     }
     abstract get isLocal(): boolean;
-    abstract async load(): Promise<CartItem2[]>;
-    abstract async storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
-    abstract async removeFromCart(rows: [{ productId: number, packId: number }]): Promise<void>;
+    abstract load(): Promise<CartItem2[]>;
+    abstract storeCart(product: BoxId, pack: BoxId, quantity: number, price: number, currency: any): Promise<void>;
+    abstract removeFromCart(rows: [{ productId: number, packId: number }]): Promise<void>;
 }
 
 class CartRemote extends CartStore {

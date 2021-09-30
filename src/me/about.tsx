@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Page } from 'tonva';
+import { Page } from "tonva-react";
 import marked from 'marked';
 import logo from '../images/logo.png';
 

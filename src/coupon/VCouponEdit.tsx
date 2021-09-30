@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, FA, Page, List, LMR, tv, EasyDate } from 'tonva';
+import { VPage, FA, Page, List, LMR, tv, EasyDate } from "tonva-react";
 import { CCoupon } from './CCoupon';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { VVIPCard } from './VVIPCard';
 
@@ -12,7 +12,14 @@ export class VCouponEdit extends VPage<CCoupon> {
     private couponList: any[];
     private vipCardForWebUser: any;
 
-    @observable tips: string;
+    tips: string;
+    constructor(c: CCoupon) {
+        super(c);
+        makeObservable(this, {
+            tips: observable
+        });
+    }
+
     async open(param: any) {
         this.vipCardForWebUser = param.vipCard;
         this.openPage(this.page);

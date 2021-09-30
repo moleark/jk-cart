@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { CAppBase, IConstructor, User, nav, Elements, Query } from 'tonva';
+import { CAppBase, IConstructor, User, nav, Elements, Query } from "tonva-react";
 //import { UQs } from "./uqs";
 import { Cart } from "./cart/Cart";
 import { WebUser } from "./CurrentUser";

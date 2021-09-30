@@ -1,8 +1,8 @@
 import React from "react";
-import { VPage, Page, FA, List, tv, LMR } from "tonva";
+import { VPage, Page, FA, List, tv, LMR } from "tonva-react";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from "mobx-react-lite";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { GLOABLE } from "cartenv";
 import { VReceivePointSuccess } from "./VReceivePointSuccess";
 
@@ -10,7 +10,13 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
 
     private couponInput: HTMLInputElement;
     private currentCredits: string;
-    @observable tips: string;
+    tips: string;
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable(this, {
+            tips: observable
+        });
+    }
 
     async open(param?: any) {
         this.currentCredits = param;
@@ -73,6 +79,7 @@ export class VPlatformOrderPoint extends VPage<CPointProduct> {
                     break;
                 case 100:
                     tip = '您已经使用过该积分码了，不可重复使用。'
+                    break;
                 default:
                     break;
             }

@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { COrderMaker } from './COrderMaker';
 export class VOrderMaker extends View<COrderMaker> {
 
-    @observable private ordermaker: any;
+    ordermaker: any;
+    constructor(c: COrderMaker) {
+        super(c);
+
+        makeObservable(this, {
+            ordermaker: observable
+        });
+    }
 
     render(param: any): JSX.Element {
         return <this.content id={param} />;

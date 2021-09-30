@@ -3,7 +3,7 @@ import LabSupplies from './images/LabSupplies.png';
 import LifeScience from './images/LifeScience.png';
 import MaterialScience from './images/MaterialScience.png';
 import OrganicChemistry from './images/OrganicChemistry.png';
-import { env } from 'tonva';
+import { env } from "tonva-react";
 
 
 // 生产配置

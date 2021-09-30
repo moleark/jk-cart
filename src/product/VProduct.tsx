@@ -3,8 +3,8 @@ import { CProduct } from './CProduct';
 import {
     VPage, Page, Form, ItemSchema, NumSchema, UiSchema, Field,
     ObjectSchema, RowContext, UiCustom, FormField, BoxId, FA, List
-} from 'tonva';
-import { tv } from 'tonva';
+} from "tonva-react";
+import { tv } from "tonva-react";
 import { MinusPlusWidget } from '../tools/minusPlusWidget';
 import { ProductPackRow } from './Product';
 import { ViewMainSubs, MainProductChemical } from 'mainSubs';

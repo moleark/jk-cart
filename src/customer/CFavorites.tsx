@@ -1,6 +1,6 @@
 import { VFavorites } from './VFavorites';
 import { CUqBase } from '../CBase';
-import { QueryPager, BoxId } from 'tonva';
+import { QueryPager, BoxId } from "tonva-react";
 import moment from 'moment';
 import { VProductFavorateLabel } from './VProductFavorateLabel';
 

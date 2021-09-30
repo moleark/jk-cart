@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva';
+import { Page, VPage } from "tonva-react";
 import marked from 'marked';
 import { CMe } from './CMe';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 const legalC: any = `<div class="container">
     <p class="mt-lg-1" style="line-height:1.8em; "> 北京百灵威科技有限公司（以下简称“本公司”）提供本网站服务。用户在登录本网站后，请仔细阅读本协议，如您不 同意有关条款或本网站对其进行的修改，请停止使用本网站提供的服务。您一旦使用本网站提供的内容，包括但不限于浏览网站信息、下载网站内容、使用网站提供 的第三方网站链接等，即视为您已了解并完全同意本协议中的所有条款。</p>
 	<h6><b>一、网站使用</b></h6>
@@ -43,7 +43,16 @@ const legalC: any = `<div class="container">
 </div>`;
 export class VLegal extends VPage<CMe>{
 
-    @observable private legal: any;
+	private legal: any;
+
+	constructor(cMe: CMe) {
+        super(cMe);
+
+        makeObservable<VLegal, "legal">(this, {
+            legal: observable
+        });
+	}
+
     async open(param?: any) {
 
         this.legal = legalC;

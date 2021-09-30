@@ -1,14 +1,21 @@
-import { observable } from 'mobx';
-import { Context, BoxId } from 'tonva';
+import { makeObservable, observable } from 'mobx';
+import { Context, BoxId } from "tonva-react";
 import { CUqBase } from '../CBase';
 import { VContactList } from './VContactList';
 import { VContact } from './VContact';
 import { CAddress } from './CAddress';
+import { CApp } from 'CApp';
 
 export abstract class CSelectContact extends CUqBase {
     fromOrderCreation: boolean;
+    userContacts: BoxId[] = [];
 
-    @observable userContacts: BoxId[] = [];
+    constructor(cApp: CApp) {
+        super(cApp);
+        makeObservable(this, {
+            userContacts: observable
+        });
+    }
 
     async internalStart(fromOrderCreation: boolean/*contactType: ContactType*/) {
         this.fromOrderCreation = fromOrderCreation;
@@ -20,7 +27,7 @@ export abstract class CSelectContact extends CUqBase {
         }
     }
 
-    protected abstract async getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
+    protected abstract getIsDefault(userSetting: any, userContactId: number): Promise<boolean>;
 
     /**
      * 打开地址新建界面
@@ -79,7 +86,7 @@ export abstract class CSelectContact extends CUqBase {
         }
     }
 
-    protected abstract async setDefaultContact(contactId: BoxId): Promise<any>;
+    protected abstract setDefaultContact(contactId: BoxId): Promise<any>;
 
     onContactSelected = (contact: BoxId) => {
         if (this.fromOrderCreation) {

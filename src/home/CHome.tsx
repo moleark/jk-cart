@@ -1,5 +1,5 @@
-import { QueryPager, Tuid } from 'tonva';
-import { PageItems } from 'tonva';
+import { QueryPager, Tuid } from "tonva-react";
+import { PageItems } from "tonva-react";
 import { CUqBase } from '../CBase';
 import { VSearchHeader } from './VSearchHeader';
 import { VHome } from './VHome';

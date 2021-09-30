@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, nav, LMR, Image, FA } from 'tonva';
+import { View, nav, LMR, Image, FA } from "tonva-react";
 import { EditMeInfo } from './EditMeInfo';
 import { CMe } from './CMe';
 

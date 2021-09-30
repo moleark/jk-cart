@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { BoxId, RowContext, nav, User, QueryPager } from 'tonva';
+import { BoxId, RowContext, nav, User, QueryPager } from "tonva-react";
 import { CUqBase } from 'CBase';
-import { observable } from 'mobx';
+import { observable, makeObservable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
 import { VExchangeOrder } from './VExchangeOrder';
 import { VMyPoint } from './VMyPoint';
@@ -20,6 +20,7 @@ import moment from 'moment';
 import { VPointDoubt } from './VPointDoubt';
 import { VExchangeOrderTrack } from './VExchangeOrderTrack';
 import { FetchPost } from 'tools/wFeatch';
+import { CApp } from 'CApp';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -46,30 +47,57 @@ export const PointProductDetailLevel = {
 
 export class CPointProduct extends CUqBase {
 
-    @observable myPoints: any[] = [];                  /* 我的积分 */
-    @observable myEffectivePoints: number = 0;         /* 我的积分(计算后) */
-    @observable myTotalPoints: number = 0;             /* 我的积分(计算后) */
-    @observable myPointTobeExpired: number = 0;        /* 我的快过期积分 */
+    myPoints: any[] = [];                  /* 我的积分 */
+    myEffectivePoints: number = 0;         /* 我的积分(计算后) */
+    myTotalPoints: number = 0;             /* 我的积分(计算后) */
+    myPointTobeExpired: number = 0;        /* 我的快过期积分 */
 
-    @observable navCloseByOrderSuccess: number = 0;    /* 兑换成功后关闭页面层数 */
-    @observable themeName: any = '积分商城';
-    @observable pointProducts: any[] = [];             /* 可兑产品列表 */
-    @observable newPointProducts: any[] = [];          /* 新品推荐 */
-    @observable hotPointProducts: any[] = [];          /* 热门产品 */
-    @observable pointProductsSelected: any[] = [];     /* 已选择产品列表 */
-    @observable pointProductsDetail: any;              /* 详情产品 */
-    @observable pointToExchanging: number = 0;              /* 将要兑换的积分总计 */
-    @observable orderData: pointOrder = new pointOrder();   /* 正在提交的产品列表*/
-    @observable couponId: number;                      /* 积分码 */
-    @observable platformOrderId: any;                  /* 平台合同号 */
-    @observable platformOrder: any[] = [];             /* 平台合同 */
-    @observable pagePointHistory: QueryPager<any>;     /* 积分详情 */
-    @observable pointProductGenre: any[] = [];         /* 产品类型列表 */
+    navCloseByOrderSuccess: number = 0;    /* 兑换成功后关闭页面层数 */
+    themeName: any = '积分商城';
+    pointProducts: any[] = [];             /* 可兑产品列表 */
+    newPointProducts: any[] = [];          /* 新品推荐 */
+    hotPointProducts: any[] = [];          /* 热门产品 */
+    pointProductsSelected: any[] = [];     /* 已选择产品列表 */
+    pointProductsDetail: any;              /* 详情产品 */
+    pointToExchanging: number = 0;              /* 将要兑换的积分总计 */
+    orderData: pointOrder = new pointOrder();   /* 正在提交的产品列表*/
+    couponId: number;                      /* 积分码 */
+    platformOrderId: any;                  /* 平台合同号 */
+    platformOrder: any[] = [];             /* 平台合同 */
+    pagePointHistory: QueryPager<any>;     /* 积分详情 */
+    pointProductGenre: any[] = [];         /* 产品类型列表 */
 
-    @observable outWardOrderByJD: any;                 /* 订单中存在京东商品的订单 */
-    @observable noJDStock: boolean=false;            
+    outWardOrderByJD: any;                 /* 订单中存在京东商品的订单 */
+    noJDStock: boolean=false;            
 
     pointInterval: any = { startPoint: 0, endPoint: 10000 };
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            myPoints: observable,
+            myEffectivePoints: observable,
+            myTotalPoints: observable,
+            myPointTobeExpired: observable,
+            pointProducts: observable,
+            newPointProducts: observable,
+            hotPointProducts: observable,
+            pointProductsSelected: observable,
+            pointProductsDetail: observable,
+            pointToExchanging: observable,
+            orderData: observable,
+            couponId: observable,
+            platformOrderId: observable,
+            platformOrder: observable,
+            pagePointHistory: observable,
+            pointProductGenre: observable,
+            navCloseByOrderSuccess: observable,
+            themeName: observable,
+            outWardOrderByJD: observable,
+            noJDStock: observable,
+        });
+    }
 
     protected async internalStart(param?: any) { }
 

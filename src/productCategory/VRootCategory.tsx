@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { CProductCategory } from './CProductCategory';
-import { FA } from 'tonva';
+import { FA } from "tonva-react";
 import { GLOABLE } from 'cartenv';
 //import { observer } from 'mobx-react';
 

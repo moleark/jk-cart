@@ -1,6 +1,6 @@
-import { observable } from 'mobx';
-import { BoxId, Tuid } from 'tonva';
-import { nav } from 'tonva';
+import { observable, makeObservable } from 'mobx';
+import { BoxId, Tuid } from "tonva-react";
+import { nav } from "tonva-react";
 import { CUqBase } from '../CBase';
 import { VCreateOrder } from './VCreateOrder';
 import { Order, OrderItem } from './Order';
@@ -12,21 +12,31 @@ import { CInvoiceInfo } from '../customer/CInvoiceInfo';
 import { groupByProduct } from '../tools/groupByProduct';
 import { CartItem2, CartPackRow } from '../cart/Cart';
 import { createOrderPriceStrategy, OrderPriceStrategy } from 'coupon/Coupon';
+import { CApp } from 'CApp';
 
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 
 export class COrder extends CUqBase {
-    @observable orderData: Order = new Order();
+    orderData: Order = new Order();
     /**
      * 存储已经被应用的卡券，以便在使用后（下单后）将其删除
      */
-    @observable couponAppliedData: any = {};
+    couponAppliedData: any = {};
     hasAnyCoupon: boolean;
     /**
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
      */
-    @observable buyerAccounts: any[] = [];
+    buyerAccounts: any[] = [];
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            orderData: observable,
+            couponAppliedData: observable,
+            buyerAccounts: observable
+        });
+    }
 
     protected async internalStart(param: any) {
     }

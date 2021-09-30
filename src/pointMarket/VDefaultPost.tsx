@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'tonva';
+import { View } from "tonva-react";
 import { CPointProduct } from './CPointProduct';
 import infb from 'images/infb.jpg'
 

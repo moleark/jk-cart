@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, StringSchema } from 'tonva';
+import { VPage, Page, Form, List, tv, ObjectSchema, NumSchema, UiSchema, UiCustom, FA, Tabs, TabProp, TabCaptionComponent, StringSchema } from "tonva-react";
 import { CPointProduct, PointProductDetailLevel } from 'pointMarket/CPointProduct';
 import { observer } from 'mobx-react-lite';
 import { PointProductImage } from 'tools/productImage';
 import { MinusPlusWidget } from 'tools';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 import { randomColor } from 'tools/randomColor';
@@ -33,9 +33,9 @@ export const schema = [
 ];
 
 export class VPointProduct extends VPage<CPointProduct> {
-    @observable protected isShowSelectForm: boolean = false;
-    @observable protected productIsNull: boolean = false;
-    @observable protected pointIsEnough: boolean = false;
+    protected isShowSelectForm: boolean = false;
+    protected productIsNull: boolean = false;
+    protected pointIsEnough: boolean = false;
     private currentInterval: string;
     private tabs: TabProp[];
     protected none: JSX.Element = <div className="my-4 text-secondary d-flex justify-content-center">『 暂无可兑换产品 』</div>;
@@ -45,6 +45,17 @@ export class VPointProduct extends VPage<CPointProduct> {
         { caption: '5-15万', state: 'twoLevel', icon: 'superpowers', borderC: '#7c1e5e' },
         { caption: '15万以上', state: 'above', icon: 'superpowers', borderC: '#0e2c8c' },
     ];
+
+    constructor(c: CPointProduct) {
+        super(c);
+
+        makeObservable<VPointProduct, "isShowSelectForm" | "productIsNull" | "pointIsEnough">(this, {
+            isShowSelectForm: observable,
+            productIsNull: observable,
+            pointIsEnough: observable,
+        });
+    }
+
     async open(param?: any) {
         this.openPage(this.page);
     }

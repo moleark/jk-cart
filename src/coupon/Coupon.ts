@@ -1,5 +1,5 @@
 import { UQs } from '../uqs';
-import { Tuid, BoxId } from 'tonva';
+import { Tuid, BoxId } from "tonva-react";
 import { Order } from 'order/Order';
 import moment from 'moment';
 

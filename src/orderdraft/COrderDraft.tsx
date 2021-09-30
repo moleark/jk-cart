@@ -1,16 +1,29 @@
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { CUqBase } from '../CBase';
 import { VNotYOrder } from './VNotYOrder';
 import { groupByProduct } from 'tools/groupByProduct';
 import { Order, OrderItem } from 'order/Order';
 import { LoaderProductChemicalWithPrices } from 'product/itemLoader';
+import { CApp } from 'CApp';
 const FREIGHTFEEFIXED = 12;
 const FREIGHTFEEREMITTEDSTARTPOINT = 100;
 export class COrderDraft extends CUqBase {
-    @observable orderData: Order = new Order();
-    @observable buyerAccounts: any[] = [];
-    @observable hasAnyCoupon: boolean;
-    @observable orderDraft: any;
+    orderData: Order = new Order();
+    buyerAccounts: any[] = [];
+    hasAnyCoupon: boolean;
+    orderDraft: any;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            orderData: observable,
+            hasAnyCoupon: observable,
+            orderDraft: observable,
+            buyerAccounts: observable
+        });
+    }
+
     protected async internalStart() { }
 
     showSharedOrder = async (param: any) => {

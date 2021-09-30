@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPage, Page, tv, List, LMR, FA } from 'tonva';
+import { VPage, Page, tv, List, LMR, FA } from "tonva-react";
 import { COrder } from './COrder';
 import { OrderItem } from './Order';
 import { CartPackRow } from '../cart/Cart';
@@ -10,12 +10,25 @@ import { GLOABLE } from 'cartenv';
 
 export class VCreateOrder extends VPage<COrder> {
 
-    @observable private useShippingAddress: boolean = true;
-    @observable private shippingAddressIsBlank: boolean = false;
-    @observable private invoiceAddressIsBlank: boolean = false;
-    @observable private invoiceIsBlank: boolean = false;
-    @observable fromOrderParam: string;
-    @observable orderDraftBrief: any;
+   private useShippingAddress: boolean = true;
+   private shippingAddressIsBlank: boolean = false;
+   private invoiceAddressIsBlank: boolean = false;
+   private invoiceIsBlank: boolean = false;
+   fromOrderParam: string;
+   orderDraftBrief: any;
+
+    constructor(c: COrder) {
+        super(c);
+
+        makeObservable<VCreateOrder, "useShippingAddress" | "shippingAddressIsBlank" | "invoiceAddressIsBlank" | "invoiceIsBlank">(this, {
+            useShippingAddress: observable,
+            shippingAddressIsBlank: observable,
+            invoiceAddressIsBlank: observable,
+            invoiceIsBlank: observable,
+            fromOrderParam: observable,
+            orderDraftBrief: observable
+        });
+    }
 
     async open(param: any) {
         this.fromOrderParam = param.fromOrderParam;

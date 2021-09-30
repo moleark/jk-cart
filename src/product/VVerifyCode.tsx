@@ -1,14 +1,22 @@
 import * as React from 'react';
 import { CProduct } from './CProduct';
-import { VPage, Page } from 'tonva';
-import { observable } from 'mobx';
+import { VPage, Page } from "tonva-react";
+import { makeObservable, observable } from 'mobx';
 
 import { observer } from 'mobx-react-lite';
 import { GLOABLE } from 'cartenv';
 
 export class VVerifyCode extends VPage<CProduct> {
-    @observable verifyCodeInput: HTMLInputElement;
-    @observable verifyInfo: string;
+    verifyCodeInput: HTMLInputElement;
+    verifyInfo: string;
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable(this, {
+            verifyCodeInput: observable,
+            verifyInfo: observable,
+        });
+    }
+
     async open(param?: any) {
         this.openPage(this.page);
     }

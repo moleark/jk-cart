@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { CUqBase } from '../CBase';
 import { VSharedCoupon } from './VSharedCoupon';
-import { BoxId, nav, User, QueryPager, Tuid } from 'tonva';
-import { observable } from 'mobx';
+import { BoxId, nav, User, QueryPager, Tuid } from "tonva-react";
+import { makeObservable, observable } from 'mobx';
 import { VCoupleAvailable } from './VCouponAvailable';
 import { VVIPCardDiscount } from './VVIPCardDiscount';
 import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 import { VCouponManage } from './VCouponManage';
+import { CApp } from 'CApp';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -16,9 +17,18 @@ export const COUPONBASE: any = {
 
 export class CCoupon extends CUqBase {
     isOpenMyCouponManage: boolean = false;
-    @observable couponDrawed: boolean;
-    @observable sharedCouponValidationResult: any;
+    couponDrawed: boolean;
+    sharedCouponValidationResult: any;
     couponPager: QueryPager<any>;
+    
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            couponDrawed: observable,
+            sharedCouponValidationResult: observable,
+        });
+    }
 
     applyCoupon = async (coupon: string) => {
         let validationResult = await this.getCouponValidationResult(coupon);

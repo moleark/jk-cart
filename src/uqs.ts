@@ -1,4 +1,4 @@
-import { Tuid, Map, Query, Action, Sheet, Book } from "tonva";
+import { Tuid, Map, Query, Action, Sheet, Book } from "tonva-react";
 
 export interface UqOrder {
     //a: Tuid;

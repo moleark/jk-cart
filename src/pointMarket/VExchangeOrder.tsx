@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, nav, Page, LMR, FA, tv, List, autoHideTips } from 'tonva';
+import { VPage, nav, Page, LMR, FA, tv, List, autoHideTips } from "tonva-react";
 import { CPointProduct, OrderSource } from './CPointProduct';
 import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { PointProductImage } from 'tools/productImage';
 import { GLOABLE } from 'cartenv';
 import { randomColor } from 'tools/randomColor';
@@ -10,10 +10,19 @@ import { pointIcon } from 'tools/images';
 import noStock from 'images/noStock.png';
 
 export class VExchangeOrder extends VPage<CPointProduct> {
-    @observable protected shippingAddressIsBlank: boolean = false;
-    @observable disBtn: boolean = false;
+    protected shippingAddressIsBlank: boolean = false;
+    disBtn: boolean = false;
     protected pageDesc: string = OrderSource.EXCHANGEORDER;
-    private noStockTip = observable.box();
+    noStockTip = observable.box<string | boolean | JSX.Element>();
+
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable<VExchangeOrder,"shippingAddressIsBlank">(this, {
+            shippingAddressIsBlank: observable,
+            disBtn: observable,
+        });
+    }
+
     async open(param?: any) {
         this.openPage(this.page);
     }
@@ -111,7 +120,7 @@ export class VExchangeOrder extends VPage<CPointProduct> {
         let { pointProductsSelected, pointToExchanging: pointsSum, noJDStock } = this.controller;
         let header = <div className="w-100 text-center">兑换确认</div>;
         let footer = <div className="d-block">
-            {autoHideTips(this.noStockTip)}
+            {/* {autoHideTips(this.noStockTip)} */}
             <div className="w-100 px-3 d-flex justify-content-between">
                 <div>总计:<span className="text-danger ml-2 mr-1 h2" >{pointsSum}</span>分</div>
                 <button disabled={this.disBtn} type="button" className="btn btn-danger m-1" onClick={this.onSubmit}>确认兑换</button>
@@ -133,8 +142,14 @@ export class VExchangeOrder extends VPage<CPointProduct> {
  * 领取奖品页面
  */
 export class VMyPrizeExchangeOrder extends VExchangeOrder {
-    @observable shippingAddressIsBlank: boolean = false;
+    shippingAddressIsBlank: boolean = false;
     protected pageDesc: string = OrderSource.PRIZEORDER;
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable(this, {
+            shippingAddressIsBlank: observable
+        });
+    }
 
     renderPointProduct = (pointProduct: any) => {
         return <div>11111</div>

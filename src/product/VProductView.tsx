@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema, ArrSchema, UiArr } from 'tonva';
+import { View, tv, FormField, ObjectSchema, NumSchema, UiSchema, UiCustom, RowContext, BoxId, Form, ItemSchema, ArrSchema, UiArr } from "tonva-react";
 import { CProduct } from './CProduct';
 import { ProductImage } from 'tools/productImage';
 import { observer } from 'mobx-react';
 import { MinusPlusWidget } from 'tools';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import classNames from 'classnames';
 import { VProductFavorateLabel } from 'customer/VProductFavorateLabel';
 
@@ -48,8 +48,15 @@ export class VCartProuductView extends View<CProduct> {
  */
 export class VProuductView extends View<CProduct> {
 
-    @observable product: any;
-    @observable discount: number;
+    product: any;
+    discount: number;
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable(this, {
+            product: observable,
+            discount: observable,
+        });
+    }
 
     render(product: BoxId): JSX.Element {
         return <this.renderProduct productBox={product} />;
@@ -101,6 +108,12 @@ export class VProuductView extends View<CProduct> {
  * 需要的参数product必须是BoxId(或者object?)
  */
 export class VProductPrice extends View<CProduct> {
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable(this, {
+            prices: observable,
+        });
+    }
 
     private schema: ItemSchema[] = [
         { name: 'pack', type: 'object' } as ObjectSchema,
@@ -140,7 +153,7 @@ export class VProductPrice extends View<CProduct> {
         }
     }
 
-    @observable private prices: any;
+    prices: any;
     private initPrices = async (product: BoxId, salesRegionId: number, discount: number) => {
         if (this.prices === undefined)
             this.prices = await this.controller.getProductPrice(product, salesRegionId, discount);
@@ -219,8 +232,15 @@ export class VProductPrice extends View<CProduct> {
 }
 
 export class VProductWithPrice extends View<CProduct> {
-    @observable product: any;
-    @observable discount: number;
+    product: any;
+    discount: number;
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable(this, {
+            product: observable,
+            discount: observable,
+        });
+    }
 
     render(product: BoxId): JSX.Element {
         return <this.renderProduct productBox={product} />;
@@ -328,8 +348,15 @@ export function unsoldProductsUI(discountinued: number) {
 
 export class VProuductView2 extends View<CProduct> {
 
-    @observable product: any;
-    @observable discount: number;
+    product: any;
+    discount: number;
+    constructor(c: CProduct) {
+        super(c);
+        makeObservable(this, {
+            product: observable,
+            discount: observable,
+        });
+    }
 
     render(product: any): JSX.Element {
         return <this.renderProduct product={product} />;

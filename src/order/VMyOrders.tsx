@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page, Tabs, TabCaptionComponent, TabsProps, TabProp } from 'tonva';
+import { VPage, Page, Tabs, TabCaptionComponent, TabsProps, TabProp } from "tonva-react";
 import { COrder } from './COrder';
-import { List, EasyDate } from 'tonva';
-import { observable } from 'mobx';
+import { List, EasyDate } from "tonva-react";
+import { makeObservable, observable } from 'mobx';
 
 export const color = (selected: boolean) => selected === true ? 'text-primary' : 'text-muted';
 
@@ -14,10 +14,16 @@ export class VMyOrders extends VPage<COrder> {
     @observable private completedOrders: any[];
 	@observable private allOrders: any[];
 	*/
-	@observable private list: any[];
+	private list: any[];
 	private currentState: string;
 	private tabs: TabProp[];
+	constructor(c: COrder) {
+        super(c);
 
+        makeObservable<VMyOrders, "list">(this, {
+            list: observable,
+        });
+	}
 	/*
     async open(param: any) {
         this.currentState = param;

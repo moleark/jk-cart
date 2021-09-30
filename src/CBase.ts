@@ -1,21 +1,15 @@
-import { CSub, CBase, CAppBase, IConstructor } from 'tonva';
+//=== UqApp builder created on Mon Sep 27 2021 10:48:05 GMT+0800 (中国标准时间) ===//
+import { CSub, CBase, CAppBase, IConstructor } from 'tonva-react';
 import { UQs } from './uqs';
 import { CApp } from './CApp';
 
-export abstract class CUqBase extends CBase {
-    get cApp(): CApp { return this._cApp; }
-    protected get uqs(): UQs { return this._uqs as UQs };
+export abstract class CUqBase extends CBase<CApp, UQs> {
 }
 
-export abstract class CUqSub<T extends CUqBase> extends CSub<T> {
-    get cApp(): CApp { return this.cApp; }
-    protected get uqs(): UQs { return this._uqs as UQs };
-    protected get owner(): T { return this._owner as T }
+export abstract class CUqSub<A extends CAppBase<U>, U, T extends CBase<A, U>> extends CSub<A, U, T> {
 }
 
-export abstract class CUqApp extends CAppBase {
-    get uqs(): UQs { return this._uqs };
-
+export abstract class CUqApp extends CAppBase<UQs> {
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         let c = new type(this);
         c.init();

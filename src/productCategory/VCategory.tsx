@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page, FA } from 'tonva';
+import { VPage, Page, FA } from "tonva-react";
 import { CProductCategory } from './CProductCategory';
 import marked from 'marked';
-//import { tv } from 'tonva';
+//import { tv } from "tonva-react";
 import { renderThirdCategory } from './VRootCategory';
 import { observer } from 'mobx-react';
 import $ from 'jquery';

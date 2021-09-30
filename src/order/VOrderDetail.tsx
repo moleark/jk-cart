@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyDate } from 'tonva';
+import { VPage, Page, BoxId, EasyDate } from "tonva-react";
 import { COrder } from './COrder';
-import { tv } from 'tonva';
-import { List } from 'tonva';
+import { tv } from "tonva-react";
+import { List } from "tonva-react";
 import { OrderItem } from './Order';
 import { CartItem2 } from 'cart/Cart';
 

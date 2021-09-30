@@ -1,5 +1,5 @@
-import { observable } from 'mobx';
-import { BoxId, nav, QueryPager, User } from 'tonva';
+import { observable, makeObservable } from 'mobx';
+import { BoxId, nav, QueryPager, User } from "tonva-react";
 import { CUqBase } from '../CBase';
 import { VProduct } from './VProduct';
 import { VProductList } from './VProductList';
@@ -14,6 +14,7 @@ import { CFavorites } from '../customer/CFavorites';
 import { VPDFView } from './VPDFView';
 import { VVerifyCode } from './VVerifyCode';
 import { GLOABLE } from 'cartenv';
+import { CApp } from 'CApp';
 
 /*
 class PageProducts extends PageItems<any> {
@@ -43,14 +44,30 @@ class PageProducts extends PageItems<any> {
 export class CProduct extends CUqBase {
     //pageProducts: PageProducts;
     productsPager: QueryPager<any>;
-    @observable productSpecFiles: any[] = [];
-    @observable productMSDSFiles: any[] = [];
-    @observable futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
-    @observable chemicalInfoContainer: { [productId: number]: any } = {};
-    @observable verifyCode: any;
-    @observable currentFileName: any;
-    @observable currentLanguage: any;
-    @observable currentProduct: any;
+    productSpecFiles: any[] = [];
+    productMSDSFiles: any[] = [];
+    futureDeliveryTimeDescriptionContainer: { [cacheId: string]: string } = {};
+    chemicalInfoContainer: { [productId: number]: any } = {};
+    verifyCode: any;
+    currentFileName: any;
+    currentLanguage: any;
+    currentProduct: any;
+
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            productSpecFiles: observable,
+            productMSDSFiles: observable,
+            futureDeliveryTimeDescriptionContainer: observable,
+            chemicalInfoContainer: observable,
+            verifyCode: observable,
+            currentFileName: observable,
+            currentLanguage: observable,
+            currentProduct: observable,
+        });
+    }
+
     protected async internalStart(param?: any) {
         this.searchByKey(param);
         this.openVPage(VProductList, param);

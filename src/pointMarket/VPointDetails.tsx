@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, EasyDate, tv, Scroller } from 'tonva';
+import { VPage, Page, List, EasyDate, tv, Scroller } from "tonva-react";
 import { CPointProduct } from "./CPointProduct";
 import { observer } from 'mobx-react-lite';
 

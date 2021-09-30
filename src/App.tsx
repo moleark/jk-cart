@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './App.css';
-import { NavView, nav, start } from 'tonva';
+import { NavView, nav, start } from "tonva-react";
 import { CApp } from 'CApp';
-import { appConfig } from 'configuration';
+import { appConfig } from 'uq-app/appConfig';
 
 //const tonvaApp = "bruce/TestApp";
 nav.setSettings(appConfig);

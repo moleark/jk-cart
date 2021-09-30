@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Page, VPage, nav } from 'tonva';
+import { Page, VPage, nav } from "tonva-react";
 import logo from '../images/logo.png';
-import { appConfig } from 'configuration';
+import { appConfig } from 'uq-app/appConfig';
 import { CMe } from './CMe';
 
 export class AboutThisApp extends VPage<CMe>{

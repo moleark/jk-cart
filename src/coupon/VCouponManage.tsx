@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager } from 'tonva';
+import { VPage, Page, LMR, FA, List, TabProp, TabCaptionComponent, Tabs, Scroller, QueryPager } from "tonva-react";
 import { observer } from 'mobx-react';
 import { VCoupon, VCredits, VVIPCard, VCouponUsed } from './VVIPCard';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { color } from 'order/VMyOrders';
 import { CCoupon } from './CCoupon';
@@ -10,7 +10,7 @@ import { CCoupon } from './CCoupon';
 export class VCouponManage extends VPage<CCoupon> {
 
     private couponInput: HTMLInputElement;
-    @observable private coupons: QueryPager<any>;
+    private coupons: QueryPager<any>;
     private currentStatus: string;
     private tabs: TabProp[];
     oss: any = [
@@ -19,7 +19,16 @@ export class VCouponManage extends VPage<CCoupon> {
         { caption: '已过期', state: 'expiredForWebUser', icon: 'ravelry', toolTip: '亲，您还没已过期的优惠券！' },
     ];
 
-    @observable tips: string;
+    tips: string;
+
+    constructor(c: CCoupon) {
+        super(c);
+        makeObservable<VCouponManage, "coupons">(this, {
+            coupons: observable,
+            tips: observable
+        });
+    }
+
     async open(param: any) {
         this.openPage(this.page);
     }

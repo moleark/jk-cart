@@ -1,14 +1,22 @@
 import React from 'react';
-import { VPage, Page, FA, Form, ItemSchema, UiSchema, Context, StringSchema, UiTextAreaItem, ButtonSchema, UiButton } from 'tonva';
+import { VPage, Page, FA, Form, ItemSchema, UiSchema, Context, StringSchema, UiTextAreaItem, ButtonSchema, UiButton } from "tonva-react";
 import { CPointProduct } from "./CPointProduct";
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { GLOABLE } from 'cartenv';
 import { observer } from 'mobx-react';
 
 export class VPointDoubt extends VPage<CPointProduct> {
 
     private form: Form;
-    @observable private tip: string;
+    private tip: string;
+
+    constructor(c: CPointProduct) {
+        super(c);
+        makeObservable<VPointDoubt, "tips">(this, {
+            tips: observable
+        });
+    }
+
     async open(params: any) {
         this.openPage(this.page, params);
     }

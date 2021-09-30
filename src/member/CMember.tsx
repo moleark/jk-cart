@@ -1,10 +1,10 @@
 import * as React from 'react';
 //import Loadable from 'react-loadable';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FA } from 'tonva';
-import { Controller, Loading, nav } from 'tonva';
-import { Action, Map, BoxId } from 'tonva';
+import { FA } from "tonva-react";
+import { Controller, Loading, nav } from "tonva-react";
+import { Action, Map, BoxId } from "tonva-react";
 import { CApp } from '../CApp';
 import { CUqBase } from '../CBase';
 import { VMember } from './VMember';
@@ -15,8 +15,15 @@ export class CMember extends CUqBase {
 
     //cApp: CCartApp;
     //    cApp: CApp;
-    @observable member: any;
+    member: any;
     private referrer: BoxId;
+    constructor(cApp: CApp) {
+        super(cApp);
+
+        makeObservable(this, {
+            member: observable
+        });
+    }
 
     protected async internalStart(param: any) {
 
