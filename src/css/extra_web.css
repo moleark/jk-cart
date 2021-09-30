@@ -1,0 +1,11 @@
+#moleculeCanvases  a:hover{
+    color: chocolate !important;
+}
+
+#moleculeCanvases  canvas:hover{
+    border:1px solid chocolate !important;
+}
+
+.btn-secondary{
+    background-color: #6c757d !important;
+}

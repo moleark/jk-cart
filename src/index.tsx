@@ -46,6 +46,7 @@ serviceWorker.unregister();
     }
     else {
         require('style-loader!./css/style.css');
+        require('style-loader!./css/extra_web.css');
         loadQQScript();
         onLogined = async () => {
             await startPage(CWeb, appConfig);

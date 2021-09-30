@@ -10,6 +10,7 @@ import { GLOABLE } from 'global';
 import { ElasticSearchPager, UrlGen, productUrlGen, productCatalogUrlGen, productStandardUrlGen } from '../tools/elasticSearchPager';
 import { xs } from 'tools/browser';
 import { VError } from '../tools/VError';
+import { VStructure } from './VStructure';
 
 export class CProduct extends CUqBase {
     productsPager: QueryPager<Product>;
@@ -45,6 +46,10 @@ export class CProduct extends CUqBase {
         this.searchKey = key;
         this.currentPage = 1;
         this.searchByKey(Number(type));
+    }
+
+    openStructuredSearch = async () => {
+        this.openVPage(VStructure);
     }
 
     private productConverter = (item: any, queryResults?: { [name: string]: any[] }): Product => {
