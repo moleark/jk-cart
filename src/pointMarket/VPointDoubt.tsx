@@ -8,12 +8,12 @@ import { observer } from 'mobx-react';
 export class VPointDoubt extends VPage<CPointProduct> {
 
     private form: Form;
-    private tip: string;
+    tip: string;
 
     constructor(c: CPointProduct) {
         super(c);
-        makeObservable<VPointDoubt, "tips">(this, {
-            tips: observable
+        makeObservable(this, {
+            tip: observable
         });
     }
 
