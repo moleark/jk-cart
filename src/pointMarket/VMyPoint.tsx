@@ -101,7 +101,7 @@ export class VMyPoint extends VPage<CPointProduct> {
 
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">『 无任何类型 』</div>;
         let UINoExchangeTip: JSX.Element;
-        if (currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
+        if (!currentUser?.hasCustomer) UINoExchangeTip = <div className="alert alert-warning m-0">
             您的个人信息不完善，无法兑换礼品.<br />
             请完善您的<span className="text-primary" > 账户信息 </span>.
             <br />完善后需要一点审核时间,请您耐心等待.
@@ -174,10 +174,13 @@ export class VMyPoint extends VPage<CPointProduct> {
 }
 
 export function renderPointRecord(item: any) {
-    let { comments, point, date } = item;
+    let { comments, point, date, source, pointType } = item;
+    let sources: { [s: number]: string } = { 1: "积分券下单", 2: "签到", 3: "兑换", 5: "下单", 8: "抽奖", 9: "退货" };
+    let PointTypes: { [type: number]: string } = { 1: "总积分", 2: "有效积分", 3: "用掉的积分" };
+    let desc = `( ${sources[source]}--${PointTypes[pointType] || ""} )`;
     return <div className="d-flex w-100 justify-content-between align-content-center small px-3 py-2">
         <div>
-            <div className="text-muted">{comments}</div>
+            <div className="text-muted">{comments}{desc}</div>
             <div className="text-muted small"><EasyDate date={date} /></div>
         </div>
         <div className="d-table h-100">

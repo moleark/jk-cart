@@ -11,6 +11,7 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
     private showList: any = [];
     private tipNone: string = '『 无 』';
     async open(param?: any) {
+        this.matchData(param);
         this.openPage(this.page, { header: param });
     }
 
@@ -52,7 +53,7 @@ export class VRevenueExpenditure extends VPage<CPointProduct> {
 
     private page = observer((param: any) => {
         let { header } = param;
-        this.matchData(header);
+        // this.matchData(header);
         let none = <div className="mt-4 text-secondary d-flex justify-content-center">{this.tipNone}</div>;
 
         return <Page header={header} onScrollBottom={this.onScrollBottom}>

@@ -98,8 +98,8 @@ export class MinusPlusWidget extends UpdownWidget {
             readOnly={this.readOnly}
             disabled={this.disabled}
             onKeyDown={this.onKeyDown}
-            onFocus={(evt: React.FocusEvent<any>) => this.onFocus(evt)}
-            onBlur={(evt: React.FocusEvent<any>) => this.onBlur(evt)}
+            onFocus={(evt: any) => this.onFocus(evt)}
+            onBlur={(evt: any) => this.onBlur(evt)}
             maxLength={10} />;
 
         let plus = <i className={classNames('fa fa-plus-circle fa-lg',
