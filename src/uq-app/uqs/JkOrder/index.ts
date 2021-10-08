@@ -1,4 +1,4 @@
-import { UqExt as Uq } from './JkOrder';
+import { UqExt as Uq, assign } from './JkOrder';
 import * as Coupon from './Coupon.ui';
 import * as Chemical from './Chemical.ui';
 import * as SalesRegion from './SalesRegion.ui';
@@ -32,17 +32,12 @@ import * as ReturnMainEx from './ReturnMainEx.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
 import * as DxReturnDetail from './DxReturnDetail.ui';
 import * as DxOrderMainState from './DxOrderMainState.ui';
+import * as IxCustomerReturnable from './IxCustomerReturnable.ui';
 import * as IxOrderDetailFee from './IxOrderDetailFee.ui';
 import * as IxOrderMainFee from './IxOrderMainFee.ui';
 import * as IxOrderDetailCoupon from './IxOrderDetailCoupon.ui';
+import * as IxOrderAmountDiff from './IxOrderAmountDiff.ui';
 import * as IxOrderMainCustomerCoupon from './IxOrderMainCustomerCoupon.ui';
-
-function assign(uq:Uq, to:string, from:any): void {
-	try {
-		Object.assign((uq as any)[to], from);
-	}
-	catch {}
-}
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Coupon', Coupon);
@@ -78,9 +73,11 @@ export function setUI(uq: Uq) {
 	assign(uq, 'DxOrderDetail', DxOrderDetail);
 	assign(uq, 'DxReturnDetail', DxReturnDetail);
 	assign(uq, 'DxOrderMainState', DxOrderMainState);
+	assign(uq, 'IxCustomerReturnable', IxCustomerReturnable);
 	assign(uq, 'IxOrderDetailFee', IxOrderDetailFee);
 	assign(uq, 'IxOrderMainFee', IxOrderMainFee);
 	assign(uq, 'IxOrderDetailCoupon', IxOrderDetailCoupon);
+	assign(uq, 'IxOrderAmountDiff', IxOrderAmountDiff);
 	assign(uq, 'IxOrderMainCustomerCoupon', IxOrderMainCustomerCoupon);
 }
 export * from './JkOrder';

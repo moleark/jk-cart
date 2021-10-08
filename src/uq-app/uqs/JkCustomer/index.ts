@@ -1,4 +1,4 @@
-import { UqExt as Uq } from './JkCustomer';
+import { UqExt as Uq, assign } from './JkCustomer';
 import * as Currency from './Currency.ui';
 import * as Contact from './Contact.ui';
 import * as Customer from './Customer.ui';
@@ -22,13 +22,6 @@ import * as Brand from './Brand.ui';
 import * as CustomerSettingType from './CustomerSettingType.ui';
 import * as VIPCardType from './VIPCardType.ui';
 import * as CustomerSalesman from './CustomerSalesman.ui';
-
-function assign(uq:Uq, to:string, from:any): void {
-	try {
-		Object.assign((uq as any)[to], from);
-	}
-	catch {}
-}
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Currency', Currency);

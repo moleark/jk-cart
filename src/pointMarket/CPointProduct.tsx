@@ -17,7 +17,7 @@ import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 import { VShopSideBar } from './view/VShopSideBar';
 import { VError } from 'tools/VError';
-import { DxExchagneMainState } from '../uq-app/uqs/Jk积分商城/Jk积分商城';
+import { DxExchangeMainState } from '../uq-app/uqs/Jk积分商城/Jk积分商城';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -247,7 +247,7 @@ export class CPointProduct extends CUqBase {
         ];
         let presult = await Promise.all(promises);
         let exchangeHistory = presult[0].concat(presult[1]); */
-        let { Jk积分商城, 积分商城 } = this.uqs;
+        let { JkPointshop, 积分商城 } = this.uqs;
         /* 
         let as:any[] = await Jk积分商城.QueryID({
             IDX: [Jk积分商城.ExchangeMain]
@@ -273,19 +273,19 @@ export class CPointProduct extends CUqBase {
             this.openVPage(VError);
             return;
         }; */
-        let { Jk积分商城, 积分商城, customer: customerUQ, deliver } = this.uqs;
+        let { JkPointshop, 积分商城, customer: customerUQ, deliver } = this.uqs;
         let order = { brief: {}, data: {} };
-        let getOrder:any[] = await Jk积分商城.IDDetailGet({
+        let getOrder:any[] = await JkPointshop.IDDetailGet({
             id: orderId,
-            main: Jk积分商城.ExchangeMain,
-            detail: Jk积分商城.ExchangeDetail,
+            main: JkPointshop.ExchangeMain,
+            detail: JkPointshop.ExchangeDetail,
         });
         let [mainArr, orderDetail] = getOrder;
         if (!mainArr.length || !orderDetail.length) {
             this.openVPage(VError);return;
         };
-        let getDxExchagneMainState: any[] = await Jk积分商城.ID<DxExchagneMainState>({
-            IDX: Jk积分商城.DxExchagneMainState,
+        let getDxExchagneMainState: any[] = await JkPointshop.ID<DxExchangeMainState>({
+            IDX: JkPointshop.DxExchangeMainState,
             id: orderId,
         });
         let { id, no, createDate, shippingContact, amount, customer } = mainArr[0];
