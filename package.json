@@ -40,7 +40,7 @@
     "react-scripts": "^4.0.1",
     "react-slick": "^0.28.1",
     "slick-carousel": "^1.8.1",
-    "tonva-react": "^2.0.55",
+    "tonva-react": "^2.0.70",
     "typescript": "^4.4.3"
   },
   "scripts": {

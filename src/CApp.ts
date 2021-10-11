@@ -58,10 +58,10 @@ export class CApp extends CUqApp {
     }
     */
 
-    private setUser() {
+    private async setUser() {
         this.currentUser = new WebUser(this.uqs); //this.cUqWebUser, this.cUqCustomer);
         if (this.isLogined) {
-            this.currentUser.setUser(this.user);
+            await this.currentUser.setUser(this.user);
         }
     }
 
@@ -73,7 +73,7 @@ export class CApp extends CUqApp {
             SalesRegion.load(GLOABLE.SALESREGION_CN),
             Language.load(GLOABLE.CHINESE),
         ]);
-        this.setUser();
+        await this.setUser();
         //this.currentSalesRegion = await this.uqs.common.SalesRegion.load(GLOABLE.SALESREGION_CN);
         //this.currentLanguage = await this.uqs.common.Language.load(GLOABLE.CHINESE);
         this.currentSalesRegion = currentSalesRegion;
