@@ -11,6 +11,7 @@ import { CFavorites } from '../customer/CFavorites';
 import { VLoginState } from './VLoginState';
 import { VLoginState_Web } from './VLoginState_Web';
 import { VLegal } from './legal';
+import { EditMeInfo } from './EditMeInfo';
 
 export class CMe extends CUqBase {
     //    cApp: CApp;
@@ -96,6 +97,10 @@ export class CMe extends CUqBase {
     openPrivacy = () => {
         // this.openVPage(Privacy);
         nav.showPrivacyPage();
+    }
+
+    openEditMeInfo = () => {
+        this.openVPage(EditMeInfo);
     }
 
     openLegal = async () => {

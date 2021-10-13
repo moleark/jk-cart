@@ -53,6 +53,10 @@ export class VMe extends VPage<CMe> {
         this.controller.openFavorites();
     }
 
+    private openEditMeInfo = async () => {
+        this.controller.openEditMeInfo();
+    }
+
     private meInfo = observer(() => {
         let { user } = nav;
         if (user === undefined || user === null) return null;
@@ -61,7 +65,7 @@ export class VMe extends VPage<CMe> {
             left={<Image className="w-3c h-3c mr-3" src={icon} />}
             right={<FA className="align-self-end" name="angle-right" />}
             onClick={() => {
-                this.openVPage(EditMeInfo);
+                this.openEditMeInfo()
             }}>
             <div>
                 <div>{userSpan(name, nick)}</div>
