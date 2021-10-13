@@ -105,7 +105,7 @@ export class VMyPoint extends VPage<CPointProduct> {
         </div>;
         if (!currentUser) {
             UINoExchangeTip = <div className="alert alert-warning m-0">
-                请登录后进行礼品兑换.<br />
+                请<Ax href={"/login"} className="text-primary" ><b>登录</b></Ax>后进行礼品兑换.<br />
             </div>;
         };
         let header = CrPageHeaderTitle('积分商城');
