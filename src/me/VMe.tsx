@@ -57,6 +57,10 @@ export class VMe extends VPage<CMe> {
         this.controller.openEditMeInfo();
     }
 
+    private userQuit = async () => {
+        await nav.userQuit();
+    }
+
     private meInfo = observer(() => {
         let { user } = nav;
         if (user === undefined || user === null) return null;
@@ -212,8 +216,16 @@ export class VMe extends VPage<CMe> {
                     component: <IconText iconClass="text-info mr-2" icon="key" text="修改密码" />,
                     onClick: this.changePassword
                 },
-            ]
-            rows.push(...aboutRows, ...logOutRows);
+            ];
+            let aboutRows2: Prop[] = [
+                '',
+                {
+                    type: "component",
+                    component: <IconText iconClass="text-danger me-2" icon="ban" text="注销账户" />,
+                    onClick:this.userQuit
+                },
+            ];
+            rows.push(...aboutRows,...aboutRows2, ...logOutRows);
         }
         return <PropGrid rows={rows} values={{}} />;
     })

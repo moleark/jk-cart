@@ -28,13 +28,16 @@ export class COrder extends CUqBase {
      * 当前webuser对应的buyeraccount，用来设置订单中的buyeraccount
      */
     buyerAccounts: any[] = [];
+    exOrderContacts: any;
+
     constructor(cApp: CApp) {
         super(cApp);
 
         makeObservable(this, {
             orderData: observable,
             couponAppliedData: observable,
-            buyerAccounts: observable
+            buyerAccounts: observable,
+            exOrderContacts: observable
         });
     }
 
@@ -247,12 +250,23 @@ export class COrder extends CUqBase {
         let cSelect = this.newC(CSelectShippingContact);
         let contactBox = await cSelect.call<BoxId>(true);
         this.orderData.shippingContact = contactBox;
+        await this.exOrderContact();
     }
 
     onSelectInvoiceContact = async () => {
         let cSelect = this.newC(CSelectInvoiceContact);
         let contactBox = await cSelect.call<BoxId>(true);
         this.orderData.invoiceContact = contactBox;
+        await this.exOrderContact();
+    }
+
+    exOrderContact = async () => {
+        let shippingAssure: any = await this.orderData.shippingContact?.assure();
+        let invoiceAssure:any = await this.orderData.invoiceContact?.assure();
+        this.exOrderContacts = {
+            "_shippingContact": (shippingAssure && shippingAssure?.obj?.mobile && shippingAssure?.obj?.email) ? true : false,
+            "_invoiceContact": (invoiceAssure && invoiceAssure?.obj?.mobile && invoiceAssure?.obj?.email) ? true : false,
+        };
     }
 
     /**
