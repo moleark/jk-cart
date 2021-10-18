@@ -1,4 +1,4 @@
-import { BoxId, RowContext, QueryPager, nav } from 'tonva-react';
+import { BoxId, RowContext, QueryPager, nav, Tuid } from 'tonva-react';
 import { CApp, CUqBase } from 'tapp';
 import { observable, makeObservable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
@@ -459,10 +459,24 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
+        if (Tuid.equ(this.pointProductsDetail.product,data.product))
+            this.pointProductsDetail.quantity = value;
+        let findSelected = this.pointProductsSelected.find((el: any) => el && el.product.id === data.product.id);
+        if (findSelected) {
+            IsContain = IsContain + 1;
+            findSelected.quantity = data.quantity;
+        };
+        if (IsContain === 0) {
+            data.point = data.product.obj.point;
+            this.pointProductsSelected.push(data);
+        };
+        this.pointToExchanging = this.pointProductsSelected.reduce((pv, cv) => (pv + cv.quantity * cv.point), 0);
+        this.pointProductsSelected = this.pointProductsSelected.filter((el: any) => el.quantity !== 0);
+
         /* let availablePoints = this.myEffectivePoints - this.pointToExchanging;
         if (availablePoints <= 0) return;    */
         // 当前产品详情的数量
-        this.pointProductsDetail.quantity = value;
+        /* this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
         this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
         this.pointProductsSelected.forEach(element => {
@@ -474,7 +488,7 @@ export class CPointProduct extends CUqBase {
         if (IsContain === 0) {
             data.point = data.product.obj.point;
             this.pointProductsSelected.push(data);
-        }
+        } */
     }
 
     private createOrderFromCart = async () => {
