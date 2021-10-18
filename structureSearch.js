@@ -401,11 +401,15 @@ function callStructureSearch() {
 	structure = getStructure();
 	searchOptions = getSearchOptions();
 	var structureSearchJSON = { "structure": structure, "options": { "searchOptions": searchOptions } };
+
 	$.ajax({
 		type: "POST",
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+			"Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
 		},
 		url: "https://fm.jkchemical.com/fm/structureSearch",
 		data: JSON.stringify(structureSearchJSON)
