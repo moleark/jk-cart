@@ -407,7 +407,7 @@ function callStructureSearch() {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		url: "http://fm.jkchemical.com/fm/structureSearch",
+		url: "https://fm.jkchemical.com/fm/structureSearch",
 		data: JSON.stringify(structureSearchJSON)
 	}).done(function (fmResults) {
 		//parse JSON
