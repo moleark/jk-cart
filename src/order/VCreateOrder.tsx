@@ -34,12 +34,13 @@ export class VCreateOrder extends VPage<COrder> {
 
     async open(param: any) {
         document.documentElement.scrollIntoView();
-        let { orderData } = this.controller;
+        let { orderData, uqs, exOrderContact } = this.controller;        
         if (orderData?.invoiceContact?.id !== orderData?.shippingContact?.id) {
             this.useShippingAddress = false;
         } else {
             this.useShippingAddress = true;
         };
+        await exOrderContact();
         this.openPage(this.page);
     }
 
@@ -158,7 +159,7 @@ export class VCreateOrder extends VPage<COrder> {
     })
 
     private onSubmit = async () => {
-        let { orderData, activePushOrder } = this.controller;
+        let { orderData, activePushOrder, exOrderContacts, exOrderContact } = this.controller;
         // 必填项验证
         let { shippingContact, invoiceContact, invoiceType, invoiceInfo } = orderData;
         // let renderTip = (tip:string) => <div className="text-danger small my-2"><FA name="exclamation-circle" /> {tip}</div>;
@@ -189,6 +190,17 @@ export class VCreateOrder extends VPage<COrder> {
         };
         if (this.useShippingAddress) {
             this.controller.orderData.invoiceContact = shippingContact; this.invoiceAddressTip.set(null);
+        };
+        if (!exOrderContacts) await exOrderContact();
+        let { _shippingContact, _invoiceContact } = this.controller.exOrderContacts;
+        let exOrderContactTip: string = "地址缺少手机号或Email,请补全";
+        if (!_shippingContact) {
+            this.shippingAddressTip.set("收货" + exOrderContactTip);
+            combinTip += `收货${exOrderContactTip};`;
+        };
+        if (!_invoiceContact && !this.useShippingAddress) {
+            this.invoiceAddressTip.set("发票" + exOrderContactTip);
+            combinTip += `发票${exOrderContactTip};`;
         };
         if (!invoiceType || !invoiceInfo) {
             //this.invoiceIsBlank = true;
@@ -228,7 +240,8 @@ export class VCreateOrder extends VPage<COrder> {
 
     private page = observer(() => {
 
-        let { cApp, orderData, onSelectShippingContact, onSelectInvoiceContact, onInvoiceInfoEdit, onCouponEdit, getValidCardForWebUser } = this.controller;
+        let { cApp, orderData, exOrderContacts, onSelectShippingContact, onSelectInvoiceContact,
+            onInvoiceInfoEdit, onCouponEdit, getValidCardForWebUser } = this.controller;
 		let { currentUser } = cApp;
         let { allowOrdering } = currentUser;
         let disableOrderBtn = () => { this.submitOrderEd = true; setTimeout(() => this.submitOrderEd = false, 5000); };
@@ -243,7 +256,7 @@ export class VCreateOrder extends VPage<COrder> {
                 </button>
             </div>
         </div>;
-
+        let exOrderContactsUI: JSX.Element = <div className="text-danger font-weight-bold small">地址缺少手机号或Email,请补全</div>;
         let chevronRight = xs ? <FA name="chevron-right" className="cursor-pointer" /> : <></>;
 		/*
         let shippingAddressBlankTip = this.shippingAddressIsBlank ?
@@ -252,7 +265,7 @@ export class VCreateOrder extends VPage<COrder> {
         let invoiceAddressBlankTip = this.invoiceAddressIsBlank ?
             <div className="text-danger small my-2"><FA name="exclamation-circle" /> 必须填写发票地址</div> : null;
 		*/
-        let divInvoiceContact: any = null;
+        let divInvoiceContact: any = null, invoiceExUI: JSX.Element;
         if (this.useShippingAddress === false) {
             if (orderData.invoiceContact !== undefined) {
                 divInvoiceContact = <div className="col-8 col-sm-10 offset-4 offset-sm-2 d-flex"
@@ -260,6 +273,8 @@ export class VCreateOrder extends VPage<COrder> {
                     {tv(orderData.invoiceContact, undefined, undefined, this.nullContact)}
                     <div>{chevronRight}</div>
                 </div>
+                invoiceExUI = !exOrderContacts["_invoiceContact"] ?
+                    <div className="col-8 col-sm-10 offset-4 offset-sm-2">{exOrderContactsUI}</div> : null;
             } else {
                 divInvoiceContact = <div className="col-8 offset-4 offset-sm-2">
                     <button className="btn btn-outline-primary"
@@ -292,6 +307,7 @@ export class VCreateOrder extends VPage<COrder> {
 					}} /> 同收货地址
 			</label>)}
             {divInvoiceContact}
+            {invoiceExUI}
         </div>
 		/*
 		            <div className="col-4 col-sm-2 pb-2 text-muted">发票地址:</div>
@@ -343,8 +359,8 @@ export class VCreateOrder extends VPage<COrder> {
                         })}
                 </LMR>)}
         </div>;
-        let header:any;
-        if(xs) header = "订单预览";
+        let header: any;
+        if (xs) header = "订单预览";
         return <Page header={header} footer={footer}>
              {!xs ? <div className="col-lg-12 px-3"><h1 className="mt-4 mb-3">订单信息</h1></div> :null }
             <div className="px-2">
@@ -353,6 +369,7 @@ export class VCreateOrder extends VPage<COrder> {
 						<>
                         <LMR className="w-100 align-items-center" right={chevronRight}>
                             {tv(orderData.shippingContact, undefined, undefined, this.nullContact)}
+                            {orderData.shippingContact && !exOrderContacts["_shippingContact"] && exOrderContactsUI}
                         </LMR>
                         {/*shippingAddressBlankTip*/}
 						{autoHideTips(this.shippingAddressTip,this.renderTip(this.shippingAddressTip.get()))}
