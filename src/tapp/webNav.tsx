@@ -141,6 +141,7 @@ export class NavHeaderView extends View<CApp> {
                             <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
                             <li><a href="/quickOrder" target="_blank">批量订购</a></li>
+                            <li><a href="/search/structure" target="_blank">结构式搜索</a></li>
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
