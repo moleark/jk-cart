@@ -99,6 +99,10 @@ interface Global {
 	LOGISTIC: {
 		ORDERTRANS: string;
 	},
+	DRAWMOLECULEGWT: {
+		HTML: string;
+		JSSRC: string;
+	}
 };
 
 // 生产配置
@@ -120,6 +124,10 @@ const GLOABLE_PRODUCTION: Global = {
 	LOGISTIC: {
 		ORDERTRANS: "https://joint.jkchemical.com/logistics/getTravelInformation"
 	},
+	DRAWMOLECULEGWT: {
+		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
+		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
+	}
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -141,6 +149,10 @@ const GLOABLE_TEST: Global = {
 	LOGISTIC: {
 		ORDERTRANS: "https://test.jkchemical.com/joint/logistics/getTravelInformation"
 	},
+	DRAWMOLECULEGWT: {
+		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
+		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
+	}
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

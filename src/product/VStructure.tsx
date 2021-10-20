@@ -6,6 +6,7 @@ import { Product } from '../store';
 import Pagination from 'antd/lib/pagination/Pagination';
 import { observer } from 'mobx-react';
 import { pageHTitle } from 'tools/pageHeaderTitle';
+import { GLOABLE } from '../global';
 
 export class VStructure extends VPage<CProduct> {
 
@@ -25,15 +26,15 @@ export class VStructure extends VPage<CProduct> {
         return <div className="mb-5">
             {pageHTitle(<div className="text-left">结构式搜索</div>)}
             {/* 本地测试 在项目public中添加drawmoleculeGWT */}
-            <div style={{}} className="alert alert-warning"> <b>使用提示</b> <br />
-                1.画板元素位置显示“Xx”字样时,可在画板右侧选择元素,需双击元素;
+            <div style={{}} className="alert alert-warning small"> <b>使用提示</b> <br />
+                1.右侧选择元素时，请双击元素。
             </div>
             {/* <iframe className="mx-auto" id="drawmolecule" src="/drawmoleculeGWT/Drawmolecule.html" width="1014" height="405" scrolling="no">
                 <script src='/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js'></script>
             </iframe> */}
             {/* 发布使用 */}
-            <iframe id="drawmolecule" src="https://test.jkchemical.com/drawmoleculeGWT" width="1014" height="405" scrolling="no">
-                <script src='https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js'></script>
+            <iframe id="drawmolecule" src={GLOABLE.DRAWMOLECULEGWT.HTML} width="1014" height="405" scrolling="no">
+                <script src={GLOABLE.DRAWMOLECULEGWT.JSSRC}></script>
             </iframe>
             <div><button onClick={() => { this.callStructureSearchs() }}
                 style={{border:"none"}} type="button" className="rounded btn-secondary px-3 py-1" >结构式查询</button></div>
