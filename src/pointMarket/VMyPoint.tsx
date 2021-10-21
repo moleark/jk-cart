@@ -38,11 +38,11 @@ export class VMyPoint extends VPage<CPointProduct> {
         if (!imgArr || !imgArr.length) return null;
         let { id, name } = type;
         let pointProductImage = (pointProduct: any, index: any) => {            
-            let { product } = pointProduct;
+            let { product, imageUrl } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
             return <div className={`d-flex align-items-center ${clm}`}>
                 <Ax style={{width: '91.6%'}} className="h-100" href={"/pointshop/product/" + product?.id} >{tv(product, (v) => {
-                    return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0 z-height-more w-100"
+                    return <PointProductImage chemicalId={imageUrl ||  v.imageUrl} className="bg-transparent p-0 z-height-more w-100"
                         style={{/*  width: '91.6%', */ border: `2px solid ${randomColor()}` }} />
                 })}</Ax>
             </div>

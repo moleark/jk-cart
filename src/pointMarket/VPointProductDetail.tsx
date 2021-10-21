@@ -61,7 +61,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
     protected renderPointProduct = (pointProduct: any) => {
         let { cApp } = this.controller;
         let { currentUser } = cApp;
-        let { product, OffShelf } = pointProduct;
+        let { product, OffShelf, imageUrl } = pointProduct;
         let OffShelfTip: any = undefined;
         if (OffShelf) OffShelfTip = <div className="position-absolute w-25" style={{ top: 0, left: 15 }}>
             <img src={已下架} alt="" className="w-100" />
@@ -70,7 +70,7 @@ export class VPointProductDetail extends VPage<CPointProduct> {
             {tv(product, (v) => {
                 return <div className="w-100 row mx-0">
                     <div title={v.description} className="col-12 col-sm-6 position-relative">
-                        <PointProductImage chemicalId={v.imageUrl} className="w-100 h-min-12c" style={{}} />
+                        <PointProductImage chemicalId={imageUrl || v.imageUrl} className="w-100 h-min-12c" style={{}} />
                         {OffShelfTip}
                     </div>
                     <div className="small col-12 col-sm-6 pt-sm-4">
