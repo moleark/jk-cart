@@ -112,11 +112,12 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product } = pointProduct;
+        let { product, imageUrl } = pointProduct;
         return <>
             {tv(product, (v) => {
                 return <div className="w-100 d-flex flex-column mb-4">{/* height: 20vh  */}
-                    <div title={v.description} className="w-100" style={{ height: '35vw' }} ><PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{border:`2px solid ${randomColor()}`}} /></div>
+                    <div title={v.description} className="w-100" style={{ height: '35vw' }} >
+                        <PointProductImage chemicalId={imageUrl || v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} /></div>
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>
                         <>

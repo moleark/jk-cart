@@ -99,7 +99,7 @@ export class CApp extends CUqApp {
         this.cOrderDraft = this.newC(COrderDraft);
 
         await this.cHome.getSlideShow();
-        await this.cPointProduct.initPointAllData();
+        // await this.cPointProduct.initPointAllData();
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cProductCategory.start());
         await Promise.all(promises);

@@ -31,6 +31,8 @@ export class VMain extends VPage<CApp> {
                 label: '积分商城',
                 icon: 'gift',
                 page: cPointProduct.tabPage,
+                load: cPointProduct.initPointAllData,
+                show : cPointProduct.initPointAllData,
             },
             {
                 name: 'me',
@@ -40,13 +42,15 @@ export class VMain extends VPage<CApp> {
                 page: cMe.tabPage
             }
         ].map(v => {
-            let { name, label, icon, page, notify } = v;
+            let { name, label, icon, page, notify, load, show } = v;
             return {
                 name: name,
                 caption: (selected: boolean) => TabCaptionComponent(label, icon, color(selected)),
                 page: page,
                 notify: notify,
-                isSelected: tabName === name ? true : false
+                isSelected: tabName === name ? true : false,
+                load: load,
+                show: show,
             }
         });
 

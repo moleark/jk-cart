@@ -42,10 +42,10 @@ export class VMyPoint extends VPage<CPointProduct> {
 
     private recommendOrHot = (name: string, more: any, toWhere: any, theme?: string, imgArr?: any, action?: any) => {
         let pointProductImage = (pointProduct: any, index: any) => {
-            let { product } = pointProduct;
+            let { product, imageUrl } = pointProduct;
             let clm = index !== 0 ? (index === 1 ? 'justify-content-center' : 'justify-content-end') : '';
             return <div className={`d-flex align-items-center ${clm}`}>{tv(product, (v) => {
-                return <PointProductImage chemicalId={v.imageUrl} className="bg-transparent p-0" style={{ width: '91.6%', height: '23vw', border: `2px solid ${randomColor()}` }} />
+                return <PointProductImage chemicalId={imageUrl || v.imageUrl} className="bg-transparent p-0" style={{ width: '91.6%', height: '23vw', border: `2px solid ${randomColor()}` }} />
             })
             }</div>
         }
