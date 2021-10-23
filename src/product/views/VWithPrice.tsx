@@ -7,10 +7,11 @@ import { renderBrand, renderPropItem } from '../renders';
 import { Product } from '../../store';
 import { VChemicalInfoInCart } from './VChemicalInfo';
 import { VPrice } from './VPrice';
+import { productPropIsValid } from 'product';
 
 
 export class VProductWithPrice extends View<CProduct> {
-	/*
+    /*
     @observable product: any;
     @observable discount: number;
 
@@ -21,34 +22,34 @@ export class VProductWithPrice extends View<CProduct> {
             this.discount = ret.discount;
         }
     }
-	*/
+    */
     render(product: Product): JSX.Element {
         return React.createElement(observer(() => {
-			let { brand, props } = product;
-			let { description, descriptionC, origin, imageUrl } = props;
-			return <div className="d-block mb-2 px-3">
-				<div className="py-2">
-					<div><strong>{description}</strong></div>
-					<div>{descriptionC}</div>
-				</div>
-				<div className="row py-2">
-					<div className="col-3">
-						<ProductImage chemicalId={imageUrl} className="w-100" />
-					</div>
-					<div className="col-9">
-						<div className="row">
-							{renderPropItem('产品编号', origin)}
-							{this.renderVm(VChemicalInfoInCart, product)}
-							{renderBrand(brand)}
-						</div>
-					</div>
-				</div>
-				<div className="border-top pt-2">
-					{this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
-				</div>
-			</div>
-		}));
-	}
+            let { brand, props } = product;
+            let { description, descriptionC, origin, purity, imageUrl } = props;
+            return <div className="d-block mb-2 px-3">
+                <div className="py-2">
+                    <div><strong>{description}</strong></div>
+                    <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}</div>
+                </div>
+                <div className="row py-2">
+                    <div className="col-3">
+                        <ProductImage chemicalId={imageUrl} className="w-100" />
+                    </div>
+                    <div className="col-9">
+                        <div className="row">
+                            {renderPropItem('产品编号', origin)}
+                            {this.renderVm(VChemicalInfoInCart, product)}
+                            {renderBrand(brand)}
+                        </div>
+                    </div>
+                </div>
+                <div className="border-top pt-2">
+                    {this.renderVm(VPrice, product) /*renderProductPrice(product, discount)*/}
+                </div>
+            </div>
+        }));
+    }
     /*
     render(product: BoxId): JSX.Element {
         let { renderProduct, renderProductPrice } = this.controller;

@@ -16,6 +16,7 @@ import classNames from 'classnames';
 import { TopicDivision } from 'pointMarket/VPointProduct';
 import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { productPropIsValid } from 'product';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -35,7 +36,7 @@ export const languageCaptions: { [language: string]: string } = {
     'CN': '中文',
 }
 
-const SymbolSrcs:any[] = [
+const SymbolSrcs: any[] = [
     { name: "LK", src: "GHS02.gif" },
     { name: "LM", src: "GSH04.gif" },
     { name: "LN", src: "GHS07.gif" },
@@ -183,7 +184,7 @@ export class VPageProduct extends VPage<CProduct> {
                 };
                 return el;
             }).filter((el: any) => extention[el]);
-            let basicInfos: any[] = basicInfoKey.filter((v: any) =>  allContent.find((i: any) => v.insideKey === i));
+            let basicInfos: any[] = basicInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
             let securityInfos: any[] = securityInfoKey.filter((v: any) => allContent.find((i: any) => v.insideKey === i));
             let tableInfo = (data: any[]) => {
                 if (data.length === 0) return;
@@ -262,8 +263,8 @@ export class VPageProduct extends VPage<CProduct> {
                 <div className="container mt-lg-2 mb-lg-2 collapse show" id="standardSample">
                     <table className="w-100 text-break standardSampleTable">
                         <thead>
-                            <tr className={classNames("border-bottom", type === "Analytes" ? "analytes" : "components" )}>
-                                {thead.map((el: any) => { return <th key={el}>{el}</th>})}
+                            <tr className={classNames("border-bottom", type === "Analytes" ? "analytes" : "components")}>
+                                {thead.map((el: any) => { return <th key={el}>{el}</th> })}
                             </tr>
                         </thead>
                         <tbody>
@@ -293,23 +294,23 @@ export class VPageProduct extends VPage<CProduct> {
         if (productCrumbs.length && productCrumbs.some((el: any[]) => el.length)) {
             productCrumbsUI = <><div className="mt-lg-1">
                 <div className="bg-nobackground-one">产品分类</div>
-                </div>
+            </div>
                 <div className="mt-lg-1">
-                    {productCrumbs.map((v: any[],index:number) => {
+                    {productCrumbs.map((v: any[], index: number) => {
                         if (!v.length) return;
                         return <div key={index}>
-                            <Ax className="mint" href={"/product-catalog"}>产品分类</Ax> <span style={{color:"#a5a8ab"}}>/</span>
-                            {v.map((el: any,i:number) => {
+                            <Ax className="mint" href={"/product-catalog"}>产品分类</Ax> <span style={{ color: "#a5a8ab" }}>/</span>
+                            {v.map((el: any, i: number) => {
                                 return <span key={el.name}>
                                     &nbsp;<Ax className="mint" href={"/product-catalog/" + el.owner}>{el.name}</Ax>&nbsp;
-                                    { i !== v.length-1 ? <span style={{color:"#a5a8ab"}}>/</span> : "" }</span>
+                                    {i !== v.length - 1 ? <span style={{ color: "#a5a8ab" }}>/</span> : ""}</span>
                             })}
                         </div>
                     })}
                 </div>
             </>;
         };
-        
+
         return <div className="col-lg-12 mt-lg-2 product-container">{/* col-lg-9 */}
             {basicInfoUI}
             {descriptionPostUI}
@@ -342,10 +343,11 @@ export class VPageProduct extends VPage<CProduct> {
     private renderProduct = (product: Product) => {
         let { id, brand, props, chemical, warnings } = product;
         let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber } = props;
-        let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{__html:description|| ''}}></strong></div>;
+        let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{ __html: description || '' }}></strong></div>;
         let cName: any;
+        descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "");
         if (descriptionC !== description) {
-            cName = <div dangerouslySetInnerHTML={{__html:descriptionC || ''}}></div>;
+            cName = <div dangerouslySetInnerHTML={{ __html: descriptionC || '' }}></div>;
         }
         return <>
             <div className="col-lg-4 ">
@@ -362,12 +364,12 @@ export class VPageProduct extends VPage<CProduct> {
                     {cName}
                     <div className="row mx-3">
                         {renderPropItem('产品编号', origin, "font-weight-bold")}
-                        {renderPropItem('CAS', <Ax href={`/search/${ CAS || chemical.CAS }` } className="text-primary">{CAS || chemical.CAS}</Ax> , "font-weight-bold")}
+                        {renderPropItem('CAS', <Ax href={`/search/${CAS || chemical.CAS}`} className="text-primary">{CAS || chemical.CAS}</Ax>, "font-weight-bold")}
                         {renderPropItem('纯度', purity || chemical.purity)}
                         {renderPropItem('分子式', molecularFomula || chemical.molecularFomula)}
                         {renderPropItem('分子量', molecularWeight || chemical.molecularWeight)}
                         {renderBrand(brand)}
-                        {renderPropItem('MDL', (mdlnumber|| chemical.mdlnumber) ? <Ax href={`/search/${ mdlnumber|| chemical.mdlnumber }` } className="text-primary">{mdlnumber|| chemical.mdlnumber}</Ax> : null)}
+                        {renderPropItem('MDL', (mdlnumber || chemical.mdlnumber) ? <Ax href={`/search/${mdlnumber || chemical.mdlnumber}`} className="text-primary">{mdlnumber || chemical.mdlnumber}</Ax> : null)}
                     </div>
                     <div className="text-danger row mx-3">{
                         warnings.map((el: any) => {
@@ -445,14 +447,14 @@ export class VPageProduct extends VPage<CProduct> {
         let { pack, retail, vipPrice, promotionPrice, currency } = data;
         let price = this.minPrice(vipPrice, promotionPrice) || retail;
         let { cApp, product } = this.controller;
-		await cApp.store.cart.changeQuantity(product, pack, value, price, retail, currency);
-		/*
+        await cApp.store.cart.changeQuantity(product, pack, value, price, retail, currency);
+        /*
         let { cCart } = cApp;
         if (value > 0)
             await cCart.add(product, pack, value, price, retail, currency);
         else
             await cCart.removeItem([{ productId: product.id, packId: pack.id }]);
-		*/
+        */
     }
 
     private minPrice(vipPrice: any, promotionPrice: any) {

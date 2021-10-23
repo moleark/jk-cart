@@ -384,3 +384,7 @@ export class CProduct extends CUqBase {
         this.openVPage(VStructure);
     }
 }
+
+export function productPropIsValid(value: string) {
+    return !(value === null || value === undefined || value === '0' || value === 'N/A');
+}
