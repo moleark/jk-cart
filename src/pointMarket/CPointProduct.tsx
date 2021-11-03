@@ -562,9 +562,10 @@ export class CPointProduct extends CUqBase {
 
     IsCouponCanUse = async (couponCode: string) => {
         this.couponId = 0;
-        let { currentUser } = this.cApp;
-        let { salesTask } = this.uqs;
-        let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
+        let { currentUser, cCoupon } = this.cApp;
+        // let { salesTask } = this.uqs;
+        let validationResult = await cCoupon.getCouponValidationResult(couponCode);
+        // let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
 
         let { result, id, types } = validationResult;
         if (result === 1) {

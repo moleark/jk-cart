@@ -103,7 +103,7 @@ export class WebUser {
         let { id, _user } = this;
         if (_user === undefined) return;
 
-        let { webuser: webUserTuid, salesTask, platformjoint } = this.uqs;
+        let { webuser: webUserTuid, salesTask, platformjoint, JkCoupon } = this.uqs;
         let { WebUser, WebUserContact, WebUserSetting, WebUserCustomer, WebUserBuyerAccount, RecordLogin } = webUserTuid;
         let webUser = await WebUser.load(this.id);
         if (webUser) {
@@ -117,7 +117,8 @@ export class WebUser {
             if (this.webUserVIPCard !== undefined) {
                 // this.VIPDiscount = await vipCardType.VIPCardTypeDiscount.query({ vipCard: this.webUserVIPCard.vipCardType })
                 if (this.webUserVIPCard.expiredDate > Date.now())
-                    this.VIPDiscount = await salesTask.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
+                    this.VIPDiscount = await JkCoupon.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
+                // this.VIPDiscount = await salesTask.VIPCardDiscount.table({ coupon: this.webUserVIPCard.vipCard });
                 else this.VIPDiscount = [];
             }
 

@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 03 2021 15:09:59 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqQuery, UqMap, UqHistory, UqIX } from "tonva-react";
 
@@ -72,6 +72,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface TuidProvince {
@@ -408,5 +409,9 @@ export interface UqExt extends Uq {
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxPendingDeliver } from "./JkDeliver";
+import { WebUserBound } from "./JkCoupon";
 
 /*--fields--*/
 const fields = {
@@ -23,32 +24,32 @@ const fields = {
 		"isKey": false,
 		"label": "Xi"
 	} as FieldItemId,
-	quantity: {
-		"name": "quantity",
-		"type": "number",
+	boundDate: {
+		"name": "boundDate",
 		"isKey": false,
-		"widget": "number",
-		"label": "Quantity"
-	} as FieldItemNum,
-	showPrice: {
-		"name": "showPrice",
-		"isKey": false,
-		"label": "ShowPrice"
+		"label": "BoundDate"
 	} as undefined,
-	json: {
-		"name": "json",
+	boundDays: {
+		"name": "boundDays",
+		"type": "integer",
 		"isKey": false,
-		"label": "Json"
+		"widget": "updown",
+		"label": "BoundDays"
+	} as FieldItemInt,
+	boundType: {
+		"name": "boundType",
+		"isKey": false,
+		"label": "BoundType"
 	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.ixx, fields.xi, fields.quantity, fields.showPrice, fields.json, 
+	fields.ixx, fields.xi, fields.boundDate, fields.boundDays, fields.boundType, 
 ];
 
 export const ui: UI = {
-	label: "IxPendingDeliver",
+	label: "WebUserBound",
 	fieldArr,
 	fields,
 };
@@ -66,6 +67,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxPendingDeliver):JSX.Element {
+export function render(item: WebUserBound):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:30 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 03 2021 15:09:56 GMT+0800 (中国标准时间) ===//
 import { CSub, CBase, CAppBase, IConstructor } from 'tonva-react';
 import { UQs } from './uqs';
 import { CApp } from './CApp';
@@ -10,9 +10,9 @@ export abstract class CUqSub<A extends CAppBase<U>, U, T extends CBase<A,U>> ext
 }
 
 export abstract class CUqApp extends CAppBase<UQs> {
-	protected newC<T extends CUqBase>(type: IConstructor<T>): T {
+	protected newC<T extends CUqBase>(type: IConstructor<T>, ...param:any[]): T {
 		let c = new type(this);
-		c.init();
+		c.internalInit(param);
 		return c;
 	}
 }

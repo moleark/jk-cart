@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 03 2021 15:09:59 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory } from "tonva-react";
 
 
 //===============================
@@ -14,6 +14,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -395,24 +396,7 @@ export interface ResultProductSearchHistory {
 	$page: ReturnProductSearchHistory$page[];
 }
 
-export interface $PiecewiseDetail {
-	id?: number;
-	main?: number;
-	sec: number;
-	value: number;
-}
-
-export interface $Piecewise {
-	id?: number;
-	name: string;
-	ratio: number;
-	offset: number;
-	asc: number;
-}
-
 export interface ParamActs {
-	$PiecewiseDetail?: $PiecewiseDetail[];
-	$Piecewise?: $Piecewise[];
 }
 
 
@@ -472,10 +456,12 @@ export interface UqExt extends Uq {
 	ProductStandardSample: UqMap;
 	ProductUserManualFile: UqMap;
 	ProductSearchHistory: UqHistory<ParamProductSearchHistory, ResultProductSearchHistory>;
-	$PiecewiseDetail: UqID<any>;
-	$Piecewise: UqID<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

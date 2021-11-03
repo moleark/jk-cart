@@ -7,6 +7,7 @@ import { VCoupon, VCredits, VVIPCard } from './VVIPCard';
 import { VCouponManage } from './VCouponManage';
 import { VModelCardDiscount } from './VModelCardDiscount';
 import { CApp, CUqBase } from 'tapp';
+import { EnumCouponType } from 'uq-app/uqs/JkCoupon';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -72,7 +73,12 @@ export class CCoupon extends CUqBase {
 
     getCouponValidationResult = async (coupon: string) => {
         let { currentUser } = this.cApp;
-        return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
+        // return await this.uqs.salesTask.IsCanUseCoupon.submit({ code: coupon, webUser: currentUser && currentUser.id });
+        let customer = (currentUser.hasCustomer && currentUser.currentCustomer.id) || undefined;
+        let res:any = await this.uqs.JkCoupon.IsCanUseCoupon.submit({ code: coupon, customer: customer });
+        res = { ...res, types: EnumCouponType[res?.type], validitydate: res?.validityDate };
+        if (res?.types && typeof res.types !== "number") res.types = res.types.toLowerCase();
+        return res;
     }
 
     /**
@@ -322,7 +328,8 @@ export class CCoupon extends CUqBase {
 
     private getCouponDiscountSetting = async (types: string, couponId: number) => {
         if (types === 'vipcard' || types === 'coupon') {
-            return await this.uqs.salesTask.VIPCardDiscount.table({ coupon: couponId });
+            // return await this.uqs.salesTask.VIPCardDiscount.table({ coupon: couponId });
+            return await this.uqs.JkCoupon.VIPCardDiscount.table({ coupon: couponId });
         }
     }
 
@@ -420,6 +427,7 @@ export class CCoupon extends CUqBase {
         let { id: currentUserId } = currentUser;
         let { webuser, customer } = uqs;
         let { result, id: creditsId, code, validitydate, types } = credits;
+        if(typeof types === "number")  types = EnumCouponType[types] || types;
         if (result !== 1)
             return;
         switch (types) {

@@ -14,6 +14,7 @@ import * as ExchangeDetail from './ExchangeDetail.ui';
 import * as ExchangeMain from './ExchangeMain.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
 import * as DxReOrderDetail from './DxReOrderDetail.ui';
+import * as DxExchangeDetail from './DxExchangeDetail.ui';
 import * as DxExchangeMainState from './DxExchangeMainState.ui';
 import * as IxExchangeMainUsedPoint from './IxExchangeMainUsedPoint.ui';
 	
@@ -33,6 +34,7 @@ export function setUI(uq: Uq) {
 	assign(uq, 'ExchangeMain', ExchangeMain);
 	assign(uq, 'DxOrderDetail', DxOrderDetail);
 	assign(uq, 'DxReOrderDetail', DxReOrderDetail);
+	assign(uq, 'DxExchangeDetail', DxExchangeDetail);
 	assign(uq, 'DxExchangeMainState', DxExchangeMainState);
 	assign(uq, 'IxExchangeMainUsedPoint', IxExchangeMainUsedPoint);
 }

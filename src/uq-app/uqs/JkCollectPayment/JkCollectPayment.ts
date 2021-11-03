@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 03 2021 15:09:59 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -31,6 +31,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -80,6 +81,12 @@ export interface ParamDoneInvoice {
 
 }
 export interface ResultDoneInvoice {
+}
+
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
 }
 
 export interface Param$poked {
@@ -159,6 +166,15 @@ export interface ReturnCustomerPendingRet {
 }
 export interface ResultCustomerPending {
 	ret: ReturnCustomerPendingRet[];
+}
+
+export interface Param$getMyTimezone {
+}
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+}
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
 export interface OrderDetail {
@@ -404,12 +420,14 @@ export interface UqExt extends Uq {
 	Currency: UqTuid<TuidCurrency>;
 	DoneReceive: UqAction<ParamDoneReceive, ResultDoneReceive>;
 	DoneInvoice: UqAction<ParamDoneInvoice, ResultDoneInvoice>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	PendingInvoice: UqQuery<ParamPendingInvoice, ResultPendingInvoice>;
 	PendingReceive: UqQuery<ParamPendingReceive, ResultPendingReceive>;
 	CustomerPendingInvoice: UqQuery<ParamCustomerPendingInvoice, ResultCustomerPendingInvoice>;
 	CustomerPendingReceive: UqQuery<ParamCustomerPendingReceive, ResultCustomerPendingReceive>;
 	CustomerPending: UqQuery<ParamCustomerPending, ResultCustomerPending>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
 	InvoiceDetail: UqID<any>;
@@ -432,5 +450,9 @@ export interface UqExt extends Uq {
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }
