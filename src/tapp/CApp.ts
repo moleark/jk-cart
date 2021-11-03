@@ -388,7 +388,7 @@ export class CApp extends CUqApp {
             '/app': this.navHome,
             '/index': this.navHome,
             '/home': this.navHome,
-            '/search/structure': this.navProductstructure,
+            // '/search/structure': this.navProductstructure,
             '/search/:key': this.navSearch,
             '/search': this.navProductCategoryHome,
             '/product/:id': this.navProduct,
