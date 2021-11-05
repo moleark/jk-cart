@@ -38,6 +38,7 @@ import * as IxOrderMainFee from './IxOrderMainFee.ui';
 import * as IxOrderDetailCoupon from './IxOrderDetailCoupon.ui';
 import * as IxOrderAmountDiff from './IxOrderAmountDiff.ui';
 import * as IxOrderMainCustomerCoupon from './IxOrderMainCustomerCoupon.ui';
+import * as OrderDetailDeliver from './OrderDetailDeliver.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Coupon', Coupon);
@@ -79,5 +80,6 @@ export function setUI(uq: Uq) {
 	assign(uq, 'IxOrderDetailCoupon', IxOrderDetailCoupon);
 	assign(uq, 'IxOrderAmountDiff', IxOrderAmountDiff);
 	assign(uq, 'IxOrderMainCustomerCoupon', IxOrderMainCustomerCoupon);
+	assign(uq, 'OrderDetailDeliver', OrderDetailDeliver);
 }
 export * from './JkOrder';

@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed Nov 03 2021 15:09:59 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Fri Nov 05 2021 17:48:44 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -459,7 +459,7 @@ export interface ReturnMain {
 
 export interface OrderMainEx {
 	id?: number;
-	seller: string;
+	seller: number;
 	salesman: number;
 	salesRegion: number;
 	organization: number;
@@ -498,7 +498,7 @@ export interface ReturnDetailEx {
 
 export interface ReturnMainEx {
 	id?: number;
-	seller: string;
+	seller: number;
 	salesman: number;
 	salesRegion: number;
 }
@@ -606,6 +606,13 @@ export interface IxOrderMainCustomerCoupon {
 	xi: number;
 }
 
+export interface OrderDetailDeliver {
+	ix: number;
+	xi: number;
+	deliverDone: number;
+	deliverTime: any;
+}
+
 export interface ParamActs {
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
@@ -624,6 +631,7 @@ export interface ParamActs {
 	ixOrderDetailCoupon?: IxOrderDetailCoupon[];
 	ixOrderAmountDiff?: IxOrderAmountDiff[];
 	ixOrderMainCustomerCoupon?: IxOrderMainCustomerCoupon[];
+	orderDetailDeliver?: OrderDetailDeliver[];
 }
 
 
@@ -668,7 +676,6 @@ export interface UqExt extends Uq {
 	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
-	OrderTransportation: UqMap;
 	OrderHistory: UqHistory<ParamOrderHistory, ResultOrderHistory>;
 	OrderReceivable: UqPending<any, any>;
 	OrderDetail: UqID<any>;
@@ -688,6 +695,7 @@ export interface UqExt extends Uq {
 	IxOrderDetailCoupon: UqIX<any>;
 	IxOrderAmountDiff: UqIX<any>;
 	IxOrderMainCustomerCoupon: UqIX<any>;
+	OrderDetailDeliver: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

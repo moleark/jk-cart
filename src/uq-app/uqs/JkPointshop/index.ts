@@ -17,6 +17,7 @@ import * as DxReOrderDetail from './DxReOrderDetail.ui';
 import * as DxExchangeDetail from './DxExchangeDetail.ui';
 import * as DxExchangeMainState from './DxExchangeMainState.ui';
 import * as IxExchangeMainUsedPoint from './IxExchangeMainUsedPoint.ui';
+import * as ExchangeDetailDeliver from './ExchangeDetailDeliver.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'ProductX', ProductX);
@@ -37,5 +38,6 @@ export function setUI(uq: Uq) {
 	assign(uq, 'DxExchangeDetail', DxExchangeDetail);
 	assign(uq, 'DxExchangeMainState', DxExchangeMainState);
 	assign(uq, 'IxExchangeMainUsedPoint', IxExchangeMainUsedPoint);
+	assign(uq, 'ExchangeDetailDeliver', ExchangeDetailDeliver);
 }
 export * from './JkPointshop';

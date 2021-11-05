@@ -13,6 +13,8 @@ import * as RequestDetail from './RequestDetail.ui';
 import * as Request from './Request.ui';
 import * as InsuredInterval from './InsuredInterval.ui';
 import * as InsuredType from './InsuredType.ui';
+import * as TruckDetail from './TruckDetail.ui';
+import * as TruckMain from './TruckMain.ui';
 import * as DxDeliverMain from './DxDeliverMain.ui';
 import * as DxDeliverDetail from './DxDeliverDetail.ui';
 import * as DxCutOffMain from './DxCutOffMain.ui';
@@ -20,6 +22,8 @@ import * as DxDelivering from './DxDelivering.ui';
 import * as Talling from './Talling.ui';
 import * as IxPendingRequest from './IxPendingRequest.ui';
 import * as DxCutOffTypeBuyerAccount from './DxCutOffTypeBuyerAccount.ui';
+import * as DxTruckMain from './DxTruckMain.ui';
+import * as DxTrucking from './DxTrucking.ui';
 import * as IxUserWarehouse from './IxUserWarehouse.ui';
 import * as IxCutoffTypeDefinition from './IxCutoffTypeDefinition.ui';
 import * as CutOffProcessing from './CutOffProcessing.ui';
@@ -27,6 +31,7 @@ import * as DeliverDetailExchangeDetail from './DeliverDetailExchangeDetail.ui';
 import * as DeliverDetailOrderDetail from './DeliverDetailOrderDetail.ui';
 import * as InsuredTypeBrand from './InsuredTypeBrand.ui';
 import * as InsuredTypeInterval from './InsuredTypeInterval.ui';
+import * as IxPendingTruck from './IxPendingTruck.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Carrier', Carrier);
@@ -43,6 +48,8 @@ export function setUI(uq: Uq) {
 	assign(uq, 'Request', Request);
 	assign(uq, 'InsuredInterval', InsuredInterval);
 	assign(uq, 'InsuredType', InsuredType);
+	assign(uq, 'TruckDetail', TruckDetail);
+	assign(uq, 'TruckMain', TruckMain);
 	assign(uq, 'DxDeliverMain', DxDeliverMain);
 	assign(uq, 'DxDeliverDetail', DxDeliverDetail);
 	assign(uq, 'DxCutOffMain', DxCutOffMain);
@@ -50,6 +57,8 @@ export function setUI(uq: Uq) {
 	assign(uq, 'Talling', Talling);
 	assign(uq, 'IxPendingRequest', IxPendingRequest);
 	assign(uq, 'DxCutOffTypeBuyerAccount', DxCutOffTypeBuyerAccount);
+	assign(uq, 'DxTruckMain', DxTruckMain);
+	assign(uq, 'DxTrucking', DxTrucking);
 	assign(uq, 'IxUserWarehouse', IxUserWarehouse);
 	assign(uq, 'IxCutoffTypeDefinition', IxCutoffTypeDefinition);
 	assign(uq, 'CutOffProcessing', CutOffProcessing);
@@ -57,5 +66,6 @@ export function setUI(uq: Uq) {
 	assign(uq, 'DeliverDetailOrderDetail', DeliverDetailOrderDetail);
 	assign(uq, 'InsuredTypeBrand', InsuredTypeBrand);
 	assign(uq, 'InsuredTypeInterval', InsuredTypeInterval);
+	assign(uq, 'IxPendingTruck', IxPendingTruck);
 }
 export * from './JkDeliver';

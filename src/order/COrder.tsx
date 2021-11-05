@@ -620,7 +620,7 @@ export class COrder extends CUqBase {
         // }
     }
     /* 物流信息 orderTransportation 此表废弃,不使用数据 */
-    inteLogistics = async (items: any[], orderId: number) => {
+    /* inteLogistics = async (items: any[], orderId: number) => {
         if (!items.length || !orderId) return [];
         let promise: PromiseLike<any>[] = [];
         items.forEach((el: any, index: number) => {
@@ -632,7 +632,8 @@ export class COrder extends CUqBase {
 
     getOrderTransportation = async (orderId: number, row: number) => {
         return await this.uqs.order.orderTransportation.obj({ order: orderId, row: row });
-    };
+    }; */
+    /* -------------------------------------------- */
 
     getOrderTrackByTransNum = async (transCompany: string, transNumber: number | string) => {
         let param = { code: transCompany, no: transNumber };

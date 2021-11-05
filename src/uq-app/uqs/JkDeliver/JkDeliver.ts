@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed Nov 03 2021 15:09:59 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Fri Nov 05 2021 17:48:44 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -349,6 +349,18 @@ export interface ResultGetInsuredTypeBrand {
 	list: ReturnGetInsuredTypeBrandList[];
 }
 
+export interface ParamGetInsuredTypeInterval {
+	insuredType: number;
+}
+export interface ReturnGetInsuredTypeIntervalList {
+	insuredType: number;
+	insuredInterval: number;
+	amount: number;
+}
+export interface ResultGetInsuredTypeInterval {
+	list: ReturnGetInsuredTypeIntervalList[];
+}
+
 export interface OrderMain {
 	id?: number;
 	no?: string;
@@ -451,6 +463,21 @@ export interface InsuredType {
 	description: string;
 }
 
+export interface TruckDetail {
+	id?: number;
+	main?: number;
+	biz: number;
+	json: string;
+}
+
+export interface TruckMain {
+	id?: number;
+	no?: string;
+	contact: number;
+	warehouse: number;
+	$create?: any;
+}
+
 export interface DxDeliverMain {
 	id: number;
 	rows?: number;
@@ -502,6 +529,19 @@ export interface DxCutOffTypeBuyerAccount {
 	id: number;
 	name?: string;
 	description?: string;
+	$act?: number;
+}
+
+export interface DxTruckMain {
+	id: number;
+	staff?: number;
+	startTime?: any;
+	finishTime?: any;
+	$act?: number;
+}
+
+export interface DxTrucking {
+	id: number;
 	$act?: number;
 }
 
@@ -559,6 +599,19 @@ export interface ActParamDxCutOffTypeBuyerAccount {
 	$act?: number;
 }
 
+export interface ActParamDxTruckMain {
+	id: number|IDXValue;
+	staff?: number|IDXValue;
+	startTime?: any|IDXValue;
+	finishTime?: any|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxTrucking {
+	id: number|IDXValue;
+	$act?: number;
+}
+
 export interface IxUserWarehouse {
 	ix: number;
 	xi: number;
@@ -597,6 +650,13 @@ export interface InsuredTypeInterval {
 	amount: number;
 }
 
+export interface IxPendingTruck {
+	ix: number;
+	xi: number;
+	contact: number;
+	json: string;
+}
+
 export interface ParamActs {
 	orderMain?: OrderMain[];
 	orderDetail?: OrderDetail[];
@@ -611,6 +671,8 @@ export interface ParamActs {
 	request?: Request[];
 	insuredInterval?: InsuredInterval[];
 	insuredType?: InsuredType[];
+	truckDetail?: TruckDetail[];
+	truckMain?: TruckMain[];
 	dxDeliverMain?: ActParamDxDeliverMain[];
 	dxDeliverDetail?: ActParamDxDeliverDetail[];
 	dxCutOffMain?: ActParamDxCutOffMain[];
@@ -618,6 +680,8 @@ export interface ParamActs {
 	talling?: ActParamTalling[];
 	ixPendingRequest?: ActParamIxPendingRequest[];
 	dxCutOffTypeBuyerAccount?: ActParamDxCutOffTypeBuyerAccount[];
+	dxTruckMain?: ActParamDxTruckMain[];
+	dxTrucking?: ActParamDxTrucking[];
 	ixUserWarehouse?: IxUserWarehouse[];
 	ixCutoffTypeDefinition?: IxCutoffTypeDefinition[];
 	cutOffProcessing?: CutOffProcessing[];
@@ -625,6 +689,7 @@ export interface ParamActs {
 	deliverDetailOrderDetail?: DeliverDetailOrderDetail[];
 	insuredTypeBrand?: InsuredTypeBrand[];
 	insuredTypeInterval?: InsuredTypeInterval[];
+	ixPendingTruck?: IxPendingTruck[];
 }
 
 
@@ -659,6 +724,7 @@ export interface UqExt extends Uq {
 	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	GetCutOffTypeDefinition: UqQuery<ParamGetCutOffTypeDefinition, ResultGetCutOffTypeDefinition>;
 	GetInsuredTypeBrand: UqQuery<ParamGetInsuredTypeBrand, ResultGetInsuredTypeBrand>;
+	GetInsuredTypeInterval: UqQuery<ParamGetInsuredTypeInterval, ResultGetInsuredTypeInterval>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;
@@ -672,6 +738,8 @@ export interface UqExt extends Uq {
 	Request: UqID<any>;
 	InsuredInterval: UqID<any>;
 	InsuredType: UqID<any>;
+	TruckDetail: UqID<any>;
+	TruckMain: UqID<any>;
 	DxDeliverMain: UqIDX<any>;
 	DxDeliverDetail: UqIDX<any>;
 	DxCutOffMain: UqIDX<any>;
@@ -679,6 +747,8 @@ export interface UqExt extends Uq {
 	Talling: UqIDX<any>;
 	IxPendingRequest: UqIDX<any>;
 	DxCutOffTypeBuyerAccount: UqIDX<any>;
+	DxTruckMain: UqIDX<any>;
+	DxTrucking: UqIDX<any>;
 	IxUserWarehouse: UqIX<any>;
 	IxCutoffTypeDefinition: UqIX<any>;
 	CutOffProcessing: UqIX<any>;
@@ -686,6 +756,7 @@ export interface UqExt extends Uq {
 	DeliverDetailOrderDetail: UqIX<any>;
 	InsuredTypeBrand: UqIX<any>;
 	InsuredTypeInterval: UqIX<any>;
+	IxPendingTruck: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
