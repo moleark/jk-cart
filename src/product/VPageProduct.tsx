@@ -342,10 +342,13 @@ export class VPageProduct extends VPage<CProduct> {
 
     private renderProduct = (product: Product) => {
         let { id, brand, props, chemical, warnings } = product;
-        let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber } = props;
+        console.log('props',props);
+        console.log('chemical',chemical);
+        
+        let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber, gradeCN } = props;
         let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{ __html: description || '' }}></strong></div>;
         let cName: any;
-        descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "");
+        descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
         if (descriptionC !== description) {
             cName = <div dangerouslySetInnerHTML={{ __html: descriptionC || '' }}></div>;
         }

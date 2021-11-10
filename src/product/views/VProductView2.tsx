@@ -25,12 +25,12 @@ export class VProuductView2 extends View<CProduct> {
             let productListSource = dataSource ? true : false;
             let { brand, chemical, props, id } = product;
             let { description, descriptionC, origin, imageUrl } = props;
-            let { CAS, purity, molecularFomula, molecularWeight } = chemical || {};
+            let { CAS, purity, molecularFomula, molecularWeight, gradeCN } = chemical || {};
             let eName = <div className="pr-5 en-font-family" style={{ wordWrap: 'break-word' }}>
                 <strong className="cursor-pointer" onClick={() => this.onProductClick(product)}
                     dangerouslySetInnerHTML={{ __html: description || '' }}></strong>
             </div>;
-            descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "");
+            descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
             let cName: any;
             if (descriptionC !== description) {
                 cName = <div className="d-inline-block cursor-pointer" onClick={() => this.onProductClick(product)}

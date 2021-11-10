@@ -38,6 +38,7 @@ export interface ProductProps {
     molecularFomula: string;
     no: string; //				// 'A01102033'
     purity: string; 			// '98%'
+    gradeCN?: string; 			// '规格'
     mdlnumber?: string;
     // seq: number;
 }

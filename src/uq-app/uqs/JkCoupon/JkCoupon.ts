@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Nov 05 2021 17:48:44 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 10 2021 19:21:33 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -195,11 +195,21 @@ export interface Coupon {
 }
 
 export interface CustomerBound {
-	ixx: number;
-	ix: number;
-	xi: number;
-	boundDate: any;
-	boundDays: number;
+	id: number;
+	salesman?: number;
+	boundDate?: any;
+	boundDays?: number;
+	boundType?: any;
+	$act?: number;
+}
+
+export interface ActParamCustomerBound {
+	id: number|IDXValue;
+	salesman?: number|IDXValue;
+	boundDate?: any|IDXValue;
+	boundDays?: number|IDXValue;
+	boundType?: any|IDXValue;
+	$act?: number;
 }
 
 export interface WebUserBound {
@@ -208,7 +218,6 @@ export interface WebUserBound {
 	xi: number;
 	boundDate: any;
 	boundDays: number;
-	boundType: any;
 }
 
 export interface IxCouponUsed {
@@ -225,7 +234,7 @@ export interface IxWebuserEmployeeCopy {
 
 export interface ParamActs {
 	coupon?: Coupon[];
-	customerBound?: CustomerBound[];
+	customerBound?: ActParamCustomerBound[];
 	webUserBound?: WebUserBound[];
 	ixCouponUsed?: IxCouponUsed[];
 	ixWebuserEmployeeCopy?: IxWebuserEmployeeCopy[];
@@ -253,7 +262,7 @@ export interface UqExt extends Uq {
 	CustomerBoundHistory: UqHistory<ParamCustomerBoundHistory, ResultCustomerBoundHistory>;
 	WebUserBoundHistory: UqHistory<ParamWebUserBoundHistory, ResultWebUserBoundHistory>;
 	Coupon: UqID<any>;
-	CustomerBound: UqIX<any>;
+	CustomerBound: UqIDX<any>;
 	WebUserBound: UqIX<any>;
 	IxCouponUsed: UqIX<any>;
 	IxWebuserEmployeeCopy: UqIX<any>;

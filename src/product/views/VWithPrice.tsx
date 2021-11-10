@@ -26,11 +26,11 @@ export class VProductWithPrice extends View<CProduct> {
     render(product: Product): JSX.Element {
         return React.createElement(observer(() => {
             let { brand, props } = product;
-            let { description, descriptionC, origin, purity, imageUrl } = props;
+            let { description, descriptionC, origin, purity, imageUrl, gradeCN } = props;
             return <div className="d-block mb-2 px-3">
                 <div className="py-2">
                     <div><strong>{description}</strong></div>
-                    <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}</div>
+                    <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}{productPropIsValid(gradeCN) ? " , " + gradeCN : ""}</div>
                 </div>
                 <div className="row py-2">
                     <div className="col-3">

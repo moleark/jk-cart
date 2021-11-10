@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Nov 05 2021 17:48:44 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 10 2021 19:21:32 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -649,6 +649,19 @@ export interface ExchangeMain {
 	createDate: any;
 }
 
+export interface ReceiveMain {
+	id?: number;
+	createDate: any;
+}
+
+export interface ReceiveDetail {
+	id?: number;
+	main?: number;
+	orderDetail: number;
+	amount: number;
+	createDate: any;
+}
+
 export interface DxOrderDetail {
 	id: number;
 	point?: number;
@@ -727,6 +740,8 @@ export interface ParamActs {
 	orderDetail?: OrderDetail[];
 	exchangeDetail?: ExchangeDetail[];
 	exchangeMain?: ExchangeMain[];
+	receiveMain?: ReceiveMain[];
+	receiveDetail?: ReceiveDetail[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
 	dxReOrderDetail?: ActParamDxReOrderDetail[];
 	dxExchangeDetail?: ActParamDxExchangeDetail[];
@@ -805,6 +820,8 @@ export interface UqExt extends Uq {
 	OrderDetail: UqID<any>;
 	ExchangeDetail: UqID<any>;
 	ExchangeMain: UqID<any>;
+	ReceiveMain: UqID<any>;
+	ReceiveDetail: UqID<any>;
 	DxOrderDetail: UqIDX<any>;
 	DxReOrderDetail: UqIDX<any>;
 	DxExchangeDetail: UqIDX<any>;

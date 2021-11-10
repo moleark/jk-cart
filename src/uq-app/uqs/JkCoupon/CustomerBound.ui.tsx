@@ -6,23 +6,17 @@ import { CustomerBound } from "./JkCoupon";
 
 /*--fields--*/
 const fields = {
-	ixx: {
-		"name": "ixx",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ixx"
+		"label": "Id"
 	} as FieldItemId,
-	ix: {
-		"name": "ix",
+	salesman: {
+		"name": "salesman",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
-	} as FieldItemId,
-	xi: {
-		"name": "xi",
-		"type": "id",
-		"isKey": false,
-		"label": "Xi"
+		"label": "Salesman"
 	} as FieldItemId,
 	boundDate: {
 		"name": "boundDate",
@@ -36,11 +30,16 @@ const fields = {
 		"widget": "updown",
 		"label": "BoundDays"
 	} as FieldItemInt,
+	boundType: {
+		"name": "boundType",
+		"isKey": false,
+		"label": "BoundType"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.ixx, fields.xi, fields.boundDate, fields.boundDays, 
+	fields.salesman, fields.boundDate, fields.boundDays, fields.boundType, 
 ];
 
 export const ui: UI = {

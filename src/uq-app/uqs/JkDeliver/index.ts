@@ -15,6 +15,8 @@ import * as InsuredInterval from './InsuredInterval.ui';
 import * as InsuredType from './InsuredType.ui';
 import * as TruckDetail from './TruckDetail.ui';
 import * as TruckMain from './TruckMain.ui';
+import * as TruckAdditionalTask from './TruckAdditionalTask.ui';
+import * as Role from './Role.ui';
 import * as DxDeliverMain from './DxDeliverMain.ui';
 import * as DxDeliverDetail from './DxDeliverDetail.ui';
 import * as DxCutOffMain from './DxCutOffMain.ui';
@@ -32,6 +34,8 @@ import * as DeliverDetailOrderDetail from './DeliverDetailOrderDetail.ui';
 import * as InsuredTypeBrand from './InsuredTypeBrand.ui';
 import * as InsuredTypeInterval from './InsuredTypeInterval.ui';
 import * as IxPendingTruck from './IxPendingTruck.ui';
+import * as RoleOps from './RoleOps.ui';
+import * as UserRole from './UserRole.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Carrier', Carrier);
@@ -50,6 +54,8 @@ export function setUI(uq: Uq) {
 	assign(uq, 'InsuredType', InsuredType);
 	assign(uq, 'TruckDetail', TruckDetail);
 	assign(uq, 'TruckMain', TruckMain);
+	assign(uq, 'TruckAdditionalTask', TruckAdditionalTask);
+	assign(uq, 'Role', Role);
 	assign(uq, 'DxDeliverMain', DxDeliverMain);
 	assign(uq, 'DxDeliverDetail', DxDeliverDetail);
 	assign(uq, 'DxCutOffMain', DxCutOffMain);
@@ -67,5 +73,7 @@ export function setUI(uq: Uq) {
 	assign(uq, 'InsuredTypeBrand', InsuredTypeBrand);
 	assign(uq, 'InsuredTypeInterval', InsuredTypeInterval);
 	assign(uq, 'IxPendingTruck', IxPendingTruck);
+	assign(uq, 'RoleOps', RoleOps);
+	assign(uq, 'UserRole', UserRole);
 }
 export * from './JkDeliver';

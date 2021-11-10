@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Nov 05 2021 17:48:44 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 10 2021 19:21:32 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -6,6 +6,22 @@ import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonv
 //===============================
 //======= UQ 百灵威系统工程部/deliver ========
 //===============================
+
+export enum EnumRole {
+	all = 1,
+	dev = 2,
+	warehouseManager = 3,
+	cutOffer = 4,
+	tallyer = 5,
+	checker = 6,
+	picker = 7,
+	packer = 8,
+	dispatcher = 9
+}
+
+export enum EnumRoleOp {
+	test = 1
+}
 
 export interface Tuid$user {
 	id?: number;
@@ -124,6 +140,48 @@ export interface Param$setMyTimezone {
 	_timezone: number;
 }
 export interface Result$setMyTimezone {
+}
+
+export interface ParamTruckArrange {
+	aWarehouse: number;
+	detail: {
+		aBiz: number;
+	}[];
+
+}
+export interface ResultTruckArrange {
+}
+
+export interface ParamTrucked {
+	truckMain: number;
+	detail: {
+		biz: number;
+		quantity: number;
+	}[];
+
+}
+export interface ResultTrucked {
+}
+
+export interface ParamAddTruckAdditionalTask {
+	warehouse: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	json: string;
+}
+export interface ResultAddTruckAdditionalTask {
+}
+
+export interface ParamAddTruck {
+	warehouse: number;
+	biz: number;
+	contact: number;
+	json: string;
+}
+export interface ResultAddTruck {
 }
 
 export interface Param$poked {
@@ -361,6 +419,107 @@ export interface ResultGetInsuredTypeInterval {
 	list: ReturnGetInsuredTypeIntervalList[];
 }
 
+export interface ParamGetDeliverDetailTransportation {
+	deliverDetail: number;
+}
+export interface ReturnGetDeliverDetailTransportationRet {
+	deliverDetail: number;
+	carrier: number;
+	waybillNumber: string;
+	deliverTime: any;
+}
+export interface ResultGetDeliverDetailTransportation {
+	ret: ReturnGetDeliverDetailTransportationRet[];
+}
+
+export interface ParamGetReadyTruckTaslList {
+	warehouse: number;
+}
+export interface ReturnGetReadyTruckTaslListRet {
+	warehouse: number;
+	deliverDetail: number;
+	contact: number;
+	json: string;
+}
+export interface ResultGetReadyTruckTaslList {
+	ret: ReturnGetReadyTruckTaslListRet[];
+}
+
+export interface ParamWarehouseTruckMain {
+}
+export interface ReturnWarehouseTruckMainRet {
+	warehouse: number;
+	truckMain: number;
+	no: string;
+	contact: number;
+	staff: number;
+}
+export interface ResultWarehouseTruckMain {
+	ret: ReturnWarehouseTruckMainRet[];
+}
+
+export interface ParamGetTruckMain {
+	truckMain: number;
+}
+export interface ReturnGetTruckMainMain {
+	truckMain: number;
+	no: string;
+	contact: number;
+	warehouse: number;
+	staff: number;
+	trucking: number;
+}
+export interface ReturnGetTruckMainDetail {
+	truckDetail: number;
+	biz: number;
+	json: string;
+}
+export interface ResultGetTruckMain {
+	main: ReturnGetTruckMainMain[];
+	detail: ReturnGetTruckMainDetail[];
+}
+
+export interface ParamGetTruckHistoryList {
+}
+export interface ReturnGetTruckHistoryListRet {
+	warehouse: number;
+	truckMain: number;
+	no: string;
+	contact: number;
+	staff: number;
+}
+export interface ResultGetTruckHistoryList {
+	ret: ReturnGetTruckHistoryListRet[];
+}
+
+export interface ParamGetTruckAdditionalTask {
+}
+export interface ReturnGetTruckAdditionalTaskRet {
+	id: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	staff: number;
+	scheduleDate: any;
+	finishTime: any;
+	create: any;
+}
+export interface ResultGetTruckAdditionalTask {
+	ret: ReturnGetTruckAdditionalTaskRet[];
+}
+
+export interface ParamGetRoleOps {
+}
+export interface ReturnGetRoleOpsRet {
+	role: any;
+	op: any;
+}
+export interface ResultGetRoleOps {
+	ret: ReturnGetRoleOpsRet[];
+}
+
 export interface OrderMain {
 	id?: number;
 	no?: string;
@@ -475,7 +634,24 @@ export interface TruckMain {
 	no?: string;
 	contact: number;
 	warehouse: number;
-	$create?: any;
+}
+
+export interface TruckAdditionalTask {
+	id?: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	staff: number;
+	scheduleDate: any;
+	finishTime: any;
+}
+
+export interface Role {
+	id?: number;
+	name: string;
+	discription: string;
 }
 
 export interface DxDeliverMain {
@@ -657,6 +833,16 @@ export interface IxPendingTruck {
 	json: string;
 }
 
+export interface RoleOps {
+	ix: number;
+	xi: number;
+}
+
+export interface UserRole {
+	ix: number;
+	xi: number;
+}
+
 export interface ParamActs {
 	orderMain?: OrderMain[];
 	orderDetail?: OrderDetail[];
@@ -673,6 +859,8 @@ export interface ParamActs {
 	insuredType?: InsuredType[];
 	truckDetail?: TruckDetail[];
 	truckMain?: TruckMain[];
+	truckAdditionalTask?: TruckAdditionalTask[];
+	role?: Role[];
 	dxDeliverMain?: ActParamDxDeliverMain[];
 	dxDeliverDetail?: ActParamDxDeliverDetail[];
 	dxCutOffMain?: ActParamDxCutOffMain[];
@@ -690,6 +878,8 @@ export interface ParamActs {
 	insuredTypeBrand?: InsuredTypeBrand[];
 	insuredTypeInterval?: InsuredTypeInterval[];
 	ixPendingTruck?: IxPendingTruck[];
+	roleOps?: RoleOps[];
+	userRole?: UserRole[];
 }
 
 
@@ -709,6 +899,10 @@ export interface UqExt extends Uq {
 	UpdateWaybillNumber: UqAction<ParamUpdateWaybillNumber, ResultUpdateWaybillNumber>;
 	CutOffSelected: UqAction<ParamCutOffSelected, ResultCutOffSelected>;
 	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
+	TruckArrange: UqAction<ParamTruckArrange, ResultTruckArrange>;
+	Trucked: UqAction<ParamTrucked, ResultTrucked>;
+	AddTruckAdditionalTask: UqAction<ParamAddTruckAdditionalTask, ResultAddTruckAdditionalTask>;
+	AddTruck: UqAction<ParamAddTruck, ResultAddTruck>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	WarehouseDeliverMain: UqQuery<ParamWarehouseDeliverMain, ResultWarehouseDeliverMain>;
 	GetDeliver: UqQuery<ParamGetDeliver, ResultGetDeliver>;
@@ -725,6 +919,13 @@ export interface UqExt extends Uq {
 	GetCutOffTypeDefinition: UqQuery<ParamGetCutOffTypeDefinition, ResultGetCutOffTypeDefinition>;
 	GetInsuredTypeBrand: UqQuery<ParamGetInsuredTypeBrand, ResultGetInsuredTypeBrand>;
 	GetInsuredTypeInterval: UqQuery<ParamGetInsuredTypeInterval, ResultGetInsuredTypeInterval>;
+	GetDeliverDetailTransportation: UqQuery<ParamGetDeliverDetailTransportation, ResultGetDeliverDetailTransportation>;
+	GetReadyTruckTaslList: UqQuery<ParamGetReadyTruckTaslList, ResultGetReadyTruckTaslList>;
+	WarehouseTruckMain: UqQuery<ParamWarehouseTruckMain, ResultWarehouseTruckMain>;
+	GetTruckMain: UqQuery<ParamGetTruckMain, ResultGetTruckMain>;
+	GetTruckHistoryList: UqQuery<ParamGetTruckHistoryList, ResultGetTruckHistoryList>;
+	GetTruckAdditionalTask: UqQuery<ParamGetTruckAdditionalTask, ResultGetTruckAdditionalTask>;
+	GetRoleOps: UqQuery<ParamGetRoleOps, ResultGetRoleOps>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;
@@ -740,6 +941,8 @@ export interface UqExt extends Uq {
 	InsuredType: UqID<any>;
 	TruckDetail: UqID<any>;
 	TruckMain: UqID<any>;
+	TruckAdditionalTask: UqID<any>;
+	Role: UqID<any>;
 	DxDeliverMain: UqIDX<any>;
 	DxDeliverDetail: UqIDX<any>;
 	DxCutOffMain: UqIDX<any>;
@@ -757,6 +960,8 @@ export interface UqExt extends Uq {
 	InsuredTypeBrand: UqIX<any>;
 	InsuredTypeInterval: UqIX<any>;
 	IxPendingTruck: UqIX<any>;
+	RoleOps: UqIX<any>;
+	UserRole: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

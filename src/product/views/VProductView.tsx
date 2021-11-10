@@ -20,12 +20,12 @@ export class VProuductView extends View<CProduct> {
     render(product: Product): JSX.Element {
         return React.createElement(observer(() => {
             let { brand, props } = product;
-            let { description, descriptionC, origin, purity, imageUrl } = props;
+            let { description, descriptionC, origin, purity, imageUrl, gradeCN } = props;
             return <div className="d-block mb-4 px-3">
                 <div className="d-flex py-2">
                     <div>
                         <div><strong>{description}</strong></div>
-                        <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}</div>
+                        <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}{productPropIsValid(gradeCN) ? " , " + gradeCN : ""}</div>
                     </div>
                     <div>{this.renderVm(VFavorite, { product })}</div>
                 </div>

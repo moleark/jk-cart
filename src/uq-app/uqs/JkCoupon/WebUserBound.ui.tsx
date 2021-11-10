@@ -36,16 +36,11 @@ const fields = {
 		"widget": "updown",
 		"label": "BoundDays"
 	} as FieldItemInt,
-	boundType: {
-		"name": "boundType",
-		"isKey": false,
-		"label": "BoundType"
-	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.ixx, fields.xi, fields.boundDate, fields.boundDays, fields.boundType, 
+	fields.ixx, fields.xi, fields.boundDate, fields.boundDays, 
 ];
 
 export const ui: UI = {
