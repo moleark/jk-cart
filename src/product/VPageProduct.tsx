@@ -342,10 +342,9 @@ export class VPageProduct extends VPage<CProduct> {
 
     private renderProduct = (product: Product) => {
         let { id, brand, props, chemical, warnings } = product;
-        console.log('props',props);
-        console.log('chemical',chemical);
-        
-        let { description, descriptionC, CAS, purity, molecularFomula, molecularWeight, origin, imageUrl, mdlnumber, gradeCN } = props;
+
+        let { description, descriptionC, origin, imageUrl } = props;
+        let { CAS, gradeCN, purity, molecularFomula, molecularWeight, mdlnumber } = chemical;
         let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{ __html: description || '' }}></strong></div>;
         let cName: any;
         descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
@@ -367,12 +366,12 @@ export class VPageProduct extends VPage<CProduct> {
                     {cName}
                     <div className="row mx-3">
                         {renderPropItem('产品编号', origin, "font-weight-bold")}
-                        {renderPropItem('CAS', <Ax href={`/search/${CAS || chemical.CAS}`} className="text-primary">{CAS || chemical.CAS}</Ax>, "font-weight-bold")}
-                        {renderPropItem('纯度', purity || chemical.purity)}
-                        {renderPropItem('分子式', molecularFomula || chemical.molecularFomula)}
-                        {renderPropItem('分子量', molecularWeight || chemical.molecularWeight)}
+                        {renderPropItem('CAS', <Ax href={`/search/${CAS || chemical.CAS}`} className="text-primary">{CAS}</Ax>, "font-weight-bold")}
+                        {renderPropItem('纯度', purity)}
+                        {renderPropItem('分子式', molecularFomula)}
+                        {renderPropItem('分子量', molecularWeight)}
                         {renderBrand(brand)}
-                        {renderPropItem('MDL', (mdlnumber || chemical.mdlnumber) ? <Ax href={`/search/${mdlnumber || chemical.mdlnumber}`} className="text-primary">{mdlnumber || chemical.mdlnumber}</Ax> : null)}
+                        {renderPropItem('MDL', (mdlnumber) ? <Ax href={`/search/${mdlnumber}`} className="text-primary">{mdlnumber}</Ax> : null)}
                     </div>
                     <div className="text-danger row mx-3">{
                         warnings.map((el: any) => {
