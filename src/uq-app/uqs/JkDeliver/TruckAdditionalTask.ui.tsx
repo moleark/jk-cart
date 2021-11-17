@@ -49,21 +49,21 @@ const fields = {
 		"isKey": false,
 		"label": "Staff"
 	} as FieldItemId,
-	scheduleDate: {
-		"name": "scheduleDate",
-		"isKey": false,
-		"label": "ScheduleDate"
-	} as undefined,
 	finishTime: {
 		"name": "finishTime",
 		"isKey": false,
 		"label": "FinishTime"
 	} as undefined,
+	$create: {
+		"name": "$create",
+		"isKey": false,
+		"label": "$create"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.contact, fields.content, fields.note, fields.creator, fields.requiredDate, fields.staff, fields.scheduleDate, fields.finishTime, 
+	fields.contact, fields.content, fields.note, fields.creator, fields.requiredDate, fields.staff, fields.finishTime, fields.$create, 
 ];
 
 export const ui: UI = {

@@ -16,6 +16,7 @@ import * as DxCustomerInvoice from './DxCustomerInvoice.ui';
 import * as DxInvoiceMain from './DxInvoiceMain.ui';
 import * as DxOrderDetailReturn from './DxOrderDetailReturn.ui';
 import * as DxReceiveMain from './DxReceiveMain.ui';
+import * as OppositeReceiveDetail from './OppositeReceiveDetail.ui';
 import * as IxCustomerPendingReceive from './IxCustomerPendingReceive.ui';
 import * as IxCustomerPendingInvoice from './IxCustomerPendingInvoice.ui';
 import * as DxOrderDetailInvoiceReceive from './DxOrderDetailInvoiceReceive.ui';
@@ -40,6 +41,7 @@ export function setUI(uq: Uq) {
 	assign(uq, 'DxInvoiceMain', DxInvoiceMain);
 	assign(uq, 'DxOrderDetailReturn', DxOrderDetailReturn);
 	assign(uq, 'DxReceiveMain', DxReceiveMain);
+	assign(uq, 'OppositeReceiveDetail', OppositeReceiveDetail);
 	assign(uq, 'IxCustomerPendingReceive', IxCustomerPendingReceive);
 	assign(uq, 'IxCustomerPendingInvoice', IxCustomerPendingInvoice);
 	assign(uq, 'DxOrderDetailInvoiceReceive', DxOrderDetailInvoiceReceive);

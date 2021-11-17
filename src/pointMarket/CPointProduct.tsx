@@ -273,7 +273,7 @@ export class CPointProduct extends CUqBase {
             this.openVPage(VError);
             return;
         }; */
-        let { JkPointshop, 积分商城, customer: customerUQ, deliver } = this.uqs;
+        let { JkPointshop, 积分商城, customer: customerUQ, deliver, JkDeliver } = this.uqs;
         let order = { brief: {}, data: {} };
         let getOrder:any[] = await JkPointshop.IDDetailGet({
             id: orderId,
@@ -293,11 +293,16 @@ export class CPointProduct extends CUqBase {
         order.brief = { id: id, no: no, date: createDate, state: state };
         customer = customerUQ.Customer.boxId(customer);
         shippingContact = customerUQ.Contact.boxId(shippingContact);
-        
+        let getDeliverDetailExchangeDetail = await JkDeliver.IX({ IX: JkDeliver.DeliverDetailExchangeDetail, ix: [] });
+        orderDetail.forEach((el: any) => {
+            let getIxByXi: any = getDeliverDetailExchangeDetail.find((i: any) => i.xi === el.id);
+            el.deliverDetail = getIxByXi?.ix;
+        });
         let promise: PromiseLike<any>[] = [customer, shippingContact];
         orderDetail.forEach((el: any) => {
             el.product = 积分商城.PointProductLib.boxId(el?.item);
-            let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
+            // let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
+            let getExchangeTransportation: any = JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail });
             getExchangeTransportation.then((data: any) => el.transportation = data || undefined);
             promise.push(getExchangeTransportation);
             promise.push(el.product);

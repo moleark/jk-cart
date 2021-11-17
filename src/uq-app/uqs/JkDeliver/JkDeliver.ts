@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed Nov 10 2021 19:21:32 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Tue Nov 16 2021 10:11:39 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -156,7 +156,6 @@ export interface ParamTrucked {
 	truckMain: number;
 	detail: {
 		biz: number;
-		quantity: number;
 	}[];
 
 }
@@ -182,6 +181,25 @@ export interface ParamAddTruck {
 	json: string;
 }
 export interface ResultAddTruck {
+}
+
+export interface ParamCancelTallying {
+	cutOffMain: number;
+}
+export interface ResultCancelTallying {
+}
+
+export interface ParamTallyCancelSingle {
+	deliverMain: number;
+	deliverDetail: number;
+}
+export interface ResultTallyCancelSingle {
+}
+
+export interface ParamCancelDelivering {
+	deliver: number;
+}
+export interface ResultCancelDelivering {
 }
 
 export interface Param$poked {
@@ -249,7 +267,7 @@ export interface ReturnGetReadyCutOffList$page {
 	orderDetail: number;
 	item: number;
 	shouldQuantity: number;
-	customerAccount: number;
+	contact: number;
 }
 export interface ResultGetReadyCutOffList {
 	$page: ReturnGetReadyCutOffList$page[];
@@ -291,6 +309,7 @@ export interface ReturnGetCutOffMainMain {
 	warehouse: number;
 	cutter: number;
 	staff: number;
+	finishTime: any;
 }
 export interface ReturnGetCutOffMainDetail {
 	deliverMain: number;
@@ -502,7 +521,6 @@ export interface ReturnGetTruckAdditionalTaskRet {
 	creator: number;
 	requiredDate: any;
 	staff: number;
-	scheduleDate: any;
 	finishTime: any;
 	create: any;
 }
@@ -518,6 +536,46 @@ export interface ReturnGetRoleOpsRet {
 }
 export interface ResultGetRoleOps {
 	ret: ReturnGetRoleOpsRet[];
+}
+
+export interface ParamGetCutOffHistory {
+	warehouse: number;
+}
+export interface ReturnGetCutOffHistory$page {
+	id: number;
+	cutOffMain: number;
+	no: string;
+	finishTime: any;
+	staff: number;
+}
+export interface ResultGetCutOffHistory {
+	$page: ReturnGetCutOffHistory$page[];
+}
+
+export interface ParamGetDeliverHistory {
+	warehouse: number;
+}
+export interface ReturnGetDeliverHistory$page {
+	id: number;
+	deliverMain: number;
+	no: string;
+	cutOffMain: string;
+	traynumber: number;
+	finishTime: any;
+	staff: number;
+}
+export interface ResultGetDeliverHistory {
+	$page: ReturnGetDeliverHistory$page[];
+}
+
+export interface ParamGetReadyTruckCount {
+}
+export interface ReturnGetReadyTruckCountRet {
+	warehouse: number;
+	readyTruckCount: number;
+}
+export interface ResultGetReadyTruckCount {
+	ret: ReturnGetReadyTruckCountRet[];
 }
 
 export interface OrderMain {
@@ -552,6 +610,7 @@ export interface DeliverMain {
 	warehouse: number;
 	cutOffMain: number;
 	trayNumber: number;
+	$create?: any;
 }
 
 export interface DeliverDetail {
@@ -577,12 +636,14 @@ export interface CutOffMain {
 	no?: string;
 	warehouse: number;
 	cutter: number;
+	$create?: any;
 }
 
 export interface CutOffType {
 	id?: number;
 	name: string;
 	description: string;
+	$create?: any;
 }
 
 export interface DeliverType {
@@ -608,6 +669,7 @@ export interface Request {
 	id?: number;
 	customerAccount: number;
 	contact: number;
+	$create?: any;
 }
 
 export interface InsuredInterval {
@@ -634,6 +696,7 @@ export interface TruckMain {
 	no?: string;
 	contact: number;
 	warehouse: number;
+	$create?: any;
 }
 
 export interface TruckAdditionalTask {
@@ -644,8 +707,8 @@ export interface TruckAdditionalTask {
 	creator: number;
 	requiredDate: any;
 	staff: number;
-	scheduleDate: any;
 	finishTime: any;
+	$create?: any;
 }
 
 export interface Role {
@@ -903,6 +966,9 @@ export interface UqExt extends Uq {
 	Trucked: UqAction<ParamTrucked, ResultTrucked>;
 	AddTruckAdditionalTask: UqAction<ParamAddTruckAdditionalTask, ResultAddTruckAdditionalTask>;
 	AddTruck: UqAction<ParamAddTruck, ResultAddTruck>;
+	CancelTallying: UqAction<ParamCancelTallying, ResultCancelTallying>;
+	TallyCancelSingle: UqAction<ParamTallyCancelSingle, ResultTallyCancelSingle>;
+	CancelDelivering: UqAction<ParamCancelDelivering, ResultCancelDelivering>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	WarehouseDeliverMain: UqQuery<ParamWarehouseDeliverMain, ResultWarehouseDeliverMain>;
 	GetDeliver: UqQuery<ParamGetDeliver, ResultGetDeliver>;
@@ -926,6 +992,9 @@ export interface UqExt extends Uq {
 	GetTruckHistoryList: UqQuery<ParamGetTruckHistoryList, ResultGetTruckHistoryList>;
 	GetTruckAdditionalTask: UqQuery<ParamGetTruckAdditionalTask, ResultGetTruckAdditionalTask>;
 	GetRoleOps: UqQuery<ParamGetRoleOps, ResultGetRoleOps>;
+	GetCutOffHistory: UqQuery<ParamGetCutOffHistory, ResultGetCutOffHistory>;
+	GetDeliverHistory: UqQuery<ParamGetDeliverHistory, ResultGetDeliverHistory>;
+	GetReadyTruckCount: UqQuery<ParamGetReadyTruckCount, ResultGetReadyTruckCount>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;

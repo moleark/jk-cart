@@ -542,7 +542,7 @@ export class COrder extends CUqBase {
         let { currentUser, store } = this.cApp;
         let { currentSalesRegion } = store;
         let { id: salesRegionId } = currentSalesRegion;
-        let { JkOrder, customer, common, product:productx, deliver } = this.uqs
+        let { JkOrder, customer, common, product:productx, deliver, JkDeliver } = this.uqs
         let order: any = { brief: {}, data: { orderItems: [], comments: undefined } };
         /* 第一项是 main， 第二项是 detail */
         let getOrderDetail = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
@@ -584,13 +584,19 @@ export class COrder extends CUqBase {
             });
             let orderItemsn: any[] = [];
             if (getOrderDetail[1].length) {
+                let getDeliverDatailByOrderDetail = await this.uqs.JkDeliver.IX({ IX: JkDeliver.DeliverDetailOrderDetail, ix: [] });
+                getOrderDetail[1].forEach((el: any) => {
+                    let getIx: any = getDeliverDatailByOrderDetail.find((i: any) => i.xi === el.id);
+                    el.deliverDetail = getIx?.ix;
+                });
                 let promise: PromiseLike<any>[] = [];
                 getOrderDetail[1].forEach((el: any) => {
                     let { product } = el;
                     el.product = productx.ProductX.boxId(product);
                     promise.push(el.product);
                     promise.push(productx.GetProductPrices.table({ product: product, salesRegion: salesRegionId }).then((data: any) => el.pricex = data || []));
-                    promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: el?.id }).then((data: any) => el.transportation = data || undefined));
+                    // promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: el?.id }).then((data: any) => el.transportation = data || undefined));
+                    promise.push(JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail }).then((data: any) => el.transportation = data || undefined));
                 });
                 await Promise.all(promise);
                 orderItemsn = getOrderDetail[1].map((el: any) => {

@@ -24,11 +24,16 @@ const fields = {
 		"isKey": false,
 		"label": "Contact"
 	} as FieldItemId,
+	$create: {
+		"name": "$create",
+		"isKey": false,
+		"label": "$create"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.customerAccount, fields.contact, 
+	fields.customerAccount, fields.contact, fields.$create, 
 ];
 
 export const ui: UI = {

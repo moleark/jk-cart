@@ -174,8 +174,8 @@ export interface UqPlatformjoint {
 }
 
 export interface UqDeliver {
-    GetOrderDetailTransportation: Query;
-    GetPointExchangeDetailTransportation: Query;
+    // GetOrderDetailTransportation: Query;
+    // GetPointExchangeDetailTransportation: Query;
 }
 export interface UQs {
     order: UqOrder;

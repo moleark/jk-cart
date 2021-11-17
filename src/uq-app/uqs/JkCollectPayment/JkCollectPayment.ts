@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed Nov 10 2021 19:21:32 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Tue Nov 16 2021 10:11:39 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -302,6 +302,12 @@ export interface DxReceiveMain {
 	$act?: number;
 }
 
+export interface OppositeReceiveDetail {
+	id: number;
+	opposite?: number;
+	$act?: number;
+}
+
 export interface ActParamDxOrderDetail {
 	id: number|IDXValue;
 	receive?: number|IDXValue;
@@ -360,6 +366,12 @@ export interface ActParamDxReceiveMain {
 	$act?: number;
 }
 
+export interface ActParamOppositeReceiveDetail {
+	id: number|IDXValue;
+	opposite?: number|IDXValue;
+	$act?: number;
+}
+
 export interface IxCustomerPendingReceive {
 	ix: number;
 	xi: number;
@@ -403,6 +415,7 @@ export interface ParamActs {
 	dxInvoiceMain?: ActParamDxInvoiceMain[];
 	dxOrderDetailReturn?: ActParamDxOrderDetailReturn[];
 	dxReceiveMain?: ActParamDxReceiveMain[];
+	oppositeReceiveDetail?: ActParamOppositeReceiveDetail[];
 	ixCustomerPendingReceive?: IxCustomerPendingReceive[];
 	ixCustomerPendingInvoice?: IxCustomerPendingInvoice[];
 	dxOrderDetailInvoiceReceive?: DxOrderDetailInvoiceReceive[];
@@ -443,6 +456,7 @@ export interface UqExt extends Uq {
 	DxInvoiceMain: UqIDX<any>;
 	DxOrderDetailReturn: UqIDX<any>;
 	DxReceiveMain: UqIDX<any>;
+	OppositeReceiveDetail: UqIDX<any>;
 	IxCustomerPendingReceive: UqIX<any>;
 	IxCustomerPendingInvoice: UqIX<any>;
 	DxOrderDetailInvoiceReceive: UqIX<any>;

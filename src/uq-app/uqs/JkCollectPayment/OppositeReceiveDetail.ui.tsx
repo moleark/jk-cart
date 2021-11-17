@@ -2,7 +2,7 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { TruckMain } from "./JkDeliver";
+import { OppositeReceiveDetail } from "./JkCollectPayment";
 
 /*--fields--*/
 const fields = {
@@ -12,39 +12,21 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	no: {
-		"name": "no",
-		"type": "string",
-		"isKey": true,
-		"widget": "string",
-		"label": "No"
-	} as FieldItemString,
-	contact: {
-		"name": "contact",
+	opposite: {
+		"name": "opposite",
 		"type": "id",
 		"isKey": false,
-		"label": "Contact"
+		"label": "Opposite"
 	} as FieldItemId,
-	warehouse: {
-		"name": "warehouse",
-		"type": "id",
-		"isKey": false,
-		"label": "Warehouse"
-	} as FieldItemId,
-	$create: {
-		"name": "$create",
-		"isKey": false,
-		"label": "$create"
-	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.no, fields.contact, fields.warehouse, fields.$create, 
+	fields.opposite, 
 ];
 
 export const ui: UI = {
-	label: "TruckMain",
+	label: "OppositeReceiveDetail",
 	fieldArr,
 	fields,
 };
@@ -62,6 +44,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: TruckMain):JSX.Element {
+export function render(item: OppositeReceiveDetail):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };
