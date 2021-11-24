@@ -1,6 +1,6 @@
-//=== UqApp builder created on Tue Nov 16 2021 10:11:39 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID } from "tonva-react";
 
 
 //===============================
@@ -244,162 +244,6 @@ export interface InvoiceDetailRaw {
 	amount: number;
 }
 
-export interface DxOrderDetail {
-	id: number;
-	receive?: number;
-	receiveDone?: number;
-	invoice?: number;
-	invoiceDone?: number;
-	$act?: number;
-}
-
-export interface DxReturnDetail {
-	id: number;
-	receive?: number;
-	receiveDone?: number;
-	invoice?: number;
-	invoiceDone?: number;
-	$act?: number;
-}
-
-export interface DxCustomerReceive {
-	id: number;
-	sumAmount?: number;
-	$act?: number;
-}
-
-export interface DxCustomerInvoice {
-	id: number;
-	sumAmount?: number;
-	$act?: number;
-}
-
-export interface DxInvoiceMain {
-	id: number;
-	sumAmount?: number;
-	usedAmount?: number;
-	redAmount?: number;
-	invalidAmount?: number;
-	leftAmount?: number;
-	$act?: number;
-}
-
-export interface DxOrderDetailReturn {
-	id: number;
-	receiveReturn?: number;
-	receiveReturnDone?: number;
-	invoiceReturn?: number;
-	invoiceReturnDone?: number;
-	$act?: number;
-}
-
-export interface DxReceiveMain {
-	id: number;
-	sumAmount?: number;
-	usedAmount?: number;
-	returnAmount?: number;
-	leftAmount?: number;
-	$act?: number;
-}
-
-export interface OppositeReceiveDetail {
-	id: number;
-	opposite?: number;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetail {
-	id: number|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxReturnDetail {
-	id: number|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxCustomerReceive {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxCustomerInvoice {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxInvoiceMain {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	usedAmount?: number|IDXValue;
-	redAmount?: number|IDXValue;
-	invalidAmount?: number|IDXValue;
-	leftAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetailReturn {
-	id: number|IDXValue;
-	receiveReturn?: number|IDXValue;
-	receiveReturnDone?: number|IDXValue;
-	invoiceReturn?: number|IDXValue;
-	invoiceReturnDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxReceiveMain {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	usedAmount?: number|IDXValue;
-	returnAmount?: number|IDXValue;
-	leftAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamOppositeReceiveDetail {
-	id: number|IDXValue;
-	opposite?: number|IDXValue;
-	$act?: number;
-}
-
-export interface IxCustomerPendingReceive {
-	ix: number;
-	xi: number;
-}
-
-export interface IxCustomerPendingInvoice {
-	ix: number;
-	xi: number;
-}
-
-export interface DxOrderDetailInvoiceReceive {
-	ixx: number;
-	ix: number;
-	xi: number;
-	amount: number;
-}
-
-export interface Refund {
-	ix: number;
-	xi: number;
-	comments: string;
-}
-
-export interface RedInvoiceMain {
-	ix: number;
-	xi: number;
-}
-
 export interface ParamActs {
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
@@ -408,19 +252,6 @@ export interface ParamActs {
 	receiveDetail?: ReceiveDetail[];
 	receiveMain?: ReceiveMain[];
 	invoiceDetailRaw?: InvoiceDetailRaw[];
-	dxOrderDetail?: ActParamDxOrderDetail[];
-	dxReturnDetail?: ActParamDxReturnDetail[];
-	dxCustomerReceive?: ActParamDxCustomerReceive[];
-	dxCustomerInvoice?: ActParamDxCustomerInvoice[];
-	dxInvoiceMain?: ActParamDxInvoiceMain[];
-	dxOrderDetailReturn?: ActParamDxOrderDetailReturn[];
-	dxReceiveMain?: ActParamDxReceiveMain[];
-	oppositeReceiveDetail?: ActParamOppositeReceiveDetail[];
-	ixCustomerPendingReceive?: IxCustomerPendingReceive[];
-	ixCustomerPendingInvoice?: IxCustomerPendingInvoice[];
-	dxOrderDetailInvoiceReceive?: DxOrderDetailInvoiceReceive[];
-	refund?: Refund[];
-	redInvoiceMain?: RedInvoiceMain[];
 }
 
 
@@ -449,19 +280,6 @@ export interface UqExt extends Uq {
 	ReceiveDetail: UqID<any>;
 	ReceiveMain: UqID<any>;
 	InvoiceDetailRaw: UqID<any>;
-	DxOrderDetail: UqIDX<any>;
-	DxReturnDetail: UqIDX<any>;
-	DxCustomerReceive: UqIDX<any>;
-	DxCustomerInvoice: UqIDX<any>;
-	DxInvoiceMain: UqIDX<any>;
-	DxOrderDetailReturn: UqIDX<any>;
-	DxReceiveMain: UqIDX<any>;
-	OppositeReceiveDetail: UqIDX<any>;
-	IxCustomerPendingReceive: UqIX<any>;
-	IxCustomerPendingInvoice: UqIX<any>;
-	DxOrderDetailInvoiceReceive: UqIX<any>;
-	Refund: UqIX<any>;
-	RedInvoiceMain: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

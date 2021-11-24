@@ -1,6 +1,6 @@
-//=== UqApp builder created on Tue Nov 16 2021 10:11:39 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap } from "tonva-react";
 
 
 //===============================
@@ -415,19 +415,19 @@ export interface ResultPriceXquery {
 	ret: ReturnPriceXqueryRet[];
 }
 
-export interface ParamProductSearchHistory {
-	webUser: number;
-	salesRegion: number;
-	keyword: string;
+export interface ParamGetProductByPackId {
+	pack: number;
 }
-export interface ReturnProductSearchHistory$page {
-	date: any;
-	webUser: number;
-	salesRegion: number;
-	keyword: string;
+export interface ReturnGetProductByPackIdRet {
+	product: number;
+	origin: string;
+	description: string;
+	descriptionC: string;
+	brand: number;
+	brandName: string;
 }
-export interface ResultProductSearchHistory {
-	$page: ReturnProductSearchHistory$page[];
+export interface ResultGetProductByPackId {
+	ret: ReturnGetProductByPackIdRet[];
 }
 
 export interface ParamActs {
@@ -470,29 +470,24 @@ export interface UqExt extends Uq {
 	GetProductLotNumber: UqQuery<ParamGetProductLotNumber, ResultGetProductLotNumber>;
 	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	PriceXquery: UqQuery<ParamPriceXquery, ResultPriceXquery>;
-	AgentPrice: UqMap;
+	GetProductByPackId: UqQuery<ParamGetProductByPackId, ResultGetProductByPackId>;
 	BrandSalesRegion: UqMap;
 	BrandDeliveryTime: UqMap;
-	ProductStuff: UqMap;
 	PriceX: UqMap;
 	ProductChemical: UqMap;
 	ProductSalesRegion: UqMap;
 	ProductLegallyProhibited: UqMap;
-	ProductCache: UqMap;
 	ProductProductCategory: UqMap;
 	ProductCategoryInclusion: UqMap;
-	ProductProductCategoryCache: UqMap;
 	ProductMSDSFile: UqMap;
 	ProductSpecFile: UqMap;
 	ProductSalesRank: UqMap;
-	ProductCategoryLeafCache: UqMap;
 	COA: UqMap;
 	ProductExtention: UqMap;
 	ProductDeliveryTime: UqMap;
 	ProductEmbargo: UqMap;
 	ProductStandardSample: UqMap;
 	ProductUserManualFile: UqMap;
-	ProductSearchHistory: UqHistory<ParamProductSearchHistory, ResultProductSearchHistory>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

@@ -29,16 +29,9 @@ import * as OrderMainEx from './OrderMainEx.ui';
 import * as OrderDetailEx from './OrderDetailEx.ui';
 import * as ReturnDetailEx from './ReturnDetailEx.ui';
 import * as ReturnMainEx from './ReturnMainEx.ui';
-import * as DxOrderDetail from './DxOrderDetail.ui';
-import * as DxReturnDetail from './DxReturnDetail.ui';
 import * as DxOrderMainState from './DxOrderMainState.ui';
-import * as IxCustomerReturnable from './IxCustomerReturnable.ui';
-import * as IxOrderDetailFee from './IxOrderDetailFee.ui';
-import * as IxOrderMainFee from './IxOrderMainFee.ui';
-import * as IxOrderDetailCoupon from './IxOrderDetailCoupon.ui';
-import * as IxOrderAmountDiff from './IxOrderAmountDiff.ui';
-import * as IxOrderMainCustomerCoupon from './IxOrderMainCustomerCoupon.ui';
 import * as OrderDetailDeliver from './OrderDetailDeliver.ui';
+import * as OrderDetailReceive from './OrderDetailReceive.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Coupon', Coupon);
@@ -71,15 +64,8 @@ export function setUI(uq: Uq) {
 	assign(uq, 'OrderDetailEx', OrderDetailEx);
 	assign(uq, 'ReturnDetailEx', ReturnDetailEx);
 	assign(uq, 'ReturnMainEx', ReturnMainEx);
-	assign(uq, 'DxOrderDetail', DxOrderDetail);
-	assign(uq, 'DxReturnDetail', DxReturnDetail);
 	assign(uq, 'DxOrderMainState', DxOrderMainState);
-	assign(uq, 'IxCustomerReturnable', IxCustomerReturnable);
-	assign(uq, 'IxOrderDetailFee', IxOrderDetailFee);
-	assign(uq, 'IxOrderMainFee', IxOrderMainFee);
-	assign(uq, 'IxOrderDetailCoupon', IxOrderDetailCoupon);
-	assign(uq, 'IxOrderAmountDiff', IxOrderAmountDiff);
-	assign(uq, 'IxOrderMainCustomerCoupon', IxOrderMainCustomerCoupon);
 	assign(uq, 'OrderDetailDeliver', OrderDetailDeliver);
+	assign(uq, 'OrderDetailReceive', OrderDetailReceive);
 }
 export * from './JkOrder';

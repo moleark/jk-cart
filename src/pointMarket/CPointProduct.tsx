@@ -293,13 +293,17 @@ export class CPointProduct extends CUqBase {
         order.brief = { id: id, no: no, date: createDate, state: state };
         customer = customerUQ.Customer.boxId(customer);
         shippingContact = customerUQ.Contact.boxId(shippingContact);
-        let getDeliverDetailExchangeDetail = await JkDeliver.IX({ IX: JkDeliver.DeliverDetailExchangeDetail, ix: [] });
+        /* let getDeliverDetailExchangeDetail = await JkDeliver.IX({ IX: JkDeliver.DeliverDetailExchangeDetail, ix: [] });
         orderDetail.forEach((el: any) => {
             let getIxByXi: any = getDeliverDetailExchangeDetail.find((i: any) => i.xi === el.id);
             el.deliverDetail = getIxByXi?.ix;
-        });
+        }); */
+        let ids = orderDetail.map((el: any) => el.id);
+        let getDeliverDetailExchangeDetail = await this.uqs.JkPointshop.IX({ IX: JkPointshop.ExchangeDetailDeliver, ix: ids });
         let promise: PromiseLike<any>[] = [customer, shippingContact];
         orderDetail.forEach((el: any) => {
+            let findD: any = getDeliverDetailExchangeDetail.find((i: any) => i.ix === el.id);
+            el.deliverDetail = findD?.xi;
             el.product = 积分商城.PointProductLib.boxId(el?.item);
             // let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
             let getExchangeTransportation: any = JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail });

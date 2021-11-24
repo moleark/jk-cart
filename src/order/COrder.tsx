@@ -584,13 +584,17 @@ export class COrder extends CUqBase {
             });
             let orderItemsn: any[] = [];
             if (getOrderDetail[1].length) {
-                let getDeliverDatailByOrderDetail = await this.uqs.JkDeliver.IX({ IX: JkDeliver.DeliverDetailOrderDetail, ix: [] });
+                let ids = getOrderDetail[1].map((el: any) => el.id);
+                let getDeliverDatailByOrderDetail = await this.uqs.JkOrder.IX({ IX: JkOrder.OrderDetailDeliver, ix: ids });
+                /*
                 getOrderDetail[1].forEach((el: any) => {
                     let getIx: any = getDeliverDatailByOrderDetail.find((i: any) => i.xi === el.id);
                     el.deliverDetail = getIx?.ix;
-                });
+                }); */
                 let promise: PromiseLike<any>[] = [];
                 getOrderDetail[1].forEach((el: any) => {
+                    let findD: any = getDeliverDatailByOrderDetail.find((i: any) => i.ix === el.id);
+                    el.deliverDetail = findD?.xi;
                     let { product } = el;
                     el.product = productx.ProductX.boxId(product);
                     promise.push(el.product);
@@ -604,7 +608,7 @@ export class COrder extends CUqBase {
                     let { pack } = pricex?.find((o: any) => o.pack?.id === item) || { pack: item };
                     let param: any = { id: id, transportation: el.transportation };
                     return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined };
-                });
+                });  
             };
             /* Fee(页面暂时不展示,后期实现) */
             // let getFreightFee = await JkOrder.IX<IxOrderMainFee>({

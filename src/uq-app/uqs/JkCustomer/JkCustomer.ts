@@ -1,6 +1,6 @@
-//=== UqApp builder created on Tue Nov 16 2021 10:11:40 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqQuery, UqMap, UqHistory, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap } from "tonva-react";
 
 
 //===============================
@@ -46,6 +46,7 @@ export interface TuidInvoiceType {
 export interface TuidResearch {
 	id?: number;
 	name: string;
+	parent: number;
 	no: string;
 	createTime: any;
 }
@@ -208,6 +209,12 @@ export interface TuidVIPCardType {
 	id?: number;
 }
 
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
+}
+
 export interface ParamSearchCustomer {
 	key: string;
 }
@@ -321,31 +328,30 @@ export interface ResultGetMyExpiredCoupon {
 	$page: ReturnGetMyExpiredCoupon$page[];
 }
 
-export interface ParamCustomerSalesmanHistory {
-	customer: number;
-	salesman: number;
-	operation: number;
-	createDate: any;
+export interface Param$getMyTimezone {
 }
-export interface ReturnCustomerSalesmanHistory$page {
-	date: any;
-	customer: number;
-	salesman: number;
-	operation: number;
-	createDate: any;
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
 }
-export interface ResultCustomerSalesmanHistory {
-	$page: ReturnCustomerSalesmanHistory$page[];
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
-export interface CustomerSalesman {
-	ix: number;
-	xi: number;
-	unLockOn: any;
+export interface ParamGetResearchByParent {
+	parent: number;
+	key: string;
+}
+export interface ReturnGetResearchByParentRet {
+	id: number;
+	name: string;
+	parent: number;
+}
+export interface ResultGetResearchByParent {
+	ret: ReturnGetResearchByParentRet[];
 }
 
 export interface ParamActs {
-	customerSalesman?: CustomerSalesman[];
 }
 
 
@@ -376,6 +382,7 @@ export interface UqExt extends Uq {
 	Brand: UqTuid<TuidBrand>;
 	CustomerSettingType: UqTuid<TuidCustomerSettingType>;
 	VIPCardType: UqTuid<TuidVIPCardType>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	SearchCustomer: UqQuery<ParamSearchCustomer, ResultSearchCustomer>;
 	GetBuyerAccountByNo: UqQuery<ParamGetBuyerAccountByNo, ResultGetBuyerAccountByNo>;
 	GetCustomerByNo: UqQuery<ParamGetCustomerByNo, ResultGetCustomerByNo>;
@@ -385,6 +392,8 @@ export interface UqExt extends Uq {
 	$poked: UqQuery<Param$poked, Result$poked>;
 	GetMyUsedCoupon: UqQuery<ParamGetMyUsedCoupon, ResultGetMyUsedCoupon>;
 	GetMyExpiredCoupon: UqQuery<ParamGetMyExpiredCoupon, ResultGetMyExpiredCoupon>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
+	GetResearchByParent: UqQuery<ParamGetResearchByParent, ResultGetResearchByParent>;
 	CustomerDepartment: UqMap;
 	CustomerSetting: UqMap;
 	CustomerContractor: UqMap;
@@ -404,8 +413,6 @@ export interface UqExt extends Uq {
 	CustomerCredits: UqMap;
 	CustomerCoupon: UqMap;
 	CustomerCouponUsed: UqMap;
-	CustomerSalesmanHistory: UqHistory<ParamCustomerSalesmanHistory, ResultCustomerSalesmanHistory>;
-	CustomerSalesman: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
