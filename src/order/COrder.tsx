@@ -542,10 +542,10 @@ export class COrder extends CUqBase {
         let { currentUser, store } = this.cApp;
         let { currentSalesRegion } = store;
         let { id: salesRegionId } = currentSalesRegion;
-        let { JkOrder, customer, common, product:productx, deliver, JkDeliver } = this.uqs
+        let { JkOrder, customer, common, product: productx, JkDeliver } = this.uqs;
         let order: any = { brief: {}, data: { orderItems: [], comments: undefined } };
         /* 第一项是 main， 第二项是 detail */
-        let getOrderDetail = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
+        let getOrderDetail: any[] = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
             id: orderId,
             main: JkOrder.OrderMain,
             detail: JkOrder.OrderDetail,
@@ -554,14 +554,14 @@ export class COrder extends CUqBase {
             IDX: JkOrder.OrderMainEx,
             id: orderId,
         });
-        if (!getOrderDetail[0].length || !getOrderDetail[1].length) {
+        let [mainArr, orderDetail] = getOrderDetail;
+        if (!this.user || !mainArr.length || !orderDetail.length || (mainArr.length && mainArr[0].webUser !== this.user?.id)) {
             this.openVPage(VError);return;
         };
         let getOrderMainState: any[] = await JkOrder.ID<DxOrderMainState>({
             IDX: JkOrder.DxOrderMainState,
             id: orderId,
         });
-        let mainArr: any[] = getOrderDetail[0];
         if (mainArr.length) {
             let { id, no, createDate: date, sumAmount: amount, shippingContact, invoiceContact, invoiceInfo, invoiceType } = mainArr[0] as any;
             let { state } = getOrderMainState[0] || { state: undefined };
@@ -583,16 +583,16 @@ export class COrder extends CUqBase {
                 comments: getOrderMainEx[0]?.commentsAboutDeliver
             });
             let orderItemsn: any[] = [];
-            if (getOrderDetail[1].length) {
-                let ids = getOrderDetail[1].map((el: any) => el.id);
+            if (orderDetail.length) {
+                let ids = orderDetail.map((el: any) => el.id);
                 let getDeliverDatailByOrderDetail = await this.uqs.JkOrder.IX({ IX: JkOrder.OrderDetailDeliver, ix: ids });
                 /*
-                getOrderDetail[1].forEach((el: any) => {
+                orderDetail.forEach((el: any) => {
                     let getIx: any = getDeliverDatailByOrderDetail.find((i: any) => i.xi === el.id);
                     el.deliverDetail = getIx?.ix;
                 }); */
                 let promise: PromiseLike<any>[] = [];
-                getOrderDetail[1].forEach((el: any) => {
+                orderDetail.forEach((el: any) => {
                     let findD: any = getDeliverDatailByOrderDetail.find((i: any) => i.ix === el.id);
                     el.deliverDetail = findD?.xi;
                     let { product } = el;
@@ -603,11 +603,11 @@ export class COrder extends CUqBase {
                     promise.push(JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail }).then((data: any) => el.transportation = data || undefined));
                 });
                 await Promise.all(promise);
-                orderItemsn = getOrderDetail[1].map((el: any) => {
+                orderItemsn = orderDetail.map((el: any) => {
                     let { product, item, price, quantity, id, pricex } = el as any;
                     let { pack } = pricex?.find((o: any) => o.pack?.id === item) || { pack: item };
                     let param: any = { id: id, transportation: el.transportation };
-                    return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined };
+                    return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined as any };
                 });  
             };
             /* Fee(页面暂时不展示,后期实现) */

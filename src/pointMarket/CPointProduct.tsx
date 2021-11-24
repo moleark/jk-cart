@@ -273,7 +273,7 @@ export class CPointProduct extends CUqBase {
             this.openVPage(VError);
             return;
         }; */
-        let { JkPointshop, 积分商城, customer: customerUQ, deliver, JkDeliver } = this.uqs;
+        let { JkPointshop, 积分商城, customer: customerUQ, JkDeliver } = this.uqs;
         let order = { brief: {}, data: {} };
         let getOrder:any[] = await JkPointshop.IDDetailGet({
             id: orderId,
@@ -281,7 +281,7 @@ export class CPointProduct extends CUqBase {
             detail: JkPointshop.ExchangeDetail,
         });
         let [mainArr, orderDetail] = getOrder;
-        if (!mainArr.length || !orderDetail.length) {
+        if ( !this.user || !mainArr.length || !orderDetail.length || (mainArr.length && mainArr[0].customer !== this.cApp.currentUser?.currentCustomer?.id)) {
             this.openVPage(VError);return;
         };
         let getDxExchagneMainState: any[] = await JkPointshop.ID<DxExchangeMainState>({
