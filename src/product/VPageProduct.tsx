@@ -17,6 +17,7 @@ import { TopicDivision } from 'pointMarket/VPointProduct';
 import { observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { productPropIsValid } from 'product';
+import { VPagePDF } from './VPagePDF';
 
 const schema: ItemSchema[] = [
     { name: 'pack', type: 'object' } as ObjectSchema,
@@ -320,18 +321,29 @@ export class VPageProduct extends VPage<CProduct> {
         </div>
     }
 
+    openPDF = async (type: string, param: any) => {
+        this.controller.materialType = type;
+        let { getPDFFileUrl } = this.controller;
+        let content: any = await getPDFFileUrl(param);
+        if (content === undefined || content.status) return;
+        this.openVPage(VPagePDF, content);
+    };
+
     private material = (product: Product, showMob?: boolean) => {
-        let { id, productDocs } = product;
+        let { id, productDocs, props } = product;
         let Materials = [
-            { id: 1, name: "化学品安全技术说明书（SDS）", type: "msds" },
-            { id: 2, name: "技术规格说明书（Specifications）", type: "spec" },
-            { id: 3, name: "质检报告 (COA)", type: "coa" },
-            { id: 4, name: "用户手册（UserManual）", type: "um" },
+            { id: 1, onclick: true, name: "化学品安全技术说明书（SDS）", type: "msds" },
+            { id: 2, onclick: true, name: "技术规格说明书（Specifications）", type: "spec" },
+            { id: 3, onclick: false, name: "质检报告 (COA)", type: "coa" },
+            { id: 4, onclick: true, name: "用户手册（UserManual）", type: "um" },
         ];
         let effectArr: any[] = Materials.filter((el: any) => productDocs[el.type]);
+        let param: any = { origin: props.origin, lang: "CN" };/* lang 后期需要根据国家更改 */
         return <div className={classNames('', !showMob ? 'd-none d-sm-block' : 'd-block d-sm-none')} >{/* left-below */}
             {
                 effectArr.map((v: any) => {
+                    if (v.onclick) return <a key={v.name} href="#!"
+                        onClick={() => { this.openPDF(v.type, param);}} ><div className="mint" >{v.name}</div></a>;
                     return <Ax key={v.name} href={'/product/mscu/' + v.type + '/' + id}>
                         <div className="mint" >{v.name}</div>
                     </Ax>

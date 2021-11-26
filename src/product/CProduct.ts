@@ -289,13 +289,13 @@ export class CProduct extends CUqBase {
      */
     getPDFFileUrl = async (row: any) => {
         // await this.cApp.assureLogin();
-        let { origin, captcha, lang, lot } = row;
+        let { origin, lang, lot } = row;
         if (this.materialType === 'msds')
-            return await this.fetchPdf(`/partial/productMsdsFileByOrigin/${lang}/${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productMsdsFileByOrigin/${lang}/${origin}`);
         if (this.materialType === 'um')
-            return await this.fetchPdf(`/partial/productUserManualFileByOrigin/${lang}/${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productUserManualFileByOrigin/${lang}/${origin}`);
         if (this.materialType === 'spec')
-            return await this.fetchPdf(`/partial/productSpecFileByOrigin/${origin}/${captcha}`);
+            return await this.fetchPdf(`/partial/productSpecFileByOrigin/${origin}`);
         if (this.materialType === 'coa') {
             let getLot = await this.getLotByOrigin({ lotnumber: lot, origin: origin });/* LV50T103 911810  */
             let res = {
@@ -327,7 +327,7 @@ export class CProduct extends CUqBase {
     fetchPdf = async (url: string) => {
         let fileUrl = GLOABLE.CONTENTSITE + url;
         let res = await window.fetch(fileUrl, {
-            credentials: 'include'
+            // credentials: 'include'
         });
         if (res.status === 200) {
             let content = await res.arrayBuffer();
@@ -356,7 +356,7 @@ export class CProduct extends CUqBase {
      */
     openMaterial = async (type?: string, id?: string) => {
         type = type !== undefined ? type.toLowerCase() : type;
-        if (docTypeWithCaptcha.includes(type)) await this.getCaptcha();
+        // if (docTypeWithCaptcha.includes(type)) await this.getCaptcha();
         this.materialType = type;
         let origin: string;
         if (!isNaN(Number(id))) {
