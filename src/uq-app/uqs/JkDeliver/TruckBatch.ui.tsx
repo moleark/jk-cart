@@ -2,31 +2,39 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxWebuserEmployeeCopy } from "./JkCoupon";
+import { TruckBatch } from "./JkDeliver";
 
 /*--fields--*/
 const fields = {
-	ix: {
-		"name": "ix",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
+		"label": "Id"
 	} as FieldItemId,
-	xi: {
-		"name": "xi",
-		"type": "id",
+	name: {
+		"name": "name",
+		"type": "string",
+		"isKey": true,
+		"widget": "string",
+		"label": "Name"
+	} as FieldItemString,
+	description: {
+		"name": "description",
+		"type": "string",
 		"isKey": false,
-		"label": "Xi"
-	} as FieldItemId,
+		"widget": "string",
+		"label": "Description"
+	} as FieldItemString,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.xi, 
+	fields.name, fields.description, 
 ];
 
 export const ui: UI = {
-	label: "IxWebuserEmployeeCopy",
+	label: "TruckBatch",
 	fieldArr,
 	fields,
 };
@@ -44,6 +52,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxWebuserEmployeeCopy):JSX.Element {
+export function render(item: TruckBatch):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

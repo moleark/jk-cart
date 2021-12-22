@@ -17,6 +17,22 @@ import * as TruckDetail from './TruckDetail.ui';
 import * as TruckMain from './TruckMain.ui';
 import * as TruckAdditionalTask from './TruckAdditionalTask.ui';
 import * as Role from './Role.ui';
+import * as TruckBatch from './TruckBatch.ui';
+import * as TruckStaff from './TruckStaff.ui';
+import * as DxDeliverMain from './DxDeliverMain.ui';
+import * as DxDeliverDetail from './DxDeliverDetail.ui';
+import * as DxDelivering from './DxDelivering.ui';
+import * as DxCutOffTypeBuyerAccount from './DxCutOffTypeBuyerAccount.ui';
+import * as DxTruckMain from './DxTruckMain.ui';
+import * as DxTrucking from './DxTrucking.ui';
+import * as IxUserWarehouse from './IxUserWarehouse.ui';
+import * as IxCutoffTypeDefinition from './IxCutoffTypeDefinition.ui';
+import * as DeliverDetailExchangeDetail from './DeliverDetailExchangeDetail.ui';
+import * as DeliverDetailOrderDetail from './DeliverDetailOrderDetail.ui';
+import * as InsuredTypeBrand from './InsuredTypeBrand.ui';
+import * as InsuredTypeInterval from './InsuredTypeInterval.ui';
+import * as IxPendingTruck from './IxPendingTruck.ui';
+import * as IxOrganizationTruckSetting from './IxOrganizationTruckSetting.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Carrier', Carrier);
@@ -37,5 +53,21 @@ export function setUI(uq: Uq) {
 	assign(uq, 'TruckMain', TruckMain);
 	assign(uq, 'TruckAdditionalTask', TruckAdditionalTask);
 	assign(uq, 'Role', Role);
+	assign(uq, 'TruckBatch', TruckBatch);
+	assign(uq, 'TruckStaff', TruckStaff);
+	assign(uq, 'DxDeliverMain', DxDeliverMain);
+	assign(uq, 'DxDeliverDetail', DxDeliverDetail);
+	assign(uq, 'DxDelivering', DxDelivering);
+	assign(uq, 'DxCutOffTypeBuyerAccount', DxCutOffTypeBuyerAccount);
+	assign(uq, 'DxTruckMain', DxTruckMain);
+	assign(uq, 'DxTrucking', DxTrucking);
+	assign(uq, 'IxUserWarehouse', IxUserWarehouse);
+	assign(uq, 'IxCutoffTypeDefinition', IxCutoffTypeDefinition);
+	assign(uq, 'DeliverDetailExchangeDetail', DeliverDetailExchangeDetail);
+	assign(uq, 'DeliverDetailOrderDetail', DeliverDetailOrderDetail);
+	assign(uq, 'InsuredTypeBrand', InsuredTypeBrand);
+	assign(uq, 'InsuredTypeInterval', InsuredTypeInterval);
+	assign(uq, 'IxPendingTruck', IxPendingTruck);
+	assign(uq, 'IxOrganizationTruckSetting', IxOrganizationTruckSetting);
 }
 export * from './JkDeliver';

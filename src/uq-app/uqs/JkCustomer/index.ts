@@ -21,6 +21,11 @@ import * as ProductX from './ProductX.ui';
 import * as Brand from './Brand.ui';
 import * as CustomerSettingType from './CustomerSettingType.ui';
 import * as VIPCardType from './VIPCardType.ui';
+import * as Certificate from './Certificate.ui';
+import * as CertificateSource from './CertificateSource.ui';
+import * as CretificateSourceAuditHistory from './CretificateSourceAuditHistory.ui';
+import * as DxPendingAuditCertificate from './DxPendingAuditCertificate.ui';
+import * as BuyeraccountCertificate from './BuyeraccountCertificate.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Currency', Currency);
@@ -45,5 +50,10 @@ export function setUI(uq: Uq) {
 	assign(uq, 'Brand', Brand);
 	assign(uq, 'CustomerSettingType', CustomerSettingType);
 	assign(uq, 'VIPCardType', VIPCardType);
+	assign(uq, 'Certificate', Certificate);
+	assign(uq, 'CertificateSource', CertificateSource);
+	assign(uq, 'CretificateSourceAuditHistory', CretificateSourceAuditHistory);
+	assign(uq, 'DxPendingAuditCertificate', DxPendingAuditCertificate);
+	assign(uq, 'BuyeraccountCertificate', BuyeraccountCertificate);
 }
 export * from './JkCustomer';

@@ -1,6 +1,6 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -351,7 +351,65 @@ export interface ResultGetResearchByParent {
 	ret: ReturnGetResearchByParentRet[];
 }
 
+export interface Certificate {
+	id?: number;
+	name: string;
+	description: string;
+}
+
+export interface CertificateSource {
+	id?: number;
+	certificate: number;
+	buyeraccount: number;
+	expiredDate: any;
+	path: string;
+	status: number;
+	creator: number;
+	createDate: any;
+}
+
+export interface CretificateSourceAuditHistory {
+	id: number;
+	status?: number;
+	comments?: string;
+	auditor?: number;
+	$act?: number;
+}
+
+export interface DxPendingAuditCertificate {
+	id: number;
+	createDate?: any;
+	$act?: number;
+}
+
+export interface ActParamCretificateSourceAuditHistory {
+	id: number|IDXValue;
+	status?: number|IDXValue;
+	comments?: string|IDXValue;
+	auditor?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxPendingAuditCertificate {
+	id: number|IDXValue;
+	createDate?: any|IDXValue;
+	$act?: number;
+}
+
+export interface BuyeraccountCertificate {
+	ix: number;
+	xi: number;
+	expiredDate: any;
+	path: string;
+	createDate: any;
+}
+
 export interface ParamActs {
+	certificate?: Certificate[];
+	certificateSource?: CertificateSource[];
+	cretificateSourceAuditHistory?: ActParamCretificateSourceAuditHistory[];
+	dxPendingAuditCertificate?: ActParamDxPendingAuditCertificate[];
+	buyeraccountCertificate?: BuyeraccountCertificate[];
 }
 
 
@@ -413,6 +471,11 @@ export interface UqExt extends Uq {
 	CustomerCredits: UqMap;
 	CustomerCoupon: UqMap;
 	CustomerCouponUsed: UqMap;
+	Certificate: UqID<any>;
+	CertificateSource: UqID<any>;
+	CretificateSourceAuditHistory: UqIDX<any>;
+	DxPendingAuditCertificate: UqIDX<any>;
+	BuyeraccountCertificate: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

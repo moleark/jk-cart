@@ -466,3 +466,11 @@
         right: 51px;
     }
 }
+
+.bg-center-img {
+    border-style: none;
+    border-width: 0;
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}

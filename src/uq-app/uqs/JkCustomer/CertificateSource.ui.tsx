@@ -2,7 +2,7 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { Coupon } from "./JkCoupon";
+import { CertificateSource } from "./JkCustomer";
 
 /*--fields--*/
 const fields = {
@@ -12,27 +12,34 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	code: {
-		"name": "code",
+	certificate: {
+		"name": "certificate",
+		"type": "id",
+		"isKey": false,
+		"label": "Certificate"
+	} as FieldItemId,
+	buyeraccount: {
+		"name": "buyeraccount",
+		"type": "id",
+		"isKey": false,
+		"label": "Buyeraccount"
+	} as FieldItemId,
+	expiredDate: {
+		"name": "expiredDate",
+		"isKey": false,
+		"label": "ExpiredDate"
+	} as undefined,
+	path: {
+		"name": "path",
 		"type": "string",
-		"isKey": true,
+		"isKey": false,
 		"widget": "string",
-		"label": "Code"
+		"label": "Path"
 	} as FieldItemString,
-	type: {
-		"name": "type",
+	status: {
+		"name": "status",
 		"isKey": false,
-		"label": "Type"
-	} as undefined,
-	validityDate: {
-		"name": "validityDate",
-		"isKey": false,
-		"label": "ValidityDate"
-	} as undefined,
-	isValid: {
-		"name": "isValid",
-		"isKey": false,
-		"label": "IsValid"
+		"label": "Status"
 	} as undefined,
 	creator: {
 		"name": "creator",
@@ -49,11 +56,11 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.code, fields.type, fields.validityDate, fields.isValid, fields.creator, fields.createDate, 
+	fields.certificate, fields.buyeraccount, fields.expiredDate, fields.path, fields.status, fields.creator, fields.createDate, 
 ];
 
 export const ui: UI = {
-	label: "Coupon",
+	label: "CertificateSource",
 	fieldArr,
 	fields,
 };
@@ -71,6 +78,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: Coupon):JSX.Element {
+export function render(item: CertificateSource):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

@@ -1,4 +1,4 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -387,6 +387,7 @@ export interface OrderMainEx {
 	organization: number;
 	currency: number;
 	poNumber: string;
+	orderType: number;
 	carrier: number;
 	commentsAboutDeliver: string;
 	createDate: any;
@@ -506,6 +507,7 @@ export interface UqExt extends Uq {
 	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
+	CurrencyExchangeRate: UqMap;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
 	ReturnDetail: UqID<any>;

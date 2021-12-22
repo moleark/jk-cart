@@ -1,6 +1,6 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:25 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqID } from "tonva-react";
 
 
 //===============================
@@ -149,40 +149,6 @@ export interface ResultSearchBottomDiscount {
 	ret: ReturnSearchBottomDiscountRet[];
 }
 
-export interface ParamCustomerBoundHistory {
-	customer: number;
-	boundTo: number;
-	boundType: any;
-	operation: number;
-}
-export interface ReturnCustomerBoundHistory$page {
-	date: any;
-	customer: number;
-	boundTo: number;
-	boundType: any;
-	operation: number;
-}
-export interface ResultCustomerBoundHistory {
-	$page: ReturnCustomerBoundHistory$page[];
-}
-
-export interface ParamWebUserBoundHistory {
-	webuser: number;
-	boundTo: number;
-	boundType: any;
-	operation: number;
-}
-export interface ReturnWebUserBoundHistory$page {
-	date: any;
-	webuser: number;
-	boundTo: number;
-	boundType: any;
-	operation: number;
-}
-export interface ResultWebUserBoundHistory {
-	$page: ReturnWebUserBoundHistory$page[];
-}
-
 export interface Coupon {
 	id?: number;
 	code: string;
@@ -191,53 +157,10 @@ export interface Coupon {
 	isValid: number;
 	creator: number;
 	createDate: any;
-	$create?: any;
-}
-
-export interface CustomerBound {
-	id: number;
-	salesman?: number;
-	boundDate?: any;
-	boundDays?: number;
-	boundType?: any;
-	$act?: number;
-}
-
-export interface ActParamCustomerBound {
-	id: number|IDXValue;
-	salesman?: number|IDXValue;
-	boundDate?: any|IDXValue;
-	boundDays?: number|IDXValue;
-	boundType?: any|IDXValue;
-	$act?: number;
-}
-
-export interface WebUserBound {
-	ixx: number;
-	ix: number;
-	xi: number;
-	boundDate: any;
-	boundDays: number;
-}
-
-export interface IxCouponUsed {
-	ixx: number;
-	ix: number;
-	xi: number;
-	usedDate: any;
-}
-
-export interface IxWebuserEmployeeCopy {
-	ix: number;
-	xi: number;
 }
 
 export interface ParamActs {
 	coupon?: Coupon[];
-	customerBound?: ActParamCustomerBound[];
-	webUserBound?: WebUserBound[];
-	ixCouponUsed?: IxCouponUsed[];
-	ixWebuserEmployeeCopy?: IxWebuserEmployeeCopy[];
 }
 
 
@@ -259,13 +182,7 @@ export interface UqExt extends Uq {
 	BottomDiscount: UqMap;
 	VIPCardDiscount: UqMap;
 	BrandSalesRegion: UqMap;
-	CustomerBoundHistory: UqHistory<ParamCustomerBoundHistory, ResultCustomerBoundHistory>;
-	WebUserBoundHistory: UqHistory<ParamWebUserBoundHistory, ResultWebUserBoundHistory>;
 	Coupon: UqID<any>;
-	CustomerBound: UqIDX<any>;
-	WebUserBound: UqIX<any>;
-	IxCouponUsed: UqIX<any>;
-	IxWebuserEmployeeCopy: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

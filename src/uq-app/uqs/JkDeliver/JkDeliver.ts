@@ -1,6 +1,6 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:44 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -661,6 +661,19 @@ export interface ResultGetCheckInfo {
 	detail: ReturnGetCheckInfoDetail[];
 }
 
+export interface ParamGetOrganizationTruckStaff {
+	staff: number;
+}
+export interface ReturnGetOrganizationTruckStaffRet {
+	truckStaff: number;
+	organization: number;
+	truckBatchId: number;
+	truckBatchName: string;
+}
+export interface ResultGetOrganizationTruckStaff {
+	ret: ReturnGetOrganizationTruckStaffRet[];
+}
+
 export interface OrderMain {
 	id?: number;
 	no?: string;
@@ -795,6 +808,164 @@ export interface Role {
 	discription: string;
 }
 
+export interface TruckBatch {
+	id?: number;
+	name: string;
+	description: string;
+}
+
+export interface TruckStaff {
+	id?: number;
+	name: string;
+	webuser: number;
+}
+
+export interface DxDeliverMain {
+	id: number;
+	rows?: number;
+	pickRows?: number;
+	carrier?: number;
+	waybillNumber?: string;
+	deliverTime?: any;
+	staff?: number;
+	startTime?: any;
+	finishTime?: any;
+	$act?: number;
+}
+
+export interface DxDeliverDetail {
+	id: number;
+	deliverDone?: number;
+	pickDone?: number;
+	checkDone?: number;
+	tallyDone?: number;
+	tallyState?: number;
+	deliverReturn?: number;
+	returnDone?: number;
+	$act?: number;
+}
+
+export interface DxDelivering {
+	id: number;
+	$act?: number;
+}
+
+export interface DxCutOffTypeBuyerAccount {
+	id: number;
+	name?: string;
+	description?: string;
+	$act?: number;
+}
+
+export interface DxTruckMain {
+	id: number;
+	staff?: number;
+	startTime?: any;
+	finishTime?: any;
+	$act?: number;
+}
+
+export interface DxTrucking {
+	id: number;
+	$act?: number;
+}
+
+export interface ActParamDxDeliverMain {
+	id: number|IDXValue;
+	rows?: number|IDXValue;
+	pickRows?: number|IDXValue;
+	carrier?: number|IDXValue;
+	waybillNumber?: string|IDXValue;
+	deliverTime?: any|IDXValue;
+	staff?: number|IDXValue;
+	startTime?: any|IDXValue;
+	finishTime?: any|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxDeliverDetail {
+	id: number|IDXValue;
+	deliverDone?: number|IDXValue;
+	pickDone?: number|IDXValue;
+	checkDone?: number|IDXValue;
+	tallyDone?: number|IDXValue;
+	tallyState?: number|IDXValue;
+	deliverReturn?: number|IDXValue;
+	returnDone?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxDelivering {
+	id: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxCutOffTypeBuyerAccount {
+	id: number|IDXValue;
+	name?: string|IDXValue;
+	description?: string|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxTruckMain {
+	id: number|IDXValue;
+	staff?: number|IDXValue;
+	startTime?: any|IDXValue;
+	finishTime?: any|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxTrucking {
+	id: number|IDXValue;
+	$act?: number;
+}
+
+export interface IxUserWarehouse {
+	ix: number;
+	xi: number;
+}
+
+export interface IxCutoffTypeDefinition {
+	ixx: number;
+	ix: number;
+	xi: number;
+}
+
+export interface DeliverDetailExchangeDetail {
+	ix: number;
+	xi: number;
+}
+
+export interface DeliverDetailOrderDetail {
+	ix: number;
+	xi: number;
+}
+
+export interface InsuredTypeBrand {
+	ix: number;
+	xi: number;
+}
+
+export interface InsuredTypeInterval {
+	ix: number;
+	xi: number;
+	amount: number;
+}
+
+export interface IxPendingTruck {
+	ix: number;
+	xi: number;
+	contact: number;
+	json: string;
+	truckStaff: number;
+}
+
+export interface IxOrganizationTruckSetting {
+	ix: number;
+	xi: number;
+	ixx: number;
+}
+
 export interface ParamActs {
 	orderMain?: OrderMain[];
 	orderDetail?: OrderDetail[];
@@ -813,6 +984,22 @@ export interface ParamActs {
 	truckMain?: TruckMain[];
 	truckAdditionalTask?: TruckAdditionalTask[];
 	role?: Role[];
+	truckBatch?: TruckBatch[];
+	truckStaff?: TruckStaff[];
+	dxDeliverMain?: ActParamDxDeliverMain[];
+	dxDeliverDetail?: ActParamDxDeliverDetail[];
+	dxDelivering?: ActParamDxDelivering[];
+	dxCutOffTypeBuyerAccount?: ActParamDxCutOffTypeBuyerAccount[];
+	dxTruckMain?: ActParamDxTruckMain[];
+	dxTrucking?: ActParamDxTrucking[];
+	ixUserWarehouse?: IxUserWarehouse[];
+	ixCutoffTypeDefinition?: IxCutoffTypeDefinition[];
+	deliverDetailExchangeDetail?: DeliverDetailExchangeDetail[];
+	deliverDetailOrderDetail?: DeliverDetailOrderDetail[];
+	insuredTypeBrand?: InsuredTypeBrand[];
+	insuredTypeInterval?: InsuredTypeInterval[];
+	ixPendingTruck?: IxPendingTruck[];
+	ixOrganizationTruckSetting?: IxOrganizationTruckSetting[];
 }
 
 
@@ -872,6 +1059,7 @@ export interface UqExt extends Uq {
 	WarehouseDelivers: UqQuery<ParamWarehouseDelivers, ResultWarehouseDelivers>;
 	GetCheckHistory: UqQuery<ParamGetCheckHistory, ResultGetCheckHistory>;
 	GetCheckInfo: UqQuery<ParamGetCheckInfo, ResultGetCheckInfo>;
+	GetOrganizationTruckStaff: UqQuery<ParamGetOrganizationTruckStaff, ResultGetOrganizationTruckStaff>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;
@@ -889,6 +1077,22 @@ export interface UqExt extends Uq {
 	TruckMain: UqID<any>;
 	TruckAdditionalTask: UqID<any>;
 	Role: UqID<any>;
+	TruckBatch: UqID<any>;
+	TruckStaff: UqID<any>;
+	DxDeliverMain: UqIDX<any>;
+	DxDeliverDetail: UqIDX<any>;
+	DxDelivering: UqIDX<any>;
+	DxCutOffTypeBuyerAccount: UqIDX<any>;
+	DxTruckMain: UqIDX<any>;
+	DxTrucking: UqIDX<any>;
+	IxUserWarehouse: UqIX<any>;
+	IxCutoffTypeDefinition: UqIX<any>;
+	DeliverDetailExchangeDetail: UqIX<any>;
+	DeliverDetailOrderDetail: UqIX<any>;
+	InsuredTypeBrand: UqIX<any>;
+	InsuredTypeInterval: UqIX<any>;
+	IxPendingTruck: UqIX<any>;
+	IxOrganizationTruckSetting: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

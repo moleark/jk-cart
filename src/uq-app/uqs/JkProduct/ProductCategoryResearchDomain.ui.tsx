@@ -2,16 +2,10 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxCouponUsed } from "./JkCoupon";
+import { ProductCategoryResearchDomain } from "./JkProduct";
 
 /*--fields--*/
 const fields = {
-	ixx: {
-		"name": "ixx",
-		"type": "id",
-		"isKey": false,
-		"label": "Ixx"
-	} as FieldItemId,
 	ix: {
 		"name": "ix",
 		"type": "id",
@@ -24,20 +18,15 @@ const fields = {
 		"isKey": false,
 		"label": "Xi"
 	} as FieldItemId,
-	usedDate: {
-		"name": "usedDate",
-		"isKey": false,
-		"label": "UsedDate"
-	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.ixx, fields.xi, fields.usedDate, 
+	fields.xi, 
 ];
 
 export const ui: UI = {
-	label: "IxCouponUsed",
+	label: "ProductCategoryResearchDomain",
 	fieldArr,
 	fields,
 };
@@ -55,6 +44,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxCouponUsed):JSX.Element {
+export function render(item: ProductCategoryResearchDomain):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

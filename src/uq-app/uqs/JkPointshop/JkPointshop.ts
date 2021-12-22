@@ -1,6 +1,6 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -448,174 +448,6 @@ export interface Result$getMyTimezone {
 	ret: Return$getMyTimezoneRet[];
 }
 
-export interface ParamPointBook {
-	webUser: number;
-}
-export interface ReturnPointBook$page {
-	pointYear: number;
-	point: number;
-	usedPoint: number;
-	totalPoint: number;
-	tempPoint: number;
-	tempUsedPoint: number;
-	tempSignInPoint: number;
-}
-export interface ResultPointBook {
-	$page: ReturnPointBook$page[];
-}
-
-export interface ParamPointBookByCustomer {
-	customer: number;
-}
-export interface ReturnPointBookByCustomer$page {
-	pointYear: number;
-	point: number;
-	usedPoint: number;
-	totalPoint: number;
-}
-export interface ResultPointBookByCustomer {
-	$page: ReturnPointBookByCustomer$page[];
-}
-
-export interface ParamPointProductHotStat {
-}
-export interface ReturnPointProductHotStat$page {
-	pointProduct: number;
-	visits: number;
-	exchanges: number;
-}
-export interface ResultPointProductHotStat {
-	$page: ReturnPointProductHotStat$page[];
-}
-
-export interface ParamPointDistributionBook {
-}
-export interface ReturnPointDistributionBook$page {
-	pointStart: number;
-	numbers: number;
-}
-export interface ResultPointDistributionBook {
-	$page: ReturnPointDistributionBook$page[];
-}
-
-export interface ParamPointHistory {
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	webUser: number;
-}
-export interface ReturnPointHistory$page {
-	date: any;
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	webUser: number;
-	type: number;
-	sheet: number;
-	row: number;
-}
-export interface ResultPointHistory {
-	$page: ReturnPointHistory$page[];
-}
-
-export interface ParamPointProductVisitHistory {
-	pointProduct: number;
-	webUser: number;
-}
-export interface ReturnPointProductVisitHistory$page {
-	date: any;
-	pointProduct: number;
-	webUser: number;
-}
-export interface ResultPointProductVisitHistory {
-	$page: ReturnPointProductVisitHistory$page[];
-}
-
-export interface ParamPointProductLibHistory {
-	pointProduct: number;
-	startDate: any;
-	endDate: any;
-	reason: string;
-	createTime: any;
-}
-export interface ReturnPointProductLibHistory$page {
-	date: any;
-	pointProduct: number;
-	startDate: any;
-	endDate: any;
-	reason: string;
-	createTime: any;
-}
-export interface ResultPointProductLibHistory {
-	$page: ReturnPointProductLibHistory$page[];
-}
-
-export interface ParamPointHistoryByCustomer {
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	customer: number;
-}
-export interface ReturnPointHistoryByCustomer$page {
-	date: any;
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	customer: number;
-	type: number;
-	sheet: number;
-	row: number;
-}
-export interface ResultPointHistoryByCustomer {
-	$page: ReturnPointHistoryByCustomer$page[];
-}
-
-export interface ParamOrderDetailPointHistory {
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ReturnOrderDetailPointHistory$page {
-	date: any;
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ResultOrderDetailPointHistory {
-	$page: ReturnOrderDetailPointHistory$page[];
-}
-
-export interface ParamReOrderDetailPointHistory {
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ReturnReOrderDetailPointHistory$page {
-	date: any;
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ResultReOrderDetailPointHistory {
-	$page: ReturnReOrderDetailPointHistory$page[];
-}
-
 export interface OrderMain {
 	id?: number;
 	no?: string;
@@ -782,10 +614,6 @@ export interface UqExt extends Uq {
 	PointChanged: UqAction<ParamPointChanged, ResultPointChanged>;
 	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	PointExchangeSheet: UqSheet<SheetPointExchangeSheet, any>;
-	PointBook: UqBook<ParamPointBook, ResultPointBook>;
-	PointBookByCustomer: UqBook<ParamPointBookByCustomer, ResultPointBookByCustomer>;
-	PointProductHotStat: UqBook<ParamPointProductHotStat, ResultPointProductHotStat>;
-	PointDistributionBook: UqBook<ParamPointDistributionBook, ResultPointDistributionBook>;
 	GetPoints: UqQuery<ParamGetPoints, ResultGetPoints>;
 	GetPointProduct: UqQuery<ParamGetPointProduct, ResultGetPointProduct>;
 	GetPlatFormOrder: UqQuery<ParamGetPlatFormOrder, ResultGetPlatFormOrder>;
@@ -816,14 +644,6 @@ export interface UqExt extends Uq {
 	BrandMinDiscount: UqMap;
 	OrderBack: UqMap;
 	PointCustomerBlacklist: UqMap;
-	PointHistory: UqHistory<ParamPointHistory, ResultPointHistory>;
-	PointProductVisitHistory: UqHistory<ParamPointProductVisitHistory, ResultPointProductVisitHistory>;
-	PointProductLibHistory: UqHistory<ParamPointProductLibHistory, ResultPointProductLibHistory>;
-	PointHistoryByCustomer: UqHistory<ParamPointHistoryByCustomer, ResultPointHistoryByCustomer>;
-	OrderDetailPointHistory: UqHistory<ParamOrderDetailPointHistory, ResultOrderDetailPointHistory>;
-	ReOrderDetailPointHistory: UqHistory<ParamReOrderDetailPointHistory, ResultReOrderDetailPointHistory>;
-	PlatformOrderPending: UqPending<any, any>;
-	SOrderPaymentPending: UqPending<any, any>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	ExchangeDetail: UqID<any>;

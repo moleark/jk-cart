@@ -24,6 +24,7 @@ import { CSelectInvoiceContact, CSelectShippingContact } from 'customer/CSelectC
 import { CAddress } from '../customer/CAddress';
 import { CInvoiceInfo } from 'customer/CInvoiceInfo';
 import { CQuickOrder } from '../order/CQuickOrder';
+import { CCertificate } from 'customer/certificate/CCertificate';
 
 export class CApp extends CUqApp {
     store: Store;
@@ -54,6 +55,7 @@ export class CApp extends CUqApp {
     cSelectInvoiceContact: CSelectInvoiceContact;
     cAddress: CAddress;
     cInvoiceInfo: CInvoiceInfo;
+    certificate: CCertificate
 
 
     protected async beforeStart(): Promise<boolean> {
@@ -91,6 +93,7 @@ export class CApp extends CUqApp {
         this.cSelectInvoiceContact = this.newC(CSelectInvoiceContact);
         this.cAddress = this.newC(CAddress);
         this.cInvoiceInfo = this.newC(CInvoiceInfo);
+        this.certificate = this.newC(CCertificate);
         await this.store.initCart();/* 暂时性初始化购物车 调整后可删除 */
         await this.cSelectShippingContact.getContactList();
         await this.cHome.getSlideShow();
@@ -379,6 +382,14 @@ export class CApp extends CUqApp {
         this.cPointProduct.openOrderDetail(Number(id));
     }
 
+    private navUploadCertificate: NavPage = async (params?: any) => {
+        this.certificate.openUpLoadCertificate();
+    }
+
+    private navUploadCertificateHistory: NavPage = async (params?: any) => {
+        this.certificate.openCertificateHistory();
+    }
+
     private navProductstructure: NavPage = async (params: any) => {
         this.cProduct.openStructuredSearch();
     }
@@ -417,6 +428,10 @@ export class CApp extends CUqApp {
             "/pointshop/product/:id": this.navPointProductDetail,
             "/pointshop/order": this.navPointProductOrder,
             "/pointshop/orderDetail/:id": this.navPointProductOrderDetail,
+
+            "/upload/certificate": this.navUploadCertificate,
+            "/upload/certificateHistory": this.navUploadCertificateHistory
+
         };
         nav.onNavRoutes(routes);
         this.setHomeRoute();

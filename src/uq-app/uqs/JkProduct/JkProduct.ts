@@ -1,6 +1,6 @@
-//=== UqApp builder created on Wed Nov 24 2021 09:49:45 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqIX } from "tonva-react";
 
 
 //===============================
@@ -103,6 +103,10 @@ export interface TuidPackSalesLevel {
 	id?: number;
 	name: string;
 	no: string;
+}
+
+export interface TuidResearch {
+	id?: number;
 }
 
 export interface ParamCountProductCategoryInclusion {
@@ -430,7 +434,24 @@ export interface ResultGetProductByPackId {
 	ret: ReturnGetProductByPackIdRet[];
 }
 
+export interface ParamGetResearchByProductCategory {
+	productCategory: number;
+}
+export interface ReturnGetResearchByProductCategoryRet {
+	productCategory: number;
+	research: number;
+}
+export interface ResultGetResearchByProductCategory {
+	ret: ReturnGetResearchByProductCategoryRet[];
+}
+
+export interface ProductCategoryResearchDomain {
+	ix: number;
+	xi: number;
+}
+
 export interface ParamActs {
+	productCategoryResearchDomain?: ProductCategoryResearchDomain[];
 }
 
 
@@ -450,6 +471,7 @@ export interface UqExt extends Uq {
 	ProductCategory: UqTuid<TuidProductCategory>;
 	Lot: UqTuid<TuidLot>;
 	PackSalesLevel: UqTuid<TuidPackSalesLevel>;
+	Research: UqTuid<TuidResearch>;
 	CountProductCategoryInclusion: UqAction<ParamCountProductCategoryInclusion, ResultCountProductCategoryInclusion>;
 	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	GetRootCategory: UqQuery<ParamGetRootCategory, ResultGetRootCategory>;
@@ -471,23 +493,30 @@ export interface UqExt extends Uq {
 	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	PriceXquery: UqQuery<ParamPriceXquery, ResultPriceXquery>;
 	GetProductByPackId: UqQuery<ParamGetProductByPackId, ResultGetProductByPackId>;
+	GetResearchByProductCategory: UqQuery<ParamGetResearchByProductCategory, ResultGetResearchByProductCategory>;
+	AgentPrice: UqMap;
 	BrandSalesRegion: UqMap;
 	BrandDeliveryTime: UqMap;
+	ProductStuff: UqMap;
 	PriceX: UqMap;
 	ProductChemical: UqMap;
 	ProductSalesRegion: UqMap;
 	ProductLegallyProhibited: UqMap;
+	ProductCache: UqMap;
 	ProductProductCategory: UqMap;
 	ProductCategoryInclusion: UqMap;
+	ProductProductCategoryCache: UqMap;
 	ProductMSDSFile: UqMap;
 	ProductSpecFile: UqMap;
 	ProductSalesRank: UqMap;
+	ProductCategoryLeafCache: UqMap;
 	COA: UqMap;
 	ProductExtention: UqMap;
 	ProductDeliveryTime: UqMap;
 	ProductEmbargo: UqMap;
 	ProductStandardSample: UqMap;
 	ProductUserManualFile: UqMap;
+	ProductCategoryResearchDomain: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
