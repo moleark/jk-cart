@@ -136,7 +136,6 @@ export class NavHeaderView extends View<CApp> {
                     <a href="/" className="header-logo"><img src="/images/logo.svg" alt="logo" className="img-fluid" /></a>
                     <div className="justify-content-center search-wrap">
                         <ul className="d-none d-lg-flex top-list justify-content-center">
-                            <li><a href="/upload/certificate" target="_blank">企业许可证</a></li>
                             <li><a href="/subjectpost/18" type="_blank">特惠活动</a> </li>
                             <li><a href="/myOrders">订单查询</a> </li>
                             <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
@@ -201,6 +200,7 @@ export class NavHeaderView extends View<CApp> {
                                     <a className="dropdown-item text-center" href="/password">修改密码</a>
                                     <a className="dropdown-item text-center" href="/meInfo">账户信息</a>
                                     <a className="dropdown-item text-center" href="/contact">地址管理</a>
+                                    <a className="dropdown-item text-center" href="/upload/certificate">企业许可证</a>
                                     <hr className="my-1" />
                                     <a className="dropdown-item text-center" href="/favorites">商品收藏</a>
                                     <a className="dropdown-item text-center" href="/pointshop">积分商城</a>
