@@ -250,8 +250,9 @@ export class COrder extends CUqBase {
         // 如果使用了coupon/credits，需要将其标记为已使用
         let { id: couponId, types } = this.couponAppliedData;
         if (couponId) {
-            let nowDate = new Date();
-            let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
+            // let nowDate = new Date();
+            let usedDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            // let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
             switch (types) {
                 case 'coupon':
                     if (currentUser.hasCustomer) {

@@ -8,6 +8,7 @@ import { VCouponManage } from './VCouponManage';
 import { VModelCardDiscount } from './VModelCardDiscount';
 import { CApp, CUqBase } from 'tapp';
 import { EnumCouponType } from 'uq-app/uqs/JkCoupon';
+import moment from 'moment';
 
 export const COUPONBASE: any = {
     'coupon': { 'name': '优惠券', 'view': VCoupon },
@@ -437,10 +438,11 @@ export class CCoupon extends CUqBase {
                     drawedResult = await customer.CustomerCredits.obj({ customer: currentUser.currentCustomer, credits: creditsId });
                 else drawedResult = await webuser.WebUserCredits.obj({ webUser: currentUserId, credits: creditsId });
                 if (!drawedResult) {
-                    let now = new Date();
+                    // let now = new Date();
                     let pramArr = [{
                         credits: creditsId, creditsCode: code,
-                        createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate
+                        createDate: moment().format("YYYY-MM-DD HH:mm:ss"), expiredDate: validitydate
+                        // createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate
                     }];
                     if (currentUser.hasCustomer)
                         await customer.CustomerCredits.add({ customer: currentUser.currentCustomer, arr1: pramArr });
@@ -454,10 +456,11 @@ export class CCoupon extends CUqBase {
                     drawedResult3 = await customer.CustomerCoupon.obj({ customer: currentUser.currentCustomer, coupon: creditsId });
                 else drawedResult3 = await webuser.WebUserCoupon.obj({ webUser: currentUserId, coupon: creditsId });
                 if (!drawedResult3) {
-                    let now = new Date();
+                    // let now = new Date();
                     let pramArr = [{
                         couponType: 1, couponCode: code,
-                        createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate,
+                        // createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, expiredDate: validitydate,
+                        createDate: moment().format("YYYY-MM-DD HH:mm:ss"), expiredDate: validitydate,
                     }];
                     if (currentUser.hasCustomer)
                         await customer.CustomerCoupon.add({ customer: currentUser.currentCustomer, coupon: creditsId, arr1: pramArr });
@@ -468,13 +471,14 @@ export class CCoupon extends CUqBase {
             case 'vipcard':
                 let drawedResult2 = await webuser.WebUserVIPCard.obj({ webUser: currentUserId, vipCard: creditsId });
                 if (!drawedResult2) {
-                    let now = new Date();
+                    // let now = new Date();
                     await this.uqs.webuser.WebUserVIPCard.add({
                         webUser: currentUserId,
                         vipCard: creditsId,
                         arr1: [{
                             vipCardType: 1,
-                            createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
+                            createDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+                            // createDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
                             expiredDate: validitydate,
                             vipCardCode: code
                         }]

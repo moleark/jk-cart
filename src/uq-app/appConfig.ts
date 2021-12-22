@@ -14,7 +14,7 @@ const jk: DevConfig = {
 }
 
 export const appConfig: AppConfig = {
-	version: '0.1.17',
+	version: '0.1.18',
 	app: {
 		dev: jk,
 		name: 'cart',
