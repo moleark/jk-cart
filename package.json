@@ -27,7 +27,7 @@
     "jquery": "^3.5.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "mobx": "^6.3.0",
     "mobx-react": "^7.1.0",
     "moment": "^2.26.0",
