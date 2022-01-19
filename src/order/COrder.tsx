@@ -247,57 +247,58 @@ export class COrder extends CUqBase {
         let { id: orderId, no, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
 
-        // 如果使用了coupon/credits，需要将其标记为已使用
-        let { id: couponId, types } = this.couponAppliedData;
-        if (couponId) {
-            // let nowDate = new Date();
-            let usedDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            // let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
-            switch (types) {
-                case 'coupon':
-                    if (currentUser.hasCustomer) {
-                        let customerId = currentUser.currentCustomer.id;
-                        customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
-                        customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
-                    } else {
-                        webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
-                        webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
-                    };
-                    break;
-                case 'credits':
-                    if (currentUser.hasCustomer) {
-                        let customerId = currentUser.currentCustomer.id;
-                        customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
-                        customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
-                    } else {
-                        webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
-                        webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
-                    };
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        let param: [{ productId: number, packId: number }] = [] as any;
-        orderItems.forEach(e => {
-            e.packs.forEach(v => {
-                param.push({ productId: e.product.id, packId: v.pack.id })
-            })
-        });
-        store.cart.removeItem(param);
-        /* pushOrder 不同客户调用不同的pushOrder */
-        // await this.activePushOrder.pushOrder(result);
-        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
-        // epec客户下单后要求跳转到指定的url
-        let epecOrder = this.orderData.getDataForSave2();
-        epecOrder.id = orderId;
-        epecOrder.no = no;
-        epecOrder.type = 1;
         try {
+            // 如果使用了coupon/credits，需要将其标记为已使用
+            let { id: couponId, types } = this.couponAppliedData;
+            if (couponId) {
+                // let nowDate = new Date();
+                let usedDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                // let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
+                switch (types) {
+                    case 'coupon':
+                        if (currentUser.hasCustomer) {
+                            let customerId = currentUser.currentCustomer.id;
+                            customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
+                            customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                        } else {
+                            webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
+                            webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                        };
+                        break;
+                    case 'credits':
+                        if (currentUser.hasCustomer) {
+                            let customerId = currentUser.currentCustomer.id;
+                            customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
+                            customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
+                        } else {
+                            webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
+                            webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            let param: [{ productId: number, packId: number }] = [] as any;
+            orderItems.forEach(e => {
+                e.packs.forEach(v => {
+                    param.push({ productId: e.product.id, packId: v.pack?.id })
+                })
+            });
+            store.cart.removeItem(param);
+            /* pushOrder 不同客户调用不同的pushOrder */
+            // await this.activePushOrder.pushOrder(result);
+            /* --------------- epec下单 已整理,中间部分弃用 --------------- */
+            // epec客户下单后要求跳转到指定的url
+            let epecOrder = this.orderData.getDataForSave2();
+            epecOrder.id = orderId;
+            epecOrder.no = no;
+            epecOrder.type = 1;
+
             let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
                 method: 'post',
-                mode:"cors",
+                mode: "cors",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(epecOrder)
             });
@@ -318,14 +319,20 @@ export class COrder extends CUqBase {
                         break;
                 }
             }
-        } catch (error) {
-
+        } catch (error: any) {
+            let message: string = `Order failed, orderId: ${orderId}, no: ${no}, error: ${error?.message}`;
+            await window.fetch(GLOABLE.EPEC.ERRORINFORECORD, {
+                method: 'post',
+                mode: "cors",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ webUser: currentUser.id, message: message })
+            });
         }
         /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(OrderSuccess, result);
-    }
+    };
 
     openOrderSuccess(result:any) {
         nav.popTo(this.cApp.topKey);

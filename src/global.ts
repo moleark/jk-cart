@@ -92,6 +92,7 @@ interface Global {
 	EPEC: {
 		AUTOLOGIN: string;
 		PUSHORDERURL: string;
+		ERRORINFORECORD: string;
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: string;
@@ -116,7 +117,9 @@ const GLOABLE_PRODUCTION: Global = {
 	CONTENTSITE: "https://web.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://web.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
+		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder",
+		ERRORINFORECORD: "https://joint.jkchemical.com/epec/errorInfoRecord"
+
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: "https://joint.jkchemical.com/punchout/generatePunchOutXML"
@@ -141,7 +144,8 @@ const GLOABLE_TEST: Global = {
 	CONTENTSITE: "https://test.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://test.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://test.jkchemical.com/joint/epec/pushOrder"
+		PUSHORDERURL: "https://test.jkchemical.com/joint/epec/pushOrder",
+		ERRORINFORECORD: "https://test.jkchemical.com/joint/epec/errorInfoRecord"
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: "https://test.jkchemical.com/joint/punchout/generatePunchOutXML"
