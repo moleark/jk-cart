@@ -281,8 +281,8 @@ export class COrder extends CUqBase {
             }
 
             let param: [{ productId: number, packId: number }] = [] as any;
-            orderItems.forEach(e => {
-                e.packs.forEach(v => {
+            orderItems.forEach((e:any) => {
+                e.packs.forEach((v:any) => {
                     param.push({ productId: e.product.id, packId: v.pack?.id })
                 })
             });
@@ -291,16 +291,17 @@ export class COrder extends CUqBase {
             // await this.activePushOrder.pushOrder(result);
             /* --------------- epec下单 已整理,中间部分弃用 --------------- */
             // epec客户下单后要求跳转到指定的url
-            let epecOrder = this.orderData.getDataForSave2();
+            let epecOrder:any = this.orderData.getDataForSave2();
             epecOrder.id = orderId;
             epecOrder.no = no;
             epecOrder.type = 1;
-
+            let newEpecOrder: any = {};
+            _.assign(newEpecOrder, epecOrder);
             let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
                 method: 'post',
                 mode: "cors",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(epecOrder)
+                body: JSON.stringify(newEpecOrder)
             });
             let { ok, status } = rep;
             if (ok) {

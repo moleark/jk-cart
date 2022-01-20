@@ -359,7 +359,7 @@ export class VPageProduct extends VPage<CProduct> {
         let { CAS, gradeCN, purity, molecularFomula, molecularWeight, mdlnumber } = chemical;
         let eName = <div className="py-2"><strong dangerouslySetInnerHTML={{ __html: description || '' }}></strong></div>;
         let cName: any;
-        descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
+        descriptionC = (descriptionC ? descriptionC : "" ) + (productPropIsValid(purity) ? ( descriptionC ? " , " : "" ) + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
         if (descriptionC !== description) {
             cName = <div dangerouslySetInnerHTML={{ __html: descriptionC || '' }}></div>;
         }

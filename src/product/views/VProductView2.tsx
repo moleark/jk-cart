@@ -30,7 +30,7 @@ export class VProuductView2 extends View<CProduct> {
                 <strong className="cursor-pointer" onClick={() => this.onProductClick(product)}
                     dangerouslySetInnerHTML={{ __html: description || '' }}></strong>
             </div>;
-            descriptionC = descriptionC + (productPropIsValid(purity) ? " , " + purity : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
+            descriptionC = (descriptionC? descriptionC : "" ) + (productPropIsValid(purity) ? ( descriptionC ? " , " : "") + purity  : "") + (productPropIsValid(gradeCN) ? " , " + gradeCN : "");
             let cName: any;
             if (descriptionC !== description) {
                 cName = <div className="d-inline-block cursor-pointer" onClick={() => this.onProductClick(product)}

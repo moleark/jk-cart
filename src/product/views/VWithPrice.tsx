@@ -30,7 +30,7 @@ export class VProductWithPrice extends View<CProduct> {
             return <div className="d-block mb-2 px-3">
                 <div className="py-2">
                     <div><strong>{description}</strong></div>
-                    <div>{descriptionC}{productPropIsValid(purity) ? " , " + purity : ""}{productPropIsValid(gradeCN) ? " , " + gradeCN : ""}</div>
+                    <div>{descriptionC ? descriptionC : ""}{productPropIsValid(purity) ? (descriptionC ? " , " : "")  + purity : ""}{productPropIsValid(gradeCN) ? " , " + gradeCN : ""}</div>
                 </div>
                 <div className="row py-2">
                     <div className="col-3">
