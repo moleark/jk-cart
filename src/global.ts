@@ -103,7 +103,8 @@ interface Global {
 	DRAWMOLECULEGWT: {
 		HTML: string;
 		JSSRC: string;
-	}
+	},
+	TCIGETPACK: string;
 };
 
 // 生产配置
@@ -130,7 +131,9 @@ const GLOABLE_PRODUCTION: Global = {
 	DRAWMOLECULEGWT: {
 		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
 		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
-	}
+	},
+	TCIGETPACK: "https://joint.jkchemical.com/tci/getNumberPacking",
+	// TCIGETPACK: "https://joint.jkchemical.com/tci/getNumberPacking",
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -156,7 +159,8 @@ const GLOABLE_TEST: Global = {
 	DRAWMOLECULEGWT: {
 		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
 		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
-	}
+	},
+	TCIGETPACK: "https://test.jkchemical.com/joint/tci/getNumberPacking",
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

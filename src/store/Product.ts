@@ -1,7 +1,7 @@
 import { GLOABLE } from 'global';
 import { observable, makeObservable } from 'mobx';
 import moment from 'moment';
-import { BoxId } from 'tonva-react';
+import { BoxId, env } from 'tonva-react';
 import { MainBrand, Chemical } from './model';
 import { UQs } from 'uq-app';
 import { Store } from './store';
@@ -10,6 +10,7 @@ export interface InventoryAllocation {
     warehouse: BoxId;
     quantity: number;
     deliveryTimeDescription: string;
+    isAnother?: boolean;
 }
 
 export interface PackRow {
@@ -191,6 +192,35 @@ export class Product {
         this.productDocs.um = userManualFile.length ? true : false;
     }
 
+    private async getAnotherInventory(packId: number) {
+        try {
+            let res = await fetch(GLOABLE.TCIGETPACK, {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=UTF-8" },
+                body: JSON.stringify({ productxPackxId: packId })
+            });
+            if (res.ok) {
+                let ret: any = await res.json();
+                if (ret.data) {
+                    let { quantitySh, quantity_Jp, quantity_Tj } = ret.data;
+                    quantitySh = quantitySh.replace(">", "");
+                    quantity_Jp = quantity_Jp.replace(">", "");
+                    quantity_Tj = quantity_Tj.replace(">", "");
+                    return {
+                        packId: packId,
+                        isAnother: true,
+                        data: [
+                            { name: "国内", quantity: Number(quantitySh) + Number(quantity_Tj) },
+                            { name: "国外", quantity: Number(quantity_Jp) },
+                        ]
+                    };
+                };
+            };
+            return undefined;
+
+        } catch (error: any) { return undefined; }
+    }
+
     private async loadPrices() {
         let { customerDiscount, product, promotion, warehouse } = this.uqs;
         let discount = 0;
@@ -240,14 +270,18 @@ export class Product {
             return ret;
         });
 
+        let isTCI = (this.brand && (env.testing === true ? [21, 40] : [120, 139]).includes(this.brand.id)) ? true : false;
         let promises: PromiseLike<any>[] = [];
         let promises1: PromiseLike<any>[] = [];
+        let anotherInventoryP: PromiseLike<any>[] = [];
         this.prices.forEach(v => {
             promises.push(promotion.GetPromotionPack.obj({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion, language: currentLanguage }));
             promises1.push(warehouse.GetInventoryAllocation.table({ product: this.id, pack: v.pack, salesRegion: currentSalesRegion }));
+            if (isTCI) anotherInventoryP.push(this.getAnotherInventory(v.pack?.id).then((data: any) => v.anInventory = data));
         });
         let results = await Promise.all(promises);
         let results2 = await Promise.all(promises1);
+        let results3: any[] = isTCI ? await Promise.all(anotherInventoryP) : [];
 
         let newPacks = [];
         for (let i = 0; i < this.prices.length; i++) {
@@ -255,7 +289,7 @@ export class Product {
                 let res = v.filter((j: any) => j.pack.id === this.prices[i].pack.id);
                 return res.length;
             });
-            newPacks.push({ ...this.prices[i], inventoryAllocation: inventoryAllocation })
+            newPacks.push({ ...this.prices[i], inventoryAllocation: inventoryAllocation || [] })
 
             let price = this.prices[i];
             let promotion = results[i];
@@ -264,6 +298,22 @@ export class Product {
                 price.promotionPrice = Math.round((1 - discount) * price.retail);
         }
         this.packs = newPacks;
+
+        if (this.packs.length && results3.length) {
+            let warehouseParam: any = { boxName: "warehouse", isUndefined: false, assure: async () => { }, equ(id: number) { return true } };
+            this.packs.forEach((el: any) => {
+                let getAnotherInventory: any = results3.find((i: any) => i?.packId === el.pack.id);
+                if (getAnotherInventory && el.inventoryAllocation && el.inventoryAllocation.length) {
+                    let { data, isAnother } = getAnotherInventory;
+                    data.forEach((i: any) => {
+                        el.inventoryAllocation.push({
+                            warehouse: { id: undefined, obj: { id: undefined, name: i.name }, ...warehouseParam },
+                            quantity: i.quantity, isAnother: isAnother, deliveryTimeDescription: "",
+                        });
+                    });
+                };
+            });
+        };
     }
 
     async loadPacks(param: any) {
