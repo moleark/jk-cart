@@ -23,11 +23,11 @@ export class VDelivery extends View<CProduct> {
 			// if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
             if (!inventoryAllocation || inventoryAllocation.length === 0) {
                 let getAnInventory:any = prices.find((el: any) => el.anInventory && el.anInventory?.packId === packId);
-                let isRenderAnI:any[] = getAnInventory ? getAnInventory?.data?.filter((el:any)=> el?.quantity !== 0) || [] : [];
+                let isRenderAnI: any[] = getAnInventory ? getAnInventory?.anInventory?.data?.filter((el: any) => el?.quantity !== 0) || [] : [];
                 let renderAnInventory: JSX.Element;
                 if (isRenderAnI.length) {
                     renderAnInventory = <>{isRenderAnI.map((el:any)=>( <div key={el.name} className="text-success" >{`${el.name}: ${el?.quantity > 10 ? '>10' : el?.quantity}`}</div> )) }</>
-                };
+                };                
                 if (!futureDeliveryTimeDescription) {
                     if (!isRenderAnI.length) return null;
                     else return renderAnInventory;
