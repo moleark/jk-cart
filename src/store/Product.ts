@@ -211,7 +211,7 @@ export class Product {
                         isAnother: true,
                         data: [
                             { name: "国内", quantity: Number(quantitySh) + Number(quantity_Tj) },
-                            { name: "国外", quantity: Number(quantity_Jp) },
+                            // { name: "国外", quantity: Number(quantity_Jp) },
                         ]
                     };
                 };
@@ -299,7 +299,7 @@ export class Product {
         }
         this.packs = newPacks;
 
-        if (this.packs.length && results3.length) {
+        /* if (this.packs.length && results3.length) {
             let warehouseParam: any = { boxName: "warehouse", isUndefined: false, assure: async () => { }, equ(id: number) { return true } };
             this.packs.forEach((el: any) => {
                 let getAnotherInventory: any = results3.find((i: any) => i?.packId === el.pack.id);
@@ -313,7 +313,7 @@ export class Product {
                     });
                 };
             });
-        };
+        }; */
     }
 
     async loadPacks(param: any) {
