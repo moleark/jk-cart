@@ -141,6 +141,7 @@ export class NavHeaderView extends View<CApp> {
                             <li><a href="/product/mscu/COA" target="_blank">COA</a> </li>
                             <li><a href="/product/mscu/MSDS" target="_blank">SDS</a> </li>
                             <li><a href="/quickOrder" target="_blank">批量订购</a></li>
+                            <li><a href="/search/structure" target="_blank">结构式搜索</a></li>
                         </ul>
                         <div className="custom-search-input">
                             <div className="input-group col-md-12">
@@ -285,6 +286,7 @@ export class NavFooterView extends View<CApp> {
                     <div className="row text-center">
                         <div className="col-sm-5 pr-0">
                             严禁在未经同意的情况下使用本网站所有信息
+                            | <a href="/user-agreement" target="_blank">用户使用服务协议</a>
                             | <a href="/legal" target="_blank">法律声明</a>
                             | <a href="/privacy-cn" target="_blank">隐私政策</a>
                         </div>

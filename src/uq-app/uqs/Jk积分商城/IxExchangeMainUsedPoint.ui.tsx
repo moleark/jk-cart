@@ -1,35 +1,39 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxExchagneMainState } from "./Jk积分商城";
+import { IxExchangeMainUsedPoint } from "./Jk积分商城";
 
 /*--fields--*/
 const fields = {
-	id: {
-		"name": "id",
+	ix: {
+		"name": "ix",
 		"type": "id",
 		"isKey": false,
-		"label": "Id"
+		"label": "Ix"
 	} as FieldItemId,
-	state: {
-		"name": "state",
+	xi: {
+		"name": "xi",
+		"type": "id",
 		"isKey": false,
-		"label": "State"
-	} as undefined,
-	createDate: {
-		"name": "createDate",
+		"label": "Xi"
+	} as FieldItemId,
+	point: {
+		"name": "point",
+		"type": "number",
 		"isKey": false,
-		"label": "CreateDate"
-	} as undefined,
+		"widget": "number",
+		"label": "Point"
+	} as FieldItemNum,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.state, fields.createDate, 
+	fields.xi, fields.point, 
 ];
 
 export const ui: UI = {
-	label: "DxExchagneMainState",
+	label: "IxExchangeMainUsedPoint",
 	fieldArr,
 	fields,
 };
@@ -47,6 +51,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: DxExchagneMainState):JSX.Element {
+export function render(item: IxExchangeMainUsedPoint):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

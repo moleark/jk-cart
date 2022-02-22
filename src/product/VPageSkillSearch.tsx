@@ -126,7 +126,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 		if (!productOrigin) this.productOriginTip.set('产品编号不可为空');
 		if (!productLot) this.productLotTip.set('产品批号不可为空');
 		if (!currtCaptcha) this.captchaTip.set('验证码不可为空');
-
+		this.buttonDisable = false;
 		if (!productOrigin || !productLot || !currtCaptcha) return;
 		let { getPDFFileUrl, getCaptcha } = this.controller;
 		let content: any = await getPDFFileUrl({
@@ -141,6 +141,7 @@ export class VPageSkillSearch extends VPage<CProduct> {
 				await getCaptcha();
 			};
 		} else {
+			this.buttonDisable = true;
 			if (this.captchaInput) this.captchaInput.value = '';
 			if (this.productLot) this.productLot.value = '';
 			if (this.controller.materialType === 'coa') this.openVPage(VPageCoa, content);

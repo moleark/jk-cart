@@ -64,6 +64,7 @@ export class COrder extends CUqBase {
      */
     buyerAccounts: any[] = [];
     validCardForWebUser: any;
+    exOrderContacts: any;
 
     constructor(cApp: CApp) {
         super(cApp);
@@ -83,7 +84,8 @@ export class COrder extends CUqBase {
             counties: observable,
             addressId: observable,
             buyerAccounts: observable,
-            validCardForWebUser: observable
+            validCardForWebUser: observable,
+            exOrderContacts: observable
         });
     }
 
@@ -337,12 +339,14 @@ export class COrder extends CUqBase {
         let cSelect = this.newC(CSelectShippingContact);
         let contactBox = await cSelect.call<BoxId>(true);
         this.orderData.shippingContact = contactBox;
+        await this.exOrderContact();
     }
 
     onSelectInvoiceContact = async () => {
         let cSelect = this.newC(CSelectInvoiceContact);
         let contactBox = await cSelect.call<BoxId>(true);
         this.orderData.invoiceContact = contactBox;
+        await this.exOrderContact();
     }
 
     /**
@@ -670,10 +674,20 @@ export class COrder extends CUqBase {
         return cProduct.renderCartProduct(product);
     }
 
-    onContactSelected = (contact: BoxId) => {
+    onContactSelected = async (contact: BoxId) => {
         if (this.replyToContactType === 'shippingContact') this.orderData.shippingContact = contact;
         if (this.replyToContactType === 'invoiceContact') this.orderData.invoiceContact = contact;
+        await this.exOrderContact();
         this.modalTitle = '';
+    }
+
+    exOrderContact = async () => {
+        let shippingAssure: any = await this.orderData.shippingContact?.assure();
+        let invoiceAssure:any = await this.orderData.invoiceContact?.assure();
+        this.exOrderContacts = {
+            "_shippingContact": (shippingAssure && shippingAssure?.obj?.mobile && shippingAssure?.obj?.email) ? true : false,
+            "_invoiceContact": (invoiceAssure && invoiceAssure?.obj?.mobile && invoiceAssure?.obj?.email) ? true : false,
+        };
     }
 
     /**
@@ -786,6 +800,6 @@ export class COrder extends CUqBase {
             contactBox = await cSelectShippingContact.saveContactData(contact);
         if (this.replyToContactType === 'invoiceContact')
             contactBox = await cSelectInvoiceContact.saveContactData(contact);
-        this.onContactSelected(contactBox);
+        await this.onContactSelected(contactBox);
     }
 }

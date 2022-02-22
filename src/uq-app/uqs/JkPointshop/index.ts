@@ -1,4 +1,4 @@
-import { UqExt as Uq, assign } from './Jk积分商城';
+import { UqExt as Uq, assign } from './JkPointshop';
 import * as ProductX from './ProductX.ui';
 import * as Customer from './Customer.ui';
 import * as WebUser from './WebUser.ui';
@@ -36,4 +36,4 @@ export function setUI(uq: Uq) {
 	assign(uq, 'DxExchangeMainState', DxExchangeMainState);
 	assign(uq, 'IxExchangeMainUsedPoint', IxExchangeMainUsedPoint);
 }
-export * from './Jk积分商城';
+export * from './JkPointshop';

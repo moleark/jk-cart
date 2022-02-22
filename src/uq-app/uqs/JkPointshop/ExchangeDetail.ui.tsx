@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { ReturnDetail } from "./JkOrder";
+import { ExchangeDetail } from "./JkPointshop";
 
 /*--fields--*/
 const fields = {
@@ -17,23 +18,11 @@ const fields = {
 		"isKey": false,
 		"label": "Main"
 	} as FieldItemId,
-	orderDetail: {
-		"name": "orderDetail",
-		"type": "id",
-		"isKey": false,
-		"label": "OrderDetail"
-	} as FieldItemId,
 	item: {
 		"name": "item",
 		"type": "id",
 		"isKey": false,
 		"label": "Item"
-	} as FieldItemId,
-	product: {
-		"name": "product",
-		"type": "id",
-		"isKey": false,
-		"label": "Product"
 	} as FieldItemId,
 	quantity: {
 		"name": "quantity",
@@ -42,41 +31,29 @@ const fields = {
 		"widget": "number",
 		"label": "Quantity"
 	} as FieldItemNum,
-	price: {
-		"name": "price",
+	point: {
+		"name": "point",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "Price"
+		"label": "Point"
 	} as FieldItemNum,
-	amount: {
-		"name": "amount",
+	subAmount: {
+		"name": "subAmount",
 		"type": "number",
 		"isKey": false,
 		"widget": "number",
-		"label": "Amount"
+		"label": "SubAmount"
 	} as FieldItemNum,
-	lotNumber: {
-		"name": "lotNumber",
-		"type": "string",
-		"isKey": false,
-		"widget": "string",
-		"label": "LotNumber"
-	} as FieldItemString,
-	createDate: {
-		"name": "createDate",
-		"isKey": false,
-		"label": "CreateDate"
-	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.main, fields.orderDetail, fields.item, fields.product, fields.quantity, fields.price, fields.amount, fields.lotNumber, fields.createDate, 
+	fields.main, fields.item, fields.quantity, fields.point, fields.subAmount, 
 ];
 
 export const ui: UI = {
-	label: "ReturnDetail",
+	label: "ExchangeDetail",
 	fieldArr,
 	fields,
 };
@@ -94,6 +71,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: ReturnDetail):JSX.Element {
+export function render(item: ExchangeDetail):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

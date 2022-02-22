@@ -1,4 +1,4 @@
-import { BoxId, RowContext, QueryPager, nav } from 'tonva-react';
+import { BoxId, RowContext, QueryPager, nav, Tuid } from 'tonva-react';
 import { CApp, CUqBase } from 'tapp';
 import { observable, makeObservable } from 'mobx';
 import { VPointProduct, VSelectedPointProduct } from 'pointMarket/VPointProduct';
@@ -17,7 +17,7 @@ import { VDefaultPost } from './view/VDefaultPost';
 import moment from 'moment';
 import { VShopSideBar } from './view/VShopSideBar';
 import { VError } from 'tools/VError';
-import { DxExchagneMainState } from '../uq-app/uqs/Jk积分商城/Jk积分商城';
+import { DxExchangeMainState } from '../uq-app/uqs/Jk积分商城/Jk积分商城';
 
 export const topicClump = {
     productGenre: '产品分类',
@@ -247,7 +247,7 @@ export class CPointProduct extends CUqBase {
         ];
         let presult = await Promise.all(promises);
         let exchangeHistory = presult[0].concat(presult[1]); */
-        let { Jk积分商城, 积分商城 } = this.uqs;
+        let { JkPointshop, 积分商城 } = this.uqs;
         /* 
         let as:any[] = await Jk积分商城.QueryID({
             IDX: [Jk积分商城.ExchangeMain]
@@ -273,19 +273,19 @@ export class CPointProduct extends CUqBase {
             this.openVPage(VError);
             return;
         }; */
-        let { Jk积分商城, 积分商城, customer: customerUQ, deliver } = this.uqs;
+        let { JkPointshop, 积分商城, customer: customerUQ, deliver } = this.uqs;
         let order = { brief: {}, data: {} };
-        let getOrder:any[] = await Jk积分商城.IDDetailGet({
+        let getOrder:any[] = await JkPointshop.IDDetailGet({
             id: orderId,
-            main: Jk积分商城.ExchangeMain,
-            detail: Jk积分商城.ExchangeDetail,
+            main: JkPointshop.ExchangeMain,
+            detail: JkPointshop.ExchangeDetail,
         });
         let [mainArr, orderDetail] = getOrder;
         if (!mainArr.length || !orderDetail.length) {
             this.openVPage(VError);return;
         };
-        let getDxExchagneMainState: any[] = await Jk积分商城.ID<DxExchagneMainState>({
-            IDX: Jk积分商城.DxExchagneMainState,
+        let getDxExchagneMainState: any[] = await JkPointshop.ID<DxExchangeMainState>({
+            IDX: JkPointshop.DxExchangeMainState,
             id: orderId,
         });
         let { id, no, createDate, shippingContact, amount, customer } = mainArr[0];
@@ -459,10 +459,24 @@ export class CPointProduct extends CUqBase {
         let { data } = context;
         let IsContain = 0;
         let nowQuantity = value - (prev ? prev : 0);
+        if (Tuid.equ(this.pointProductsDetail.product,data.product))
+            this.pointProductsDetail.quantity = value;
+        let findSelected = this.pointProductsSelected.find((el: any) => el && el.product.id === data.product.id);
+        if (findSelected) {
+            IsContain = IsContain + 1;
+            findSelected.quantity = data.quantity;
+        };
+        if (IsContain === 0) {
+            data.point = data.product.obj.point;
+            this.pointProductsSelected.push(data);
+        };
+        this.pointToExchanging = this.pointProductsSelected.reduce((pv, cv) => (pv + cv.quantity * cv.point), 0);
+        this.pointProductsSelected = this.pointProductsSelected.filter((el: any) => el.quantity !== 0);
+
         /* let availablePoints = this.myEffectivePoints - this.pointToExchanging;
         if (availablePoints <= 0) return;    */
         // 当前产品详情的数量
-        this.pointProductsDetail.quantity = value;
+        /* this.pointProductsDetail.quantity = value;
         // this.pointToExchanging = this.pointToExchanging + (data.point * nowQuantity);
         this.pointToExchanging = this.pointToExchanging + (data.product.obj.point * nowQuantity);
         this.pointProductsSelected.forEach(element => {
@@ -474,7 +488,7 @@ export class CPointProduct extends CUqBase {
         if (IsContain === 0) {
             data.point = data.product.obj.point;
             this.pointProductsSelected.push(data);
-        }
+        } */
     }
 
     private createOrderFromCart = async () => {

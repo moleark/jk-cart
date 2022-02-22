@@ -251,6 +251,7 @@ export class NavFooterView extends View<CApp> {
                     <div className="row text-center">
                         <div className="col-sm-5">
                             严禁在未经同意的情况下使用本网站所有信息
+                            | <a href="/user-agreement" target="_blank">用户使用服务协议</a>
                             | <a href="/legal" target="_blank">法律声明</a>
                             | <a href="/privacy-cn" target="_blank">隐私政策</a>
                         </div>

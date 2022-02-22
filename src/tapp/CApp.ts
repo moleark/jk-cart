@@ -379,11 +379,16 @@ export class CApp extends CUqApp {
         this.cPointProduct.openOrderDetail(Number(id));
     }
 
+    private navProductstructure: NavPage = async (params: any) => {
+        this.cProduct.openStructuredSearch();
+    }
+
     protected onNavRoutes() {
         let routes: { [route: string]: NavPage } = {
             '/app': this.navHome,
             '/index': this.navHome,
             '/home': this.navHome,
+            '/search/structure': this.navProductstructure,
             '/search/:key': this.navSearch,
             '/search': this.navProductCategoryHome,
             '/product/:id': this.navProduct,

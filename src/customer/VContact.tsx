@@ -15,7 +15,7 @@ const schema: Schema = [
     { name: 'organizationName', type: 'string', required: true },
     { name: 'mobile', type: 'string', required: true },
     { name: 'telephone', type: 'string', required: false },
-    { name: 'email', type: 'string', required: false },
+    { name: 'email', type: 'string', required: true },
     { name: 'address', type: 'id', required: true },
     { name: 'addressString', type: 'string', required: true },
     { name: 'isDefault', type: 'boolean', required: false },

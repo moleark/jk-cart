@@ -1,4 +1,4 @@
-//=== UqApp builder created on Mon Sep 27 2021 14:37:25 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -174,7 +174,7 @@ export interface OrderDetail {
 export interface OrderMain {
 	id?: number;
 	no?: string;
-	customer: number;
+	customerAccount: number;
 }
 
 export interface InvoiceDetail {
@@ -278,7 +278,7 @@ export interface DxOrderDetailReturn {
 
 export interface DxReceiveMain {
 	id: number;
-	amount?: number;
+	sumAmount?: number;
 	usedAmount?: number;
 	returnAmount?: number;
 	leftAmount?: number;
@@ -336,7 +336,7 @@ export interface ActParamDxOrderDetailReturn {
 
 export interface ActParamDxReceiveMain {
 	id: number|IDXValue;
-	amount?: number|IDXValue;
+	sumAmount?: number|IDXValue;
 	usedAmount?: number|IDXValue;
 	returnAmount?: number|IDXValue;
 	leftAmount?: number|IDXValue;
@@ -429,4 +429,8 @@ export interface UqExt extends Uq {
 	DxOrderDetailInvoiceReceive: UqIX<any>;
 	Refund: UqIX<any>;
 	RedInvoiceMain: UqIX<any>;
+}
+
+export function assign(uq: any, to:string, from:any): void {
+	Object.assign((uq as any)[to], from);
 }

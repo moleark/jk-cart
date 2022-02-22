@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { ReturnDetail } from "./JkOrder";
+import { ExchangeMain } from "./JkPointshop";
 
 /*--fields--*/
 const fields = {
@@ -11,44 +12,25 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	main: {
-		"name": "main",
+	no: {
+		"name": "no",
+		"type": "string",
+		"isKey": true,
+		"widget": "string",
+		"label": "No"
+	} as FieldItemString,
+	customer: {
+		"name": "customer",
 		"type": "id",
 		"isKey": false,
-		"label": "Main"
+		"label": "Customer"
 	} as FieldItemId,
-	orderDetail: {
-		"name": "orderDetail",
+	shippingContact: {
+		"name": "shippingContact",
 		"type": "id",
 		"isKey": false,
-		"label": "OrderDetail"
+		"label": "ShippingContact"
 	} as FieldItemId,
-	item: {
-		"name": "item",
-		"type": "id",
-		"isKey": false,
-		"label": "Item"
-	} as FieldItemId,
-	product: {
-		"name": "product",
-		"type": "id",
-		"isKey": false,
-		"label": "Product"
-	} as FieldItemId,
-	quantity: {
-		"name": "quantity",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "Quantity"
-	} as FieldItemNum,
-	price: {
-		"name": "price",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "Price"
-	} as FieldItemNum,
 	amount: {
 		"name": "amount",
 		"type": "number",
@@ -56,13 +38,12 @@ const fields = {
 		"widget": "number",
 		"label": "Amount"
 	} as FieldItemNum,
-	lotNumber: {
-		"name": "lotNumber",
-		"type": "string",
+	sheetId: {
+		"name": "sheetId",
+		"type": "id",
 		"isKey": false,
-		"widget": "string",
-		"label": "LotNumber"
-	} as FieldItemString,
+		"label": "SheetId"
+	} as FieldItemId,
 	createDate: {
 		"name": "createDate",
 		"isKey": false,
@@ -72,11 +53,11 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.main, fields.orderDetail, fields.item, fields.product, fields.quantity, fields.price, fields.amount, fields.lotNumber, fields.createDate, 
+	fields.no, fields.customer, fields.shippingContact, fields.amount, fields.sheetId, fields.createDate, 
 ];
 
 export const ui: UI = {
-	label: "ReturnDetail",
+	label: "ExchangeMain",
 	fieldArr,
 	fields,
 };
@@ -94,6 +75,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: ReturnDetail):JSX.Element {
+export function render(item: ExchangeMain):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

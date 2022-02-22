@@ -1,4 +1,4 @@
-import { UqExt as Uq } from './JkCollectPayment';
+import { UqExt as Uq, assign } from './JkCollectPayment';
 import * as Organization from './Organization.ui';
 import * as Customer from './Customer.ui';
 import * as Currency from './Currency.ui';
@@ -21,13 +21,6 @@ import * as IxCustomerPendingInvoice from './IxCustomerPendingInvoice.ui';
 import * as DxOrderDetailInvoiceReceive from './DxOrderDetailInvoiceReceive.ui';
 import * as Refund from './Refund.ui';
 import * as RedInvoiceMain from './RedInvoiceMain.ui';
-
-function assign(uq:Uq, to:string, from:any): void {
-	try {
-		Object.assign((uq as any)[to], from);
-	}
-	catch {}
-}
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Organization', Organization);

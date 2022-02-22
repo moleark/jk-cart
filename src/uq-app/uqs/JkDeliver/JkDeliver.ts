@@ -1,4 +1,4 @@
-//=== UqApp builder created on Mon Sep 27 2021 14:37:25 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -74,21 +74,51 @@ export interface ParamTallying {
 export interface ResultTallying {
 }
 
-export interface ParamTallied {
-	cutOffMain: number;
+export interface ParamDelivering {
+	deliver: number;
+}
+export interface ResultDelivering {
+}
+
+export interface ParamDelivered {
+	deliver: number;
 	detail: {
+		deliverDetail: number;
 		orderDetail: number;
 		quantity: number;
 	}[];
 
 }
-export interface ResultTallied {
+export interface ResultDelivered {
 }
 
-export interface ParamDelivering {
-	deliver: number;
+export interface ParamTallyDoneSingle {
+	deliverMain: number;
+	deliverDetail: number;
+	quantity: number;
 }
-export interface ResultDelivering {
+export interface ResultTallyDoneSingle {
+}
+
+export interface ParamTallyDone {
+	cutOffMain: number;
+}
+export interface ResultTallyDone {
+}
+
+export interface ParamUpdateDeliverCarrier {
+	deliverMain: number;
+	carrier: number;
+}
+export interface ResultUpdateDeliverCarrier {
+}
+
+export interface ParamUpdateWaybillNumber {
+	deliverMain: number;
+	carrier: number;
+	waybillNumber: string;
+}
+export interface ResultUpdateWaybillNumber {
 }
 
 export interface Param$poked {
@@ -159,12 +189,12 @@ export interface ReturnGetDeliverMain {
 }
 export interface ReturnGetDeliverDetail {
 	id: number;
+	orderDetail: number;
 	delivermain: number;
 	item: number;
 	product: number;
 	deliverShould: number;
 	pickDone: number;
-	deliverDone: number;
 	returnDone: number;
 }
 export interface ResultGetDeliver {
@@ -224,7 +254,7 @@ export interface ReturnGetCutOffMainMain {
 	staff: number;
 }
 export interface ReturnGetCutOffMainDetail {
-	delivermain: number;
+	deliverMain: number;
 	trayNumber: number;
 	contact: number;
 	customer: number;
@@ -235,8 +265,12 @@ export interface ReturnGetCutOffMainDetail {
 	item: number;
 	product: number;
 	tallyShould: number;
+	tallyDone: number;
+	tallyState: number;
 	price: number;
+	orderMainNo: string;
 	lotNumber: string;
+	showPrice: number;
 	content: string;
 }
 export interface ResultGetCutOffMain {
@@ -268,6 +302,17 @@ export interface ReturnGetPointExchangeDetailTransportationRet {
 }
 export interface ResultGetPointExchangeDetailTransportation {
 	ret: ReturnGetPointExchangeDetailTransportationRet[];
+}
+
+export interface ParamGetCarrierNo {
+}
+export interface ReturnGetCarrierNoRet {
+	id: number;
+	name: string;
+	no: string;
+}
+export interface ResultGetCarrierNo {
+	ret: ReturnGetCarrierNoRet[];
 }
 
 export interface OrderMain {
@@ -341,12 +386,14 @@ export interface DeliverType {
 
 export interface DxDeliverMain {
 	id: number;
-	staff?: number;
 	rows?: number;
 	pickRows?: number;
 	carrier?: number;
 	waybillNumber?: string;
 	deliverTime?: any;
+	staff?: number;
+	startTime?: any;
+	finishTime?: any;
 	$act?: number;
 }
 
@@ -354,6 +401,8 @@ export interface DxDeliverDetail {
 	id: number;
 	deliverDone?: number;
 	pickDone?: number;
+	tallyDone?: number;
+	tallyState?: number;
 	deliverReturn?: number;
 	returnDone?: number;
 	showPrice?: number;
@@ -374,14 +423,21 @@ export interface DxDelivering {
 	$act?: number;
 }
 
+export interface Talling {
+	id: number;
+	$act?: number;
+}
+
 export interface ActParamDxDeliverMain {
 	id: number|IDXValue;
-	staff?: number|IDXValue;
 	rows?: number|IDXValue;
 	pickRows?: number|IDXValue;
 	carrier?: number|IDXValue;
 	waybillNumber?: string|IDXValue;
 	deliverTime?: any|IDXValue;
+	staff?: number|IDXValue;
+	startTime?: any|IDXValue;
+	finishTime?: any|IDXValue;
 	$act?: number;
 }
 
@@ -389,6 +445,8 @@ export interface ActParamDxDeliverDetail {
 	id: number|IDXValue;
 	deliverDone?: number|IDXValue;
 	pickDone?: number|IDXValue;
+	tallyDone?: number|IDXValue;
+	tallyState?: number|IDXValue;
 	deliverReturn?: number|IDXValue;
 	returnDone?: number|IDXValue;
 	showPrice?: number|IDXValue;
@@ -405,6 +463,11 @@ export interface ActParamDxCutOffMain {
 }
 
 export interface ActParamDxDelivering {
+	id: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamTalling {
 	id: number|IDXValue;
 	$act?: number;
 }
@@ -459,6 +522,7 @@ export interface ParamActs {
 	dxDeliverDetail?: ActParamDxDeliverDetail[];
 	dxCutOffMain?: ActParamDxCutOffMain[];
 	dxDelivering?: ActParamDxDelivering[];
+	talling?: ActParamTalling[];
 	ixPendingDeliver?: IxPendingDeliver[];
 	ixUserWarehouse?: IxUserWarehouse[];
 	ixCutoffTypeDefinition?: IxCutoffTypeDefinition[];
@@ -478,8 +542,12 @@ export interface UqExt extends Uq {
 	AutoWarehouseDeliver: UqAction<ParamAutoWarehouseDeliver, ResultAutoWarehouseDeliver>;
 	CutOff: UqAction<ParamCutOff, ResultCutOff>;
 	Tallying: UqAction<ParamTallying, ResultTallying>;
-	Tallied: UqAction<ParamTallied, ResultTallied>;
 	Delivering: UqAction<ParamDelivering, ResultDelivering>;
+	Delivered: UqAction<ParamDelivered, ResultDelivered>;
+	TallyDoneSingle: UqAction<ParamTallyDoneSingle, ResultTallyDoneSingle>;
+	TallyDone: UqAction<ParamTallyDone, ResultTallyDone>;
+	UpdateDeliverCarrier: UqAction<ParamUpdateDeliverCarrier, ResultUpdateDeliverCarrier>;
+	UpdateWaybillNumber: UqAction<ParamUpdateWaybillNumber, ResultUpdateWaybillNumber>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	WarehousePendingDeliver: UqQuery<ParamWarehousePendingDeliver, ResultWarehousePendingDeliver>;
 	CustomerPendingDeliver: UqQuery<ParamCustomerPendingDeliver, ResultCustomerPendingDeliver>;
@@ -491,6 +559,7 @@ export interface UqExt extends Uq {
 	GetCutOffMain: UqQuery<ParamGetCutOffMain, ResultGetCutOffMain>;
 	GetOrderDetailTransportation: UqQuery<ParamGetOrderDetailTransportation, ResultGetOrderDetailTransportation>;
 	GetPointExchangeDetailTransportation: UqQuery<ParamGetPointExchangeDetailTransportation, ResultGetPointExchangeDetailTransportation>;
+	GetCarrierNo: UqQuery<ParamGetCarrierNo, ResultGetCarrierNo>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;
@@ -504,10 +573,15 @@ export interface UqExt extends Uq {
 	DxDeliverDetail: UqIDX<any>;
 	DxCutOffMain: UqIDX<any>;
 	DxDelivering: UqIDX<any>;
+	Talling: UqIDX<any>;
 	IxPendingDeliver: UqIX<any>;
 	IxUserWarehouse: UqIX<any>;
 	IxCutoffTypeDefinition: UqIX<any>;
 	CutOffProcessing: UqIX<any>;
 	DeliverDetailExchangeDetail: UqIX<any>;
 	DeliverDetailOrderDetail: UqIX<any>;
+}
+
+export function assign(uq: any, to:string, from:any): void {
+	Object.assign((uq as any)[to], from);
 }
