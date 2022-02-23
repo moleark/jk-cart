@@ -67,14 +67,16 @@ function callStructureSearch() {
 			canvases.html("");
 			for (var i = 0; i < fmResults.list.length; i++) {
 				var casNumber = fmResults.list[i].casNumber;
+				var name = fmResults.list[i].name;
 				//TODO create HTML canvases	
-				var createA = $("<a>"), createDiv = $("<div>"), createCanvas = $("<canvas>");
+				var createA = $("<a>"), createDiv = $("<div>"), createDiv1 = $("<div>"), createCanvas = $("<canvas>");
 				createA.attr("class", "col-6 col-sm-4 col-lg-3 mb-2").attr("target", "_blank")
 					.attr("href", "/search/" + casNumber);
-				createDiv.html(casNumber).attr("class", "text-center");
+				createDiv.html(casNumber).attr("class", "text-center").attr("style", "color:orange");
+				createDiv1.html(name).attr("class", "text-center");
 				createCanvas.attr("id", "moleculeCanvas" + i).attr("class", "moleculeCanvas border")
 					.attr("height", 260).attr("style", "width:100%");
-				createA.append(createCanvas).append(createDiv).appendTo(canvases);
+				createA.append(createCanvas).append(createDiv1).append(createDiv).appendTo(canvases);
 				//Draw structures
 				drawMolecule(i, fmResults.list[i].lcmFile);
 				lastId = fmResults.list[i].id;

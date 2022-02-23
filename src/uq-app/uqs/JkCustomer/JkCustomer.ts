@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqQuery, UqMap, UqHistory, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -46,6 +46,7 @@ export interface TuidInvoiceType {
 export interface TuidResearch {
 	id?: number;
 	name: string;
+	parent: number;
 	no: string;
 	createTime: any;
 }
@@ -72,6 +73,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface TuidProvince {
@@ -207,6 +209,12 @@ export interface TuidVIPCardType {
 	id?: number;
 }
 
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
+}
+
 export interface ParamSearchCustomer {
 	key: string;
 }
@@ -320,31 +328,88 @@ export interface ResultGetMyExpiredCoupon {
 	$page: ReturnGetMyExpiredCoupon$page[];
 }
 
-export interface ParamCustomerSalesmanHistory {
-	customer: number;
-	salesman: number;
-	operation: number;
-	createDate: any;
+export interface Param$getMyTimezone {
 }
-export interface ReturnCustomerSalesmanHistory$page {
-	date: any;
-	customer: number;
-	salesman: number;
-	operation: number;
-	createDate: any;
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
 }
-export interface ResultCustomerSalesmanHistory {
-	$page: ReturnCustomerSalesmanHistory$page[];
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
-export interface CustomerSalesman {
+export interface ParamGetResearchByParent {
+	parent: number;
+	key: string;
+}
+export interface ReturnGetResearchByParentRet {
+	id: number;
+	name: string;
+	parent: number;
+}
+export interface ResultGetResearchByParent {
+	ret: ReturnGetResearchByParentRet[];
+}
+
+export interface Certificate {
+	id?: number;
+	name: string;
+	description: string;
+}
+
+export interface CertificateSource {
+	id?: number;
+	certificate: number;
+	buyeraccount: number;
+	expiredDate: any;
+	path: string;
+	status: number;
+	creator: number;
+	createDate: any;
+}
+
+export interface CretificateSourceAuditHistory {
+	id: number;
+	status?: number;
+	comments?: string;
+	auditor?: number;
+	$act?: number;
+}
+
+export interface DxPendingAuditCertificate {
+	id: number;
+	createDate?: any;
+	$act?: number;
+}
+
+export interface ActParamCretificateSourceAuditHistory {
+	id: number|IDXValue;
+	status?: number|IDXValue;
+	comments?: string|IDXValue;
+	auditor?: number|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxPendingAuditCertificate {
+	id: number|IDXValue;
+	createDate?: any|IDXValue;
+	$act?: number;
+}
+
+export interface BuyeraccountCertificate {
 	ix: number;
 	xi: number;
-	unLockOn: any;
+	expiredDate: any;
+	path: string;
+	createDate: any;
 }
 
 export interface ParamActs {
-	customerSalesman?: CustomerSalesman[];
+	certificate?: Certificate[];
+	certificateSource?: CertificateSource[];
+	cretificateSourceAuditHistory?: ActParamCretificateSourceAuditHistory[];
+	dxPendingAuditCertificate?: ActParamDxPendingAuditCertificate[];
+	buyeraccountCertificate?: BuyeraccountCertificate[];
 }
 
 
@@ -375,6 +440,7 @@ export interface UqExt extends Uq {
 	Brand: UqTuid<TuidBrand>;
 	CustomerSettingType: UqTuid<TuidCustomerSettingType>;
 	VIPCardType: UqTuid<TuidVIPCardType>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	SearchCustomer: UqQuery<ParamSearchCustomer, ResultSearchCustomer>;
 	GetBuyerAccountByNo: UqQuery<ParamGetBuyerAccountByNo, ResultGetBuyerAccountByNo>;
 	GetCustomerByNo: UqQuery<ParamGetCustomerByNo, ResultGetCustomerByNo>;
@@ -384,6 +450,8 @@ export interface UqExt extends Uq {
 	$poked: UqQuery<Param$poked, Result$poked>;
 	GetMyUsedCoupon: UqQuery<ParamGetMyUsedCoupon, ResultGetMyUsedCoupon>;
 	GetMyExpiredCoupon: UqQuery<ParamGetMyExpiredCoupon, ResultGetMyExpiredCoupon>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
+	GetResearchByParent: UqQuery<ParamGetResearchByParent, ResultGetResearchByParent>;
 	CustomerDepartment: UqMap;
 	CustomerSetting: UqMap;
 	CustomerContractor: UqMap;
@@ -403,10 +471,17 @@ export interface UqExt extends Uq {
 	CustomerCredits: UqMap;
 	CustomerCoupon: UqMap;
 	CustomerCouponUsed: UqMap;
-	CustomerSalesmanHistory: UqHistory<ParamCustomerSalesmanHistory, ResultCustomerSalesmanHistory>;
-	CustomerSalesman: UqIX<any>;
+	Certificate: UqID<any>;
+	CertificateSource: UqID<any>;
+	CretificateSourceAuditHistory: UqIDX<any>;
+	DxPendingAuditCertificate: UqIDX<any>;
+	BuyeraccountCertificate: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

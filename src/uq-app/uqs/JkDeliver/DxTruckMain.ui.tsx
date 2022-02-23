@@ -2,38 +2,41 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxOrderAmountDiff } from "./JkOrder";
+import { DxTruckMain } from "./JkDeliver";
 
 /*--fields--*/
 const fields = {
-	ix: {
-		"name": "ix",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
+		"label": "Id"
 	} as FieldItemId,
-	xi: {
-		"name": "xi",
+	staff: {
+		"name": "staff",
 		"type": "id",
 		"isKey": false,
-		"label": "Xi"
+		"label": "Staff"
 	} as FieldItemId,
-	diff: {
-		"name": "diff",
-		"type": "number",
+	startTime: {
+		"name": "startTime",
 		"isKey": false,
-		"widget": "number",
-		"label": "Diff"
-	} as FieldItemNum,
+		"label": "StartTime"
+	} as undefined,
+	finishTime: {
+		"name": "finishTime",
+		"isKey": false,
+		"label": "FinishTime"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.xi, fields.diff, 
+	fields.staff, fields.startTime, fields.finishTime, 
 ];
 
 export const ui: UI = {
-	label: "IxOrderAmountDiff",
+	label: "DxTruckMain",
 	fieldArr,
 	fields,
 };
@@ -51,6 +54,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxOrderAmountDiff):JSX.Element {
+export function render(item: DxTruckMain):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

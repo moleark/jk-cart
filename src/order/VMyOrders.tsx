@@ -72,7 +72,10 @@ export class VMyOrders extends VPage<COrder> {
 			if (this.currentState === "processing") this.list = this.listAll;
 			else {
 				let arr: any[] = [];
-				if (this.currentState === "all") arr = await getMyOrders("processing");
+				if (this.currentState === "all") {
+					arr = await getMyOrders("processing");
+					arr =  this.toRepeat(arr, "id");
+				};
 				this.list = [arr, this.listAll.slice(0, OrdersPageSize)].flat();
 			};
 		};

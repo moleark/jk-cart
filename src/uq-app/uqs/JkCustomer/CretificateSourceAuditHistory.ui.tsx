@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxReturnDetail } from "./JkCollectPayment";
+import { CretificateSourceAuditHistory } from "./JkCustomer";
 
 /*--fields--*/
 const fields = {
@@ -11,43 +12,33 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	receive: {
-		"name": "receive",
-		"type": "number",
+	status: {
+		"name": "status",
 		"isKey": false,
-		"widget": "number",
-		"label": "Receive"
-	} as FieldItemNum,
-	receiveDone: {
-		"name": "receiveDone",
-		"type": "number",
+		"label": "Status"
+	} as undefined,
+	comments: {
+		"name": "comments",
+		"type": "string",
 		"isKey": false,
-		"widget": "number",
-		"label": "ReceiveDone"
-	} as FieldItemNum,
-	invoice: {
-		"name": "invoice",
-		"type": "number",
+		"widget": "string",
+		"label": "Comments"
+	} as FieldItemString,
+	auditor: {
+		"name": "auditor",
+		"type": "id",
 		"isKey": false,
-		"widget": "number",
-		"label": "Invoice"
-	} as FieldItemNum,
-	invoiceDone: {
-		"name": "invoiceDone",
-		"type": "number",
-		"isKey": false,
-		"widget": "number",
-		"label": "InvoiceDone"
-	} as FieldItemNum,
+		"label": "Auditor"
+	} as FieldItemId,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.receive, fields.receiveDone, fields.invoice, fields.invoiceDone, 
+	fields.status, fields.comments, fields.auditor, 
 ];
 
 export const ui: UI = {
-	label: "DxReturnDetail",
+	label: "CretificateSourceAuditHistory",
 	fieldArr,
 	fields,
 };
@@ -65,6 +56,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: DxReturnDetail):JSX.Element {
+export function render(item: CretificateSourceAuditHistory):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

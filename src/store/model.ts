@@ -32,6 +32,7 @@ export interface Chemical {
     molecularFomula: string;
     molecularWeight: string;
     mdlnumber?: string;
+    gradeCN?: string;
 }
 
 export interface Pack extends Id {

@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { DxCutOffMain } from "./JkDeliver";
+import { InsuredType } from "./JkDeliver";
 
 /*--fields--*/
 const fields = {
@@ -11,31 +12,29 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	staff: {
-		"name": "staff",
-		"type": "id",
+	name: {
+		"name": "name",
+		"type": "string",
 		"isKey": false,
-		"label": "Staff"
-	} as FieldItemId,
-	startTime: {
-		"name": "startTime",
+		"widget": "string",
+		"label": "Name"
+	} as FieldItemString,
+	description: {
+		"name": "description",
+		"type": "string",
 		"isKey": false,
-		"label": "StartTime"
-	} as undefined,
-	finishTime: {
-		"name": "finishTime",
-		"isKey": false,
-		"label": "FinishTime"
-	} as undefined,
+		"widget": "string",
+		"label": "Description"
+	} as FieldItemString,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.staff, fields.startTime, fields.finishTime, 
+	fields.name, fields.description, 
 ];
 
 export const ui: UI = {
-	label: "DxCutOffMain",
+	label: "InsuredType",
 	fieldArr,
 	fields,
 };
@@ -53,6 +52,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: DxCutOffMain):JSX.Element {
+export function render(item: InsuredType):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

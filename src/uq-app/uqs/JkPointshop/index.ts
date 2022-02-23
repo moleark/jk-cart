@@ -12,10 +12,15 @@ import * as OrderMain from './OrderMain.ui';
 import * as OrderDetail from './OrderDetail.ui';
 import * as ExchangeDetail from './ExchangeDetail.ui';
 import * as ExchangeMain from './ExchangeMain.ui';
+import * as ReceiveMain from './ReceiveMain.ui';
+import * as ReceiveDetail from './ReceiveDetail.ui';
 import * as DxOrderDetail from './DxOrderDetail.ui';
 import * as DxReOrderDetail from './DxReOrderDetail.ui';
+import * as DxExchangeDetail from './DxExchangeDetail.ui';
 import * as DxExchangeMainState from './DxExchangeMainState.ui';
 import * as IxExchangeMainUsedPoint from './IxExchangeMainUsedPoint.ui';
+import * as ExchangeDetailDeliver from './ExchangeDetailDeliver.ui';
+import * as IxOrderDetailReceive from './IxOrderDetailReceive.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'ProductX', ProductX);
@@ -31,9 +36,14 @@ export function setUI(uq: Uq) {
 	assign(uq, 'OrderDetail', OrderDetail);
 	assign(uq, 'ExchangeDetail', ExchangeDetail);
 	assign(uq, 'ExchangeMain', ExchangeMain);
+	assign(uq, 'ReceiveMain', ReceiveMain);
+	assign(uq, 'ReceiveDetail', ReceiveDetail);
 	assign(uq, 'DxOrderDetail', DxOrderDetail);
 	assign(uq, 'DxReOrderDetail', DxReOrderDetail);
+	assign(uq, 'DxExchangeDetail', DxExchangeDetail);
 	assign(uq, 'DxExchangeMainState', DxExchangeMainState);
 	assign(uq, 'IxExchangeMainUsedPoint', IxExchangeMainUsedPoint);
+	assign(uq, 'ExchangeDetailDeliver', ExchangeDetailDeliver);
+	assign(uq, 'IxOrderDetailReceive', IxOrderDetailReceive);
 }
 export * from './JkPointshop';

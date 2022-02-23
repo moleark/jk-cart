@@ -247,58 +247,61 @@ export class COrder extends CUqBase {
         let { id: orderId, no, flow, state } = result;
         await order.Order.action(orderId, flow, state, "submit");
 
-        // 如果使用了coupon/credits，需要将其标记为已使用
-        let { id: couponId, types } = this.couponAppliedData;
-        if (couponId) {
-            let nowDate = new Date();
-            let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
-            switch (types) {
-                case 'coupon':
-                    if (currentUser.hasCustomer) {
-                        let customerId = currentUser.currentCustomer.id;
-                        customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
-                        customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
-                    } else {
-                        webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
-                        webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
-                    };
-                    break;
-                case 'credits':
-                    if (currentUser.hasCustomer) {
-                        let customerId = currentUser.currentCustomer.id;
-                        customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
-                        customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
-                    } else {
-                        webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
-                        webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
-                    };
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        let param: [{ productId: number, packId: number }] = [] as any;
-        orderItems.forEach(e => {
-            e.packs.forEach(v => {
-                param.push({ productId: e.product.id, packId: v.pack.id })
-            })
-        });
-        store.cart.removeItem(param);
-        /* pushOrder 不同客户调用不同的pushOrder */
-        // await this.activePushOrder.pushOrder(result);
-        /* --------------- epec下单 已整理,中间部分弃用 --------------- */
-        // epec客户下单后要求跳转到指定的url
-        let epecOrder = this.orderData.getDataForSave2();
-        epecOrder.id = orderId;
-        epecOrder.no = no;
-        epecOrder.type = 1;
         try {
+            // 如果使用了coupon/credits，需要将其标记为已使用
+            let { id: couponId, types } = this.couponAppliedData;
+            if (couponId) {
+                // let nowDate = new Date();
+                let usedDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                // let usedDate = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-${nowDate.getDate()}`;
+                switch (types) {
+                    case 'coupon':
+                        if (currentUser.hasCustomer) {
+                            let customerId = currentUser.currentCustomer.id;
+                            customer.CustomerCoupon.del({ customer: customerId, coupon: couponId, arr1: [{ couponType: 1 }] });
+                            customer.CustomerCouponUsed.add({ customer: customerId, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                        } else {
+                            webuser.WebUserCoupon.del({ webUser: currentUser.id, coupon: couponId, arr1: [{ couponType: 1 }] });
+                            webuser.WebUserCouponUsed.add({ webUser: currentUser.id, arr1: [{ coupon: couponId, usedDate: usedDate }] });
+                        };
+                        break;
+                    case 'credits':
+                        if (currentUser.hasCustomer) {
+                            let customerId = currentUser.currentCustomer.id;
+                            customer.CustomerCredits.del({ customer: customerId, arr1: [{ credits: couponId }] });
+                            customer.CustomerCreditsUsed.add({ customer: customerId, credits: couponId, arr1: [{ saleOrderItem: no, usedDate: usedDate }] });
+                        } else {
+                            webuser.WebUserCredits.del({ webUser: currentUser.id, arr1: [{ credits: couponId }] });
+                            webuser.WebUserCreditsUsed.add({ webUser: currentUser.id, credits: couponId, arr1: [{ saleOrder: no, usedDate: usedDate }] });
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            let param: [{ productId: number, packId: number }] = [] as any;
+            orderItems.forEach((e:any) => {
+                e.packs.forEach((v:any) => {
+                    param.push({ productId: e.product.id, packId: v.pack?.id })
+                })
+            });
+            store.cart.removeItem(param);
+            /* pushOrder 不同客户调用不同的pushOrder */
+            // await this.activePushOrder.pushOrder(result);
+            /* --------------- epec下单 已整理,中间部分弃用 --------------- */
+            // epec客户下单后要求跳转到指定的url
+            let epecOrder:any = this.orderData.getDataForSave2();
+            epecOrder.id = orderId;
+            epecOrder.no = no;
+            epecOrder.type = 1;
+            let newEpecOrder: any = {};
+            _.assign(newEpecOrder, epecOrder);
             let rep = await window.fetch(GLOABLE.EPEC.PUSHORDERURL, {
                 method: 'post',
-                mode:"cors",
+                mode: "cors",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(epecOrder)
+                body: JSON.stringify(newEpecOrder)
             });
             let { ok, status } = rep;
             if (ok) {
@@ -317,14 +320,20 @@ export class COrder extends CUqBase {
                         break;
                 }
             }
-        } catch (error) {
-
+        } catch (error: any) {
+            let message: string = `Order failed, orderId: ${orderId}, no: ${no}, error: ${error?.message}`;
+            await window.fetch(GLOABLE.EPEC.ERRORINFORECORD, {
+                method: 'post',
+                mode: "cors",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ webUser: currentUser.id, message: message })
+            });
         }
         /* --------------- epec下单 已整理,中间部分弃用 --------------- */
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(OrderSuccess, result);
-    }
+    };
 
     openOrderSuccess(result:any) {
         nav.popTo(this.cApp.topKey);
@@ -542,10 +551,10 @@ export class COrder extends CUqBase {
         let { currentUser, store } = this.cApp;
         let { currentSalesRegion } = store;
         let { id: salesRegionId } = currentSalesRegion;
-        let { JkOrder, customer, common, product:productx, deliver } = this.uqs
+        let { JkOrder, customer, common, product: productx, JkDeliver } = this.uqs;
         let order: any = { brief: {}, data: { orderItems: [], comments: undefined } };
         /* 第一项是 main， 第二项是 detail */
-        let getOrderDetail = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
+        let getOrderDetail: any[] = await JkOrder.IDDetailGet<OrderMain, OrderDetail>({
             id: orderId,
             main: JkOrder.OrderMain,
             detail: JkOrder.OrderDetail,
@@ -554,14 +563,14 @@ export class COrder extends CUqBase {
             IDX: JkOrder.OrderMainEx,
             id: orderId,
         });
-        if (!getOrderDetail[0].length || !getOrderDetail[1].length) {
+        let [mainArr, orderDetail] = getOrderDetail;
+        if (!this.user || !mainArr.length || !orderDetail.length || (mainArr.length && mainArr[0].webUser !== this.user?.id)) {
             this.openVPage(VError);return;
         };
         let getOrderMainState: any[] = await JkOrder.ID<DxOrderMainState>({
             IDX: JkOrder.DxOrderMainState,
             id: orderId,
         });
-        let mainArr: any[] = getOrderDetail[0];
         if (mainArr.length) {
             let { id, no, createDate: date, sumAmount: amount, shippingContact, invoiceContact, invoiceInfo, invoiceType } = mainArr[0] as any;
             let { state } = getOrderMainState[0] || { state: undefined };
@@ -583,22 +592,32 @@ export class COrder extends CUqBase {
                 comments: getOrderMainEx[0]?.commentsAboutDeliver
             });
             let orderItemsn: any[] = [];
-            if (getOrderDetail[1].length) {
+            if (orderDetail.length) {
+                let ids = orderDetail.map((el: any) => el.id);
+                let getDeliverDatailByOrderDetail = await this.uqs.JkOrder.IX({ IX: JkOrder.OrderDetailDeliver, ix: ids });
+                /*
+                orderDetail.forEach((el: any) => {
+                    let getIx: any = getDeliverDatailByOrderDetail.find((i: any) => i.xi === el.id);
+                    el.deliverDetail = getIx?.ix;
+                }); */
                 let promise: PromiseLike<any>[] = [];
-                getOrderDetail[1].forEach((el: any) => {
+                orderDetail.forEach((el: any) => {
+                    let findD: any = getDeliverDatailByOrderDetail.find((i: any) => i.ix === el.id);
+                    el.deliverDetail = findD?.xi;
                     let { product } = el;
                     el.product = productx.ProductX.boxId(product);
                     promise.push(el.product);
                     promise.push(productx.GetProductPrices.table({ product: product, salesRegion: salesRegionId }).then((data: any) => el.pricex = data || []));
-                    promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: el?.id }).then((data: any) => el.transportation = data || undefined));
+                    // promise.push(deliver.GetOrderDetailTransportation.obj({ orderDetail: el?.id }).then((data: any) => el.transportation = data || undefined));
+                    promise.push(JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail }).then((data: any) => el.transportation = data || undefined));
                 });
                 await Promise.all(promise);
-                orderItemsn = getOrderDetail[1].map((el: any) => {
+                orderItemsn = orderDetail.map((el: any) => {
                     let { product, item, price, quantity, id, pricex } = el as any;
                     let { pack } = pricex?.find((o: any) => o.pack?.id === item) || { pack: item };
                     let param: any = { id: id, transportation: el.transportation };
-                    return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined };
-                });
+                    return { param: param, pack: pack, price: price, product: product, quantity: quantity, currency: undefined as any };
+                });  
             };
             /* Fee(页面暂时不展示,后期实现) */
             // let getFreightFee = await JkOrder.IX<IxOrderMainFee>({
@@ -620,7 +639,7 @@ export class COrder extends CUqBase {
         // }
     }
     /* 物流信息 orderTransportation 此表废弃,不使用数据 */
-    inteLogistics = async (items: any[], orderId: number) => {
+    /* inteLogistics = async (items: any[], orderId: number) => {
         if (!items.length || !orderId) return [];
         let promise: PromiseLike<any>[] = [];
         items.forEach((el: any, index: number) => {
@@ -632,7 +651,8 @@ export class COrder extends CUqBase {
 
     getOrderTransportation = async (orderId: number, row: number) => {
         return await this.uqs.order.orderTransportation.obj({ order: orderId, row: row });
-    };
+    }; */
+    /* -------------------------------------------- */
 
     getOrderTrackByTransNum = async (transCompany: string, transNumber: number | string) => {
         let param = { code: transCompany, no: transNumber };

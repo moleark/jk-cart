@@ -18,7 +18,7 @@ export class OrderSuccess extends VPage<COrder> {
             <div style={{textAlign: "center",paddingTop:"150px"}}>
                 <p>下单成功，感谢您对百灵威的厚爱!<br/>
                 订单编号:<span className="mint">{orderCreateResult.no}</span><br />
-                我们会加紧处理，请注意查收短信。</p>
+                我们会加紧处理。</p>
                 <img src="images/shoppingcart.png" alt="" className="w-min-12c py-5 col-5 col-sm-4 " />
             </div>
         </Page>

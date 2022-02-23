@@ -18,23 +18,38 @@ export class VDelivery extends View<CProduct> {
             let { product, cApp } = this.controller;
             product = cApp.getProduct(obj?.owner);
             if (!product) return null;
-            let { futureDeliveryTimeDescription } = product;
+            let { futureDeliveryTimeDescription, prices } = product;
             let inventoryAllocation = product.getInventoryAllocation(packId);
+            if (prices) {
+                let getAnInventory: any = prices?.find((el: any) => el?.anInventory && el?.anInventory?.packId === packId);
+                if (getAnInventory && getAnInventory?.anInventory && getAnInventory?.anInventory?.data) {
+                    if (getAnInventory?.anInventory?.data?.length) {
+                        let isRenderAnI: any[] = getAnInventory?.anInventory?.data || [];
+                        return <>{isRenderAnI.map((el: any) => {
+                            let { name, quantity } = el;
+                            return <div key={name} className="text-success" >
+                                {(name === "国内" && quantity >= 1) ? `${el.name}现货, 2-5个工作日发货` : "货期待确认"}</div>
+                        })}
+                        </>;
+                    };
+                };
+            };
 			// if (!inventoryAllocation || !futureDeliveryTimeDescription) return null;
-			if (!inventoryAllocation || inventoryAllocation.length === 0) {
+            if (!inventoryAllocation || inventoryAllocation.length === 0) {
 				if (!futureDeliveryTimeDescription) return null;
 				return <div>{'期货: ' + futureDeliveryTimeDescription}</div>;
-			}
-            let restrict = inventoryAllocation.some(v=> v?.quantity !== 0) ? 1:  0;
-			return <>{inventoryAllocation.map((v, index) => {
-				let { warehouse, quantity, deliveryTimeDescription } = v;
+            };
+            let restrict = inventoryAllocation.some((v:any)=> v?.quantity !== 0) ? 1:  0;
+			return <>{inventoryAllocation.map((v:any, index) => {
+                let { warehouse, quantity, deliveryTimeDescription } = v;
 				if (quantity > 0) {
                     restrict += 1;
 					return <div key={index} className={className(param?.defColor ? param?.defColor : "text-success" )}>
-						{tv(warehouse, (values: any) => <span>{values?.name ? String(values.name).replace('库房','') : null}</span>)}: {(quantity > 10 ? '>10' : quantity)}{/* small */}
+                        {tv(warehouse, (values: any) => <span>{values?.name ? String(values.name).replace('库房', '') : null}</span>)
+                        }: {(quantity > 10 ? '>10' : quantity)}
 						{deliveryTimeDescription}
 					</div>
-				} else {
+                } else {
                     if (restrict === 0) {
                         if (!futureDeliveryTimeDescription) return null;
                         restrict += 1;

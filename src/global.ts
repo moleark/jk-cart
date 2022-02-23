@@ -92,6 +92,7 @@ interface Global {
 	EPEC: {
 		AUTOLOGIN: string;
 		PUSHORDERURL: string;
+		ERRORINFORECORD: string;
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: string;
@@ -99,6 +100,11 @@ interface Global {
 	LOGISTIC: {
 		ORDERTRANS: string;
 	},
+	DRAWMOLECULEGWT: {
+		HTML: string;
+		JSSRC: string;
+	},
+	TCIGETPACK: string;
 };
 
 // 生产配置
@@ -112,7 +118,9 @@ const GLOABLE_PRODUCTION: Global = {
 	CONTENTSITE: "https://web.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://web.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder"
+		PUSHORDERURL: "https://joint.jkchemical.com/epec/pushOrder",
+		ERRORINFORECORD: "https://joint.jkchemical.com/epec/errorInfoRecord"
+
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: "https://joint.jkchemical.com/punchout/generatePunchOutXML"
@@ -120,6 +128,12 @@ const GLOABLE_PRODUCTION: Global = {
 	LOGISTIC: {
 		ORDERTRANS: "https://joint.jkchemical.com/logistics/getTravelInformation"
 	},
+	DRAWMOLECULEGWT: {
+		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
+		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
+	},
+	TCIGETPACK: "https://joint.jkchemical.com/tci/getNumberPacking",
+	// TCIGETPACK: "https://joint.jkchemical.com/tci/getNumberPacking",
 	// CONTENTSITE: "http://localhost:6061",
 }
 
@@ -133,7 +147,8 @@ const GLOABLE_TEST: Global = {
 	CONTENTSITE: "https://test.jkchemical.com",
 	EPEC: {
 		AUTOLOGIN: "https://test.jkchemical.com/api/joint/clientLogin",
-		PUSHORDERURL: "https://test.jkchemical.com/joint/epec/pushOrder"
+		PUSHORDERURL: "https://test.jkchemical.com/joint/epec/pushOrder",
+		ERRORINFORECORD: "https://test.jkchemical.com/joint/epec/errorInfoRecord"
 	},
 	PUNCHOUT: {
 		PUNCHOUTXML: "https://test.jkchemical.com/joint/punchout/generatePunchOutXML"
@@ -141,6 +156,11 @@ const GLOABLE_TEST: Global = {
 	LOGISTIC: {
 		ORDERTRANS: "https://test.jkchemical.com/joint/logistics/getTravelInformation"
 	},
+	DRAWMOLECULEGWT: {
+		HTML: "https://test.jkchemical.com/drawmoleculeGWT",
+		JSSRC: "https://test.jkchemical.com/drawmoleculeGWT/drawmolecule/drawmolecule.nocache.js"
+	},
+	TCIGETPACK: "https://test.jkchemical.com/joint/tci/getNumberPacking",
 }
 
 export const GLOABLE = env.testing === true ? GLOABLE_TEST : GLOABLE_PRODUCTION;

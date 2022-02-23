@@ -1,38 +1,40 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxOrderMainFee } from "./JkOrder";
+import { Role } from "./JkDeliver";
 
 /*--fields--*/
 const fields = {
-	ix: {
-		"name": "ix",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
+		"label": "Id"
 	} as FieldItemId,
-	xi: {
-		"name": "xi",
-		"type": "id",
+	name: {
+		"name": "name",
+		"type": "string",
 		"isKey": false,
-		"label": "Xi"
-	} as FieldItemId,
-	fee: {
-		"name": "fee",
-		"type": "number",
+		"widget": "string",
+		"label": "Name"
+	} as FieldItemString,
+	discription: {
+		"name": "discription",
+		"type": "string",
 		"isKey": false,
-		"widget": "number",
-		"label": "Fee"
-	} as FieldItemNum,
+		"widget": "string",
+		"label": "Discription"
+	} as FieldItemString,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.xi, fields.fee, 
+	fields.name, fields.discription, 
 ];
 
 export const ui: UI = {
-	label: "IxOrderMainFee",
+	label: "Role",
 	fieldArr,
 	fields,
 };
@@ -50,6 +52,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxOrderMainFee):JSX.Element {
+export function render(item: Role):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

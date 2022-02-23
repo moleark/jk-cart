@@ -1,13 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
+import { productPropIsValid } from 'product';
 
 export function renderBrand(brand: any) {
-	if (!brand) return;
+    if (!brand) return;
     return renderPropItem('品牌', brand.name);
 }
 
 export function renderPropItem(caption: string, value: any, captionClass?: string) {
-    if (value === null || value === undefined || value === '0') return null;
+    if (!productPropIsValid(value)) return null;
     let capClass = captionClass ? classNames(captionClass) : classNames("text-muted");
     let valClass = captionClass ? classNames(captionClass) : "";
     return <>

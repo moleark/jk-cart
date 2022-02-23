@@ -1,7 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxOrderDetailCoupon } from "./JkOrder";
+import { ProductCategoryResearchDomain } from "./JkProduct";
 
 /*--fields--*/
 const fields = {
@@ -25,7 +26,7 @@ const fieldArr: FieldItem[] = [
 ];
 
 export const ui: UI = {
-	label: "IxOrderDetailCoupon",
+	label: "ProductCategoryResearchDomain",
 	fieldArr,
 	fields,
 };
@@ -43,6 +44,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxOrderDetailCoupon):JSX.Element {
+export function render(item: ProductCategoryResearchDomain):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

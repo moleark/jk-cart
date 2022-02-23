@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID } from "tonva-react";
 
 
 //===============================
@@ -31,6 +31,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -80,6 +81,12 @@ export interface ParamDoneInvoice {
 
 }
 export interface ResultDoneInvoice {
+}
+
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
 }
 
 export interface Param$poked {
@@ -161,6 +168,16 @@ export interface ResultCustomerPending {
 	ret: ReturnCustomerPendingRet[];
 }
 
+export interface Param$getMyTimezone {
+}
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
+}
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
+}
+
 export interface OrderDetail {
 	id?: number;
 	main?: number;
@@ -227,150 +244,6 @@ export interface InvoiceDetailRaw {
 	amount: number;
 }
 
-export interface DxOrderDetail {
-	id: number;
-	receive?: number;
-	receiveDone?: number;
-	invoice?: number;
-	invoiceDone?: number;
-	$act?: number;
-}
-
-export interface DxReturnDetail {
-	id: number;
-	receive?: number;
-	receiveDone?: number;
-	invoice?: number;
-	invoiceDone?: number;
-	$act?: number;
-}
-
-export interface DxCustomerReceive {
-	id: number;
-	sumAmount?: number;
-	$act?: number;
-}
-
-export interface DxCustomerInvoice {
-	id: number;
-	sumAmount?: number;
-	$act?: number;
-}
-
-export interface DxInvoiceMain {
-	id: number;
-	sumAmount?: number;
-	usedAmount?: number;
-	redAmount?: number;
-	invalidAmount?: number;
-	leftAmount?: number;
-	$act?: number;
-}
-
-export interface DxOrderDetailReturn {
-	id: number;
-	receiveReturn?: number;
-	receiveReturnDone?: number;
-	invoiceReturn?: number;
-	invoiceReturnDone?: number;
-	$act?: number;
-}
-
-export interface DxReceiveMain {
-	id: number;
-	sumAmount?: number;
-	usedAmount?: number;
-	returnAmount?: number;
-	leftAmount?: number;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetail {
-	id: number|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxReturnDetail {
-	id: number|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxCustomerReceive {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxCustomerInvoice {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxInvoiceMain {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	usedAmount?: number|IDXValue;
-	redAmount?: number|IDXValue;
-	invalidAmount?: number|IDXValue;
-	leftAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetailReturn {
-	id: number|IDXValue;
-	receiveReturn?: number|IDXValue;
-	receiveReturnDone?: number|IDXValue;
-	invoiceReturn?: number|IDXValue;
-	invoiceReturnDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxReceiveMain {
-	id: number|IDXValue;
-	sumAmount?: number|IDXValue;
-	usedAmount?: number|IDXValue;
-	returnAmount?: number|IDXValue;
-	leftAmount?: number|IDXValue;
-	$act?: number;
-}
-
-export interface IxCustomerPendingReceive {
-	ix: number;
-	xi: number;
-}
-
-export interface IxCustomerPendingInvoice {
-	ix: number;
-	xi: number;
-}
-
-export interface DxOrderDetailInvoiceReceive {
-	ixx: number;
-	ix: number;
-	xi: number;
-	amount: number;
-}
-
-export interface Refund {
-	ix: number;
-	xi: number;
-	comments: string;
-}
-
-export interface RedInvoiceMain {
-	ix: number;
-	xi: number;
-}
-
 export interface ParamActs {
 	orderDetail?: OrderDetail[];
 	orderMain?: OrderMain[];
@@ -379,18 +252,6 @@ export interface ParamActs {
 	receiveDetail?: ReceiveDetail[];
 	receiveMain?: ReceiveMain[];
 	invoiceDetailRaw?: InvoiceDetailRaw[];
-	dxOrderDetail?: ActParamDxOrderDetail[];
-	dxReturnDetail?: ActParamDxReturnDetail[];
-	dxCustomerReceive?: ActParamDxCustomerReceive[];
-	dxCustomerInvoice?: ActParamDxCustomerInvoice[];
-	dxInvoiceMain?: ActParamDxInvoiceMain[];
-	dxOrderDetailReturn?: ActParamDxOrderDetailReturn[];
-	dxReceiveMain?: ActParamDxReceiveMain[];
-	ixCustomerPendingReceive?: IxCustomerPendingReceive[];
-	ixCustomerPendingInvoice?: IxCustomerPendingInvoice[];
-	dxOrderDetailInvoiceReceive?: DxOrderDetailInvoiceReceive[];
-	refund?: Refund[];
-	redInvoiceMain?: RedInvoiceMain[];
 }
 
 
@@ -404,12 +265,14 @@ export interface UqExt extends Uq {
 	Currency: UqTuid<TuidCurrency>;
 	DoneReceive: UqAction<ParamDoneReceive, ResultDoneReceive>;
 	DoneInvoice: UqAction<ParamDoneInvoice, ResultDoneInvoice>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	PendingInvoice: UqQuery<ParamPendingInvoice, ResultPendingInvoice>;
 	PendingReceive: UqQuery<ParamPendingReceive, ResultPendingReceive>;
 	CustomerPendingInvoice: UqQuery<ParamCustomerPendingInvoice, ResultCustomerPendingInvoice>;
 	CustomerPendingReceive: UqQuery<ParamCustomerPendingReceive, ResultCustomerPendingReceive>;
 	CustomerPending: UqQuery<ParamCustomerPending, ResultCustomerPending>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
 	InvoiceDetail: UqID<any>;
@@ -417,20 +280,12 @@ export interface UqExt extends Uq {
 	ReceiveDetail: UqID<any>;
 	ReceiveMain: UqID<any>;
 	InvoiceDetailRaw: UqID<any>;
-	DxOrderDetail: UqIDX<any>;
-	DxReturnDetail: UqIDX<any>;
-	DxCustomerReceive: UqIDX<any>;
-	DxCustomerInvoice: UqIDX<any>;
-	DxInvoiceMain: UqIDX<any>;
-	DxOrderDetailReturn: UqIDX<any>;
-	DxReceiveMain: UqIDX<any>;
-	IxCustomerPendingReceive: UqIX<any>;
-	IxCustomerPendingInvoice: UqIX<any>;
-	DxOrderDetailInvoiceReceive: UqIX<any>;
-	Refund: UqIX<any>;
-	RedInvoiceMain: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

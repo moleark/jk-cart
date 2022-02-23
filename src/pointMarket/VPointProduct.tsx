@@ -145,11 +145,11 @@ export class VPointProduct extends VPage<CPointProduct> {
     }
 
     protected renderPointProduct = (pointProduct: any) => {
-        let { product } = pointProduct;
+        let { product, imageUrl } = pointProduct;
         return <>
             {tv(product, (v) => {
                 let cProductUI: JSX.Element = <><div title={v.description} className={classNames("w-100 cus-height", this.isShowSelectForm ? "z-height" : "")}>
-                    <PointProductImage chemicalId={v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} />
+                    <PointProductImage chemicalId={imageUrl || v.imageUrl} className="w-100 h-100" style={{ border: `2px solid ${randomColor()}` }} />
                 </div>
                     <div className="small w-100">
                         <div className="text-truncate w-100">{v.descriptionC}</div>

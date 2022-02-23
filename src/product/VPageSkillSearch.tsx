@@ -103,7 +103,8 @@ export class VPageSkillSearch extends VPage<CProduct> {
 				{langArr.map((v: any) => (<option key={v.language} value={v.language}>{languageCaptions[v.language]}</option>))}
 			</select>
 		};
-		return <>
+		return <div className="col-md-6 my-2">{langUI}</div>
+		/* return <>
 			<div className="col-md-3">
 				<input ref={v => this.captchaInput = v} type="text"
 					className='form-control border-primary my-2' placeholder='验证码' />
@@ -115,34 +116,35 @@ export class VPageSkillSearch extends VPage<CProduct> {
 				<button className="btn btn-link btn-block w-5c p-0 m-0 d-inline-block align-self-center"
 					onClick={(e: any) => { e.preventDefault(); getCaptcha() }}>换一张</button>
 			</div>
-		</>;
+		</>; */
 	}
 
 	private onSubmit = async () => {
 		let productOrigin = this.productOrigin.value;
 		let productLot = this.productLot ? this.productLot.value : true;
-		let currtCaptcha = this.captchaInput ? this.captchaInput.value : true;
+		// let currtCaptcha = this.captchaInput ? this.captchaInput.value : true;
 
 		if (!productOrigin) this.productOriginTip.set('产品编号不可为空');
 		if (!productLot) this.productLotTip.set('产品批号不可为空');
-		if (!currtCaptcha) this.captchaTip.set('验证码不可为空');
+		// if (!currtCaptcha) this.captchaTip.set('验证码不可为空');
 		this.buttonDisable = false;
-		if (!productOrigin || !productLot || !currtCaptcha) return;
-		let { getPDFFileUrl, getCaptcha } = this.controller;
+		if (!productOrigin || !productLot) return;
+		let { getPDFFileUrl } = this.controller;
 		let content: any = await getPDFFileUrl({
-			origin: productOrigin, captcha: currtCaptcha,
+			origin: productOrigin,
 			lang: this.selectVal ? this.selectVal.value : undefined, lot: productLot
 		});
 		if (content === undefined) return;
 		if (content.status) {
 			if (this.controller.materialType === 'coa') this.productLotTipNone.set(content.msg);
-			else {
+			else this.productOriginTip.set(content.msg);
+			/* else {
 				this.captchaTip.set(content.msg);
 				await getCaptcha();
-			};
+			}; */
 		} else {
 			this.buttonDisable = true;
-			if (this.captchaInput) this.captchaInput.value = '';
+			// if (this.captchaInput) this.captchaInput.value = '';
 			if (this.productLot) this.productLot.value = '';
 			if (this.controller.materialType === 'coa') this.openVPage(VPageCoa, content);
 			else this.openVPage(VPagePDF, content);

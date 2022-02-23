@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -36,6 +36,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface TuidProductX {
@@ -153,6 +154,23 @@ export interface ParamPointProductGenreDelete {
 	genre: number;
 }
 export interface ResultPointProductGenreDelete {
+}
+
+export interface ParamPointChanged {
+	customer: number;
+	point: number;
+	pointYear: number;
+	pointType: number;
+	pointSource: number;
+	comments: string;
+}
+export interface ResultPointChanged {
+}
+
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
 }
 
 export interface SheetPointExchangeSheet {
@@ -420,172 +438,14 @@ export interface ResultSearchExchangeOrders {
 	$page: ReturnSearchExchangeOrders$page[];
 }
 
-export interface ParamPointBook {
-	webUser: number;
+export interface Param$getMyTimezone {
 }
-export interface ReturnPointBook$page {
-	pointYear: number;
-	point: number;
-	usedPoint: number;
-	totalPoint: number;
-	tempPoint: number;
-	tempUsedPoint: number;
-	tempSignInPoint: number;
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
 }
-export interface ResultPointBook {
-	$page: ReturnPointBook$page[];
-}
-
-export interface ParamPointBookByCustomer {
-	customer: number;
-}
-export interface ReturnPointBookByCustomer$page {
-	pointYear: number;
-	point: number;
-	usedPoint: number;
-	totalPoint: number;
-}
-export interface ResultPointBookByCustomer {
-	$page: ReturnPointBookByCustomer$page[];
-}
-
-export interface ParamPointProductHotStat {
-}
-export interface ReturnPointProductHotStat$page {
-	pointProduct: number;
-	visits: number;
-	exchanges: number;
-}
-export interface ResultPointProductHotStat {
-	$page: ReturnPointProductHotStat$page[];
-}
-
-export interface ParamPointDistributionBook {
-}
-export interface ReturnPointDistributionBook$page {
-	pointStart: number;
-	numbers: number;
-}
-export interface ResultPointDistributionBook {
-	$page: ReturnPointDistributionBook$page[];
-}
-
-export interface ParamPointHistory {
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	webUser: number;
-}
-export interface ReturnPointHistory$page {
-	date: any;
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	webUser: number;
-	type: number;
-	sheet: number;
-	row: number;
-}
-export interface ResultPointHistory {
-	$page: ReturnPointHistory$page[];
-}
-
-export interface ParamPointProductVisitHistory {
-	pointProduct: number;
-	webUser: number;
-}
-export interface ReturnPointProductVisitHistory$page {
-	date: any;
-	pointProduct: number;
-	webUser: number;
-}
-export interface ResultPointProductVisitHistory {
-	$page: ReturnPointProductVisitHistory$page[];
-}
-
-export interface ParamPointProductLibHistory {
-	pointProduct: number;
-	startDate: any;
-	endDate: any;
-	reason: string;
-	createTime: any;
-}
-export interface ReturnPointProductLibHistory$page {
-	date: any;
-	pointProduct: number;
-	startDate: any;
-	endDate: any;
-	reason: string;
-	createTime: any;
-}
-export interface ResultPointProductLibHistory {
-	$page: ReturnPointProductLibHistory$page[];
-}
-
-export interface ParamPointHistoryByCustomer {
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	customer: number;
-}
-export interface ReturnPointHistoryByCustomer$page {
-	date: any;
-	pointYear: number;
-	point: number;
-	pointType: any;
-	source: any;
-	comments: string;
-	customer: number;
-	type: number;
-	sheet: number;
-	row: number;
-}
-export interface ResultPointHistoryByCustomer {
-	$page: ReturnPointHistoryByCustomer$page[];
-}
-
-export interface ParamOrderDetailPointHistory {
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ReturnOrderDetailPointHistory$page {
-	date: any;
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ResultOrderDetailPointHistory {
-	$page: ReturnOrderDetailPointHistory$page[];
-}
-
-export interface ParamReOrderDetailPointHistory {
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ReturnReOrderDetailPointHistory$page {
-	date: any;
-	orderDetailId: number;
-	pointYear: number;
-	point: number;
-	type: number;
-	comments: string;
-}
-export interface ResultReOrderDetailPointHistory {
-	$page: ReturnReOrderDetailPointHistory$page[];
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
 export interface OrderMain {
@@ -621,6 +481,19 @@ export interface ExchangeMain {
 	createDate: any;
 }
 
+export interface ReceiveMain {
+	id?: number;
+	createDate: any;
+}
+
+export interface ReceiveDetail {
+	id?: number;
+	main?: number;
+	orderDetail: number;
+	amount: number;
+	createDate: any;
+}
+
 export interface DxOrderDetail {
 	id: number;
 	point?: number;
@@ -633,6 +506,14 @@ export interface DxReOrderDetail {
 	id: number;
 	point?: number;
 	totalPoint?: number;
+	$act?: number;
+}
+
+export interface DxExchangeDetail {
+	id: number;
+	deliver?: number;
+	deliverDone?: number;
+	deliverTime?: any;
 	$act?: number;
 }
 
@@ -658,6 +539,14 @@ export interface ActParamDxReOrderDetail {
 	$act?: number;
 }
 
+export interface ActParamDxExchangeDetail {
+	id: number|IDXValue;
+	deliver?: number|IDXValue;
+	deliverDone?: number|IDXValue;
+	deliverTime?: any|IDXValue;
+	$act?: number;
+}
+
 export interface ActParamDxExchangeMainState {
 	id: number|IDXValue;
 	state?: any|IDXValue;
@@ -671,15 +560,34 @@ export interface IxExchangeMainUsedPoint {
 	point: number;
 }
 
+export interface ExchangeDetailDeliver {
+	ix: number;
+	xi: number;
+	deliverDone: number;
+	deliverTime: any;
+}
+
+export interface IxOrderDetailReceive {
+	ix: number;
+	xi: number;
+	receiveAmount: number;
+	createDate: any;
+}
+
 export interface ParamActs {
 	orderMain?: OrderMain[];
 	orderDetail?: OrderDetail[];
 	exchangeDetail?: ExchangeDetail[];
 	exchangeMain?: ExchangeMain[];
+	receiveMain?: ReceiveMain[];
+	receiveDetail?: ReceiveDetail[];
 	dxOrderDetail?: ActParamDxOrderDetail[];
 	dxReOrderDetail?: ActParamDxReOrderDetail[];
+	dxExchangeDetail?: ActParamDxExchangeDetail[];
 	dxExchangeMainState?: ActParamDxExchangeMainState[];
 	ixExchangeMainUsedPoint?: IxExchangeMainUsedPoint[];
+	exchangeDetailDeliver?: ExchangeDetailDeliver[];
+	ixOrderDetailReceive?: IxOrderDetailReceive[];
 }
 
 
@@ -703,11 +611,9 @@ export interface UqExt extends Uq {
 	Signin: UqAction<ParamSignin, ResultSignin>;
 	SetPointProductVisits: UqAction<ParamSetPointProductVisits, ResultSetPointProductVisits>;
 	PointProductGenreDelete: UqAction<ParamPointProductGenreDelete, ResultPointProductGenreDelete>;
+	PointChanged: UqAction<ParamPointChanged, ResultPointChanged>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	PointExchangeSheet: UqSheet<SheetPointExchangeSheet, any>;
-	PointBook: UqBook<ParamPointBook, ResultPointBook>;
-	PointBookByCustomer: UqBook<ParamPointBookByCustomer, ResultPointBookByCustomer>;
-	PointProductHotStat: UqBook<ParamPointProductHotStat, ResultPointProductHotStat>;
-	PointDistributionBook: UqBook<ParamPointDistributionBook, ResultPointDistributionBook>;
 	GetPoints: UqQuery<ParamGetPoints, ResultGetPoints>;
 	GetPointProduct: UqQuery<ParamGetPointProduct, ResultGetPointProduct>;
 	GetPlatFormOrder: UqQuery<ParamGetPlatFormOrder, ResultGetPlatFormOrder>;
@@ -727,6 +633,7 @@ export interface UqExt extends Uq {
 	GetPointProductsByPage: UqQuery<ParamGetPointProductsByPage, ResultGetPointProductsByPage>;
 	GetBrandMinDiscount: UqQuery<ParamGetBrandMinDiscount, ResultGetBrandMinDiscount>;
 	SearchExchangeOrders: UqQuery<ParamSearchExchangeOrders, ResultSearchExchangeOrders>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	PointProduct: UqMap;
 	PlatformOrder: UqMap;
 	PlatformOrderUsed: UqMap;
@@ -737,24 +644,25 @@ export interface UqExt extends Uq {
 	BrandMinDiscount: UqMap;
 	OrderBack: UqMap;
 	PointCustomerBlacklist: UqMap;
-	PointHistory: UqHistory<ParamPointHistory, ResultPointHistory>;
-	PointProductVisitHistory: UqHistory<ParamPointProductVisitHistory, ResultPointProductVisitHistory>;
-	PointProductLibHistory: UqHistory<ParamPointProductLibHistory, ResultPointProductLibHistory>;
-	PointHistoryByCustomer: UqHistory<ParamPointHistoryByCustomer, ResultPointHistoryByCustomer>;
-	OrderDetailPointHistory: UqHistory<ParamOrderDetailPointHistory, ResultOrderDetailPointHistory>;
-	ReOrderDetailPointHistory: UqHistory<ParamReOrderDetailPointHistory, ResultReOrderDetailPointHistory>;
-	PlatformOrderPending: UqPending<any, any>;
-	SOrderPaymentPending: UqPending<any, any>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	ExchangeDetail: UqID<any>;
 	ExchangeMain: UqID<any>;
+	ReceiveMain: UqID<any>;
+	ReceiveDetail: UqID<any>;
 	DxOrderDetail: UqIDX<any>;
 	DxReOrderDetail: UqIDX<any>;
+	DxExchangeDetail: UqIDX<any>;
 	DxExchangeMainState: UqIDX<any>;
 	IxExchangeMainUsedPoint: UqIX<any>;
+	ExchangeDetailDeliver: UqIX<any>;
+	IxOrderDetailReceive: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

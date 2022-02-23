@@ -71,16 +71,16 @@ export class Coupon extends CouponBase implements OrderPriceStrategy {
             if (this.discount) {
                 let { orderItems, salesRegion } = orderData;
                 if (orderItems !== undefined && orderItems.length > 0) {
-                    let { salesTask, product: uqsProduct } = uqs;
+                    let { salesTask, product: uqsProduct, JkCoupon } = uqs;
                     let couponOffsetAmount = 0;
                     for (let i = 0; i < orderItems.length; i++) {
                         let oi = orderItems[i];
-						let { product, packs } = oi;
-						let { brand } = product;
+                        let { product, packs } = oi;
+                        let { brand } = product;
                         //let { ProductX } = uqsProduct;
                         //let productTuid: any = await ProductX.load(product)
                         // 获取品牌的折扣
-                        let { BottomDiscount } = salesTask;
+                        let { BottomDiscount } = JkCoupon;
                         let brandDiscountMap: any = await BottomDiscount.obj({ brand, salesRegion: salesRegion.id });
 
                         for (let j = 0; j < packs.length; j++) {
@@ -183,8 +183,8 @@ export class VIPCard extends CouponBase implements OrderPriceStrategy {
                 let couponOffsetAmount = 0;
                 for (let i = 0; i < orderItems.length; i++) {
                     let oi = orderItems[i];
-					let { product, packs } = oi;
-					let { brand } = product;
+                    let { product, packs } = oi;
+                    let { brand } = product;
                     // 获取明细中产品的VIP卡折扣
                     let thisDiscountSetting = this.discountSetting.find((e: any) => Tuid.equ(e.brand, brand));
                     let discount = (thisDiscountSetting && thisDiscountSetting.discount) || 0;

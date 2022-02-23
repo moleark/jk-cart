@@ -2,37 +2,58 @@
 import { Res, setRes, TFunc, UI, uqStringify } from "tonva-react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemInt, FieldItemNum, FieldItemString, FieldItemId } from "tonva-react";
-import { IxCustomerReturnable } from "./JkOrder";
+import { Coupon } from "./JkCoupon";
 
 /*--fields--*/
 const fields = {
-	ixx: {
-		"name": "ixx",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ixx"
+		"label": "Id"
 	} as FieldItemId,
-	ix: {
-		"name": "ix",
+	code: {
+		"name": "code",
+		"type": "string",
+		"isKey": true,
+		"widget": "string",
+		"label": "Code"
+	} as FieldItemString,
+	type: {
+		"name": "type",
+		"isKey": false,
+		"label": "Type"
+	} as undefined,
+	validityDate: {
+		"name": "validityDate",
+		"isKey": false,
+		"label": "ValidityDate"
+	} as undefined,
+	isValid: {
+		"name": "isValid",
+		"isKey": false,
+		"label": "IsValid"
+	} as undefined,
+	creator: {
+		"name": "creator",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
+		"label": "Creator"
 	} as FieldItemId,
-	xi: {
-		"name": "xi",
-		"type": "id",
+	createDate: {
+		"name": "createDate",
 		"isKey": false,
-		"label": "Xi"
-	} as FieldItemId,
+		"label": "CreateDate"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.ixx, fields.xi, 
+	fields.code, fields.type, fields.validityDate, fields.isValid, fields.creator, fields.createDate, 
 ];
 
 export const ui: UI = {
-	label: "IxCustomerReturnable",
+	label: "Coupon",
 	fieldArr,
 	fields,
 };
@@ -50,6 +71,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxCustomerReturnable):JSX.Element {
+export function render(item: Coupon):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

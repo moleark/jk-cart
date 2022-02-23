@@ -273,7 +273,7 @@ export class CPointProduct extends CUqBase {
             this.openVPage(VError);
             return;
         }; */
-        let { JkPointshop, 积分商城, customer: customerUQ, deliver } = this.uqs;
+        let { JkPointshop, 积分商城, customer: customerUQ, JkDeliver } = this.uqs;
         let order = { brief: {}, data: {} };
         let getOrder:any[] = await JkPointshop.IDDetailGet({
             id: orderId,
@@ -281,7 +281,7 @@ export class CPointProduct extends CUqBase {
             detail: JkPointshop.ExchangeDetail,
         });
         let [mainArr, orderDetail] = getOrder;
-        if (!mainArr.length || !orderDetail.length) {
+        if ( !this.user || !mainArr.length || !orderDetail.length || (mainArr.length && mainArr[0].customer !== this.cApp.currentUser?.currentCustomer?.id)) {
             this.openVPage(VError);return;
         };
         let getDxExchagneMainState: any[] = await JkPointshop.ID<DxExchangeMainState>({
@@ -293,11 +293,20 @@ export class CPointProduct extends CUqBase {
         order.brief = { id: id, no: no, date: createDate, state: state };
         customer = customerUQ.Customer.boxId(customer);
         shippingContact = customerUQ.Contact.boxId(shippingContact);
-        
+        /* let getDeliverDetailExchangeDetail = await JkDeliver.IX({ IX: JkDeliver.DeliverDetailExchangeDetail, ix: [] });
+        orderDetail.forEach((el: any) => {
+            let getIxByXi: any = getDeliverDetailExchangeDetail.find((i: any) => i.xi === el.id);
+            el.deliverDetail = getIxByXi?.ix;
+        }); */
+        let ids = orderDetail.map((el: any) => el.id);
+        let getDeliverDetailExchangeDetail = await this.uqs.JkPointshop.IX({ IX: JkPointshop.ExchangeDetailDeliver, ix: ids });
         let promise: PromiseLike<any>[] = [customer, shippingContact];
         orderDetail.forEach((el: any) => {
+            let findD: any = getDeliverDetailExchangeDetail.find((i: any) => i.ix === el.id);
+            el.deliverDetail = findD?.xi;
             el.product = 积分商城.PointProductLib.boxId(el?.item);
-            let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
+            // let getExchangeTransportation: any = deliver.GetPointExchangeDetailTransportation.obj({ pointExchangeDetail: el?.id });
+            let getExchangeTransportation: any = JkDeliver.GetDeliverDetailTransportation.obj({ deliverDetail: el?.deliverDetail });
             getExchangeTransportation.then((data: any) => el.transportation = data || undefined);
             promise.push(getExchangeTransportation);
             promise.push(el.product);
@@ -428,7 +437,7 @@ export class CPointProduct extends CUqBase {
      */
     getNewPointProducts = async () => {
         let result = await this.uqs.积分商城.GetNewPointProducts.table({});
-        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v: any) => { return { product: v.id, imageUrl: v?.imageUrl } });
     }
 
     /**
@@ -436,7 +445,7 @@ export class CPointProduct extends CUqBase {
      */
     getHotPointProducts = async () => {
         let result = await this.uqs.积分商城.GetHotPointProducts.table({});
-        return result.sort((a, b) => a.point - b.point).map((v) => { return { product: v.id } });
+        return result.sort((a, b) => a.point - b.point).map((v: any) => { return { product: v.id, imageUrl: v?.imageUrl } });
     }
 
     /**
@@ -562,9 +571,10 @@ export class CPointProduct extends CUqBase {
 
     IsCouponCanUse = async (couponCode: string) => {
         this.couponId = 0;
-        let { currentUser } = this.cApp;
-        let { salesTask } = this.uqs;
-        let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
+        let { currentUser, cCoupon } = this.cApp;
+        // let { salesTask } = this.uqs;
+        let validationResult = await cCoupon.getCouponValidationResult(couponCode);
+        // let validationResult = await salesTask.IsCanUseCoupon.submit({ code: couponCode, webUser: currentUser && currentUser.id });
 
         let { result, id, types } = validationResult;
         if (result === 1) {

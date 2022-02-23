@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqBook, UqQuery, UqMap, UqHistory, UqPending, UqID, UqIDX, UqIX } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqSheet, UqQuery, UqMap, UqID, UqIDX, UqIX } from "tonva-react";
 
 
 //===============================
@@ -38,6 +38,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -235,71 +236,10 @@ export interface ParamMergeCart {
 export interface ResultMergeCart {
 }
 
-export interface ParamOrderPaid {
-	id: number;
-	amount: number;
+export interface Param$setMyTimezone {
+	_timezone: number;
 }
-export interface ReturnOrderPaidRet {
-	ok: number;
-}
-export interface ResultOrderPaid {
-	ret: ReturnOrderPaidRet[];
-}
-
-export interface ParamSaveOrderReturn {
-	detail: {
-		orderDetail: number;
-		quantity: number;
-	}[];
-
-}
-export interface ReturnSaveOrderReturnRet {
-	id: number;
-}
-export interface ResultSaveOrderReturn {
-	ret: ReturnSaveOrderReturnRet[];
-}
-
-export interface ParamOrderConfirm {
-	id: number;
-}
-export interface ResultOrderConfirm {
-}
-
-export interface ParamSaveOrder {
-	id: number;
-	no: string;
-	webUser: number;
-	customer: number;
-	buyerAccount: number;
-	shippingContact: number;
-	invoiceContact: number;
-	invoiceType: number;
-	invoiceInfo: number;
-	sumAmount: number;
-	currency: number;
-	couponNo: string;
-	sheetId: number;
-	createDate: any;
-	detail: {
-		id: number;
-		main: number;
-		warehouse: number;
-		item: number;
-		product: number;
-		quantity: number;
-		price: number;
-		amount: number;
-		lotNumber: string;
-		createDate: any;
-	}[];
-
-}
-export interface ReturnSaveOrderRet {
-	id: number;
-}
-export interface ResultSaveOrder {
-	ret: ReturnSaveOrderRet[];
+export interface Result$setMyTimezone {
 }
 
 export interface SheetOrder {
@@ -358,84 +298,6 @@ export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
-export interface ParamGetCustomerReturnable {
-	customer: number;
-}
-export interface ReturnGetCustomerReturnable$page {
-	id: number;
-	main: number;
-	warehouse: number;
-	item: number;
-	product: number;
-	quantity: number;
-	price: number;
-	amount: number;
-	lotNumber: string;
-	createDate: any;
-	deliver: number;
-	deliverDone: number;
-	deliverTime: any;
-	receive: number;
-	receiveDone: number;
-	receiveTime: any;
-	invoice: number;
-	invoiceDone: number;
-	invoiceTime: any;
-	invoiceReturn: number;
-	invoiceReturnDone: number;
-}
-export interface ResultGetCustomerReturnable {
-	$page: ReturnGetCustomerReturnable$page[];
-}
-
-export interface ParamGetCustomerOrderReturn {
-	customer: number;
-	order: number;
-}
-export interface ReturnGetCustomerOrderReturnMain {
-	id: number;
-	no: string;
-	webUser: number;
-	customer: number;
-	buyerAccount: number;
-	shippingContact: number;
-	invoiceContact: number;
-	invoiceType: number;
-	invoiceInfo: number;
-	sumAmount: number;
-	currency: number;
-	couponNo: string;
-	sheetId: number;
-	createDate: any;
-}
-export interface ReturnGetCustomerOrderReturnDetail {
-	id: number;
-	main: number;
-	warehouse: number;
-	item: number;
-	product: number;
-	quantity: number;
-	price: number;
-	amount: number;
-	lotNumber: string;
-	createDate: any;
-	deliver: number;
-	deliverDone: number;
-	deliverTime: any;
-	receive: number;
-	receiveDone: number;
-	receiveTime: any;
-	invoice: number;
-	invoiceDone: number;
-	invoiceTime: any;
-	invoiceReturn: number;
-	invoiceReturnDone: number;
-}
-export interface ResultGetCustomerOrderReturn {
-	main: ReturnGetCustomerOrderReturnMain[];
-	detail: ReturnGetCustomerOrderReturnDetail[];
-}
-
 export interface ParamSearchOrders {
 	keyWord: string;
 	state: string;
@@ -452,82 +314,14 @@ export interface ResultSearchOrders {
 	$page: ReturnSearchOrders$page[];
 }
 
-export interface ParamCart {
-	user: number;
-	product: number;
+export interface Param$getMyTimezone {
 }
-export interface ReturnCart$page {
-	pack: number;
-	price: number;
-	currency: number;
-	quantity: number;
-	date: any;
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
 }
-export interface ResultCart {
-	$page: ReturnCart$page[];
-}
-
-export interface ParamWebUserAccount {
-	webUser: number;
-}
-export interface ReturnWebUserAccount$page {
-	currency: number;
-	总订单金额: number;
-	总到货金额: number;
-	总开票金额: number;
-	总付款金额: number;
-}
-export interface ResultWebUserAccount {
-	$page: ReturnWebUserAccount$page[];
-}
-
-export interface ParamOrderState {
-}
-export interface ReturnOrderState$page {
-	Order: number;
-	总金额: number;
-	已付金额: number;
-	发货完成: number;
-}
-export interface ResultOrderState {
-	$page: ReturnOrderState$page[];
-}
-
-export interface ParamOrderHistory {
-	webUser: number;
-	product: number;
-	pack: number;
-	price: number;
-	quantity: number;
-	amount: number;
-	refrigerationFee: number;
-	freezingFee: number;
-	packingFee: number;
-	proxyFreightFee: number;
-	currency: number;
-	salesRegion: number;
-}
-export interface ReturnOrderHistory$page {
-	date: any;
-	webUser: number;
-	product: number;
-	pack: number;
-	price: number;
-	quantity: number;
-	amount: number;
-	refrigerationFee: number;
-	freezingFee: number;
-	packingFee: number;
-	proxyFreightFee: number;
-	currency: number;
-	salesRegion: number;
-	type: number;
-	sheet: number;
-	row: number;
-	user: number;
-}
-export interface ResultOrderHistory {
-	$page: ReturnOrderHistory$page[];
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
 export interface OrderDetail {
@@ -587,12 +381,13 @@ export interface ReturnMain {
 
 export interface OrderMainEx {
 	id?: number;
-	seller: string;
+	seller: number;
 	salesman: number;
 	salesRegion: number;
 	organization: number;
 	currency: number;
 	poNumber: string;
+	orderType: number;
 	carrier: number;
 	commentsAboutDeliver: string;
 	createDate: any;
@@ -626,69 +421,15 @@ export interface ReturnDetailEx {
 
 export interface ReturnMainEx {
 	id?: number;
-	seller: string;
+	seller: number;
 	salesman: number;
 	salesRegion: number;
-}
-
-export interface DxOrderDetail {
-	id: number;
-	deliver?: number;
-	deliverDone?: number;
-	deliverTime?: any;
-	receive?: number;
-	receiveDone?: number;
-	receiveTime?: any;
-	invoice?: number;
-	invoiceDone?: number;
-	invoiceTime?: any;
-	invoiceReturn?: number;
-	invoiceReturnDone?: number;
-	$act?: number;
-}
-
-export interface DxReturnDetail {
-	id: number;
-	deliverReturn?: number;
-	deliverReturnDone?: number;
-	receiveReturn?: number;
-	receiveReturnDone?: number;
-	invoiceReturn?: number;
-	invoiceReturnDone?: number;
-	$act?: number;
 }
 
 export interface DxOrderMainState {
 	id: number;
 	state?: any;
 	createDate?: any;
-	$act?: number;
-}
-
-export interface ActParamDxOrderDetail {
-	id: number|IDXValue;
-	deliver?: number|IDXValue;
-	deliverDone?: number|IDXValue;
-	deliverTime?: any|IDXValue;
-	receive?: number|IDXValue;
-	receiveDone?: number|IDXValue;
-	receiveTime?: any|IDXValue;
-	invoice?: number|IDXValue;
-	invoiceDone?: number|IDXValue;
-	invoiceTime?: any|IDXValue;
-	invoiceReturn?: number|IDXValue;
-	invoiceReturnDone?: number|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxReturnDetail {
-	id: number|IDXValue;
-	deliverReturn?: number|IDXValue;
-	deliverReturnDone?: number|IDXValue;
-	receiveReturn?: number|IDXValue;
-	receiveReturnDone?: number|IDXValue;
-	invoiceReturn?: number|IDXValue;
-	invoiceReturnDone?: number|IDXValue;
 	$act?: number;
 }
 
@@ -699,39 +440,18 @@ export interface ActParamDxOrderMainState {
 	$act?: number;
 }
 
-export interface IxCustomerReturnable {
-	ixx: number;
+export interface OrderDetailDeliver {
 	ix: number;
 	xi: number;
+	deliverDone: number;
+	deliverTime: any;
 }
 
-export interface IxOrderDetailFee {
+export interface OrderDetailReceive {
 	ix: number;
 	xi: number;
-	fee: number;
-}
-
-export interface IxOrderMainFee {
-	ix: number;
-	xi: number;
-	fee: number;
-}
-
-export interface IxOrderDetailCoupon {
-	ix: number;
-	xi: number;
-}
-
-export interface IxOrderAmountDiff {
-	ix: number;
-	xi: number;
-	diff: number;
-}
-
-export interface IxOrderMainCustomerCoupon {
-	ixx: number;
-	ix: number;
-	xi: number;
+	receiveDone: number;
+	receiveTime: any;
 }
 
 export interface ParamActs {
@@ -743,15 +463,9 @@ export interface ParamActs {
 	orderDetailEx?: OrderDetailEx[];
 	returnDetailEx?: ReturnDetailEx[];
 	returnMainEx?: ReturnMainEx[];
-	dxOrderDetail?: ActParamDxOrderDetail[];
-	dxReturnDetail?: ActParamDxReturnDetail[];
 	dxOrderMainState?: ActParamDxOrderMainState[];
-	ixCustomerReturnable?: IxCustomerReturnable[];
-	ixOrderDetailFee?: IxOrderDetailFee[];
-	ixOrderMainFee?: IxOrderMainFee[];
-	ixOrderDetailCoupon?: IxOrderDetailCoupon[];
-	ixOrderAmountDiff?: IxOrderAmountDiff[];
-	ixOrderMainCustomerCoupon?: IxOrderMainCustomerCoupon[];
+	orderDetailDeliver?: OrderDetailDeliver[];
+	orderDetailReceive?: OrderDetailReceive[];
 }
 
 
@@ -785,24 +499,15 @@ export interface UqExt extends Uq {
 	SetCart: UqAction<ParamSetCart, ResultSetCart>;
 	RemoveFromCart: UqAction<ParamRemoveFromCart, ResultRemoveFromCart>;
 	MergeCart: UqAction<ParamMergeCart, ResultMergeCart>;
-	OrderPaid: UqAction<ParamOrderPaid, ResultOrderPaid>;
-	SaveOrderReturn: UqAction<ParamSaveOrderReturn, ResultSaveOrderReturn>;
-	OrderConfirm: UqAction<ParamOrderConfirm, ResultOrderConfirm>;
-	SaveOrder: UqAction<ParamSaveOrder, ResultSaveOrder>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	Order: UqSheet<SheetOrder, VerifyOrder>;
-	Cart: UqBook<ParamCart, ResultCart>;
-	WebUserAccount: UqBook<ParamWebUserAccount, ResultWebUserAccount>;
-	OrderState: UqBook<ParamOrderState, ResultOrderState>;
 	GetCart: UqQuery<ParamGetCart, ResultGetCart>;
 	$poked: UqQuery<Param$poked, Result$poked>;
-	GetCustomerReturnable: UqQuery<ParamGetCustomerReturnable, ResultGetCustomerReturnable>;
-	GetCustomerOrderReturn: UqQuery<ParamGetCustomerOrderReturn, ResultGetCustomerOrderReturn>;
 	SearchOrders: UqQuery<ParamSearchOrders, ResultSearchOrders>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
 	SalesRegionWarehouse: UqMap;
 	OrderBuyerAccount: UqMap;
-	OrderTransportation: UqMap;
-	OrderHistory: UqHistory<ParamOrderHistory, ResultOrderHistory>;
-	OrderReceivable: UqPending<any, any>;
+	CurrencyExchangeRate: UqMap;
 	OrderDetail: UqID<any>;
 	OrderMain: UqID<any>;
 	ReturnDetail: UqID<any>;
@@ -811,17 +516,15 @@ export interface UqExt extends Uq {
 	OrderDetailEx: UqID<any>;
 	ReturnDetailEx: UqID<any>;
 	ReturnMainEx: UqID<any>;
-	DxOrderDetail: UqIDX<any>;
-	DxReturnDetail: UqIDX<any>;
 	DxOrderMainState: UqIDX<any>;
-	IxCustomerReturnable: UqIX<any>;
-	IxOrderDetailFee: UqIX<any>;
-	IxOrderMainFee: UqIX<any>;
-	IxOrderDetailCoupon: UqIX<any>;
-	IxOrderAmountDiff: UqIX<any>;
-	IxOrderMainCustomerCoupon: UqIX<any>;
+	OrderDetailDeliver: UqIX<any>;
+	OrderDetailReceive: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

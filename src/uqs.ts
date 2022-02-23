@@ -10,7 +10,7 @@ export interface UqOrder {
     GetCart: Query;
     GetPendingPayment: Query;
     CommonText: Tuid;
-    orderTransportation: Map;
+    // orderTransportation: Map;
     SearchOrders: Query;
 }
 
@@ -182,8 +182,8 @@ export interface UqPlatformjoint {
 }
 
 export interface UqDeliver {
-    GetOrderDetailTransportation: Query;
-    GetPointExchangeDetailTransportation: Query;
+    // GetOrderDetailTransportation: Query;
+    // GetPointExchangeDetailTransportation: Query;
 }
 
 export interface UQs {

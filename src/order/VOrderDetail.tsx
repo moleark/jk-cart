@@ -27,7 +27,7 @@ export class VOrderDetail extends VPage<COrder> {
 
     private packsRow = (item: any, index: number) => {
         let { pack, quantity, price, currency } = item;
-
+        let d = <div>{ this.controller.uqs.JkDeliver.OrderDetail}</div>
         return <div key={index} className={classNames('px-2 py-2', index !== 0 ? 'border-top' : '')}>
             <div className="d-flex align-items-center">
                 <div className="flex-grow-1"><b>{tv(pack)}</b></div>

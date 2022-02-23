@@ -8,9 +8,14 @@ export class VExchangeHistory extends VPage<CPointProduct> {
 
     private exchangeHistory: any[] = [];        /*积分产品列表 */
     async open(param?: any) {
-        this.exchangeHistory = param;
+        this.exchangeHistory = this.toRepeat(param, "id");
         this.openPage(this.page);
     }
+
+    toRepeat = (arr: any[], key: string) => {
+		let obj: any = {};
+		return arr.filter(item => obj[item[key]] ? '' : (obj[item[key]] = true));
+	};
 
     private renderExchangeHistory = (pointProduct: any, index: number) => {
         let { openOrderDetail } = this.controller;

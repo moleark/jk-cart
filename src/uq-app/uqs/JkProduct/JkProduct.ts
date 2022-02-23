@@ -1,6 +1,6 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqHistory, UqID } from "tonva-react";
+import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqMap, UqIX } from "tonva-react";
 
 
 //===============================
@@ -14,6 +14,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -104,9 +105,19 @@ export interface TuidPackSalesLevel {
 	no: string;
 }
 
+export interface TuidResearch {
+	id?: number;
+}
+
 export interface ParamCountProductCategoryInclusion {
 }
 export interface ResultCountProductCategoryInclusion {
+}
+
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
 }
 
 export interface ParamGetRootCategory {
@@ -212,6 +223,7 @@ export interface ReturnSearchProduct$page {
 	chemical: number;
 	CAS: string;
 	purity: string;
+	gradeCN: string;
 	molecularFomula: string;
 	molecularWeight: string;
 }
@@ -380,39 +392,66 @@ export interface ResultGetProductLotNumber {
 	ret: ReturnGetProductLotNumberRet[];
 }
 
-export interface ParamProductSearchHistory {
-	webUser: number;
-	salesRegion: number;
-	keyword: string;
+export interface Param$getMyTimezone {
 }
-export interface ReturnProductSearchHistory$page {
-	date: any;
-	webUser: number;
-	salesRegion: number;
-	keyword: string;
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
 }
-export interface ResultProductSearchHistory {
-	$page: ReturnProductSearchHistory$page[];
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
 }
 
-export interface $PiecewiseDetail {
-	id?: number;
-	main?: number;
-	sec: number;
-	value: number;
+export interface ParamPriceXquery {
+	product: number;
+	pack: number;
+	salesRegion: number;
+}
+export interface ReturnPriceXqueryRet {
+	product: number;
+	pack: number;
+	salesRegion: number;
+	expireDate: any;
+	discountinued: number;
+	retail: number;
+}
+export interface ResultPriceXquery {
+	ret: ReturnPriceXqueryRet[];
 }
 
-export interface $Piecewise {
-	id?: number;
-	name: string;
-	ratio: number;
-	offset: number;
-	asc: number;
+export interface ParamGetProductByPackId {
+	pack: number;
+}
+export interface ReturnGetProductByPackIdRet {
+	product: number;
+	origin: string;
+	description: string;
+	descriptionC: string;
+	brand: number;
+	brandName: string;
+}
+export interface ResultGetProductByPackId {
+	ret: ReturnGetProductByPackIdRet[];
+}
+
+export interface ParamGetResearchByProductCategory {
+	productCategory: number;
+}
+export interface ReturnGetResearchByProductCategoryRet {
+	productCategory: number;
+	research: number;
+}
+export interface ResultGetResearchByProductCategory {
+	ret: ReturnGetResearchByProductCategoryRet[];
+}
+
+export interface ProductCategoryResearchDomain {
+	ix: number;
+	xi: number;
 }
 
 export interface ParamActs {
-	$PiecewiseDetail?: $PiecewiseDetail[];
-	$Piecewise?: $Piecewise[];
+	productCategoryResearchDomain?: ProductCategoryResearchDomain[];
 }
 
 
@@ -432,7 +471,9 @@ export interface UqExt extends Uq {
 	ProductCategory: UqTuid<TuidProductCategory>;
 	Lot: UqTuid<TuidLot>;
 	PackSalesLevel: UqTuid<TuidPackSalesLevel>;
+	Research: UqTuid<TuidResearch>;
 	CountProductCategoryInclusion: UqAction<ParamCountProductCategoryInclusion, ResultCountProductCategoryInclusion>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
 	GetRootCategory: UqQuery<ParamGetRootCategory, ResultGetRootCategory>;
 	GetChildrenCategory: UqQuery<ParamGetChildrenCategory, ResultGetChildrenCategory>;
 	SearchProductByCategory: UqQuery<ParamSearchProductByCategory, ResultSearchProductByCategory>;
@@ -449,6 +490,10 @@ export interface UqExt extends Uq {
 	GetProductPackByOrigin: UqQuery<ParamGetProductPackByOrigin, ResultGetProductPackByOrigin>;
 	GetProductPrices: UqQuery<ParamGetProductPrices, ResultGetProductPrices>;
 	GetProductLotNumber: UqQuery<ParamGetProductLotNumber, ResultGetProductLotNumber>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
+	PriceXquery: UqQuery<ParamPriceXquery, ResultPriceXquery>;
+	GetProductByPackId: UqQuery<ParamGetProductByPackId, ResultGetProductByPackId>;
+	GetResearchByProductCategory: UqQuery<ParamGetResearchByProductCategory, ResultGetResearchByProductCategory>;
 	AgentPrice: UqMap;
 	BrandSalesRegion: UqMap;
 	BrandDeliveryTime: UqMap;
@@ -471,11 +516,13 @@ export interface UqExt extends Uq {
 	ProductEmbargo: UqMap;
 	ProductStandardSample: UqMap;
 	ProductUserManualFile: UqMap;
-	ProductSearchHistory: UqHistory<ParamProductSearchHistory, ResultProductSearchHistory>;
-	$PiecewiseDetail: UqID<any>;
-	$Piecewise: UqID<any>;
+	ProductCategoryResearchDomain: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }

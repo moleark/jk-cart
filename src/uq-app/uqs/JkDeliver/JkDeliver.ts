@@ -1,4 +1,4 @@
-//=== UqApp builder created on Fri Oct 08 2021 19:33:33 GMT+0800 (中国标准时间) ===//
+//=== UqApp builder created on Mon Dec 20 2021 16:49:24 GMT+0800 (中国标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonva-react";
 
@@ -7,6 +7,22 @@ import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIDX, UqIX } from "tonv
 //======= UQ 百灵威系统工程部/deliver ========
 //===============================
 
+export enum EnumRole {
+	all = 1,
+	dev = 2,
+	warehouseManager = 3,
+	cutOffer = 4,
+	tallyer = 5,
+	checker = 6,
+	picker = 7,
+	packer = 8,
+	dispatcher = 9
+}
+
+export enum EnumRoleOp {
+	test = 1
+}
+
 export interface Tuid$user {
 	id?: number;
 	name: string;
@@ -14,6 +30,7 @@ export interface Tuid$user {
 	icon: string;
 	assigned: string;
 	poke: number;
+	timezone: number;
 }
 
 export interface Tuid$sheet {
@@ -36,24 +53,6 @@ export interface TuidCarrier {
 	name: string;
 	no: string;
 	isValid: number;
-}
-
-export interface ParamDoneDeliver {
-	customer: number;
-	contact: number;
-	warehouse: number;
-	detail: {
-		orderDetail: number;
-		quantity: number;
-	}[];
-
-}
-export interface ResultDoneDeliver {
-}
-
-export interface ParamAutoWarehouseDeliver {
-}
-export interface ResultAutoWarehouseDeliver {
 }
 
 export interface ParamCutOff {
@@ -121,6 +120,118 @@ export interface ParamUpdateWaybillNumber {
 export interface ResultUpdateWaybillNumber {
 }
 
+export interface ParamCutOffSelected {
+	aWarehouse: number;
+	cutOffType: number;
+	detail: {
+		aRequestDetail: number;
+	}[];
+
+}
+export interface ReturnCutOffSelectedMain {
+	id: number;
+	no: string;
+}
+export interface ResultCutOffSelected {
+	main: ReturnCutOffSelectedMain[];
+}
+
+export interface Param$setMyTimezone {
+	_timezone: number;
+}
+export interface Result$setMyTimezone {
+}
+
+export interface ParamTruckArrange {
+	aWarehouse: number;
+	detail: {
+		aBiz: number;
+	}[];
+
+}
+export interface ResultTruckArrange {
+}
+
+export interface ParamTrucked {
+	truckMain: number;
+	detail: {
+		biz: number;
+	}[];
+
+}
+export interface ResultTrucked {
+}
+
+export interface ParamAddTruckAdditionalTask {
+	warehouse: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	json: string;
+}
+export interface ResultAddTruckAdditionalTask {
+}
+
+export interface ParamAddTruck {
+	warehouse: number;
+	biz: number;
+	contact: number;
+	json: string;
+}
+export interface ResultAddTruck {
+}
+
+export interface ParamCancelTallying {
+	cutOffMain: number;
+}
+export interface ResultCancelTallying {
+}
+
+export interface ParamTallyCancelSingle {
+	deliverMain: number;
+	deliverDetail: number;
+}
+export interface ResultTallyCancelSingle {
+}
+
+export interface ParamCancelDelivering {
+	deliver: number;
+}
+export interface ResultCancelDelivering {
+}
+
+export interface ParamCancelTruckAdditionalTask {
+	warehouse: number;
+	truckAdditionalTask: number;
+}
+export interface ResultCancelTruckAdditionalTask {
+}
+
+export interface ParamCancelChecking {
+	cutOffMain: number;
+}
+export interface ResultCancelChecking {
+}
+
+export interface ParamCheckDone {
+	cutOffMain: number;
+	detail: {
+		deliverDetail: number;
+		quantity: number;
+	}[];
+
+}
+export interface ResultCheckDone {
+}
+
+export interface ParamChecking {
+	cutOffMain: number;
+}
+export interface ResultChecking {
+}
+
 export interface Param$poked {
 }
 export interface Return$pokedRet {
@@ -130,56 +241,13 @@ export interface Result$poked {
 	ret: Return$pokedRet[];
 }
 
-export interface ParamWarehousePendingDeliver {
-}
-export interface ReturnWarehousePendingDeliverRet {
-	warehouse: number;
-	rowCount: number;
-}
-export interface ResultWarehousePendingDeliver {
-	ret: ReturnWarehousePendingDeliverRet[];
-}
-
-export interface ParamCustomerPendingDeliver {
-	warehouse: number;
-	customer: number;
-}
-export interface ReturnCustomerPendingDeliverRet {
-	orderDetail: number;
-	item: number;
-	product: number;
-	quantity: number;
-	amount: number;
-	price: number;
-	deliverShould: number;
-}
-export interface ResultCustomerPendingDeliver {
-	ret: ReturnCustomerPendingDeliverRet[];
-}
-
-export interface ParamWarehouseDeliverMain {
-}
-export interface ReturnWarehouseDeliverMainRet {
-	warehouse: number;
-	deliverMain: number;
-	no: string;
-	customer: number;
-	create: any;
-	rows: number;
-	pickRows: number;
-	staff: number;
-}
-export interface ResultWarehouseDeliverMain {
-	ret: ReturnWarehouseDeliverMainRet[];
-}
-
 export interface ParamGetDeliver {
 	deliver: number;
 }
 export interface ReturnGetDeliverMain {
 	id: number;
 	no: string;
-	customer: number;
+	customerAccount: number;
 	contact: number;
 	warehouse: number;
 	staff: number;
@@ -190,12 +258,13 @@ export interface ReturnGetDeliverMain {
 export interface ReturnGetDeliverDetail {
 	id: number;
 	orderDetail: number;
-	delivermain: number;
+	deliverMain: number;
 	item: number;
-	product: number;
+	lotNumber: string;
 	deliverShould: number;
-	pickDone: number;
+	deliverDone: number;
 	returnDone: number;
+	content: string;
 }
 export interface ResultGetDeliver {
 	main: ReturnGetDeliverMain[];
@@ -206,15 +275,16 @@ export interface ParamGetReadyCutOffList {
 	warehouse: number;
 	cutOffType: number;
 }
-export interface ReturnGetReadyCutOffListList {
+export interface ReturnGetReadyCutOffList$page {
+	id: number;
 	orderDetail: number;
-	product: number;
 	item: number;
 	shouldQuantity: number;
-	customerAccount: number;
+	contact: number;
+	json: string;
 }
 export interface ResultGetReadyCutOffList {
-	list: ReturnGetReadyCutOffListList[];
+	$page: ReturnGetReadyCutOffList$page[];
 }
 
 export interface ParamGetCutOffMainList {
@@ -224,23 +294,12 @@ export interface ReturnGetCutOffMainList$page {
 	id: number;
 	no: string;
 	cutter: number;
+	create: any;
+	sumQuantity: number;
+	deliverDone: number;
 }
 export interface ResultGetCutOffMainList {
 	$page: ReturnGetCutOffMainList$page[];
-}
-
-export interface ParamWarehouseCutOffMain {
-}
-export interface ReturnWarehouseCutOffMainRet {
-	warehouse: number;
-	cutOffMain: number;
-	no: string;
-	cutter: number;
-	create: any;
-	staff: number;
-}
-export interface ResultWarehouseCutOffMain {
-	ret: ReturnWarehouseCutOffMainRet[];
 }
 
 export interface ParamGetCutOffMain {
@@ -252,23 +311,21 @@ export interface ReturnGetCutOffMainMain {
 	warehouse: number;
 	cutter: number;
 	staff: number;
+	finishTime: any;
 }
 export interface ReturnGetCutOffMainDetail {
 	deliverMain: number;
 	trayNumber: number;
 	contact: number;
-	customer: number;
+	customerAccount: number;
 	carrier: number;
 	waybillNumber: string;
 	deliverTime: any;
 	deliverDetail: number;
 	item: number;
-	product: number;
 	tallyShould: number;
 	tallyDone: number;
 	tallyState: number;
-	price: number;
-	orderMainNo: string;
 	lotNumber: string;
 	showPrice: number;
 	content: string;
@@ -315,6 +372,308 @@ export interface ResultGetCarrierNo {
 	ret: ReturnGetCarrierNoRet[];
 }
 
+export interface ParamGetReadyCutOffCount {
+}
+export interface ReturnGetReadyCutOffCountRet {
+	warehouse: number;
+	readyCutOffCount: number;
+}
+export interface ResultGetReadyCutOffCount {
+	ret: ReturnGetReadyCutOffCountRet[];
+}
+
+export interface ParamGetCutOffTypeCount {
+	warehouseId: number;
+	cutofftypeId: number;
+}
+export interface ReturnGetCutOffTypeCountRet {
+	warehouse: number;
+	cutofftype: number;
+	readyCutOffCount: number;
+}
+export interface ResultGetCutOffTypeCount {
+	ret: ReturnGetCutOffTypeCountRet[];
+}
+
+export interface Param$getMyTimezone {
+}
+export interface Return$getMyTimezoneRet {
+	timezone: number;
+	unitTimeZone: number;
+}
+export interface Result$getMyTimezone {
+	ret: Return$getMyTimezoneRet[];
+}
+
+export interface ParamGetCutOffTypeDefinition {
+	cutOffType: number;
+}
+export interface ReturnGetCutOffTypeDefinitionList {
+	deliverType: number;
+	deliverTypeName: string;
+	customerAccount: number;
+}
+export interface ResultGetCutOffTypeDefinition {
+	list: ReturnGetCutOffTypeDefinitionList[];
+}
+
+export interface ParamGetInsuredTypeBrand {
+	insuredType: number;
+}
+export interface ReturnGetInsuredTypeBrandList {
+	insuredType: number;
+	brand: number;
+}
+export interface ResultGetInsuredTypeBrand {
+	list: ReturnGetInsuredTypeBrandList[];
+}
+
+export interface ParamGetInsuredTypeInterval {
+	insuredType: number;
+}
+export interface ReturnGetInsuredTypeIntervalList {
+	insuredType: number;
+	insuredInterval: number;
+	amount: number;
+}
+export interface ResultGetInsuredTypeInterval {
+	list: ReturnGetInsuredTypeIntervalList[];
+}
+
+export interface ParamGetDeliverDetailTransportation {
+	deliverDetail: number;
+}
+export interface ReturnGetDeliverDetailTransportationRet {
+	deliverDetail: number;
+	carrier: number;
+	waybillNumber: string;
+	deliverTime: any;
+}
+export interface ResultGetDeliverDetailTransportation {
+	ret: ReturnGetDeliverDetailTransportationRet[];
+}
+
+export interface ParamGetReadyTruckTaslList {
+	warehouse: number;
+}
+export interface ReturnGetReadyTruckTaslListRet {
+	warehouse: number;
+	deliverDetail: number;
+	contact: number;
+	json: string;
+}
+export interface ResultGetReadyTruckTaslList {
+	ret: ReturnGetReadyTruckTaslListRet[];
+}
+
+export interface ParamGetTruckMain {
+	truckMain: number;
+}
+export interface ReturnGetTruckMainMain {
+	truckMain: number;
+	no: string;
+	contact: number;
+	warehouse: number;
+	staff: number;
+	trucking: number;
+}
+export interface ReturnGetTruckMainDetail {
+	truckDetail: number;
+	biz: number;
+	json: string;
+}
+export interface ResultGetTruckMain {
+	main: ReturnGetTruckMainMain[];
+	detail: ReturnGetTruckMainDetail[];
+}
+
+export interface ParamGetTruckHistoryList {
+}
+export interface ReturnGetTruckHistoryListRet {
+	warehouse: number;
+	truckMain: number;
+	no: string;
+	contact: number;
+	staff: number;
+}
+export interface ResultGetTruckHistoryList {
+	ret: ReturnGetTruckHistoryListRet[];
+}
+
+export interface ParamGetTruckAdditionalTask {
+}
+export interface ReturnGetTruckAdditionalTaskRet {
+	id: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	staff: number;
+	state: number;
+	finishTime: any;
+	create: any;
+}
+export interface ResultGetTruckAdditionalTask {
+	ret: ReturnGetTruckAdditionalTaskRet[];
+}
+
+export interface ParamGetRoleOps {
+}
+export interface ReturnGetRoleOpsRet {
+	role: any;
+	op: any;
+}
+export interface ResultGetRoleOps {
+	ret: ReturnGetRoleOpsRet[];
+}
+
+export interface ParamGetCutOffHistory {
+	warehouse: number;
+}
+export interface ReturnGetCutOffHistory$page {
+	id: number;
+	cutOffMain: number;
+	no: string;
+	finishTime: any;
+	staff: number;
+}
+export interface ResultGetCutOffHistory {
+	$page: ReturnGetCutOffHistory$page[];
+}
+
+export interface ParamGetDeliverHistory {
+	warehouse: number;
+}
+export interface ReturnGetDeliverHistory$page {
+	id: number;
+	deliverMain: number;
+	no: string;
+	cutOffMain: string;
+	traynumber: number;
+	finishTime: any;
+	staff: number;
+}
+export interface ResultGetDeliverHistory {
+	$page: ReturnGetDeliverHistory$page[];
+}
+
+export interface ParamGetReadyTruckCount {
+}
+export interface ReturnGetReadyTruckCountRet {
+	warehouse: number;
+	readyTruckCount: number;
+}
+export interface ResultGetReadyTruckCount {
+	ret: ReturnGetReadyTruckCountRet[];
+}
+
+export interface ParamWarehouseChecks {
+}
+export interface ReturnWarehouseChecksRet {
+	warehouse: number;
+	cutOffMain: number;
+	no: string;
+	staff: number;
+	create: any;
+}
+export interface ResultWarehouseChecks {
+	ret: ReturnWarehouseChecksRet[];
+}
+
+export interface ParamWarehouseTallys {
+}
+export interface ReturnWarehouseTallysRet {
+	warehouse: number;
+	cutOffMain: number;
+	no: string;
+	create: any;
+	staff: number;
+}
+export interface ResultWarehouseTallys {
+	ret: ReturnWarehouseTallysRet[];
+}
+
+export interface ParamWarehouseTrucks {
+}
+export interface ReturnWarehouseTrucksRet {
+	warehouse: number;
+	truckMain: number;
+	no: string;
+	contact: number;
+	staff: number;
+}
+export interface ResultWarehouseTrucks {
+	ret: ReturnWarehouseTrucksRet[];
+}
+
+export interface ParamWarehouseDelivers {
+}
+export interface ReturnWarehouseDeliversRet {
+	warehouse: number;
+	deliverMain: number;
+	no: string;
+	cutOffMain: string;
+	traynumber: number;
+	customerAccount: number;
+	staff: number;
+}
+export interface ResultWarehouseDelivers {
+	ret: ReturnWarehouseDeliversRet[];
+}
+
+export interface ParamGetCheckHistory {
+	warehouse: number;
+}
+export interface ReturnGetCheckHistory$page {
+	id: number;
+	cutOffMain: number;
+	no: string;
+	finishTime: any;
+	staff: number;
+}
+export interface ResultGetCheckHistory {
+	$page: ReturnGetCheckHistory$page[];
+}
+
+export interface ParamGetCheckInfo {
+	cutOffMain: number;
+}
+export interface ReturnGetCheckInfoMain {
+	id: number;
+	no: string;
+	warehouse: number;
+	staff: number;
+	finishTime: any;
+}
+export interface ReturnGetCheckInfoDetail {
+	deliverMain: number;
+	trayNumber: number;
+	deliverDetail: number;
+	item: number;
+	checkShould: number;
+	checkDone: number;
+	lotNumber: string;
+	content: string;
+}
+export interface ResultGetCheckInfo {
+	main: ReturnGetCheckInfoMain[];
+	detail: ReturnGetCheckInfoDetail[];
+}
+
+export interface ParamGetOrganizationTruckStaff {
+	staff: number;
+}
+export interface ReturnGetOrganizationTruckStaffRet {
+	truckStaff: number;
+	organization: number;
+	truckBatchId: number;
+	truckBatchName: string;
+}
+export interface ResultGetOrganizationTruckStaff {
+	ret: ReturnGetOrganizationTruckStaffRet[];
+}
+
 export interface OrderMain {
 	id?: number;
 	no?: string;
@@ -342,18 +701,22 @@ export interface Warehouse {
 export interface DeliverMain {
 	id?: number;
 	no?: string;
-	customer: number;
+	customerAccount: number;
 	contact: number;
 	warehouse: number;
 	cutOffMain: number;
 	trayNumber: number;
-	$create?: any;
 }
 
 export interface DeliverDetail {
 	id?: number;
 	main?: number;
+	biz: number;
+	item: number;
 	quantity: number;
+	lotNumber: string;
+	showPrice: number;
+	json: string;
 }
 
 export interface DeliverMainEx {
@@ -368,20 +731,93 @@ export interface CutOffMain {
 	no?: string;
 	warehouse: number;
 	cutter: number;
-	$create?: any;
 }
 
 export interface CutOffType {
 	id?: number;
 	name: string;
 	description: string;
-	$create?: any;
 }
 
 export interface DeliverType {
 	id?: number;
 	name: string;
 	description: string;
+}
+
+export interface RequestDetail {
+	id?: number;
+	main?: number;
+	biz: number;
+	cutOffType: number;
+	warehouse: number;
+	item: number;
+	quantity: number;
+	lotNumber: string;
+	showPrice: number;
+	json: string;
+}
+
+export interface Request {
+	id?: number;
+	customerAccount: number;
+	contact: number;
+}
+
+export interface InsuredInterval {
+	id?: number;
+	start: number;
+	end: number;
+}
+
+export interface InsuredType {
+	id?: number;
+	name: string;
+	description: string;
+}
+
+export interface TruckDetail {
+	id?: number;
+	main?: number;
+	biz: number;
+	json: string;
+}
+
+export interface TruckMain {
+	id?: number;
+	no?: string;
+	contact: number;
+	warehouse: number;
+}
+
+export interface TruckAdditionalTask {
+	id?: number;
+	contact: number;
+	content: string;
+	note: string;
+	creator: number;
+	requiredDate: any;
+	staff: number;
+	finishTime: any;
+	state: number;
+}
+
+export interface Role {
+	id?: number;
+	name: string;
+	discription: string;
+}
+
+export interface TruckBatch {
+	id?: number;
+	name: string;
+	description: string;
+}
+
+export interface TruckStaff {
+	id?: number;
+	name: string;
+	webuser: number;
 }
 
 export interface DxDeliverMain {
@@ -401,20 +837,11 @@ export interface DxDeliverDetail {
 	id: number;
 	deliverDone?: number;
 	pickDone?: number;
+	checkDone?: number;
 	tallyDone?: number;
 	tallyState?: number;
 	deliverReturn?: number;
 	returnDone?: number;
-	showPrice?: number;
-	json?: string;
-	$act?: number;
-}
-
-export interface DxCutOffMain {
-	id: number;
-	staff?: number;
-	startTime?: any;
-	finishTime?: any;
 	$act?: number;
 }
 
@@ -423,7 +850,22 @@ export interface DxDelivering {
 	$act?: number;
 }
 
-export interface Talling {
+export interface DxCutOffTypeBuyerAccount {
+	id: number;
+	name?: string;
+	description?: string;
+	$act?: number;
+}
+
+export interface DxTruckMain {
+	id: number;
+	staff?: number;
+	startTime?: any;
+	finishTime?: any;
+	$act?: number;
+}
+
+export interface DxTrucking {
 	id: number;
 	$act?: number;
 }
@@ -445,20 +887,11 @@ export interface ActParamDxDeliverDetail {
 	id: number|IDXValue;
 	deliverDone?: number|IDXValue;
 	pickDone?: number|IDXValue;
+	checkDone?: number|IDXValue;
 	tallyDone?: number|IDXValue;
 	tallyState?: number|IDXValue;
 	deliverReturn?: number|IDXValue;
 	returnDone?: number|IDXValue;
-	showPrice?: number|IDXValue;
-	json?: string|IDXValue;
-	$act?: number;
-}
-
-export interface ActParamDxCutOffMain {
-	id: number|IDXValue;
-	staff?: number|IDXValue;
-	startTime?: any|IDXValue;
-	finishTime?: any|IDXValue;
 	$act?: number;
 }
 
@@ -467,18 +900,24 @@ export interface ActParamDxDelivering {
 	$act?: number;
 }
 
-export interface ActParamTalling {
+export interface ActParamDxCutOffTypeBuyerAccount {
 	id: number|IDXValue;
+	name?: string|IDXValue;
+	description?: string|IDXValue;
 	$act?: number;
 }
 
-export interface IxPendingDeliver {
-	ixx: number;
-	ix: number;
-	xi: number;
-	quantity: number;
-	showPrice: number;
-	json: string;
+export interface ActParamDxTruckMain {
+	id: number|IDXValue;
+	staff?: number|IDXValue;
+	startTime?: any|IDXValue;
+	finishTime?: any|IDXValue;
+	$act?: number;
+}
+
+export interface ActParamDxTrucking {
+	id: number|IDXValue;
+	$act?: number;
 }
 
 export interface IxUserWarehouse {
@@ -487,12 +926,6 @@ export interface IxUserWarehouse {
 }
 
 export interface IxCutoffTypeDefinition {
-	ixx: number;
-	ix: number;
-	xi: number;
-}
-
-export interface CutOffProcessing {
 	ixx: number;
 	ix: number;
 	xi: number;
@@ -508,6 +941,31 @@ export interface DeliverDetailOrderDetail {
 	xi: number;
 }
 
+export interface InsuredTypeBrand {
+	ix: number;
+	xi: number;
+}
+
+export interface InsuredTypeInterval {
+	ix: number;
+	xi: number;
+	amount: number;
+}
+
+export interface IxPendingTruck {
+	ix: number;
+	xi: number;
+	contact: number;
+	json: string;
+	truckStaff: number;
+}
+
+export interface IxOrganizationTruckSetting {
+	ix: number;
+	xi: number;
+	ixx: number;
+}
+
 export interface ParamActs {
 	orderMain?: OrderMain[];
 	orderDetail?: OrderDetail[];
@@ -518,17 +976,30 @@ export interface ParamActs {
 	cutOffMain?: CutOffMain[];
 	cutOffType?: CutOffType[];
 	deliverType?: DeliverType[];
+	requestDetail?: RequestDetail[];
+	request?: Request[];
+	insuredInterval?: InsuredInterval[];
+	insuredType?: InsuredType[];
+	truckDetail?: TruckDetail[];
+	truckMain?: TruckMain[];
+	truckAdditionalTask?: TruckAdditionalTask[];
+	role?: Role[];
+	truckBatch?: TruckBatch[];
+	truckStaff?: TruckStaff[];
 	dxDeliverMain?: ActParamDxDeliverMain[];
 	dxDeliverDetail?: ActParamDxDeliverDetail[];
-	dxCutOffMain?: ActParamDxCutOffMain[];
 	dxDelivering?: ActParamDxDelivering[];
-	talling?: ActParamTalling[];
-	ixPendingDeliver?: IxPendingDeliver[];
+	dxCutOffTypeBuyerAccount?: ActParamDxCutOffTypeBuyerAccount[];
+	dxTruckMain?: ActParamDxTruckMain[];
+	dxTrucking?: ActParamDxTrucking[];
 	ixUserWarehouse?: IxUserWarehouse[];
 	ixCutoffTypeDefinition?: IxCutoffTypeDefinition[];
-	cutOffProcessing?: CutOffProcessing[];
 	deliverDetailExchangeDetail?: DeliverDetailExchangeDetail[];
 	deliverDetailOrderDetail?: DeliverDetailOrderDetail[];
+	insuredTypeBrand?: InsuredTypeBrand[];
+	insuredTypeInterval?: InsuredTypeInterval[];
+	ixPendingTruck?: IxPendingTruck[];
+	ixOrganizationTruckSetting?: IxOrganizationTruckSetting[];
 }
 
 
@@ -538,8 +1009,6 @@ export interface UqExt extends Uq {
 	$user: UqTuid<Tuid$user>;
 	$sheet: UqTuid<Tuid$sheet>;
 	Carrier: UqTuid<TuidCarrier>;
-	DoneDeliver: UqAction<ParamDoneDeliver, ResultDoneDeliver>;
-	AutoWarehouseDeliver: UqAction<ParamAutoWarehouseDeliver, ResultAutoWarehouseDeliver>;
 	CutOff: UqAction<ParamCutOff, ResultCutOff>;
 	Tallying: UqAction<ParamTallying, ResultTallying>;
 	Delivering: UqAction<ParamDelivering, ResultDelivering>;
@@ -548,18 +1017,49 @@ export interface UqExt extends Uq {
 	TallyDone: UqAction<ParamTallyDone, ResultTallyDone>;
 	UpdateDeliverCarrier: UqAction<ParamUpdateDeliverCarrier, ResultUpdateDeliverCarrier>;
 	UpdateWaybillNumber: UqAction<ParamUpdateWaybillNumber, ResultUpdateWaybillNumber>;
+	CutOffSelected: UqAction<ParamCutOffSelected, ResultCutOffSelected>;
+	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
+	TruckArrange: UqAction<ParamTruckArrange, ResultTruckArrange>;
+	Trucked: UqAction<ParamTrucked, ResultTrucked>;
+	AddTruckAdditionalTask: UqAction<ParamAddTruckAdditionalTask, ResultAddTruckAdditionalTask>;
+	AddTruck: UqAction<ParamAddTruck, ResultAddTruck>;
+	CancelTallying: UqAction<ParamCancelTallying, ResultCancelTallying>;
+	TallyCancelSingle: UqAction<ParamTallyCancelSingle, ResultTallyCancelSingle>;
+	CancelDelivering: UqAction<ParamCancelDelivering, ResultCancelDelivering>;
+	CancelTruckAdditionalTask: UqAction<ParamCancelTruckAdditionalTask, ResultCancelTruckAdditionalTask>;
+	CancelChecking: UqAction<ParamCancelChecking, ResultCancelChecking>;
+	CheckDone: UqAction<ParamCheckDone, ResultCheckDone>;
+	Checking: UqAction<ParamChecking, ResultChecking>;
 	$poked: UqQuery<Param$poked, Result$poked>;
-	WarehousePendingDeliver: UqQuery<ParamWarehousePendingDeliver, ResultWarehousePendingDeliver>;
-	CustomerPendingDeliver: UqQuery<ParamCustomerPendingDeliver, ResultCustomerPendingDeliver>;
-	WarehouseDeliverMain: UqQuery<ParamWarehouseDeliverMain, ResultWarehouseDeliverMain>;
 	GetDeliver: UqQuery<ParamGetDeliver, ResultGetDeliver>;
 	GetReadyCutOffList: UqQuery<ParamGetReadyCutOffList, ResultGetReadyCutOffList>;
 	GetCutOffMainList: UqQuery<ParamGetCutOffMainList, ResultGetCutOffMainList>;
-	WarehouseCutOffMain: UqQuery<ParamWarehouseCutOffMain, ResultWarehouseCutOffMain>;
 	GetCutOffMain: UqQuery<ParamGetCutOffMain, ResultGetCutOffMain>;
 	GetOrderDetailTransportation: UqQuery<ParamGetOrderDetailTransportation, ResultGetOrderDetailTransportation>;
 	GetPointExchangeDetailTransportation: UqQuery<ParamGetPointExchangeDetailTransportation, ResultGetPointExchangeDetailTransportation>;
 	GetCarrierNo: UqQuery<ParamGetCarrierNo, ResultGetCarrierNo>;
+	GetReadyCutOffCount: UqQuery<ParamGetReadyCutOffCount, ResultGetReadyCutOffCount>;
+	GetCutOffTypeCount: UqQuery<ParamGetCutOffTypeCount, ResultGetCutOffTypeCount>;
+	$getMyTimezone: UqQuery<Param$getMyTimezone, Result$getMyTimezone>;
+	GetCutOffTypeDefinition: UqQuery<ParamGetCutOffTypeDefinition, ResultGetCutOffTypeDefinition>;
+	GetInsuredTypeBrand: UqQuery<ParamGetInsuredTypeBrand, ResultGetInsuredTypeBrand>;
+	GetInsuredTypeInterval: UqQuery<ParamGetInsuredTypeInterval, ResultGetInsuredTypeInterval>;
+	GetDeliverDetailTransportation: UqQuery<ParamGetDeliverDetailTransportation, ResultGetDeliverDetailTransportation>;
+	GetReadyTruckTaslList: UqQuery<ParamGetReadyTruckTaslList, ResultGetReadyTruckTaslList>;
+	GetTruckMain: UqQuery<ParamGetTruckMain, ResultGetTruckMain>;
+	GetTruckHistoryList: UqQuery<ParamGetTruckHistoryList, ResultGetTruckHistoryList>;
+	GetTruckAdditionalTask: UqQuery<ParamGetTruckAdditionalTask, ResultGetTruckAdditionalTask>;
+	GetRoleOps: UqQuery<ParamGetRoleOps, ResultGetRoleOps>;
+	GetCutOffHistory: UqQuery<ParamGetCutOffHistory, ResultGetCutOffHistory>;
+	GetDeliverHistory: UqQuery<ParamGetDeliverHistory, ResultGetDeliverHistory>;
+	GetReadyTruckCount: UqQuery<ParamGetReadyTruckCount, ResultGetReadyTruckCount>;
+	WarehouseChecks: UqQuery<ParamWarehouseChecks, ResultWarehouseChecks>;
+	WarehouseTallys: UqQuery<ParamWarehouseTallys, ResultWarehouseTallys>;
+	WarehouseTrucks: UqQuery<ParamWarehouseTrucks, ResultWarehouseTrucks>;
+	WarehouseDelivers: UqQuery<ParamWarehouseDelivers, ResultWarehouseDelivers>;
+	GetCheckHistory: UqQuery<ParamGetCheckHistory, ResultGetCheckHistory>;
+	GetCheckInfo: UqQuery<ParamGetCheckInfo, ResultGetCheckInfo>;
+	GetOrganizationTruckStaff: UqQuery<ParamGetOrganizationTruckStaff, ResultGetOrganizationTruckStaff>;
 	OrderMain: UqID<any>;
 	OrderDetail: UqID<any>;
 	Warehouse: UqID<any>;
@@ -569,19 +1069,36 @@ export interface UqExt extends Uq {
 	CutOffMain: UqID<any>;
 	CutOffType: UqID<any>;
 	DeliverType: UqID<any>;
+	RequestDetail: UqID<any>;
+	Request: UqID<any>;
+	InsuredInterval: UqID<any>;
+	InsuredType: UqID<any>;
+	TruckDetail: UqID<any>;
+	TruckMain: UqID<any>;
+	TruckAdditionalTask: UqID<any>;
+	Role: UqID<any>;
+	TruckBatch: UqID<any>;
+	TruckStaff: UqID<any>;
 	DxDeliverMain: UqIDX<any>;
 	DxDeliverDetail: UqIDX<any>;
-	DxCutOffMain: UqIDX<any>;
 	DxDelivering: UqIDX<any>;
-	Talling: UqIDX<any>;
-	IxPendingDeliver: UqIX<any>;
+	DxCutOffTypeBuyerAccount: UqIDX<any>;
+	DxTruckMain: UqIDX<any>;
+	DxTrucking: UqIDX<any>;
 	IxUserWarehouse: UqIX<any>;
 	IxCutoffTypeDefinition: UqIX<any>;
-	CutOffProcessing: UqIX<any>;
 	DeliverDetailExchangeDetail: UqIX<any>;
 	DeliverDetailOrderDetail: UqIX<any>;
+	InsuredTypeBrand: UqIX<any>;
+	InsuredTypeInterval: UqIX<any>;
+	IxPendingTruck: UqIX<any>;
+	IxOrganizationTruckSetting: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {
+	let hasEntity = uq.$.hasEntity(to);
+	if (hasEntity === false) {
+		return;
+	}
 	Object.assign((uq as any)[to], from);
 }
