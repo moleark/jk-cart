@@ -1,4 +1,5 @@
 //=== UqApp builder created on Tue Jan 12 2021 23:14:51 GMT-0500 (GMT-05:00) ===//
+
 import { jnkTop } from "me/loginTop";
 import { AppConfig, DevConfig } from "tonva-react";
 import { tvs } from "tvs";
@@ -15,6 +16,7 @@ const jk: DevConfig = {
 
 export const appConfig: AppConfig = {
 	version: '1.2.7',
+	/*
 	app: {
 		dev: jk,
 		name: 'cart',
@@ -77,9 +79,15 @@ export const appConfig: AppConfig = {
 			alias: 'coupon',
 			version: '0.1.1',
 		},
+		{
+			dev: jk,
+			name: 'webBuilder',
+			alias: 'WebBuilder',
+			version: '0.1.1',
+		},
 	],
 	noUnit: true,
-	tvs,
+	tvs: tvs,
 	oem: undefined,
 	loginTop: jnkTop
 };
