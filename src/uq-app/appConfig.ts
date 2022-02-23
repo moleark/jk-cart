@@ -15,10 +15,12 @@ const jk: DevConfig = {
 
 export const appConfig: AppConfig = {
 	version: '0.1.7',
+	/*
 	app: {
 		dev: jk,
 		name: 'cart',
 	},
+	*/
 	uqs: [
 		/*
 		{
@@ -68,6 +70,11 @@ export const appConfig: AppConfig = {
 		{
 			dev: jk,
 			name: 'customer',
+			version: '0.1.1',
+		},
+		{
+			dev: jk,
+			name: 'webbuilder',
 			version: '0.1.1',
 		},
 	],
